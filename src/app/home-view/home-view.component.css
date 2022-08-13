@@ -1,0 +1,53 @@
+.content-container {
+  display: flex;
+  max-width: 600px;
+  justify-content: space-between;
+  margin: 2rem;
+  height: 300px;
+  margin: auto;
+  margin-top: 5.5rem;
+}
+
+@media (max-width: 625px) {
+  .content-container {
+    flex-direction: column;
+    width: min-content;
+  }
+}
+
+h1 {
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 500;
+  font-size: 44;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 115px;
+}
+
+button {
+  border-radius: 8px;
+  height: 45px;
+  width: 250px;
+  font-family: sans-serif; /* TODO make lato font */
+  font-weight: 200;
+  font-size: 22;
+  letter-spacing: 10px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.host-button {
+  background-color: white;
+  color: #404040;
+  border: 1px solid #404040;
+}
+
+.join-button {
+  background-color: #404040;
+  color: white;
+  border: 1px solid white;
+}
