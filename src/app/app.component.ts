@@ -11,13 +11,22 @@ export class AppComponent {
   title = 'Lanes';
   currentView = 'home-view';
   gameCode$: Subject<string>;
+  warningMessage = '';
 
   constructor(public signalrService: SignalrService) {
     this.gameCode$ = signalrService.gameCode$;
   }
 
   hostGameEvent() {
-    this.signalrService.createGame();
-    this.currentView = 'host-view';
+    const hasConnectedToServer =
+      this.signalrService.connectionEstablished$.getValue();
+
+    if (hasConnectedToServer) {
+      this.signalrService.createGame();
+      this.currentView = 'host-view';
+      return;
+    }
+
+    this.warningMessage = 'Failed to connect to the server.';
   }
 }
