@@ -5,7 +5,7 @@ import {
   HubConnectionState,
   LogLevel,
 } from '@microsoft/signalr';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 export class SignalrService {
   connectionEstablished$ = new BehaviorSubject<boolean>(false);
   gameCode$ = new BehaviorSubject<string>('');
+  invalidGameCode$ = new Subject<boolean>();
 
   private hubConnection: HubConnection;
 
@@ -48,6 +49,10 @@ export class SignalrService {
 
     this.hubConnection.on('OpponentDisconnected', () => {
       this.gameCode$.next('');
+    });
+
+    this.hubConnection.on('InvalidGameCode', () => {
+      this.invalidGameCode$.next(true);
     });
   }
 

@@ -34,3 +34,8 @@
   text-transform: uppercase;
   text-align: center;
 }
+
+.invalid-game-code-message {
+  color: crimson;
+  font-size: 18px;
+}

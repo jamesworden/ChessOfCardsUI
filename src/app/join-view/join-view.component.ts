@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { SignalrService } from '../services/SignalRService';
 
 @Component({
   selector: 'app-join-view',
@@ -8,9 +9,15 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 export class JoinViewComponent implements OnInit {
   @Output() joinGameEvent = new EventEmitter();
 
+  @Input() invalidGameCode = false;
+
   gameCodeInput = '';
 
-  constructor() {
+  constructor(public signalrService: SignalrService) {
+    signalrService.invalidGameCode$.subscribe((invalidGameCode) => {
+      this.invalidGameCode = invalidGameCode;
+    });
+
     document.addEventListener('keypress', ({ key }) => {
       this.attemptType(key);
     });
@@ -84,6 +91,8 @@ export class JoinViewComponent implements OnInit {
       );
 
       this.renderGameCode();
+
+      this.invalidGameCode = false;
     }
   }
 }
