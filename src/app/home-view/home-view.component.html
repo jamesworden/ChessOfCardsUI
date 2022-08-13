@@ -1,7 +1,8 @@
 <div class="content-container">
   <h1>Lanes, <br />the chess of cards.</h1>
   <div class="button-container">
-    <button class="host-button">Host Game</button>
+    <button class="host-button" (click)="hostGame()">Host Game</button>
     <button class="join-button">Join Game</button>
+    <span>{{ signalrService.gameCode$ | async }}</span>
   </div>
 </div>
