@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SignalrService } from '../services/SignalRService';
 
 @Component({
@@ -7,11 +7,13 @@ import { SignalrService } from '../services/SignalRService';
   styleUrls: ['./home-view.component.css'],
 })
 export class HomeViewComponent implements OnInit {
-  constructor(public signalrService: SignalrService) {}
+  @Output() hostGameEvent = new EventEmitter<string>();
+
+  constructor() {}
 
   ngOnInit(): void {}
 
   hostGame() {
-    this.signalrService.createGame();
+    this.hostGameEvent.emit();
   }
 }

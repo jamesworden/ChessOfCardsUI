@@ -1,3 +1,8 @@
 <ng-template [ngIf]="currentView == 'home-view'">
-  <app-home-view></app-home-view>
+  <app-home-view (hostGameEvent)="hostGameEvent()"></app-home-view>
+</ng-template>
+
+<ng-template [ngIf]="currentView == 'host-view'">
+  <app-host-view></app-host-view>
+  <!-- (goToGameView)="goToGameView()" -->
 </ng-template>

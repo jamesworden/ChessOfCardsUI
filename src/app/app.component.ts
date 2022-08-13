@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
+import { SignalrService } from './services/SignalRService';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +10,14 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Lanes';
   currentView = 'home-view';
+  gameCode$: Subject<string>;
+
+  constructor(public signalrService: SignalrService) {
+    this.gameCode$ = signalrService.gameCode$;
+  }
+
+  hostGameEvent() {
+    this.signalrService.createGame();
+    this.currentView = 'host-view';
+  }
 }
