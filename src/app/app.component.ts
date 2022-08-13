@@ -15,7 +15,11 @@ export class AppComponent {
   views = Views;
   currentView = Views.Home;
 
-  constructor(public signalrService: SignalrService) {}
+  constructor(public signalrService: SignalrService) {
+    signalrService.gameStarted.subscribe(() => {
+      this.currentView = Views.Game;
+    });
+  }
 
   onClickHostGameEvent() {
     const isConnectedToServer =

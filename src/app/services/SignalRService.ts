@@ -14,6 +14,7 @@ export class SignalrService {
   connectionEstablished$ = new BehaviorSubject<boolean>(false);
   gameCode$ = new BehaviorSubject<string>('');
   invalidGameCode$ = new Subject<boolean>();
+  gameStarted = new Subject<null>();
 
   private hubConnection: HubConnection;
 
@@ -53,6 +54,10 @@ export class SignalrService {
 
     this.hubConnection.on('InvalidGameCode', () => {
       this.invalidGameCode$.next(true);
+    });
+
+    this.hubConnection.on('GameStarted', () => {
+      this.gameStarted.next();
     });
   }
 
