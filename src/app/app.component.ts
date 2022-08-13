@@ -11,16 +11,11 @@ import { JoinGameEvent } from './events';
 })
 export class AppComponent {
   title = 'Lanes';
-
-  gameCode$: BehaviorSubject<string>;
   showWarningMessage = false;
-
   views = Views;
   currentView = Views.Home;
 
-  constructor(public signalrService: SignalrService) {
-    this.gameCode$ = signalrService.gameCode$;
-  }
+  constructor(public signalrService: SignalrService) {}
 
   onClickHostGameEvent() {
     const isConnectedToServer =
@@ -43,14 +38,5 @@ export class AppComponent {
     }
 
     this.currentView = Views.Join;
-  }
-
-  onJoinGameEvent($joinGameEvent: JoinGameEvent) {
-    const { gameCode } = $joinGameEvent;
-    this.signalrService.joinGame(gameCode);
-  }
-
-  goToGameView() {
-    this.currentView = Views.Game;
   }
 }

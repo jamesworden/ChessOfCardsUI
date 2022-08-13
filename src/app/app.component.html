@@ -3,19 +3,9 @@
 </span>
 
 <ng-container [ngSwitch]="currentView">
-  <app-host-view
-    *ngSwitchCase="views.Host"
-    (goToGameView)="goToGameView()"
-    [gameCode]="(gameCode$ | async) ?? ''"
-  >
-  </app-host-view>
+  <app-host-view *ngSwitchCase="views.Host"> </app-host-view>
 
-  <app-join-view
-    *ngSwitchCase="views.Join"
-    (goToGameView)="goToGameView()"
-    (joinGameEvent)="onJoinGameEvent($event)"
-  >
-  </app-join-view>
+  <app-join-view *ngSwitchCase="views.Join"> </app-join-view>
 
   <app-game-view *ngSwitchCase="views.Game"></app-game-view>
 

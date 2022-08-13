@@ -7,8 +7,6 @@ import { SignalrService } from '../services/SignalRService';
   styleUrls: ['./join-view.component.css'],
 })
 export class JoinViewComponent implements OnInit {
-  @Output() joinGameEvent = new EventEmitter();
-
   @Input() invalidGameCode = false;
 
   gameCodeInput = '';
@@ -31,10 +29,6 @@ export class JoinViewComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onSubmitGameCode() {
-    this.joinGameEvent.emit();
-  }
-
   attemptType(key: string) {
     if (key.length != 1) {
       return;
@@ -55,7 +49,7 @@ export class JoinViewComponent implements OnInit {
     const isFinalKey = this.gameCodeInput.length == 4;
 
     if (isFinalKey) {
-      this.joinGameEvent.emit({ gameCode: this.gameCodeInput });
+      this.signalrService.joinGame(this.gameCodeInput);
     }
   }
 
