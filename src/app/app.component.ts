@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { SignalrService } from './services/SignalRService';
 import { Views } from './constants';
+import { JoinGameEvent } from './events';
 
 @Component({
   selector: 'app-root',
@@ -44,7 +45,8 @@ export class AppComponent {
     this.currentView = Views.Join;
   }
 
-  onJoinGameEvent(gameCode: string) {
+  onJoinGameEvent($joinGameEvent: JoinGameEvent) {
+    const { gameCode } = $joinGameEvent;
     this.signalrService.joinGame(gameCode);
   }
 

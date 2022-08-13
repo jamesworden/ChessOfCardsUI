@@ -10,7 +10,11 @@
   >
   </app-host-view>
 
-  <app-join-view *ngSwitchCase="views.Join" (goToGameView)="goToGameView()">
+  <app-join-view
+    *ngSwitchCase="views.Join"
+    (goToGameView)="goToGameView()"
+    (joinGameEvent)="onJoinGameEvent($event)"
+  >
   </app-join-view>
 
   <app-game-view *ngSwitchCase="views.Game"></app-game-view>

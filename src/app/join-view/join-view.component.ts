@@ -14,6 +14,12 @@ export class JoinViewComponent implements OnInit {
     document.addEventListener('keypress', ({ key }) => {
       this.attemptType(key);
     });
+
+    document.addEventListener('keydown', ({ key }) => {
+      if (key == 'Backspace') {
+        this.attemptBackspace();
+      }
+    });
   }
 
   ngOnInit(): void {}
@@ -42,7 +48,7 @@ export class JoinViewComponent implements OnInit {
     const isFinalKey = this.gameCodeInput.length == 4;
 
     if (isFinalKey) {
-      this.joinGameEvent.emit(this.gameCodeInput);
+      this.joinGameEvent.emit({ gameCode: this.gameCodeInput });
     }
   }
 
@@ -55,12 +61,29 @@ export class JoinViewComponent implements OnInit {
     console.log(this.gameCodeInput);
     const keyElements = document.getElementsByClassName('game-code-char');
 
-    for (let i = 0; i < this.gameCodeInput.length; i++) {
+    for (let i = 0; i < 4; i++) {
       const keyElement = keyElements.item(i);
+      const keyForThisElementExists = this.gameCodeInput.length - 1 >= i;
 
-      if (keyElement) {
-        keyElement.textContent = this.gameCodeInput.charAt(i);
+      if (!keyElement) break;
+
+      if (keyForThisElementExists) {
+        const key = this.gameCodeInput.charAt(i);
+        keyElement.textContent = key;
+      } else {
+        keyElement.textContent = '';
       }
+    }
+  }
+
+  attemptBackspace() {
+    if (this.gameCodeInput.length > 0) {
+      this.gameCodeInput = this.gameCodeInput.substring(
+        0,
+        this.gameCodeInput.length - 1
+      );
+
+      this.renderGameCode();
     }
   }
 }
