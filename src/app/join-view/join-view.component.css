@@ -1,0 +1,36 @@
+.container {
+  height: 200px;
+  margin: 0 auto;
+  width: 50%;
+  margin-top: 7.5rem;
+}
+
+.horisontal-align {
+  display: flex;
+  justify-content: space-around;
+}
+
+.game-code-char-container {
+  display: flex;
+  flex-direction: space-between;
+  text-align: center;
+}
+
+.message {
+  font-size: 16px;
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+
+.game-code-char {
+  border-bottom: solid 2px #404040;
+  font-size: 28px;
+  font-family: sans-serif;
+  letter-spacing: 8px;
+  height: 28px;
+  width: 26px;
+  margin-right: 8px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  text-align: center;
+}

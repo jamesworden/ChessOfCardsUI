@@ -47,7 +47,7 @@ export class SignalrService {
     });
 
     this.hubConnection.on('OpponentDisconnected', () => {
-      this.gameCode$.next('Stop');
+      this.gameCode$.next('');
     });
   }
 
@@ -55,8 +55,8 @@ export class SignalrService {
     this.hubConnection.invoke('CreateGame');
   }
 
-  public joinGame() {
-    const gameCode = this.gameCode$.getValue();
+  public joinGame(gameCode: string) {
+    this.gameCode$.next(gameCode);
     this.hubConnection.invoke('JoinGame', gameCode);
   }
 }

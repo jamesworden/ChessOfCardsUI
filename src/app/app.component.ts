@@ -21,7 +21,7 @@ export class AppComponent {
     this.gameCode$ = signalrService.gameCode$;
   }
 
-  hostGameEvent() {
+  onClickHostGameEvent() {
     const isConnectedToServer =
       this.signalrService.connectionEstablished$.getValue();
     if (!isConnectedToServer) {
@@ -33,7 +33,7 @@ export class AppComponent {
     this.currentView = Views.Host;
   }
 
-  joinGameEvent() {
+  onClickJoinGameEvent() {
     const isConnectedToServer =
       this.signalrService.connectionEstablished$.getValue();
     if (!isConnectedToServer) {
@@ -41,8 +41,11 @@ export class AppComponent {
       return;
     }
 
-    this.signalrService.joinGame();
     this.currentView = Views.Join;
+  }
+
+  onJoinGameEvent(gameCode: string) {
+    this.signalrService.joinGame(gameCode);
   }
 
   goToGameView() {

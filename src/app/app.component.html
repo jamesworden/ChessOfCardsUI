@@ -17,6 +17,7 @@
 
   <app-home-view
     *ngSwitchDefault
-    (hostGameEvent)="hostGameEvent()"
+    (clickHostGameEvent)="onClickHostGameEvent()"
+    (clickJoinGameEvent)="onClickJoinGameEvent()"
   ></app-home-view>
 </ng-container>

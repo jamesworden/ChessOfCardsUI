@@ -7,13 +7,18 @@ import { SignalrService } from '../services/SignalRService';
   styleUrls: ['./home-view.component.css'],
 })
 export class HomeViewComponent implements OnInit {
-  @Output() hostGameEvent = new EventEmitter<string>();
+  @Output() clickHostGameEvent = new EventEmitter<string>();
+  @Output() clickJoinGameEvent = new EventEmitter<string>();
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  hostGame() {
-    this.hostGameEvent.emit();
+  clickHostGame() {
+    this.clickHostGameEvent.emit();
+  }
+
+  clickJoinGame() {
+    this.clickJoinGameEvent.emit();
   }
 }
