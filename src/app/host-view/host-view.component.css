@@ -1,0 +1,29 @@
+span {
+  color: #404040;
+}
+
+.message {
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.game-code {
+  font-family: sans-serif;
+  font-family: sans-serif; /* TODO make lato font */
+  font-weight: 600;
+  font-size: 26px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+}
+
+.container {
+  height: 200px;
+  margin: 0 auto;
+  width: 50%;
+  margin-top: 7.5rem;
+}
+
+.horisontal-align {
+  display: flex;
+  justify-content: space-around;
+}

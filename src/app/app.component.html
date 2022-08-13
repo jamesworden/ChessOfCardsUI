@@ -1,15 +1,19 @@
 <span *ngIf="showWarningMessage" class="warning-message">
-  ❌ Failed to connect to the server.
+  ❌ Failed to connect to the server! ❌
 </span>
 
 <ng-container [ngSwitch]="currentView">
-  <app-host-view *ngSwitchCase="views.Host" (goToGameView)="goToGameView()">
+  <app-host-view
+    *ngSwitchCase="views.Host"
+    (goToGameView)="goToGameView()"
+    [gameCode]="(gameCode$ | async) ?? ''"
+  >
   </app-host-view>
 
   <app-join-view *ngSwitchCase="views.Join" (goToGameView)="goToGameView()">
   </app-join-view>
 
-  <app-game-view *ngSwitchCase="views.Game"> </app-game-view>
+  <app-game-view *ngSwitchCase="views.Game"></app-game-view>
 
   <app-home-view
     *ngSwitchDefault
