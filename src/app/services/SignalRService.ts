@@ -5,14 +5,14 @@ import {
   HubConnectionState,
   LogLevel,
 } from '@microsoft/signalr';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SignalrService {
   connectionEstablished$ = new BehaviorSubject<boolean>(false);
-  gameCode$ = new Subject<string>();
+  gameCode$ = new BehaviorSubject<string>('');
 
   private hubConnection: HubConnection;
 
@@ -52,7 +52,11 @@ export class SignalrService {
   }
 
   public createGame() {
-    const test = this.hubConnection.invoke('CreateGame');
-    console.log(test);
+    this.hubConnection.invoke('CreateGame');
+  }
+
+  public joinGame() {
+    const gameCode = this.gameCode$.getValue();
+    this.hubConnection.invoke('JoinGame', gameCode);
   }
 }

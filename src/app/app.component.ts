@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { SignalrService } from './services/SignalRService';
+import { Views } from './constants';
 
 @Component({
   selector: 'app-root',
@@ -9,24 +10,42 @@ import { SignalrService } from './services/SignalRService';
 })
 export class AppComponent {
   title = 'Lanes';
-  currentView = 'home-view';
-  gameCode$: Subject<string>;
-  warningMessage = '';
+
+  gameCode$: BehaviorSubject<string>;
+  showWarningMessage = false;
+
+  views = Views;
+  currentView = Views.Home;
 
   constructor(public signalrService: SignalrService) {
     this.gameCode$ = signalrService.gameCode$;
   }
 
   hostGameEvent() {
-    const hasConnectedToServer =
+    const isConnectedToServer =
       this.signalrService.connectionEstablished$.getValue();
-
-    if (hasConnectedToServer) {
-      this.signalrService.createGame();
-      this.currentView = 'host-view';
+    if (!isConnectedToServer) {
+      this.showWarningMessage = true;
       return;
     }
 
-    this.warningMessage = 'Failed to connect to the server.';
+    this.signalrService.createGame();
+    this.currentView = Views.Host;
+  }
+
+  joinGameEvent() {
+    const isConnectedToServer =
+      this.signalrService.connectionEstablished$.getValue();
+    if (!isConnectedToServer) {
+      this.showWarningMessage = true;
+      return;
+    }
+
+    this.signalrService.joinGame();
+    this.currentView = Views.Join;
+  }
+
+  goToGameView() {
+    this.currentView = Views.Game;
   }
 }

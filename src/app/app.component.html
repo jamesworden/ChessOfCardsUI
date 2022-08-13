@@ -1,10 +1,18 @@
-<span class="warning-message">{{ warningMessage }}</span>
+<span *ngIf="showWarningMessage" class="warning-message">
+  'Failed to connect to the server.'
+</span>
 
-<ng-template [ngIf]="currentView == 'home-view'">
-  <app-home-view (hostGameEvent)="hostGameEvent()"></app-home-view>
-</ng-template>
+<ng-container [ngSwitch]="currentView">
+  <app-host-view *ngSwitchCase="views.Host" (goToGameView)="goToGameView()">
+  </app-host-view>
 
-<ng-template [ngIf]="currentView == 'host-view'">
-  <app-host-view></app-host-view>
-  <!-- (goToGameView)="goToGameView()" -->
-</ng-template>
+  <app-join-view *ngSwitchCase="views.Join" (goToGameView)="goToGameView()">
+  </app-join-view>
+
+  <app-game-view *ngSwitchCase="views.Game"> </app-game-view>
+
+  <app-home-view
+    *ngSwitchDefault
+    (hostGameEvent)="hostGameEvent()"
+  ></app-home-view>
+</ng-container>
