@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
 import { SignalrService } from './services/SignalRService';
 import { Views } from './constants';
-import { JoinGameEvent } from './events';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +14,7 @@ export class AppComponent {
   currentView = Views.Home;
 
   constructor(public signalrService: SignalrService) {
-    signalrService.gameStarted.subscribe(() => {
+    signalrService.gameStarted$.subscribe(() => {
       this.currentView = Views.Game;
     });
   }
