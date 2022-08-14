@@ -57,8 +57,10 @@ export class SignalrService {
       this.invalidGameCode$.next(true);
     });
 
-    this.hubConnection.on('GameStarted', () => {
+    this.hubConnection.on('GameStarted', (stringifiedGameState) => {
       this.gameStarted$.next();
+      const gameState = JSON.parse(stringifiedGameState);
+      console.log(gameState);
     });
 
     this.hubConnection.on('GameOver', (message) => {
