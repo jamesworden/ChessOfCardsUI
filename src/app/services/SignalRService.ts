@@ -60,6 +60,7 @@ export class SignalrService {
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
       this.gameStarted$.next();
       const gameState = JSON.parse(stringifiedGameState);
+      // TODO: Store game state
       console.log(gameState);
     });
 
