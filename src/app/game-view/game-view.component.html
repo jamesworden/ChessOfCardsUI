@@ -1,3 +1,5 @@
-<span *ngIf="gameOverMessage">❌ Game Over: {{ gameOverMessage }} ❌</span>
+<div *ngIf="!gameIsRunning">
+  <span *ngIf="gameOverMessage">❌ Game Over: {{ gameOverMessage }} ❌</span>
+</div>
 
 <p>This is the game.</p>
