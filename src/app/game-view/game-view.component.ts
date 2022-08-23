@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { emptyGameState } from '../constants/empty-game-state';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { PlayerGameState } from '../models/player-game-state';
 import { SignalrService } from '../services/SignalRService';
+import { PlayerGameStateState } from '../state/player-game-state.state';
 
 @Component({
   selector: 'app-game-view',
@@ -11,19 +13,17 @@ import { SignalrService } from '../services/SignalRService';
 export class GameViewComponent {
   gameIsRunning = true;
   gameOverMessage: string | null = null;
-  playerGameState: PlayerGameState = emptyGameState;
   // isHost: boolean;
 
-  constructor(SignalrService: SignalrService) {
+  playerGameState$: Observable<PlayerGameState>;
+
+  constructor(private store: Store, SignalrService: SignalrService) {
     SignalrService.gameOverMessage$.subscribe((message) => {
       this.gameIsRunning = false;
       this.gameOverMessage = message;
     });
 
-    SignalrService.playerGameState$.subscribe((playerGameState) => {
-      this.playerGameState = playerGameState;
-      this.renderPlayerGameState();
-    });
+    this.playerGameState$ = this.store.select(PlayerGameStateState.state);
   }
 
   renderPlayerGameState() {
