@@ -6,6 +6,7 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { emptyGameState } from '../constants/empty-game-state';
 import { PlayerGameState } from '../models/player-game-state';
 
 @Injectable({
@@ -16,7 +17,8 @@ export class SignalrService {
   gameCode$ = new BehaviorSubject<string>('');
   invalidGameCode$ = new Subject<boolean>();
   gameStarted$ = new Subject<null>();
-  gameOver$ = new BehaviorSubject<string>('');
+  gameOverMessage$ = new BehaviorSubject<string>('');
+  playerGameState$ = new BehaviorSubject<PlayerGameState>(emptyGameState);
 
   private hubConnection: HubConnection;
 
@@ -60,19 +62,12 @@ export class SignalrService {
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
       this.gameStarted$.next();
-      const gameState: PlayerGameState = JSON.parse(stringifiedGameState);
-      // TODO: Store game state
-      console.log(
-        gameState.Hand,
-        gameState.Lanes,
-        gameState.NumCardsInOpponentsDeck,
-        gameState.NumCardsInOpponentsHand,
-        gameState.NumCardsInPlayersDeck
-      );
+      const playerGameState: PlayerGameState = JSON.parse(stringifiedGameState);
+      this.playerGameState$.next(playerGameState);
     });
 
     this.hubConnection.on('GameOver', (message) => {
-      this.gameOver$.next(message);
+      this.gameOverMessage$.next(message);
     });
   }
 

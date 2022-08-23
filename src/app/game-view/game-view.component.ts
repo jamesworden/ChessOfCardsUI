@@ -11,7 +11,7 @@ export class GameViewComponent implements OnInit {
   gameOverMessage: string | null = null;
 
   constructor(SignalrService: SignalrService) {
-    SignalrService.gameOver$.subscribe((message) => {
+    SignalrService.gameOverMessage$.subscribe((message) => {
       this.gameIsRunning = false;
       this.gameOverMessage = message;
     });
