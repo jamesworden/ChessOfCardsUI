@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
