@@ -17,3 +17,13 @@
   padding-bottom: 0;
   justify-content: space-around;
 }
+
+.board {
+  display: flex;
+  justify-content: space-around;
+}
+
+.lane {
+  display: flex;
+  flex-direction: column;
+}

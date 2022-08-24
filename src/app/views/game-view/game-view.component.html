@@ -12,14 +12,26 @@
       ></app-face-down-card>
     </div>
 
-    <div class="board"></div>
+    <div class="board">
+      <div class="lane" *ngFor="let lane of playerGameState.Lanes">
+        <ng-container *ngFor="let row of lane.Rows; let i = index">
+          <app-card
+            *ngIf="row.length > 0; else emptySpace"
+            [cardImageFileName]="getCardImageFileName(getTopCard(row))"
+          ></app-card>
+        </ng-container>
+      </div>
+    </div>
 
     <div class="player-hand">
       <app-card
         *ngFor="let card of playerGameState.Hand.Cards"
-        [kind]="card.Kind.toLowerCase()"
-        [suit]="card.Suit.toLowerCase()"
+        [cardImageFileName]="getCardImageFileName(card)"
       ></app-card>
     </div>
   </div>
 </div>
+
+<ng-template #emptySpace>
+  <app-card cardImageFileName="card_empty.png"></app-card>
+</ng-template>

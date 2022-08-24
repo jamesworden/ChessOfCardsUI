@@ -6,8 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./card.component.css'],
 })
 export class CardComponent implements OnInit {
-  @Input() suit: string;
-  @Input() kind: string;
+  @Input() cardImageFileName: string;
 
   constructor() {}
 
