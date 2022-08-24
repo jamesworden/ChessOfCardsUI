@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { SignalrService } from '../services/SignalRService';
+import { SignalrService } from '../../services/SignalRService';
 
 @Component({
   selector: 'app-join-view',

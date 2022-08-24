@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { PlayerGameStateModel } from '../models/player-game-state-model';
-import { SignalrService } from '../services/SignalRService';
-import { PlayerGameState } from '../state/player-game-state.state';
+import { PlayerGameStateModel } from '../../models/player-game-state-model';
+import { SignalrService } from '../../services/SignalRService';
+import { PlayerGameState } from '../../state/player-game-state.state';
 
 @Component({
   selector: 'app-game-view',

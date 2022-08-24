@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { SignalrService } from '../services/SignalRService';
+import { SignalrService } from '../../services/SignalRService';
 
 @Component({
   selector: 'app-host-view',

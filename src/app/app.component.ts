@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SignalrService } from './services/SignalRService';
-import { Views } from './constants/views';
+import { Views } from './views';
 
 @Component({
   selector: 'app-root',
