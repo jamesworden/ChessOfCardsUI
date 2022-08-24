@@ -2,4 +2,24 @@
   <span *ngIf="gameOverMessage">❌ Game Over: {{ gameOverMessage }} ❌</span>
 </div>
 
-<p>This is the game.</p>
+<div class="game-container">
+  <div class="game" *ngIf="playerGameState$ | async as playerGameState">
+    <div class="opponent-hand">
+      <app-face-down-card
+        *ngFor="
+          let _ of [].constructor(playerGameState.NumCardsInOpponentsHand)
+        "
+      ></app-face-down-card>
+    </div>
+
+    <div class="board"></div>
+
+    <div class="player-hand">
+      <app-card
+        *ngFor="let card of playerGameState.Hand.Cards"
+        [kind]="card.Kind.toLowerCase()"
+        [suit]="card.Suit.toLowerCase()"
+      ></app-card>
+    </div>
+  </div>
+</div>

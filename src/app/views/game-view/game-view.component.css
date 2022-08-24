@@ -1,0 +1,19 @@
+:host {
+  --outer-padding: 16px;
+}
+
+.game-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.game {
+  max-width: 500px;
+}
+
+.opponent-hand {
+  display: flex;
+  padding: --outer-padding;
+  padding-bottom: 0;
+  justify-content: space-around;
+}
