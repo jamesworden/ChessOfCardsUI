@@ -13,7 +13,6 @@ import { PlayerGameState } from '../../state/player-game-state.state';
 export class GameViewComponent {
   gameIsRunning = true;
   gameOverMessage: string | null = null;
-  // isHost: boolean;
 
   @Select(PlayerGameState.state)
   playerGameState$: Observable<PlayerGameStateModel>;
@@ -23,13 +22,5 @@ export class GameViewComponent {
       this.gameIsRunning = false;
       this.gameOverMessage = message;
     });
-
-    this.playerGameState$.subscribe((playerGameState) => {
-      this.renderPlayerGameState(playerGameState);
-    });
-  }
-
-  renderPlayerGameState(playerGameState: PlayerGameStateModel) {
-    console.log('Rendering...', playerGameState);
   }
 }
