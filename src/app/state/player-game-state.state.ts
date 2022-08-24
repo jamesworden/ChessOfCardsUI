@@ -22,9 +22,7 @@ export class PlayerGameState {
   @Action(UpdateGameState)
   updateGameState(ctx: StateContext<PlayerGameStateModel>) {
     const state = ctx.getState();
-    ctx.setState({
-      ...state,
-    });
+    ctx.setState(state);
   }
 
   @Selector()

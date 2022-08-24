@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
@@ -15,18 +15,21 @@ export class GameViewComponent {
   gameOverMessage: string | null = null;
   // isHost: boolean;
 
+  @Select(PlayerGameState)
   playerGameState$: Observable<PlayerGameStateModel>;
 
-  constructor(private store: Store, SignalrService: SignalrService) {
+  constructor(SignalrService: SignalrService) {
     SignalrService.gameOverMessage$.subscribe((message) => {
       this.gameIsRunning = false;
       this.gameOverMessage = message;
     });
 
-    this.playerGameState$ = this.store.select(PlayerGameState.state);
+    this.playerGameState$.subscribe((playerGameState) => {
+      this.renderPlayerGameState(playerGameState);
+    });
   }
 
-  renderPlayerGameState() {
-    // TODO
+  renderPlayerGameState(playerGameState: PlayerGameStateModel) {
+    console.log('Rendering...', playerGameState);
   }
 }
