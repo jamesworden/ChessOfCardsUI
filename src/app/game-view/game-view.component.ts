@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { PlayerGameState } from '../models/player-game-state';
+import { PlayerGameStateModel } from '../models/player-game-state-model';
 import { SignalrService } from '../services/SignalRService';
-import { PlayerGameStateState } from '../state/player-game-state.state';
+import { PlayerGameState } from '../state/player-game-state.state';
 
 @Component({
   selector: 'app-game-view',
@@ -15,7 +15,7 @@ export class GameViewComponent {
   gameOverMessage: string | null = null;
   // isHost: boolean;
 
-  playerGameState$: Observable<PlayerGameState>;
+  playerGameState$: Observable<PlayerGameStateModel>;
 
   constructor(private store: Store, SignalrService: SignalrService) {
     SignalrService.gameOverMessage$.subscribe((message) => {
@@ -23,7 +23,7 @@ export class GameViewComponent {
       this.gameOverMessage = message;
     });
 
-    this.playerGameState$ = this.store.select(PlayerGameStateState.state);
+    this.playerGameState$ = this.store.select(PlayerGameState.state);
   }
 
   renderPlayerGameState() {

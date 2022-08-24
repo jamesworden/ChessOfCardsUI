@@ -59,7 +59,6 @@ export class JoinViewComponent implements OnInit {
   }
 
   renderGameCode() {
-    console.log(this.gameCodeInput);
     const keyElements = document.getElementsByClassName('game-code-char');
 
     for (let i = 0; i < 4; i++) {

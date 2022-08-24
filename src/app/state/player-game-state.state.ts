@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { UpdateGameState } from '../actions/player-game-state.actions';
-import { PlayerGameState } from '../models/player-game-state';
+import { PlayerGameStateModel } from '../models/player-game-state-model';
 
-const defaultPlayerGameState = {
+const defaultPlayerGameState: PlayerGameStateModel = {
   Hand: {
     Cards: [],
   },
@@ -13,14 +13,14 @@ const defaultPlayerGameState = {
   NumCardsInPlayersDeck: 21,
 };
 
-@State<PlayerGameState>({
+@State<PlayerGameStateModel>({
   name: 'playerGameState',
   defaults: defaultPlayerGameState,
 })
 @Injectable()
-export class PlayerGameStateState {
+export class PlayerGameState {
   @Action(UpdateGameState)
-  feedAnimals(ctx: StateContext<PlayerGameState>) {
+  updateGameState(ctx: StateContext<PlayerGameStateModel>) {
     const state = ctx.getState();
     ctx.setState({
       ...state,
@@ -28,7 +28,7 @@ export class PlayerGameStateState {
   }
 
   @Selector()
-  static state(state: PlayerGameState) {
+  static state(state: PlayerGameStateModel) {
     return state;
   }
 }

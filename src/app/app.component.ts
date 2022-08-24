@@ -8,7 +8,6 @@ import { Views } from './constants/views';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'Lanes';
   showWarningMessage = false;
   views = Views;
   currentView = Views.Home;

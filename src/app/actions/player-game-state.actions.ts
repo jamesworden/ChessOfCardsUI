@@ -1,6 +1,6 @@
-import { PlayerGameState } from '../models/player-game-state';
+import { PlayerGameStateModel } from '../models/player-game-state-model';
 
 export class UpdateGameState {
   static readonly type = '[PlayerGameState] Update Game State';
-  constructor(public playerGameState: PlayerGameState) {}
+  constructor(public playerGameState: PlayerGameStateModel) {}
 }

@@ -8,7 +8,7 @@ import {
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UpdateGameState } from '../actions/player-game-state.actions';
-import { PlayerGameState } from '../models/player-game-state';
+import { PlayerGameStateModel } from '../models/player-game-state-model';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +40,7 @@ export class SignalrService {
 
     this.hubConnection.start().then(
       () => {
-        console.log('Hub connection started!');
+        console.log('Hub connection started.');
         this.connectionEstablished$.next(true);
       },
       (error) => console.error(error)
@@ -62,7 +62,8 @@ export class SignalrService {
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
       this.gameStarted$.next();
-      const playerGameState: PlayerGameState = JSON.parse(stringifiedGameState);
+      const playerGameState: PlayerGameStateModel =
+        JSON.parse(stringifiedGameState);
       this.store.dispatch(new UpdateGameState(playerGameState));
     });
 
