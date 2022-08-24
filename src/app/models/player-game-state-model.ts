@@ -7,4 +7,5 @@ export type PlayerGameStateModel = {
   NumCardsInOpponentsDeck: number;
   NumCardsInOpponentsHand: number;
   NumCardsInPlayersDeck: number;
+  IsHost: boolean;
 };

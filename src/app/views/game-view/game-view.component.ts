@@ -15,7 +15,7 @@ export class GameViewComponent {
   gameOverMessage: string | null = null;
   // isHost: boolean;
 
-  @Select(PlayerGameState)
+  @Select(PlayerGameState.state)
   playerGameState$: Observable<PlayerGameStateModel>;
 
   constructor(SignalrService: SignalrService) {
