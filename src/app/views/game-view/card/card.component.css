@@ -1,8 +1,12 @@
-.card:hover {
-  transform: scale(1.1);
+.card {
   transition: ease 0.1s;
 }
 
-.card {
-  transition: ease 0.2s;
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.card:hover {
+  transform: scale(1.1);
+  transition: ease 0.1s;
 }

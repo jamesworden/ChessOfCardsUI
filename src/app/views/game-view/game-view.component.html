@@ -3,7 +3,11 @@
 </div>
 
 <div class="game-container">
-  <div class="game" *ngIf="playerGameState$ | async as playerGameState">
+  <div
+    class="game"
+    *ngIf="playerGameState$ | async as playerGameState"
+    cdkDropListGroup
+  >
     <div class="opponent-hand">
       <app-face-down-card
         *ngFor="
@@ -31,10 +35,11 @@
       </div>
     </div>
 
-    <div class="player-hand">
+    <div class="player-hand" cdkDropList>
       <app-card
         *ngFor="let card of playerGameState.Hand.Cards"
         [cardImageFileName]="getCardImageFileName(card)"
+        [playerCanDrag]="true"
       ></app-card>
     </div>
 

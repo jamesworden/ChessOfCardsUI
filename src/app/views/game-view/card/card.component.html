@@ -3,6 +3,5 @@
   src="../../../../assets/images/{{ cardImageFileName }}"
   alt=""
   cdkDrag
-  (cdkDragReleased)="onDragReleased()"
-  [cdkDragConstrainPosition]="constrainPosition"
+  [cdkDragDisabled]="!playerCanDrag"
 />
