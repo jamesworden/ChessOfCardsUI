@@ -8,6 +8,7 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 export class DeckComponent implements OnChanges {
   @Input() isOpponent!: boolean;
   @Input() totalNumCards!: number;
+  @Input() onRightSide!: boolean;
 
   numCardsToDisplay = 0;
 

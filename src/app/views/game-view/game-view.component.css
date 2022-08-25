@@ -35,13 +35,9 @@
   flex-direction: column;
 }
 
-.left-gutter,
-.right-gutter {
-  width: var(--gutter-width);
-}
-
-.right-gutter {
+.gutter {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: var(--gutter-width);
 }
