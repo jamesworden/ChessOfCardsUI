@@ -2,4 +2,7 @@
   class="card"
   src="../../../../assets/images/{{ cardImageFileName }}"
   alt=""
+  cdkDrag
+  (cdkDragReleased)="onDragReleased()"
+  [cdkDragConstrainPosition]="constrainPosition"
 />
