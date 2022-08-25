@@ -11,7 +11,9 @@ export class DeckComponent implements OnInit {
 
   numCardsToDisplay = this.totalNumCards >= 3 ? 3 : this.totalNumCards;
 
-  constructor() {}
+  constructor() {
+    console.log(this.numCardsToDisplay);
+  }
 
   ngOnInit(): void {}
 }

@@ -13,6 +13,8 @@
     </div>
 
     <div class="board">
+      <div class="left-gutter"></div>
+
       <div class="lane" *ngFor="let lane of playerGameState.Lanes">
         <ng-container *ngFor="let row of lane.Rows; let i = index">
           <app-card
@@ -20,6 +22,16 @@
             [cardImageFileName]="getCardImageFileName(getTopCard(row))"
           ></app-card>
         </ng-container>
+      </div>
+
+      <div class="right-gutter">
+        <app-deck
+          [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
+        ></app-deck>
+
+        <app-deck
+          [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
+        ></app-deck>
       </div>
     </div>
 
@@ -29,16 +41,6 @@
         [cardImageFileName]="getCardImageFileName(card)"
       ></app-card>
     </div>
-
-    <app-deck
-      [isOpponent]="true"
-      [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
-    ></app-deck>
-
-    <app-deck
-      [isOpponent]="false"
-      [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
-    ></app-deck>
   </div>
 </div>
 
