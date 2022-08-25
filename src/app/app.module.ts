@@ -15,6 +15,7 @@ import { DeckComponent } from './views/game-view/deck/deck.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { EmptySpaceComponent } from './views/game-view/empty-space/empty-space.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FaceDownCardComponent,
     CardComponent,
     DeckComponent,
+    EmptySpaceComponent,
   ],
   imports: [
     BrowserModule,
