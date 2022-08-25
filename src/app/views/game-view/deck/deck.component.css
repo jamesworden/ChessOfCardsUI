@@ -1,3 +1,10 @@
 .deck {
   position: relative;
+  /* 
+   * TODO: This fixed height might be an issue later on. Might need a card resize
+   * service where we can dynamically fetch sizes for items on board.
+
+    I think this 68 is 64 for the card height and another 4 for padding between cards.
+   */
+  height: 68px;
 }
