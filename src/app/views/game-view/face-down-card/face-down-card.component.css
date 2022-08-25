@@ -1,0 +1,8 @@
+.face-down-card:hover {
+  transform: scale(1.05);
+  transition: ease 0.1s;
+}
+
+.face-down-card {
+  transition: ease 0.2s;
+}
