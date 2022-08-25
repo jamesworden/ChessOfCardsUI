@@ -12,6 +12,9 @@ import { JoinViewComponent } from './views/join-view/join-view.component';
 import { FaceDownCardComponent } from './views/game-view/face-down-card/face-down-card.component';
 import { CardComponent } from './views/game-view/card/card.component';
 import { DeckComponent } from './views/game-view/deck/deck.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { DeckComponent } from './views/game-view/deck/deck.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    DragDropModule,
     NgxsModule.forRoot([PlayerGameState]),
+    BrowserAnimationsModule,
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

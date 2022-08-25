@@ -1,4 +1,9 @@
-<div class="deck">
+<div
+  class="deck"
+  [matTooltip]="totalNumCards.toString()"
+  matTooltipPosition="below"
+  matTooltipTouchGestures="auto"
+>
   <app-face-down-card
     *ngFor="let _ of [].constructor(numCardsToDisplay); let i = index"
     [ngStyle]="{
