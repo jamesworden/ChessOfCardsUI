@@ -24,8 +24,6 @@ export class GameViewComponent {
       this.gameIsRunning = false;
       this.gameOverMessage = message;
     });
-
-    this.playerGameState$.subscribe((g) => console.log(g));
   }
 
   getCardImageFileName(card: CardModel) {

@@ -1,19 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-deck',
   templateUrl: './deck.component.html',
   styleUrls: ['./deck.component.css'],
 })
-export class DeckComponent implements OnInit {
+export class DeckComponent implements OnChanges {
   @Input() isOpponent!: boolean;
   @Input() totalNumCards!: number;
 
-  numCardsToDisplay = this.totalNumCards >= 3 ? 3 : this.totalNumCards;
+  numCardsToDisplay = 0;
 
-  constructor() {
-    console.log(this.numCardsToDisplay);
+  constructor() {}
+
+  ngOnChanges() {
+    this.numCardsToDisplay = this.totalNumCards >= 3 ? 3 : this.totalNumCards;
   }
-
-  ngOnInit(): void {}
 }

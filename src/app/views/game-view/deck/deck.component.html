@@ -1,6 +1,6 @@
 <div class="deck">
   <app-face-down-card
-    *ngFor="let _ of [].constructor(2); let i = index"
+    *ngFor="let _ of [].constructor(numCardsToDisplay); let i = index"
     [ngStyle]="{
       position: 'absolute',
       right: 'calc((' + i + ' * -6px) - 28px)',
