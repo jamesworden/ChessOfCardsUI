@@ -1,0 +1,12 @@
+<app-face-down-card
+  *ngFor="let _ of [].constructor(numCardsToDisplay); let i = index"
+  [ngStyle]="{
+    right: 'calc((' + i + ' * -6px) - 32px)',
+    top: isOpponent ? '24px' : '464px',
+    position: 'absolute'
+  }"
+>
+</app-face-down-card>
+
+<!-- [ngStyle]="isOpponent ? { top: '24px' } : { bottom: '24px' }"
+[ngStyle]="{ position: 'absolute' }" -->

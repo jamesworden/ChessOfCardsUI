@@ -29,6 +29,16 @@
         [cardImageFileName]="getCardImageFileName(card)"
       ></app-card>
     </div>
+
+    <app-deck
+      [isOpponent]="true"
+      [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
+    ></app-deck>
+
+    <app-deck
+      [isOpponent]="false"
+      [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
+    ></app-deck>
   </div>
 </div>
 

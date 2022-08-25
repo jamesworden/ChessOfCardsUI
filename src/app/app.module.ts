@@ -11,6 +11,7 @@ import { HostViewComponent } from './views/host-view/host-view.component';
 import { JoinViewComponent } from './views/join-view/join-view.component';
 import { FaceDownCardComponent } from './views/game-view/face-down-card/face-down-card.component';
 import { CardComponent } from './views/game-view/card/card.component';
+import { DeckComponent } from './views/game-view/deck/deck.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { CardComponent } from './views/game-view/card/card.component';
     JoinViewComponent,
     FaceDownCardComponent,
     CardComponent,
+    DeckComponent,
   ],
   imports: [
     BrowserModule,
