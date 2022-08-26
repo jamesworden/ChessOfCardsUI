@@ -75,7 +75,6 @@ export class SignalrService {
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
       const playerGameState: PlayerGameStateModel =
         JSON.parse(stringifiedGameState);
-      console.log('updated');
       this.store.dispatch(new UpdateGameState(playerGameState));
     });
   }

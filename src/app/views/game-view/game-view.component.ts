@@ -4,6 +4,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { UpdateGameState } from 'src/app/actions/player-game-state.actions';
 import { CardModel } from 'src/app/models/card.model';
+import { MoveModel } from 'src/app/models/move.model';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { PlayerGameState } from '../../state/player-game-state.state';
@@ -59,11 +60,16 @@ export class GameViewComponent {
     const { Cards } = this.latestGameStateSnapshot.Hand;
 
     this.signalrService.rearrangeHand(Cards);
-
-    console.log('finished');
   }
 
   drop(event: CdkDragDrop<string>) {
     console.log('player hand', event);
+  }
+
+  makeMove(move: MoveModel) {
+    console.log(move);
+
+    // Update game state locally
+    // Send websocket request
   }
 }

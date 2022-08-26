@@ -26,9 +26,15 @@
         *ngFor="let lane of playerGameState.Lanes; let i = index"
       >
         <ng-container *ngFor="let row of lane.Rows; let j = index">
-          <app-position [laneIndex]="i" [rowIndex]="j">
+          <app-position
+            [laneIndex]="i"
+            [rowIndex]="j"
+            (makeMove)="makeMove($event)"
+          >
             <app-card
               *ngIf="row.length > 0"
+              [suit]="getTopCard(row).Suit"
+              [kind]="getTopCard(row).Suit"
               [cardImageFileName]="getCardImageFileName(getTopCard(row))"
             ></app-card>
           </app-position>
@@ -51,6 +57,8 @@
     >
       <app-card
         *ngFor="let card of playerGameState.Hand.Cards"
+        [suit]="card.Suit"
+        [kind]="card.Kind"
         [cardImageFileName]="getCardImageFileName(card)"
         [playerCanDrag]="true"
       ></app-card>

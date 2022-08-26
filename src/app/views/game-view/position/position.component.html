@@ -5,4 +5,5 @@
   cdkDropListData="position"
   cdkDropListConnectedTo="player-hand"
   (cdkDropListDropped)="drop($event)"
+  [cdkDropListEnterPredicate]="isMoveValid"
 ></div>

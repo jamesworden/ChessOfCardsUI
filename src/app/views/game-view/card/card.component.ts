@@ -8,6 +8,8 @@ import { Component, Input } from '@angular/core';
 export class CardComponent {
   @Input() cardImageFileName: string;
   @Input() playerCanDrag = false;
+  @Input() suit: string;
+  @Input() kind: string;
 
   constructor() {}
 }
