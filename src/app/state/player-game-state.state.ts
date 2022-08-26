@@ -17,6 +17,8 @@ export class PlayerGameState {
       state = action.playerGameState;
       return state;
     });
+
+    ctx.patchState(action.playerGameState);
   }
 
   @Selector()

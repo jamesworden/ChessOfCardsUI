@@ -31,6 +31,7 @@ export class GameViewComponent {
     });
 
     this.playerGameState$.subscribe((playerGameState) => {
+      console.log(playerGameState);
       this.latestGameStateSnapshot = playerGameState;
     });
   }
@@ -67,9 +68,14 @@ export class GameViewComponent {
   }
 
   makeMove(move: MoveModel) {
-    console.log(move);
+    const { targetLaneIndex, targetRowIndex, card } = move;
 
-    // Update game state locally
-    // Send websocket request
+    this.latestGameStateSnapshot.Lanes[targetLaneIndex].Rows[
+      targetRowIndex
+    ].push(card);
+
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+
+    // this.signalrService.makeMove(move)
   }
 }
