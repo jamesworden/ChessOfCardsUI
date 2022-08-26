@@ -28,19 +28,6 @@
 
 .player-hand {
   margin: 0px var(--gutter-width);
-  transition: ease 0.2s;
-}
-
-.player-hand.cdk-drag-placeholder {
-  opacity: 0;
-}
-
-.player-hand.cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.player-hand.cdk-drop-list-dragging {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .lane {
