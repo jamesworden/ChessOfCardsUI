@@ -44,15 +44,23 @@ export class GameViewComponent {
     return row[lastIndex];
   }
 
-  rearrangeHand(event: any) {
+  rearrangeHand({ previousIndex, currentIndex }: CdkDragDrop<string>) {
+    if (previousIndex === currentIndex) {
+      return;
+    }
+
     moveItemInArray(
       this.latestGameStateSnapshot.Hand.Cards,
-      event.previousIndex,
-      event.currentIndex
+      previousIndex,
+      currentIndex
     );
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
 
-    // this.signalrService.rearrangeHand()
+    const { Cards } = this.latestGameStateSnapshot.Hand;
+
+    this.signalrService.rearrangeHand(Cards);
+
+    console.log('finished');
   }
 
   drop(event: CdkDragDrop<string>) {

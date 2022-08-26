@@ -8,6 +8,7 @@ import {
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UpdateGameState } from '../actions/player-game-state.actions';
+import { CardModel } from '../models/card.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 
 @Injectable({
@@ -70,6 +71,13 @@ export class SignalrService {
     this.hubConnection.on('GameOver', (message) => {
       this.gameOverMessage$.next(message);
     });
+
+    this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
+      const playerGameState: PlayerGameStateModel =
+        JSON.parse(stringifiedGameState);
+      console.log('updated');
+      this.store.dispatch(new UpdateGameState(playerGameState));
+    });
   }
 
   public createGame() {
@@ -79,5 +87,10 @@ export class SignalrService {
   public joinGame(gameCode: string) {
     this.gameCode$.next(gameCode);
     this.hubConnection.invoke('JoinGame', gameCode);
+  }
+
+  rearrangeHand(cards: CardModel[]) {
+    const stringifiedCards = JSON.stringify(cards);
+    this.hubConnection.invoke('RearrangeHand', stringifiedCards);
   }
 }
