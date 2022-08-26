@@ -27,7 +27,7 @@
 }
 
 .player-hand {
-  padding: 0px var(--gutter-width);
+  margin: 0px var(--gutter-width);
 }
 
 .lane {

@@ -1,8 +1,9 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { UpdateGameState } from 'src/app/actions/player-game-state.actions';
 import { CardModel } from 'src/app/models/card.model';
-import { LaneModel } from 'src/app/models/lane.model';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { PlayerGameState } from '../../state/player-game-state.state';
@@ -14,15 +15,22 @@ import { PlayerGameState } from '../../state/player-game-state.state';
 })
 export class GameViewComponent {
   gameIsRunning = true;
+
   gameOverMessage: string | null = null;
 
   @Select(PlayerGameState.state)
   playerGameState$: Observable<PlayerGameStateModel>;
 
-  constructor(SignalrService: SignalrService) {
-    SignalrService.gameOverMessage$.subscribe((message) => {
+  latestGameStateSnapshot: PlayerGameStateModel;
+
+  constructor(private signalrService: SignalrService, private store: Store) {
+    this.signalrService.gameOverMessage$.subscribe((message) => {
       this.gameIsRunning = false;
       this.gameOverMessage = message;
+    });
+
+    this.playerGameState$.subscribe((playerGameState) => {
+      this.latestGameStateSnapshot = playerGameState;
     });
   }
 
@@ -34,5 +42,28 @@ export class GameViewComponent {
   getTopCard(row: CardModel[]) {
     const lastIndex = row.length - 1;
     return row[lastIndex];
+  }
+
+  rearrangeHand({ previousIndex, currentIndex }: CdkDragDrop<string>) {
+    if (previousIndex === currentIndex) {
+      return;
+    }
+
+    moveItemInArray(
+      this.latestGameStateSnapshot.Hand.Cards,
+      previousIndex,
+      currentIndex
+    );
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+
+    const { Cards } = this.latestGameStateSnapshot.Hand;
+
+    this.signalrService.rearrangeHand(Cards);
+
+    console.log('finished');
+  }
+
+  drop(event: CdkDragDrop<string>) {
+    console.log('player hand', event);
   }
 }

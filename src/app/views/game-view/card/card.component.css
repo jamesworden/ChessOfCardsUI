@@ -1,8 +1,15 @@
-.card:hover {
-  transform: scale(1.1);
-  transition: ease 0.1s;
+.cdk-drag-placeholder {
+  opacity: 1;
+}
+.cdk-drag-preview {
+  -webkit-filter: drop-shadow(5px 5px 5px gray);
+  filter: drop-shadow(5px 5px 5px gray);
 }
 
-.card {
-  transition: ease 0.2s;
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

@@ -3,7 +3,11 @@
 </div>
 
 <div class="game-container">
-  <div class="game" *ngIf="playerGameState$ | async as playerGameState">
+  <div
+    class="game"
+    *ngIf="playerGameState$ | async as playerGameState"
+    cdkDropListGroup
+  >
     <div class="opponent-hand">
       <app-face-down-card
         *ngFor="
@@ -17,12 +21,17 @@
         <ng-content *ngIf="playerGameState.IsHost; else decks"></ng-content>
       </div>
 
-      <div class="lane" *ngFor="let lane of playerGameState.Lanes">
-        <ng-container *ngFor="let row of lane.Rows; let i = index">
-          <app-card
-            *ngIf="row.length > 0; else emptySpace"
-            [cardImageFileName]="getCardImageFileName(getTopCard(row))"
-          ></app-card>
+      <div
+        class="lane"
+        *ngFor="let lane of playerGameState.Lanes; let i = index"
+      >
+        <ng-container *ngFor="let row of lane.Rows; let j = index">
+          <app-position [laneIndex]="i" [rowIndex]="j">
+            <app-card
+              *ngIf="row.length > 0"
+              [cardImageFileName]="getCardImageFileName(getTopCard(row))"
+            ></app-card>
+          </app-position>
         </ng-container>
       </div>
 
@@ -31,10 +40,19 @@
       </div>
     </div>
 
-    <div class="player-hand">
+    <div
+      class="player-hand"
+      id="player-hand"
+      cdkDropList
+      cdkDropListConnectedTo="position"
+      (cdkDropListDropped)="rearrangeHand($event)"
+      cdkDropListData="player-hand"
+      cdkDropListOrientation="horizontal"
+    >
       <app-card
         *ngFor="let card of playerGameState.Hand.Cards"
         [cardImageFileName]="getCardImageFileName(card)"
+        [playerCanDrag]="true"
       ></app-card>
     </div>
 
@@ -51,7 +69,3 @@
     </ng-template>
   </div>
 </div>
-
-<ng-template #emptySpace>
-  <app-card cardImageFileName="card_empty.png"></app-card>
-</ng-template>
