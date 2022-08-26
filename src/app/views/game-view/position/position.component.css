@@ -1,6 +1,8 @@
-.empty-space {
+.position {
   height: 64px;
   width: 64px;
+  display: flex;
+  justify-content: space-around;
 
   /* TODO: REMOVE COLOR FROM DRAG DROP ZONE */
   border: 1px solid #404040;

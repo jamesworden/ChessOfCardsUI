@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -33,5 +34,9 @@ export class GameViewComponent {
   getTopCard(row: CardModel[]) {
     const lastIndex = row.length - 1;
     return row[lastIndex];
+  }
+
+  drop(event: CdkDragDrop<string>) {
+    console.log('player hand', event);
   }
 }
