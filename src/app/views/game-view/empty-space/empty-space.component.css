@@ -1,4 +1,7 @@
 .empty-space {
   height: 64px;
   width: 64px;
+
+  /* TODO: REMOVE COLOR FROM DRAG DROP ZONE */
+  border: 1px solid #404040;
 }
