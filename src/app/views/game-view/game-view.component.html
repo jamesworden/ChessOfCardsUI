@@ -16,9 +16,55 @@
       ></app-face-down-card>
     </div>
 
-    <div class="board">
+    <div class="board" *ngIf="playerGameState.IsHost">
+      <div class="gutter"></div>
+
+      <div
+        class="lane"
+        *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
+      >
+        <ng-container *ngFor="let row of lane.Rows; let rowIndex = index">
+          <app-position
+            [laneIndex]="laneIndex"
+            [rowIndex]="6 - rowIndex"
+            (makeMove)="makeMove($event)"
+          >
+            <app-card
+              *ngIf="lane.Rows[6 - rowIndex].length > 0"
+              [suit]="getTopCard(lane.Rows[6 - rowIndex]).Suit"
+              [kind]="getTopCard(lane.Rows[6 - rowIndex]).Suit"
+              [cardImageFileName]="
+                getCardImageFileName(getTopCard(lane.Rows[6 - rowIndex]))
+              "
+            ></app-card>
+          </app-position>
+        </ng-container>
+      </div>
+
       <div class="gutter">
-        <ng-content *ngIf="playerGameState.IsHost; else decks"></ng-content>
+        <app-deck
+          [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
+          [onRightSide]="true"
+        ></app-deck>
+
+        <app-deck
+          [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
+          [onRightSide]="true"
+        ></app-deck>
+      </div>
+    </div>
+
+    <div class="board" *ngIf="!playerGameState.IsHost">
+      <div class="gutter">
+        <app-deck
+          [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
+          [onRightSide]="false"
+        ></app-deck>
+
+        <app-deck
+          [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
+          [onRightSide]="false"
+        ></app-deck>
       </div>
 
       <div
@@ -28,40 +74,20 @@
         <ng-container *ngFor="let row of lane.Rows; let rowIndex = index">
           <app-position
             [laneIndex]="laneIndex"
-            [rowIndex]="!playerGameState.IsHost ? rowIndex : 6 - rowIndex"
+            [rowIndex]="rowIndex"
             (makeMove)="makeMove($event)"
           >
             <app-card
-              *ngIf="
-                !playerGameState.IsHost
-                  ? row.length > 0
-                  : lane.Rows[6 - rowIndex].length > 0
-              "
-              [suit]="
-                getTopCard(
-                  !playerGameState.IsHost ? row : lane.Rows[6 - rowIndex]
-                ).Suit
-              "
-              [kind]="
-                getTopCard(
-                  !playerGameState.IsHost ? row : lane.Rows[6 - rowIndex]
-                ).Suit
-              "
-              [cardImageFileName]="
-                getCardImageFileName(
-                  getTopCard(
-                    !playerGameState.IsHost ? row : lane.Rows[6 - rowIndex]
-                  )
-                )
-              "
+              *ngIf="row.length > 0"
+              [suit]="getTopCard(row).Suit"
+              [kind]="getTopCard(row).Suit"
+              [cardImageFileName]="getCardImageFileName(getTopCard(row))"
             ></app-card>
           </app-position>
         </ng-container>
       </div>
 
-      <div class="gutter">
-        <ng-content *ngIf="!playerGameState.IsHost; else decks"></ng-content>
-      </div>
+      <div class="gutter"></div>
     </div>
 
     <div
