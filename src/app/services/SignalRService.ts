@@ -9,6 +9,7 @@ import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UpdateGameState } from '../actions/player-game-state.actions';
 import { CardModel } from '../models/card.model';
+import { MoveModel } from '../models/move.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 
 @Injectable({
@@ -73,6 +74,7 @@ export class SignalrService {
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
+      console.log('Server says game was updated.');
       const playerGameState: PlayerGameStateModel =
         JSON.parse(stringifiedGameState);
       this.store.dispatch(new UpdateGameState(playerGameState));
@@ -91,5 +93,10 @@ export class SignalrService {
   rearrangeHand(cards: CardModel[]) {
     const stringifiedCards = JSON.stringify(cards);
     this.hubConnection.invoke('RearrangeHand', stringifiedCards);
+  }
+
+  makeMove(move: MoveModel) {
+    const stringifiedMove = JSON.stringify(move);
+    this.hubConnection.invoke('MakeMove', stringifiedMove);
   }
 }

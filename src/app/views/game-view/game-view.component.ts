@@ -31,7 +31,6 @@ export class GameViewComponent {
     });
 
     this.playerGameState$.subscribe((playerGameState) => {
-      console.log(playerGameState);
       this.latestGameStateSnapshot = playerGameState;
     });
   }
@@ -68,14 +67,14 @@ export class GameViewComponent {
   }
 
   makeMove(move: MoveModel) {
-    const { targetLaneIndex, targetRowIndex, card } = move;
+    const { TargetLaneIndex, TargetRowIndex, Card } = move;
 
-    this.latestGameStateSnapshot.Lanes[targetLaneIndex].Rows[
-      targetRowIndex
-    ].push(card);
+    this.latestGameStateSnapshot.Lanes[TargetLaneIndex].Rows[
+      TargetRowIndex
+    ].push(Card);
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
 
-    // this.signalrService.makeMove(move)
+    this.signalrService.makeMove(move);
   }
 }

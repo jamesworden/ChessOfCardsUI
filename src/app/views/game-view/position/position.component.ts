@@ -20,12 +20,12 @@ export class PositionComponent implements OnInit {
   drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
     const Suit = event.item.data.suit as string;
     const Kind = event.item.data.kind as string;
-    const card: CardModel = { Suit, Kind };
+    const Card: CardModel = { Suit, Kind };
 
     const move: MoveModel = {
-      card,
-      targetLaneIndex: this.laneIndex,
-      targetRowIndex: this.rowIndex,
+      Card,
+      TargetLaneIndex: this.laneIndex,
+      TargetRowIndex: this.rowIndex,
     };
 
     this.makeMove.emit(move);
