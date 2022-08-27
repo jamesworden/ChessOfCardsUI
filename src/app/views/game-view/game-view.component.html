@@ -23,19 +23,37 @@
 
       <div
         class="lane"
-        *ngFor="let lane of playerGameState.Lanes; let i = index"
+        *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
       >
-        <ng-container *ngFor="let row of lane.Rows; let j = index">
+        <ng-container *ngFor="let row of lane.Rows; let rowIndex = index">
           <app-position
-            [laneIndex]="i"
-            [rowIndex]="j"
+            [laneIndex]="laneIndex"
+            [rowIndex]="!playerGameState.IsHost ? rowIndex : 6 - rowIndex"
             (makeMove)="makeMove($event)"
           >
             <app-card
-              *ngIf="row.length > 0"
-              [suit]="getTopCard(row).Suit"
-              [kind]="getTopCard(row).Suit"
-              [cardImageFileName]="getCardImageFileName(getTopCard(row))"
+              *ngIf="
+                !playerGameState.IsHost
+                  ? row.length > 0
+                  : lane.Rows[6 - rowIndex].length > 0
+              "
+              [suit]="
+                getTopCard(
+                  !playerGameState.IsHost ? row : lane.Rows[6 - rowIndex]
+                ).Suit
+              "
+              [kind]="
+                getTopCard(
+                  !playerGameState.IsHost ? row : lane.Rows[6 - rowIndex]
+                ).Suit
+              "
+              [cardImageFileName]="
+                getCardImageFileName(
+                  getTopCard(
+                    !playerGameState.IsHost ? row : lane.Rows[6 - rowIndex]
+                  )
+                )
+              "
             ></app-card>
           </app-position>
         </ng-container>

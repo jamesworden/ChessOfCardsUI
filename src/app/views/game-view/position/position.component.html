@@ -6,4 +6,6 @@
   cdkDropListConnectedTo="player-hand"
   (cdkDropListDropped)="drop($event)"
   [cdkDropListEnterPredicate]="isMoveValid"
-></div>
+>
+  <ng-content></ng-content>
+</div>
