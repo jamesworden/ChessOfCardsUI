@@ -71,9 +71,14 @@
         class="lane"
         *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
       >
-        <ng-container *ngFor="let row of lane.Rows; let rowIndex = index">
+        <ng-container
+          *ngFor="
+            let row of playerGameState.Lanes[4 - laneIndex].Rows;
+            let rowIndex = index
+          "
+        >
           <app-position
-            [laneIndex]="laneIndex"
+            [laneIndex]="4 - laneIndex"
             [rowIndex]="rowIndex"
             (makeMove)="makeMove($event)"
           >
