@@ -67,28 +67,49 @@ export class GameViewComponent {
   }
 
   makeMove(move: MoveModel) {
+    if (!this.moveIsValid(move)) {
+      return;
+    }
+
+    this.moveCardToLane(move);
+    this.removeCardFromHand(move);
+
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+
+    this.signalrService.makeMove(move);
+  }
+
+  moveCardToLane(move: MoveModel) {
     const { TargetLaneIndex, TargetRowIndex, Card } = move;
 
-    // Move card to lane
     this.latestGameStateSnapshot.Lanes[TargetLaneIndex].Rows[
       TargetRowIndex
     ].push(Card);
+  }
 
-    // Remove card from hand
+  removeCardFromHand(move: MoveModel) {
     for (let i = 0; i < this.latestGameStateSnapshot.Hand.Cards.length; i++) {
       const card = this.latestGameStateSnapshot.Hand.Cards[i];
-      const sameSuit = Card.Suit === card.Suit;
-      const sameKind = Card.Kind === card.Kind;
+      const sameSuit = move.Card.Suit === card.Suit;
+      const sameKind = move.Card.Kind === card.Kind;
 
       if (sameSuit && sameKind) {
         this.latestGameStateSnapshot.Hand.Cards.splice(i, 1);
       }
     }
+  }
 
-    // TODO: Check if move is valid
+  moveIsValid(_: MoveModel) {
+    const { IsHostPlayersTurn, IsHost } = this.latestGameStateSnapshot;
+    const isPlayersTurn =
+      (IsHostPlayersTurn && IsHost) || (!IsHostPlayersTurn && !IsHost);
 
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+    if (!isPlayersTurn) {
+      return false;
+    }
 
-    this.signalrService.makeMove(move);
+    // TODO: Return false for all other invalid moves
+
+    return true;
   }
 }
