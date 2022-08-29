@@ -69,9 +69,23 @@ export class GameViewComponent {
   makeMove(move: MoveModel) {
     const { TargetLaneIndex, TargetRowIndex, Card } = move;
 
+    // Move card to lane
     this.latestGameStateSnapshot.Lanes[TargetLaneIndex].Rows[
       TargetRowIndex
     ].push(Card);
+
+    // Remove card from hand
+    for (let i = 0; i < this.latestGameStateSnapshot.Hand.Cards.length; i++) {
+      const card = this.latestGameStateSnapshot.Hand.Cards[i];
+      const sameSuit = Card.Suit === card.Suit;
+      const sameKind = Card.Kind === card.Kind;
+
+      if (sameSuit && sameKind) {
+        this.latestGameStateSnapshot.Hand.Cards.splice(i, 1);
+      }
+    }
+
+    // TODO: Check if move is valid
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
 
