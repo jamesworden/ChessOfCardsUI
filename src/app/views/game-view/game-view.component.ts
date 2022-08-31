@@ -8,6 +8,7 @@ import { MoveModel } from 'src/app/models/move.model';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { PlayerGameState } from '../../state/player-game-state.state';
+import { moveIsValid } from './move-is-valid/move-is-valid';
 
 @Component({
   selector: 'app-game-view',
@@ -99,17 +100,7 @@ export class GameViewComponent {
     }
   }
 
-  moveIsValid(_: MoveModel) {
-    const { IsHostPlayersTurn, IsHost } = this.latestGameStateSnapshot;
-    const isPlayersTurn =
-      (IsHostPlayersTurn && IsHost) || (!IsHostPlayersTurn && !IsHost);
-
-    if (!isPlayersTurn) {
-      return false;
-    }
-
-    // TODO: Return false for all other invalid moves
-
-    return true;
+  moveIsValid(move: MoveModel) {
+    return moveIsValid(move, this.latestGameStateSnapshot);
   }
 }
