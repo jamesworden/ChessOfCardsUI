@@ -1,6 +1,6 @@
 import { MoveModel } from 'src/app/models/move.model';
 import { PlayerGameStateModel } from 'src/app/models/player-game-state-model';
-import { isPlayersTurn } from './is-players-turn';
+import { isPlayersTurn } from './valid-move-checks';
 
 export function moveIsValid(move: MoveModel, gameState: PlayerGameStateModel) {
   if (!isPlayersTurn(move, gameState)) {

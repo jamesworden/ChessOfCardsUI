@@ -8,7 +8,7 @@ import { MoveModel } from 'src/app/models/move.model';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { PlayerGameState } from '../../state/player-game-state.state';
-import { moveIsValid } from './move-is-valid/move-is-valid';
+import { moveIsValid } from './util/move-is-valid';
 
 @Component({
   selector: 'app-game-view',
