@@ -8,7 +8,7 @@ import { MoveModel } from 'src/app/models/move.model';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { PlayerGameState } from '../../state/player-game-state.state';
-import { moveIsValid } from './util/move-is-valid';
+import { isMoveValid } from './is-move-valid';
 
 @Component({
   selector: 'app-game-view',
@@ -68,7 +68,7 @@ export class GameViewComponent {
   }
 
   makeMove(move: MoveModel) {
-    if (!this.moveIsValid(move)) {
+    if (!isMoveValid(move, this.latestGameStateSnapshot)) {
       return;
     }
 
@@ -82,10 +82,9 @@ export class GameViewComponent {
 
   moveCardToLane(move: MoveModel) {
     const { TargetLaneIndex, TargetRowIndex, Card } = move;
-
-    this.latestGameStateSnapshot.Lanes[TargetLaneIndex].Rows[
-      TargetRowIndex
-    ].push(Card);
+    const targetLane = this.latestGameStateSnapshot.Lanes[TargetLaneIndex];
+    const targetRow = targetLane.Rows[TargetRowIndex];
+    targetRow.push(Card);
   }
 
   removeCardFromHand(move: MoveModel) {
@@ -98,9 +97,5 @@ export class GameViewComponent {
         this.latestGameStateSnapshot.Hand.Cards.splice(i, 1);
       }
     }
-  }
-
-  moveIsValid(move: MoveModel) {
-    return moveIsValid(move, this.latestGameStateSnapshot);
   }
 }
