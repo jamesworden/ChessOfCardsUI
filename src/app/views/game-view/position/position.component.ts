@@ -2,6 +2,7 @@ import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CardModel } from 'src/app/models/card.model';
 import { MoveModel } from 'src/app/models/move.model';
+import { PlayedByModel } from 'src/app/models/played-by.model';
 
 @Component({
   selector: 'app-position',
@@ -20,7 +21,13 @@ export class PositionComponent implements OnInit {
   drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
     const Suit = event.item.data.suit as string;
     const Kind = event.item.data.kind as string;
-    const Card: CardModel = { Suit, Kind };
+    const PlayedBy = PlayedByModel.NotYetPlayed;
+
+    const Card: CardModel = {
+      Suit,
+      Kind,
+      PlayedBy,
+    };
 
     const move: MoveModel = {
       Card,
@@ -29,9 +36,5 @@ export class PositionComponent implements OnInit {
     };
 
     this.makeMove.emit(move);
-  }
-
-  isMoveValid(event: CdkDrag<{ suit: string; kind: string }>) {
-    return true;
   }
 }
