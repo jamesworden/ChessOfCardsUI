@@ -10,8 +10,8 @@ export function isMoveValidFromPlayerPov(lane: LaneModel, move: MoveModel) {
   const { LaneAdvantage, LastCardPlayed, Rows } = lane;
   const { Card, TargetRowIndex } = move;
 
-  const cardsInLane = !!LastCardPlayed;
   const targetCard = getTopCardOnTargetRow(lane, TargetRowIndex);
+  const playerPlayedTargetCard = targetCard?.PlayedBy === PlayedByModel.Host;
 
   const moveIsPlayerSide = TargetRowIndex < 3;
   const moveIsMiddle = TargetRowIndex === 3;
@@ -41,20 +41,12 @@ export function isMoveValidFromPlayerPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  if (cardsInLane && !cardsHaveMatchingSuitOrKind(Card, LastCardPlayed!)) {
+  if (LastCardPlayed && !cardsHaveMatchingSuitOrKind(Card, LastCardPlayed)) {
     return false;
   }
 
-  if (targetCard) {
-    console.log(targetCard, Card);
-  }
-
   // Can't reinforce with different suit
-  if (
-    targetCard &&
-    targetCard.PlayedBy === PlayedByModel.Host &&
-    targetCard.Suit != Card.Suit
-  ) {
+  if (targetCard && playerPlayedTargetCard && targetCard.Suit != Card.Suit) {
     return false;
   }
 
