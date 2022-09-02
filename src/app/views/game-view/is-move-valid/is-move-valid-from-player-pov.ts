@@ -2,7 +2,8 @@ import { LaneAdvantageModel } from 'src/app/models/lane-advantage.model';
 import { LaneModel } from 'src/app/models/lane.model';
 import { MoveModel } from 'src/app/models/move.model';
 import { PlayedByModel } from 'src/app/models/played-by.model';
-import { allPreviousRowsOccupied } from './valid-move-checks';
+import { allPreviousRowsOccupied } from './valid-move-checks/all-previous-rows-occupied';
+import { cardsHaveMatchingSuit } from './valid-move-checks/cards-have-matching-suit';
 import { cardsHaveMatchingSuitOrKind } from './valid-move-checks/cards-have-matching-suit-or-kind';
 import { getTopCardOnTargetRow } from './valid-move-checks/get-top-card-on-target-row';
 
@@ -45,16 +46,13 @@ export function isMoveValidFromPlayerPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  // Can't reinforce with different suit
-  if (targetCard && playerPlayedTargetCard && targetCard.Suit != Card.Suit) {
+  if (
+    targetCard &&
+    playerPlayedTargetCard &&
+    !cardsHaveMatchingSuit(targetCard, Card)
+  ) {
     return false;
   }
 
   return true;
 }
-
-// if (noCardsInLane) {
-//   return TargetRowIndex === 0
-// } else {
-//   return cardsHaveMatchingSuitOrKind(Card, LastCardPlayed!) && allPreviousRowsOccupied(lane, TargetRowIndex) &&
-// }
