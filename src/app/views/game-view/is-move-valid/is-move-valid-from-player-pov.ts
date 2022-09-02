@@ -11,14 +11,14 @@ export function isMoveValidFromPlayerPov(lane: LaneModel, move: MoveModel) {
   const { Card, TargetRowIndex } = move;
 
   const cardsInLane = !!LastCardPlayed;
-  const topCardOnTargetRow = getTopCardOnTargetRow(lane, TargetRowIndex);
+  const targetCard = getTopCardOnTargetRow(lane, TargetRowIndex);
 
   const moveIsPlayerSide = TargetRowIndex < 3;
   const moveIsMiddle = TargetRowIndex === 3;
   const moveIsOpponentSide = TargetRowIndex > 3;
 
-  const playerHasAdvantage = LaneAdvantage === LaneAdvantageModel.Player;
-  const opponentHasAdvantage = LaneAdvantage === LaneAdvantageModel.Opponent;
+  const playerHasAdvantage = LaneAdvantage === LaneAdvantageModel.Host;
+  const opponentHasAdvantage = LaneAdvantage === LaneAdvantageModel.Guest;
   const noAdvantage = LaneAdvantage === LaneAdvantageModel.None;
 
   if (moveIsMiddle) {
@@ -45,7 +45,18 @@ export function isMoveValidFromPlayerPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  // if (cardsInLane && topCardOnTargetRow.PlayedBy === PlayedByModel. )
+  if (targetCard) {
+    console.log(targetCard, Card);
+  }
+
+  // Can't reinforce with different suit
+  if (
+    targetCard &&
+    targetCard.PlayedBy === PlayedByModel.Host &&
+    targetCard.Suit != Card.Suit
+  ) {
+    return false;
+  }
 
   return true;
 }

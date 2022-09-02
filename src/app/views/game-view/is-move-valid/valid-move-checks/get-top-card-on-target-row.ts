@@ -4,9 +4,14 @@ import { LaneModel } from 'src/app/models/lane.model';
 export function getTopCardOnTargetRow(
   targetLane: LaneModel,
   targetRowIndex: number
-): CardModel {
+): CardModel | null {
   const targetRow = targetLane.Rows[targetRowIndex];
-  const topCard = targetRow[targetRow.length - 1];
+  const targetRowHasCards = targetRow.length != 0;
 
-  return topCard;
+  if (targetRowHasCards) {
+    const topCard = targetRow[targetRow.length - 1];
+    return topCard;
+  }
+
+  return null;
 }

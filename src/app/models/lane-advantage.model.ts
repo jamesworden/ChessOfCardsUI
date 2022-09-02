@@ -1,5 +1,5 @@
 export enum LaneAdvantageModel {
-  Player = 'Player',
-  Opponent = 'Opponent',
+  Host = 'Host',
+  Guest = 'Guest',
   None = 'None',
 }
