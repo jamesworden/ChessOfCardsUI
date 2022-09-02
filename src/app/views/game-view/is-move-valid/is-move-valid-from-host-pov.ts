@@ -47,7 +47,7 @@ export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  // Can't reinforce with card that has different suit.
+  // Can't reinforce with different suit card.
   if (
     targetCard &&
     playerPlayedTargetCard &&
