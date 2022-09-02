@@ -3,6 +3,7 @@ import { LaneModel } from 'src/app/models/lane.model';
 import { MoveModel } from 'src/app/models/move.model';
 import { PlayedByModel } from 'src/app/models/played-by.model';
 import { allPreviousRowsOccupied } from './valid-move-checks/all-previous-rows-occupied';
+import { cardTrumpsCard } from './valid-move-checks/card-trumps-card';
 import { cardsHaveMatchingSuit } from './valid-move-checks/cards-have-matching-suit';
 import { cardsHaveMatchingSuitOrKind } from './valid-move-checks/cards-have-matching-suit-or-kind';
 import { getTopCardOnTargetRow } from './valid-move-checks/get-top-card-on-target-row';
@@ -46,10 +47,20 @@ export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
+  // Can't reinforce with card that has different suit.
   if (
     targetCard &&
     playerPlayedTargetCard &&
     !cardsHaveMatchingSuit(targetCard, Card)
+  ) {
+    return false;
+  }
+
+  // Can't reinforce with a lesser card.
+  if (
+    targetCard &&
+    playerPlayedTargetCard &&
+    !cardTrumpsCard(Card, targetCard)
   ) {
     return false;
   }

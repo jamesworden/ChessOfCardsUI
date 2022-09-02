@@ -1,5 +1,8 @@
+/**
+ * - Important that these are kept in order for seeing if cards can trump one another.
+ * - Important that these don't change because they map to images.
+ */
 export enum KindModel {
-  Ace = 'Ace',
   Two = 'Two',
   Three = 'Three',
   Four = 'Four',
@@ -12,4 +15,5 @@ export enum KindModel {
   Jack = 'Jack',
   Queen = 'Queen',
   King = 'King',
+  Ace = 'Ace',
 }
