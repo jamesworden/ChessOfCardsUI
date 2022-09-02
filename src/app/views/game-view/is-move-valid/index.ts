@@ -1,8 +1,9 @@
 import { MoveModel } from 'src/app/models/move.model';
 import { PlayerGameStateModel } from 'src/app/models/player-game-state-model';
-import { isMoveValidFromPlayerPov } from './is-move-valid-from-player-pov';
-import { cloneLaneToHostPov } from './clone-lane-to-host-pov';
-import { cloneMoveToHostPov } from './clone-move-to-host-pov';
+import { isMoveValidFromHostPov } from './is-move-valid-from-host-pov';
+import * as _ from 'lodash';
+import { convertLaneToHostPov } from './convert-lane-to-host-pov';
+import { convertMoveToHostPov } from './convert-move-to-host-pov';
 
 export function isMoveValid(move: MoveModel, gameState: PlayerGameStateModel) {
   const { IsHost, IsHostPlayersTurn } = gameState;
@@ -15,9 +16,13 @@ export function isMoveValid(move: MoveModel, gameState: PlayerGameStateModel) {
   }
 
   const lane = gameState.Lanes[move.TargetLaneIndex];
+  const clonedLane = _.cloneDeep(lane);
+  const clonedMove = _.cloneDeep(move);
 
-  const playerPovLane = IsHost ? lane : cloneLaneToHostPov(lane);
-  const playerPovMove = IsHost ? move : cloneMoveToHostPov(move);
+  if (!IsHost) {
+    convertLaneToHostPov(clonedLane);
+    convertMoveToHostPov(clonedMove);
+  }
 
-  return isMoveValidFromPlayerPov(playerPovLane, playerPovMove);
+  return isMoveValidFromHostPov(clonedLane, clonedMove);
 }

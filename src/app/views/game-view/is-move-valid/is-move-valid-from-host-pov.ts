@@ -7,7 +7,7 @@ import { cardsHaveMatchingSuit } from './valid-move-checks/cards-have-matching-s
 import { cardsHaveMatchingSuitOrKind } from './valid-move-checks/cards-have-matching-suit-or-kind';
 import { getTopCardOnTargetRow } from './valid-move-checks/get-top-card-on-target-row';
 
-export function isMoveValidFromPlayerPov(lane: LaneModel, move: MoveModel) {
+export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
   const { LaneAdvantage, LastCardPlayed, Rows } = lane;
   const { Card, TargetRowIndex } = move;
 
