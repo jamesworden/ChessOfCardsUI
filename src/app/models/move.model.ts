@@ -1,7 +1,5 @@
-import { CardModel } from './card.model';
+import { PlaceCardAttemptModel } from './place-card-attempt.model';
 
 export type MoveModel = {
-  Card: CardModel;
-  TargetLaneIndex: number;
-  TargetRowIndex: number;
+  PlaceCardAttempts: PlaceCardAttemptModel[];
 };

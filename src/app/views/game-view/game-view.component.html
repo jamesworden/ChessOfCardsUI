@@ -27,7 +27,7 @@
           <app-position
             [laneIndex]="laneIndex"
             [rowIndex]="6 - rowIndex"
-            (makeMove)="makeMove($event)"
+            (attemptMove)="attemptMove($event)"
           >
             <app-card
               *ngIf="lane.Rows[6 - rowIndex].length > 0"
@@ -80,7 +80,7 @@
           <app-position
             [laneIndex]="4 - laneIndex"
             [rowIndex]="rowIndex"
-            (makeMove)="makeMove($event)"
+            (attemptMove)="attemptMove($event)"
           >
             <app-card
               *ngIf="row.length > 0"

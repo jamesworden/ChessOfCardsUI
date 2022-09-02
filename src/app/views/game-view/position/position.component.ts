@@ -14,7 +14,7 @@ import { SuitModel } from 'src/app/models/suit.model';
 export class PositionComponent implements OnInit {
   @Input() laneIndex: number;
   @Input() rowIndex: number;
-  @Output() makeMove: EventEmitter<MoveModel> = new EventEmitter();
+  @Output() attemptMove: EventEmitter<MoveModel> = new EventEmitter();
 
   constructor() {}
 
@@ -31,12 +31,16 @@ export class PositionComponent implements OnInit {
       PlayedBy,
     };
 
-    const move: MoveModel = {
+    const placeCardAttempt = {
       Card,
       TargetLaneIndex: this.laneIndex,
       TargetRowIndex: this.rowIndex,
     };
 
-    this.makeMove.emit(move);
+    const move: MoveModel = {
+      PlaceCardAttempts: [placeCardAttempt],
+    };
+
+    this.attemptMove.emit(move);
   }
 }

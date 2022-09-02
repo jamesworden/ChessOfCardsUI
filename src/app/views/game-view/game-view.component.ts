@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { UpdateGameState } from 'src/app/actions/player-game-state.actions';
 import { CardModel } from 'src/app/models/card.model';
 import { MoveModel } from 'src/app/models/move.model';
+import { PlaceCardAttemptModel } from 'src/app/models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { PlayerGameState } from '../../state/player-game-state.state';
@@ -67,31 +68,37 @@ export class GameViewComponent {
     console.log('player hand', event);
   }
 
-  makeMove(move: MoveModel) {
+  attemptMove(move: MoveModel) {
+    // TODO: playing pairs
+    // if cards in hand with same kind exist
+    // update this move accordingly if the player wants to include these cards
+
     if (!isMoveValid(move, this.latestGameStateSnapshot)) {
       return;
     }
 
-    this.moveCardToLane(move);
-    this.removeCardFromHand(move);
+    for (const placeCardAttempt of move.PlaceCardAttempts) {
+      this.moveCardToLane(placeCardAttempt);
+      this.removeCardFromHand(placeCardAttempt);
+    }
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
 
     this.signalrService.makeMove(move);
   }
 
-  moveCardToLane(move: MoveModel) {
-    const { TargetLaneIndex, TargetRowIndex, Card } = move;
+  moveCardToLane(placeCardAttempt: PlaceCardAttemptModel) {
+    const { TargetLaneIndex, TargetRowIndex, Card } = placeCardAttempt;
     const targetLane = this.latestGameStateSnapshot.Lanes[TargetLaneIndex];
     const targetRow = targetLane.Rows[TargetRowIndex];
     targetRow.push(Card);
   }
 
-  removeCardFromHand(move: MoveModel) {
+  removeCardFromHand(placeCardAttempt: PlaceCardAttemptModel) {
     for (let i = 0; i < this.latestGameStateSnapshot.Hand.Cards.length; i++) {
       const card = this.latestGameStateSnapshot.Hand.Cards[i];
-      const sameSuit = move.Card.Suit === card.Suit;
-      const sameKind = move.Card.Kind === card.Kind;
+      const sameSuit = placeCardAttempt.Card.Suit === card.Suit;
+      const sameKind = placeCardAttempt.Card.Kind === card.Kind;
 
       if (sameSuit && sameKind) {
         this.latestGameStateSnapshot.Hand.Cards.splice(i, 1);

@@ -9,7 +9,7 @@ import { getTopCardOnTargetRow } from './valid-move-checks/get-top-card-on-targe
 
 export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
   const { LaneAdvantage, LastCardPlayed, Rows } = lane;
-  const { Card, TargetRowIndex } = move;
+  const { Card, TargetRowIndex } = move.PlaceCardAttempts[0]; // TODO: For now, assume all moves have one place card attempt.
 
   const targetCard = getTopCardOnTargetRow(lane, TargetRowIndex);
   const playerPlayedTargetCard = targetCard?.PlayedBy === PlayedByModel.Host;

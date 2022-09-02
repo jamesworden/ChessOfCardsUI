@@ -2,8 +2,10 @@ import * as _ from 'lodash';
 import { MoveModel } from 'src/app/models/move.model';
 
 export function convertMoveToHostPov(move: MoveModel) {
-  move.TargetLaneIndex = 4 - move.TargetLaneIndex;
-  move.TargetRowIndex = 6 - move.TargetRowIndex;
+  for (const placeCardAttempt of move.PlaceCardAttempts) {
+    placeCardAttempt.TargetLaneIndex = 4 - placeCardAttempt.TargetLaneIndex;
+    placeCardAttempt.TargetRowIndex = 6 - placeCardAttempt.TargetRowIndex;
+  }
 
   return move;
 }

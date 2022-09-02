@@ -15,7 +15,9 @@ export function isMoveValid(move: MoveModel, gameState: PlayerGameStateModel) {
     return false;
   }
 
-  const lane = gameState.Lanes[move.TargetLaneIndex];
+  // All 'place card attempts' of a move must be in the same lane.
+  const lane = gameState.Lanes[move.PlaceCardAttempts[0].TargetLaneIndex];
+
   const clonedLane = _.cloneDeep(lane);
   const clonedMove = _.cloneDeep(move);
 
