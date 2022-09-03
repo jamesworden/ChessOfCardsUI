@@ -6,21 +6,3 @@
   -webkit-filter: drop-shadow(5px 5px 5px gray);
   filter: drop-shadow(5px 5px 5px gray);
 }
-
-.tiltRight {
-  -webkit-transition-property: -webkit-transform;
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-}
-
-.tiltLeft {
-  -webkit-transition-property: -webkit-transform;
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-}
