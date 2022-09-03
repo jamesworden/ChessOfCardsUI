@@ -1,4 +1,5 @@
 <img
+  style="transform: rotate(45)"
   class="card"
   src="../../../../assets/images/{{ cardImageFileName }}"
   alt=""
@@ -6,4 +7,5 @@
   [cdkDragDisabled]="!playerCanDrag"
   cdkDragBoundary=".game"
   [cdkDragData]="{suit, kind}"
+  [ngStyle]="{ rotate: tiltDegrees + 'deg' }"
 />

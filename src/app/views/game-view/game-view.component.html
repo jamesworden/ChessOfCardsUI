@@ -32,10 +32,13 @@
             <app-card
               *ngIf="lane.Rows[6 - rowIndex].length > 0"
               [suit]="getTopCard(lane.Rows[6 - rowIndex]).Suit"
-              [kind]="getTopCard(lane.Rows[6 - rowIndex]).Suit"
+              [kind]="getTopCard(lane.Rows[6 - rowIndex]).Kind"
               [cardImageFileName]="
                 getCardImageFileName(getTopCard(lane.Rows[6 - rowIndex]))
               "
+              [isMiddleCard]="rowIndex === 3"
+              [isPlayedBy]="getTopCard(lane.Rows[6 - rowIndex]).PlayedBy"
+              [isHost]="true"
             ></app-card>
           </app-position>
         </ng-container>
@@ -85,8 +88,11 @@
             <app-card
               *ngIf="row.length > 0"
               [suit]="getTopCard(row).Suit"
-              [kind]="getTopCard(row).Suit"
+              [kind]="getTopCard(row).Kind"
               [cardImageFileName]="getCardImageFileName(getTopCard(row))"
+              [isMiddleCard]="rowIndex === 3"
+              [isPlayedBy]="getTopCard(row).PlayedBy"
+              [isHost]="false"
             ></app-card>
           </app-position>
         </ng-container>
