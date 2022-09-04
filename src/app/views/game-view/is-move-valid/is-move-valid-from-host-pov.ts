@@ -56,12 +56,8 @@ export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  // Can't reinforce with a lesser card.
-  if (
-    targetCard &&
-    playerPlayedTargetCard &&
-    !cardTrumpsCard(Card, targetCard)
-  ) {
+  // Can't reinforce or capture a lesser card.
+  if (targetCard && !cardTrumpsCard(Card, targetCard)) {
     return false;
   }
 
