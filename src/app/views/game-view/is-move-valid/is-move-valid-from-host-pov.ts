@@ -7,6 +7,8 @@ import { cardsHaveMatchingSuit } from './valid-move-checks/cards-have-matching-s
 import { cardsHaveMatchingSuitOrKind } from './valid-move-checks/cards-have-matching-suit-or-kind';
 import { getTopCardOnTargetRow } from './valid-move-checks/get-top-card-on-target-row';
 import { allHostPovPreviousOpponentSideRowsOccupied } from './valid-move-checks/all-previous-opponent-side-rows-occupied';
+import { KindModel } from 'src/app/models/kind.model';
+import { guestAceTopOfAnyRow } from './valid-move-checks/guest-ace-top-of-any-row';
 
 export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
   const { LaneAdvantage, LastCardPlayed, Rows } = lane;
@@ -47,7 +49,14 @@ export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  if (LastCardPlayed && !cardsHaveMatchingSuitOrKind(Card, LastCardPlayed)) {
+  const playedAceToNukeRow =
+    Card.Kind === KindModel.Ace && guestAceTopOfAnyRow(lane);
+
+  if (
+    LastCardPlayed &&
+    !cardsHaveMatchingSuitOrKind(Card, LastCardPlayed) &&
+    !playedAceToNukeRow
+  ) {
     return false;
   }
 
