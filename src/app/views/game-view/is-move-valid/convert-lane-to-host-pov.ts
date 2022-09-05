@@ -1,8 +1,7 @@
 import { CardModel } from 'src/app/models/card.model';
 import { LaneModel } from 'src/app/models/lane.model';
-import { PlayedByModel } from 'src/app/models/played-by.model';
 import * as _ from 'lodash';
-import { LaneAdvantageModel } from 'src/app/models/lane-advantage.model';
+import { PlayerOrNoneModel } from 'src/app/models/player-or-none-model';
 
 export function convertLaneToHostPov(lane: LaneModel) {
   lane.Rows.reverse();
@@ -24,16 +23,16 @@ export function convertLaneToHostPov(lane: LaneModel) {
 
 function switchHostAndGuestPlayedBy(card: CardModel) {
   card.PlayedBy =
-    card.PlayedBy === PlayedByModel.Host
-      ? PlayedByModel.Guest
-      : PlayedByModel.Host;
+    card.PlayedBy === PlayerOrNoneModel.Host
+      ? PlayerOrNoneModel.Guest
+      : PlayerOrNoneModel.Host;
 }
 
 function switchLaneAdvantage(lane: LaneModel) {
-  if (lane.LaneAdvantage != LaneAdvantageModel.None) {
+  if (lane.LaneAdvantage != PlayerOrNoneModel.None) {
     lane.LaneAdvantage =
-      lane.LaneAdvantage == LaneAdvantageModel.Host
-        ? LaneAdvantageModel.Guest
-        : LaneAdvantageModel.Host;
+      lane.LaneAdvantage == PlayerOrNoneModel.Host
+        ? PlayerOrNoneModel.Guest
+        : PlayerOrNoneModel.Host;
   }
 }

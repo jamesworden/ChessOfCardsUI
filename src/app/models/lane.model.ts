@@ -1,8 +1,9 @@
 import { CardModel } from './card.model';
-import { LaneAdvantageModel } from './lane-advantage.model';
+import { PlayerOrNoneModel } from './player-or-none-model';
 
 export type LaneModel = {
   Rows: CardModel[][];
-  LaneAdvantage: LaneAdvantageModel;
+  LaneAdvantage: PlayerOrNoneModel;
   LastCardPlayed?: CardModel;
+  WonBy: PlayerOrNoneModel;
 };

@@ -1,4 +1,4 @@
-export enum LaneAdvantageModel {
+export enum PlayerOrNoneModel {
   Host = 'Host',
   Guest = 'Guest',
   None = 'None',

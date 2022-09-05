@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { PlayedByModel } from 'src/app/models/played-by.model';
+import { Component, Input, OnChanges } from '@angular/core';
+import { PlayerOrNoneModel } from 'src/app/models/player-or-none-model';
 
 @Component({
   selector: 'app-card',
@@ -12,8 +12,9 @@ export class CardComponent implements OnChanges {
   @Input() suit: string;
   @Input() kind: string;
   @Input() isMiddleCard: boolean;
-  @Input() isPlayedBy: PlayedByModel;
+  @Input() isPlayedBy: PlayerOrNoneModel;
   @Input() isHost: boolean;
+  @Input() joker = false;
 
   tiltDegrees = 0;
 
@@ -23,18 +24,18 @@ export class CardComponent implements OnChanges {
     const tiltRight =
       (this.isHost &&
         this.isMiddleCard &&
-        this.isPlayedBy === PlayedByModel.Host) ||
+        this.isPlayedBy === PlayerOrNoneModel.Host) ||
       (!this.isHost &&
         this.isMiddleCard &&
-        this.isPlayedBy === PlayedByModel.Host);
+        this.isPlayedBy === PlayerOrNoneModel.Host);
 
     const tiltLeft =
       (this.isHost &&
         this.isMiddleCard &&
-        this.isPlayedBy === PlayedByModel.Guest) ||
+        this.isPlayedBy === PlayerOrNoneModel.Guest) ||
       (!this.isHost &&
         this.isMiddleCard &&
-        this.isPlayedBy === PlayedByModel.Guest);
+        this.isPlayedBy === PlayerOrNoneModel.Guest);
 
     if (tiltRight) {
       this.tiltDegrees = 45;

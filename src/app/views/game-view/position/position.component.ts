@@ -1,9 +1,9 @@
-import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CardModel } from 'src/app/models/card.model';
 import { KindModel } from 'src/app/models/kind.model';
 import { MoveModel } from 'src/app/models/move.model';
-import { PlayedByModel } from 'src/app/models/played-by.model';
+import { PlayerOrNoneModel } from 'src/app/models/player-or-none-model';
 import { SuitModel } from 'src/app/models/suit.model';
 
 @Component({
@@ -23,7 +23,7 @@ export class PositionComponent implements OnInit {
   drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
     const Suit = event.item.data.suit as SuitModel;
     const Kind = event.item.data.kind as KindModel;
-    const PlayedBy = PlayedByModel.NotYetPlayed;
+    const PlayedBy = PlayerOrNoneModel.None;
 
     const Card: CardModel = {
       Suit,

@@ -6,6 +6,7 @@ import { UpdateGameState } from 'src/app/actions/player-game-state.actions';
 import { CardModel } from 'src/app/models/card.model';
 import { MoveModel } from 'src/app/models/move.model';
 import { PlaceCardAttemptModel } from 'src/app/models/place-card-attempt.model';
+import { PlayerOrNoneModel } from 'src/app/models/player-or-none-model';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { PlayerGameState } from '../../state/player-game-state.state';
@@ -20,6 +21,8 @@ export class GameViewComponent {
   gameIsRunning = true;
 
   gameOverMessage: string | null = null;
+
+  WonBy = PlayerOrNoneModel;
 
   @Select(PlayerGameState.state)
   playerGameState$: Observable<PlayerGameStateModel>;
