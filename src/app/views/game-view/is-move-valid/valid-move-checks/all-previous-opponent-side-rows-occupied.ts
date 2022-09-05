@@ -1,15 +1,14 @@
 import { LaneModel } from 'src/app/models/lane.model';
 import { PlayerOrNoneModel } from 'src/app/models/player-or-none-model';
 
-export function allHostPovPreviousRowsOccupied(
+export function allHostPovPreviousOpponentSideRowsOccupied(
   lane: LaneModel,
   targetRowIndex: number
 ) {
-  for (let i = 0; i < targetRowIndex; i++) {
-    const previousRow = lane.Rows[i];
+  const startCheckForPrevRowIndex = 5;
 
-    console.log(previousRow);
-
+  for (let i = startCheckForPrevRowIndex; i <= targetRowIndex; i++) {
+    const previousRow = lane.Rows[i - 1];
     const previousRowOccupied = previousRow.some(
       (row) => row.PlayedBy == PlayerOrNoneModel.Host
     );

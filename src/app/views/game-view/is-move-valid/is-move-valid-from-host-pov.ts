@@ -1,11 +1,12 @@
 import { PlayerOrNoneModel } from 'src/app/models/player-or-none-model';
 import { LaneModel } from 'src/app/models/lane.model';
 import { MoveModel } from 'src/app/models/move.model';
-import { allPreviousRowsOccupied } from './valid-move-checks/all-previous-rows-occupied';
+import { allHostPovPreviousRowsOccupied } from './valid-move-checks/all-previous-rows-occupied';
 import { cardTrumpsCard } from './valid-move-checks/card-trumps-card';
 import { cardsHaveMatchingSuit } from './valid-move-checks/cards-have-matching-suit';
 import { cardsHaveMatchingSuitOrKind } from './valid-move-checks/cards-have-matching-suit-or-kind';
 import { getTopCardOnTargetRow } from './valid-move-checks/get-top-card-on-target-row';
+import { allHostPovPreviousOpponentSideRowsOccupied } from './valid-move-checks/all-previous-opponent-side-rows-occupied';
 
 export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
   const { LaneAdvantage, LastCardPlayed, Rows } = lane;
@@ -39,7 +40,10 @@ export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  if (moveIsPlayerSide && !allPreviousRowsOccupied(lane, TargetRowIndex)) {
+  if (
+    moveIsPlayerSide &&
+    !allHostPovPreviousRowsOccupied(lane, TargetRowIndex)
+  ) {
     return false;
   }
 
@@ -56,8 +60,29 @@ export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  // Can't reinforce or capture a lesser card.
-  if (targetCard && !cardTrumpsCard(Card, targetCard)) {
+  // Can't reinforce a lesser card.
+  if (
+    targetCard &&
+    playerPlayedTargetCard &&
+    !cardTrumpsCard(Card, targetCard)
+  ) {
+    return false;
+  }
+
+  // Can't capture a lesser card.
+  if (
+    targetCard &&
+    cardsHaveMatchingSuit(Card, targetCard) &&
+    !cardTrumpsCard(Card, targetCard)
+  ) {
+    return false;
+  }
+
+  if (
+    moveIsOpponentSide &&
+    playerHasAdvantage &&
+    !allHostPovPreviousOpponentSideRowsOccupied(lane, TargetRowIndex)
+  ) {
     return false;
   }
 
