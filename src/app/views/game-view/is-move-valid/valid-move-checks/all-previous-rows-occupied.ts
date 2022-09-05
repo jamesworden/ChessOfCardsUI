@@ -8,8 +8,6 @@ export function allHostPovPreviousRowsOccupied(
   for (let i = 0; i < targetRowIndex; i++) {
     const previousRow = lane.Rows[i];
 
-    console.log(previousRow);
-
     const previousRowOccupied = previousRow.some(
       (row) => row.PlayedBy == PlayerOrNoneModel.Host
     );

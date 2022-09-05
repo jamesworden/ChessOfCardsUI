@@ -22,10 +22,12 @@ export function convertLaneToHostPov(lane: LaneModel) {
 }
 
 function switchHostAndGuestPlayedBy(card: CardModel) {
-  card.PlayedBy =
-    card.PlayedBy === PlayerOrNoneModel.Host
-      ? PlayerOrNoneModel.Guest
-      : PlayerOrNoneModel.Host;
+  if (card.PlayedBy != PlayerOrNoneModel.None) {
+    card.PlayedBy =
+      card.PlayedBy === PlayerOrNoneModel.Host
+        ? PlayerOrNoneModel.Guest
+        : PlayerOrNoneModel.Host;
+  }
 }
 
 function switchLaneAdvantage(lane: LaneModel) {
