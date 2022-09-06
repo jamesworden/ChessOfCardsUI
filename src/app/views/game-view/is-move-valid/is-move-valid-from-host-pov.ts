@@ -60,30 +60,28 @@ export function isMoveValidFromHostPov(lane: LaneModel, move: MoveModel) {
     return false;
   }
 
-  // Can't reinforce with different suit card.
-  if (
+  const reinforceWithDifferentSuit =
     targetCard &&
     playerPlayedTargetCard &&
-    !cardsHaveMatchingSuit(targetCard, Card)
-  ) {
+    !cardsHaveMatchingSuit(targetCard, Card);
+
+  if (reinforceWithDifferentSuit) {
     return false;
   }
 
-  // Can't reinforce a lesser card.
-  if (
-    targetCard &&
-    playerPlayedTargetCard &&
-    !cardTrumpsCard(Card, targetCard)
-  ) {
+  const reinforceWithLesserCard =
+    targetCard && playerPlayedTargetCard && !cardTrumpsCard(Card, targetCard);
+
+  if (reinforceWithLesserCard) {
     return false;
   }
 
-  // Can't capture a lesser card.
-  if (
+  const captureLesserCard =
     targetCard &&
     cardsHaveMatchingSuit(Card, targetCard) &&
-    !cardTrumpsCard(Card, targetCard)
-  ) {
+    !cardTrumpsCard(Card, targetCard);
+
+  if (captureLesserCard) {
     return false;
   }
 
