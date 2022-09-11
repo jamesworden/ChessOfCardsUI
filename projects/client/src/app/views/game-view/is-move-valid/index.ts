@@ -1,7 +1,7 @@
 import { MoveModel } from 'projects/client/src/app/models/move.model';
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 import { isAnyPlaceCardAttemptInMiddle } from './move-checks/is-any-place-card-attempt-in-middle';
-import { moveOnDifferentLanes } from './move-checks/move-on-multiple-lanes';
+import { moveOnDifferentLanes } from './move-checks/move-on-different-lanes';
 import { notPlayersTurn } from './move-checks/not-players-turn';
 import { moveHasNoPlaceCardAttempts } from './move-checks/move-has-no-place-card-attempts';
 import { startedMoveOpponentSideWhenNoAdvantage } from './move-checks/started-move-opponent-side-when-no-advantage';
