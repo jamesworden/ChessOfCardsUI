@@ -21,7 +21,7 @@ describe('[Move Check]: is any place card attempt in middle', () => {
     expect(result).toBe(false);
   });
 
-  function getTestMove(TargetLaneIndex: number) {
+  function getTestMove(TargetRowIndex: number) {
     const move: MoveModel = {
       PlaceCardAttempts: [
         {
@@ -30,8 +30,8 @@ describe('[Move Check]: is any place card attempt in middle', () => {
             Suit: SuitModel.Spades,
             PlayedBy: PlayerOrNoneModel.Host,
           },
-          TargetLaneIndex,
-          TargetRowIndex: 0,
+          TargetLaneIndex: 0,
+          TargetRowIndex: TargetRowIndex,
         },
       ],
     };

@@ -47,12 +47,12 @@
       <div class="gutter">
         <app-deck
           [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
-          [onRightSide]="true"
+          [rightSide]="true"
         ></app-deck>
 
         <app-deck
           [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
-          [onRightSide]="true"
+          [rightSide]="true"
         ></app-deck>
       </div>
     </div>
@@ -61,12 +61,12 @@
       <div class="gutter">
         <app-deck
           [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
-          [onRightSide]="false"
+          [rightSide]="false"
         ></app-deck>
 
         <app-deck
           [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
-          [onRightSide]="false"
+          [rightSide]="false"
         ></app-deck>
       </div>
 
@@ -109,6 +109,7 @@
       (cdkDropListDropped)="rearrangeHand($event)"
       cdkDropListData="player-hand"
       cdkDropListOrientation="horizontal"
+      *ngIf="playerGameState.Hand"
     >
       <app-card
         *ngFor="let card of playerGameState.Hand.Cards"
@@ -118,17 +119,5 @@
         [playerCanDrag]="true"
       ></app-card>
     </div>
-
-    <ng-template #decks>
-      <app-deck
-        [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
-        [onRightSide]="playerGameState.IsHost"
-      ></app-deck>
-
-      <app-deck
-        [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
-        [onRightSide]="playerGameState.IsHost"
-      ></app-deck>
-    </ng-template>
   </div>
 </div>

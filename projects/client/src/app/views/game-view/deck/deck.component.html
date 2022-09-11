@@ -1,5 +1,6 @@
 <div
   class="deck"
+  *ngIf="totalNumCards"
   [matTooltip]="totalNumCards.toString()"
   matTooltipPosition="below"
 >
@@ -7,7 +8,7 @@
     *ngFor="let _ of [].constructor(numCardsToDisplay); let i = index"
     [ngStyle]="{
       position: 'absolute',
-      right: onRightSide
+      right: rightSide
         ? 'calc((' + i + ' * -6px) - 32px)'
         : 'calc((' + i + ' * 6px))',
       'z-index': i

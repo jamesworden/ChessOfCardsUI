@@ -6,9 +6,9 @@ import { Component, Input, OnChanges } from '@angular/core';
   styleUrls: ['./deck.component.css'],
 })
 export class DeckComponent implements OnChanges {
-  @Input() isOpponent!: boolean;
-  @Input() totalNumCards!: number;
-  @Input() onRightSide!: boolean;
+  @Input() isOpponent: boolean;
+  @Input() totalNumCards: number;
+  @Input() rightSide: boolean;
 
   numCardsToDisplay = 0;
 
