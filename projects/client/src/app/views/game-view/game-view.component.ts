@@ -76,7 +76,7 @@ export class GameViewComponent {
     // if cards in hand with same kind exist
     // update this move accordingly if the player wants to include these cards
 
-    if (!isMoveValid(move, this.latestGameStateSnapshot)) {
+    if (!isMoveValid(this.latestGameStateSnapshot, move)) {
       return;
     }
 

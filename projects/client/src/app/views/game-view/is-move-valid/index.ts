@@ -1,35 +1,71 @@
 import { MoveModel } from 'projects/client/src/app/models/move.model';
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
-import { isMoveValidFromHostPov } from './is-move-valid-from-host-pov';
-import * as _ from 'lodash';
-import { convertLaneToHostPov } from './convert-lane-to-host-pov';
-import { convertMoveToHostPov } from './convert-move-to-host-pov';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
+import { isAnyPlaceCardAttemptInMiddle } from './move-checks/is-any-place-card-attempt-in-middle';
+import { moveOnDifferentLanes } from './move-checks/move-on-multiple-lanes';
+import { notPlayersTurn } from './move-checks/not-players-turn';
+import { moveHasNoPlaceCardAttempts } from './move-checks/move-has-no-place-card-attempts';
+import { startedMoveOpponentSideWhenNoAdvantage } from './move-checks/started-move-opponent-side-when-no-advantage';
+import { startedMoveOpponentSideWhenOpponentHasAdvantage } from './move-checks/started-move-opponent-side-when-opponent-has-advantage';
+import { startedMovePlayerSideAndPlaceCardOutOfOrder } from './move-checks/started-move-player-side-and-place-card-out-of-order';
+import { startedMovePlayerSideWhenPlayerHasAdvantage } from './move-checks/started-move-player-side-when-player-has-advantage';
+import { suitOrKindNotMatchAndNotPlayedAceToNukeRow } from './move-checks/suit-or-kind-not-match-and-not-played-ace-to-nuke-row';
+import { targetLaneHasBeenWon } from './move-checks/target-lane-has-been-won';
+import { triedToCaptureLesserCard } from './move-checks/tried-to-capture-lesser-card';
+import { triedToReinforceWithDifferentSuit } from './move-checks/tried-to-reinforce-with-different-suit';
+import { triedToReinforceWithLesserCard } from './move-checks/tried-to-reinforce-with-lesser-card';
 
-export function isMoveValid(move: MoveModel, gameState: PlayerGameStateModel) {
-  const { IsHost, IsHostPlayersTurn } = gameState;
-  const hostAndHostTurn = IsHostPlayersTurn && IsHost;
-  const guestAndGuestTurn = !IsHostPlayersTurn && !IsHost;
-  const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
-
-  if (!isPlayersTurn) {
+export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
+  if (notPlayersTurn(gameState)) {
     return false;
   }
 
-  // All 'place card attempts' of a move must be in the same lane.
-  const lane = gameState.Lanes[move.PlaceCardAttempts[0].TargetLaneIndex];
-
-  if (lane.WonBy != PlayerOrNoneModel.None) {
+  if (moveHasNoPlaceCardAttempts(move)) {
     return false;
   }
 
-  const clonedLane = _.cloneDeep(lane);
-  const clonedMove = _.cloneDeep(move);
-
-  if (!IsHost) {
-    convertLaneToHostPov(clonedLane);
-    convertMoveToHostPov(clonedMove);
+  if (moveOnDifferentLanes(move)) {
+    return false;
   }
 
-  return isMoveValidFromHostPov(clonedLane, clonedMove);
+  if (isAnyPlaceCardAttemptInMiddle(move)) {
+    return false;
+  }
+
+  if (targetLaneHasBeenWon(gameState, move)) {
+    return false;
+  }
+
+  if (startedMovePlayerSideWhenPlayerHasAdvantage(gameState, move)) {
+    return false;
+  }
+
+  if (startedMoveOpponentSideWhenOpponentHasAdvantage(gameState, move)) {
+    return false;
+  }
+
+  if (startedMoveOpponentSideWhenNoAdvantage(gameState, move)) {
+    return false;
+  }
+
+  if (startedMovePlayerSideAndPlaceCardOutOfOrder(gameState, move)) {
+    return false;
+  }
+
+  if (suitOrKindNotMatchAndNotPlayedAceToNukeRow(gameState, move)) {
+    return false;
+  }
+
+  if (triedToReinforceWithDifferentSuit(gameState, move)) {
+    return false;
+  }
+
+  if (triedToReinforceWithLesserCard(gameState, move)) {
+    return false;
+  }
+
+  if (triedToCaptureLesserCard(gameState, move)) {
+    return false;
+  }
+
+  return true;
 }
