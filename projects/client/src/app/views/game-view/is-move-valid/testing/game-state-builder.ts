@@ -75,6 +75,21 @@ export class GameStateBuilder {
     return this;
   }
 
+  setHostWonBy(laneIndex: number) {
+    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNoneModel.Host;
+    return this;
+  }
+
+  setGuestWonBy(laneIndex: number) {
+    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNoneModel.Guest;
+    return this;
+  }
+
+  setNoneWonBy(laneIndex: number) {
+    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNoneModel.None;
+    return this;
+  }
+
   build() {
     return this.gameState;
   }
