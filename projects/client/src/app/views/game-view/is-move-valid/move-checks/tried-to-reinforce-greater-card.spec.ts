@@ -35,9 +35,35 @@ describe('[Move Check]: tried to reinforce greater card', () => {
   });
 
   it('should return true when guest tried to reinforce greater card', () => {
-    const hostPlaceCardAttempt = new PlaceCardAttemptBuilder()
+    const guestPlaceCardAttempt = new PlaceCardAttemptBuilder()
       .setCardKind(KindModel.Three)
       .setCardSuit(SuitModel.Spades)
+      .setTargetLaneIndex(0)
+      .setTargetRowIndex(0)
+      .build();
+
+    const hostMove = new MoveBuilder()
+      .addPlaceCardAttempt(guestPlaceCardAttempt)
+      .build();
+
+    const greaterGuestCard: CardModel = {
+      Kind: KindModel.Four,
+      Suit: SuitModel.Spades,
+      PlayedBy: PlayerOrNoneModel.Guest,
+    };
+
+    const gameState = new GameStateBuilder()
+      .addCardToLaneOnRow(greaterGuestCard, 0, 0)
+      .setIsHost(false)
+      .build();
+
+    expect(triedToReinforceGreaterCard(gameState, hostMove)).toBe(true);
+  });
+
+  it('should return false when host tried to reinforce lesser card', () => {
+    const hostPlaceCardAttempt = new PlaceCardAttemptBuilder()
+      .setCardKind(KindModel.Queen)
+      .setCardSuit(SuitModel.Hearts)
       .setTargetLaneIndex(0)
       .setTargetRowIndex(0)
       .build();
@@ -46,17 +72,43 @@ describe('[Move Check]: tried to reinforce greater card', () => {
       .addPlaceCardAttempt(hostPlaceCardAttempt)
       .build();
 
-    const greaterHostCard: CardModel = {
-      Kind: KindModel.Four,
+    const lesserHostCard: CardModel = {
+      Kind: KindModel.Seven,
+      Suit: SuitModel.Hearts,
+      PlayedBy: PlayerOrNoneModel.Host,
+    };
+
+    const gameState = new GameStateBuilder()
+      .addCardToLaneOnRow(lesserHostCard, 0, 0)
+      .setIsHost(true)
+      .build();
+
+    expect(triedToReinforceGreaterCard(gameState, hostMove)).toBe(false);
+  });
+
+  it('should return false when guest tried to reinforce lesser card', () => {
+    const guestPlaceCardAttempt = new PlaceCardAttemptBuilder()
+      .setCardKind(KindModel.Three)
+      .setCardSuit(SuitModel.Spades)
+      .setTargetLaneIndex(0)
+      .setTargetRowIndex(0)
+      .build();
+
+    const hostMove = new MoveBuilder()
+      .addPlaceCardAttempt(guestPlaceCardAttempt)
+      .build();
+
+    const lesserGuestCard: CardModel = {
+      Kind: KindModel.Two,
       Suit: SuitModel.Spades,
       PlayedBy: PlayerOrNoneModel.Guest,
     };
 
     const gameState = new GameStateBuilder()
-      .addCardToLaneOnRow(greaterHostCard, 0, 0)
+      .addCardToLaneOnRow(lesserGuestCard, 0, 0)
       .setIsHost(false)
       .build();
 
-    expect(triedToReinforceGreaterCard(gameState, hostMove)).toBe(true);
+    expect(triedToReinforceGreaterCard(gameState, hostMove)).toBe(false);
   });
 });
