@@ -1,5 +1,5 @@
-import { MoveBuilder } from '../testing/move-builder';
-import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
+import { MoveBuilder } from '../../testing/move-builder';
+import { PlaceCardAttemptBuilder } from '../../testing/place-card-attempt-builder';
 import { isAnyPlaceCardAttemptInMiddle } from './any-place-card-attempt-is-in-middle';
 
 describe('[Move Check]: is any place card attempt in middle', () => {

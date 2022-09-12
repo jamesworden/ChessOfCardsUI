@@ -1,5 +1,5 @@
-import { MoveBuilder } from '../testing/move-builder';
-import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
+import { MoveBuilder } from '../../testing/move-builder';
+import { PlaceCardAttemptBuilder } from '../../testing/place-card-attempt-builder';
 import { moveHasNoPlaceCardAttempts } from './move-has-no-place-card-attempts';
 
 describe('[Move Check]: move has no place card attempts', () => {
