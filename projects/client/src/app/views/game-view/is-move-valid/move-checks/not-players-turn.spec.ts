@@ -1,61 +1,41 @@
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
+import { GameStateBuilder } from '../testing/game-state-builder';
 import { notPlayersTurn } from './not-players-turn';
 
 describe('[Move Check]: not players turn', () => {
   it('should return true when player is host and it is guests turn', () => {
-    const isHost = true;
-    const isHostPlayersTurn = false;
-    const gameState = getPartialTestGameState(
-      isHost,
-      isHostPlayersTurn
-    ) as PlayerGameStateModel;
-    const hostAndGuestTurnResult = notPlayersTurn(gameState);
+    const gameState = new GameStateBuilder()
+      .setIsHost(true)
+      .setIsHostPlayersTurn(false)
+      .build();
 
-    expect(hostAndGuestTurnResult).toBe(true);
+    expect(notPlayersTurn(gameState)).toBe(true);
   });
 
   it('should return true when player is guest and it is hosts turn', () => {
-    const isHost = false;
-    const isHostPlayersTurn = true;
-    const gameState = getPartialTestGameState(
-      isHost,
-      isHostPlayersTurn
-    ) as PlayerGameStateModel;
-    const guestAndHostTurnResult = notPlayersTurn(gameState);
+    const gameState = new GameStateBuilder()
+      .setIsHost(false)
+      .setIsHostPlayersTurn(true)
+      .build();
 
-    expect(guestAndHostTurnResult).toBe(true);
+    expect(notPlayersTurn(gameState)).toBe(true);
   });
 
   it('should return false when player is host and it is hosts turn', () => {
-    const isHost = true;
-    const isHostPlayersTurn = true;
-    const gameState = getPartialTestGameState(
-      isHost,
-      isHostPlayersTurn
-    ) as PlayerGameStateModel;
-    const hostAndGuestTurnResult = notPlayersTurn(gameState);
+    const gameState = new GameStateBuilder()
+      .setIsHost(true)
+      .setIsHostPlayersTurn(true)
+      .build();
 
-    expect(hostAndGuestTurnResult).toBe(false);
+    expect(notPlayersTurn(gameState)).toBe(false);
   });
 
   it('should return false when player is guest and it is guests turn', () => {
-    const isHost = false;
-    const isHostPlayersTurn = false;
-    const gameState = getPartialTestGameState(
-      isHost,
-      isHostPlayersTurn
-    ) as PlayerGameStateModel;
-    const guestAndHostTurnResult = notPlayersTurn(gameState);
+    const gameState = new GameStateBuilder()
+      .setIsHost(false)
+      .setIsHostPlayersTurn(false)
+      .build();
 
-    expect(guestAndHostTurnResult).toBe(false);
+    expect(notPlayersTurn(gameState)).toBe(false);
   });
 });
-
-function getPartialTestGameState(IsHost: boolean, IsHostPlayersTurn: boolean) {
-  const partialTestGameState: Partial<PlayerGameStateModel> = {
-    IsHost,
-    IsHostPlayersTurn,
-  };
-
-  return partialTestGameState;
-}
