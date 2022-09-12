@@ -7,12 +7,14 @@ export function triedToReinforceWithDifferentSuit(
   move: MoveModel
 ) {
   // Assume all moves are one place card attempt
-  const { Card, TargetLaneIndex } = move.PlaceCardAttempts[0];
-  const targetCard = gameState.Lanes[TargetLaneIndex].LastCardPlayed;
+  const { Card, TargetLaneIndex, TargetRowIndex } = move.PlaceCardAttempts[0];
+  const targetRow = gameState.Lanes[TargetLaneIndex].Rows[TargetRowIndex];
 
-  if (!targetCard) {
+  if (targetRow.length <= 0) {
     return false;
   }
+
+  const targetCard = targetRow[targetRow.length - 1];
 
   const suitNotMatch = Card.Suit != targetCard.Suit;
   const playerPlayedTargetCard = gameState.IsHost
