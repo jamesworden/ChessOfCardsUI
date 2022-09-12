@@ -1,6 +1,6 @@
 import { MoveBuilder } from '../testing/move-builder';
 import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
-import { moveOnDifferentLanes } from './move-on-different-lanes';
+import { moveOnDifferentLanes } from './place-card-attempts-target-different-lanes';
 
 describe('[Move Check]: move on different lanes', () => {
   it('should return true when move has place card attempts on different target lanes', () => {

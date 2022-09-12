@@ -1,6 +1,6 @@
-import { MoveBuilder } from '../testing/move-builder';
-import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
-import { isAnyPlaceCardAttemptInMiddle } from './is-any-place-card-attempt-in-middle';
+import { MoveBuilder } from '../../testing/move-builder';
+import { PlaceCardAttemptBuilder } from '../../testing/place-card-attempt-builder';
+import { isAnyPlaceCardAttemptInMiddle } from './any-place-card-attempt-is-in-middle';
 
 describe('[Move Check]: is any place card attempt in middle', () => {
   it('should return true when a place card attempt is in the middle', () => {
