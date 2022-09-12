@@ -12,7 +12,7 @@ import { suitOrKindNotMatchAndNotPlayedAceToNukeRow } from './move-checks/suit-o
 import { targetLaneHasBeenWon } from './move-checks/target-lane-has-been-won';
 import { triedToCaptureGreaterCard } from './move-checks/tried-to-capture-greater-card';
 import { triedToReinforceWithDifferentSuit } from './move-checks/tried-to-reinforce-with-different-suit';
-import { triedToReinforceWithLesserCard } from './move-checks/tried-to-reinforce-with-lesser-card';
+import { triedToReinforceGreaterCard } from './move-checks/tried-to-reinforce-greater-card';
 
 export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
   if (notPlayersTurn(gameState)) {
@@ -59,7 +59,7 @@ export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
     return false;
   }
 
-  if (triedToReinforceWithLesserCard(gameState, move)) {
+  if (triedToReinforceGreaterCard(gameState, move)) {
     return false;
   }
 

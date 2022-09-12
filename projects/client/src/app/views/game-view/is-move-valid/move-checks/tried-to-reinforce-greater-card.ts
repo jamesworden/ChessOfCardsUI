@@ -3,17 +3,19 @@ import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
 import { cardTrumpsCard } from '../shared-logic/card-trumps-card';
 
-export function triedToReinforceWithLesserCard(
+export function triedToReinforceGreaterCard(
   gameState: PlayerGameStateModel,
   move: MoveModel
 ) {
-  // Assume each move has one place card attempts
-  const { Card, TargetLaneIndex } = move.PlaceCardAttempts[0];
-  const targetCard = gameState.Lanes[TargetLaneIndex].LastCardPlayed;
+  // Assume all moves are one place card attempt
+  const { Card, TargetLaneIndex, TargetRowIndex } = move.PlaceCardAttempts[0];
+  const targetRow = gameState.Lanes[TargetLaneIndex].Rows[TargetRowIndex];
 
-  if (!targetCard) {
+  if (targetRow.length <= 0) {
     return false;
   }
+
+  const targetCard = targetRow[targetRow.length - 1];
 
   const playerPlayedTargetCard = gameState.IsHost
     ? targetCard.PlayedBy == PlayerOrNoneModel.Host
