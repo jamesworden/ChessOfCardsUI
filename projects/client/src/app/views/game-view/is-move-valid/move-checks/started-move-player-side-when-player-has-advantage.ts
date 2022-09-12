@@ -7,10 +7,13 @@ export function startedMovePlayerSideWhenPlayerHasAdvantage(
   move: MoveModel
 ) {
   const firstPlaceCardAttempt = move.PlaceCardAttempts[0];
+
   const startedMoveOnPlayerSide = gameState.IsHost
     ? firstPlaceCardAttempt.TargetRowIndex < 3
     : firstPlaceCardAttempt.TargetRowIndex > 3;
+
   const lane = gameState.Lanes[firstPlaceCardAttempt.TargetLaneIndex];
+
   const playerHasAdvantage = gameState.IsHost
     ? lane.LaneAdvantage == PlayerOrNoneModel.Host
     : lane.LaneAdvantage == PlayerOrNoneModel.Guest;
