@@ -3,8 +3,6 @@ import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game
 import { allFollowingRowsTopCardPlayedByPlayer } from '../shared-logic/all-following-rows-top-card-played-by-player';
 import { allPreviousRowsTopCardPlayedByPlayer } from '../shared-logic/all-previous-rows-top-card-played-by-player';
 
-// TODO: Make sure not only the rows are occupied but the top card of the row was last played by player
-
 export function startedMovePlayerSideAndPlaceCardOutOfOrder(
   gameState: PlayerGameStateModel,
   move: MoveModel
