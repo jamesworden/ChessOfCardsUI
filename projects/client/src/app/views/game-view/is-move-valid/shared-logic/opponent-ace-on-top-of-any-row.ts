@@ -14,8 +14,8 @@ export function opponentAceOnTopOfAnyRow(
     const topCard = row[row.length - 1];
     const topCardIsAce = topCard.Kind == KindModel.Ace;
     const topCardPlayedByOpponent = playerIsHost
-      ? topCard.PlayedBy == PlayerOrNoneModel.Host
-      : topCard.PlayedBy == PlayerOrNoneModel.Guest;
+      ? topCard.PlayedBy == PlayerOrNoneModel.Guest
+      : topCard.PlayedBy == PlayerOrNoneModel.Host;
 
     if (topCardIsAce && topCardPlayedByOpponent) {
       return true;
