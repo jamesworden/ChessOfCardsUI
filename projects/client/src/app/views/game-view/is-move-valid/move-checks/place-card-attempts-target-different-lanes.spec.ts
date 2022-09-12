@@ -1,5 +1,5 @@
-import { MoveBuilder } from '../../testing/move-builder';
-import { PlaceCardAttemptBuilder } from '../../testing/place-card-attempt-builder';
+import { MoveBuilder } from '../testing/move-builder';
+import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
 import { moveOnDifferentLanes } from './place-card-attempts-target-different-lanes';
 
 describe('[Move Check]: place card attempts target lanes', () => {

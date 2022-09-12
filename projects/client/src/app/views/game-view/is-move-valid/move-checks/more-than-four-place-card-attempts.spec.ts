@@ -1,5 +1,5 @@
-import { MoveBuilder } from '../../testing/move-builder';
-import { PlaceCardAttemptBuilder } from '../../testing/place-card-attempt-builder';
+import { MoveBuilder } from '../testing/move-builder';
+import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
 import { moreThanFourPlaceCardAttempts } from './more-than-four-place-card-attempts';
 
 describe('[Move Check]: more than four place card attempts', () => {

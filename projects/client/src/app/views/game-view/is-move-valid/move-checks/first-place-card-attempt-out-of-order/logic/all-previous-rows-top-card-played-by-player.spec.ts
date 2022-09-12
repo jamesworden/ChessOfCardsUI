@@ -2,7 +2,7 @@ import { CardModel } from 'projects/client/src/app/models/card.model';
 import { KindModel } from 'projects/client/src/app/models/kind.model';
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
 import { SuitModel } from 'projects/client/src/app/models/suit.model';
-import { GameStateBuilder } from '../testing/game-state-builder';
+import { GameStateBuilder } from '../../../testing/game-state-builder';
 import { allPreviousRowsTopCardPlayedByPlayer } from './all-previous-rows-top-card-played-by-player';
 
 describe('[Move Check Shared Logic]: all previous rows top card played by player', () => {
