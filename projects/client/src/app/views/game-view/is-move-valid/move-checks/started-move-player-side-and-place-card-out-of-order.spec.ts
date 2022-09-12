@@ -9,38 +9,66 @@ import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
 import { startedMovePlayerSideAndPlaceCardOutOfOrder } from './started-move-player-side-and-place-card-out-of-order';
 
 describe('[Move Check]: started move player side and place card out of order', () => {
-  // it('should return true when hosts first move is on their second position', () => {
-  //   const placeCardAttempt = new PlaceCardAttemptBuilder()
-  //     .setTargetLaneIndex(0)
-  //     .setTargetRowIndex(1)
-  //     .build();
-  //   const move = new MoveBuilder()
-  //     .addPlaceCardAttempt(placeCardAttempt)
-  //     .build();
-  //   const gameState = new GameStateBuilder()
-  //     .setIsHost(true)
-  //     .setNoLaneAdvantage(0)
-  //     .build();
-  //   const result = startedMovePlayerSideAndPlaceCardOutOfOrder(gameState, move);
-  //   expect(result).toBe(true);
-  // });
+  it('should return true when hosts first move is on their second position', () => {
+    const placeCardAttempt = new PlaceCardAttemptBuilder()
+      .setTargetLaneIndex(0)
+      .setTargetRowIndex(1)
+      .build();
+
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(placeCardAttempt)
+      .build();
+
+    const gameState = new GameStateBuilder()
+      .setIsHost(true)
+      .setNoLaneAdvantage(0)
+      .build();
+
+    const result = startedMovePlayerSideAndPlaceCardOutOfOrder(gameState, move);
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false when hosts first move is on their first position', () => {
+    const placeCardAttempt = new PlaceCardAttemptBuilder()
+      .setTargetLaneIndex(0)
+      .setTargetRowIndex(0)
+      .build();
+
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(placeCardAttempt)
+      .build();
+
+    const gameState = new GameStateBuilder()
+      .setIsHost(true)
+      .setNoLaneAdvantage(0)
+      .build();
+
+    const result = startedMovePlayerSideAndPlaceCardOutOfOrder(gameState, move);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return true when guests first move is on their second position', () => {
+    const placeCardAttempt = new PlaceCardAttemptBuilder()
+      .setTargetLaneIndex(0)
+      .setTargetRowIndex(5)
+      .build();
+
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(placeCardAttempt)
+      .build();
+
+    const gameState = new GameStateBuilder()
+      .setIsHost(false)
+      .setNoLaneAdvantage(0)
+      .build();
+
+    const result = startedMovePlayerSideAndPlaceCardOutOfOrder(gameState, move);
+
+    expect(result).toBe(true);
+  });
 });
-
-//   it('should return false when hosts first move is on their first position', () => {
-//     const playerIsHost = true;
-//     const targetRowIndex = 0;
-//     const result = getTestResult(playerIsHost, targetRowIndex);
-
-//     expect(result).toBe(false);
-//   });
-
-//   it('should return true when guests first move is on their second position', () => {
-//     const playerIsHost = false;
-//     const targetRowIndex = 5;
-//     const result = getTestResult(playerIsHost, targetRowIndex);
-
-//     expect(result).toBe(true);
-//   });
 
 //   it('should return false when guests first move is on their first position', () => {
 //     const playerIsHost = false;
