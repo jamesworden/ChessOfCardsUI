@@ -5,7 +5,7 @@ import { isAnyPlaceCardAttemptInMiddle } from './is-any-place-card-attempt-in-mi
 describe('[Move Check]: is any place card attempt in middle', () => {
   it('should return true when a place card attempt is in the middle', () => {
     const placeCardAttempt = new PlaceCardAttemptBuilder()
-      .setTargetRowIndex(3) // Middle row index
+      .setTargetRowIndex(3)
       .build();
 
     const move = new MoveBuilder()
@@ -17,7 +17,7 @@ describe('[Move Check]: is any place card attempt in middle', () => {
 
   it('should return false when there are no place card attempts in middle', () => {
     const placeCardAttempt = new PlaceCardAttemptBuilder()
-      .setTargetRowIndex(2) // Not the middle row index
+      .setTargetRowIndex(2)
       .build();
 
     const move = new MoveBuilder()
