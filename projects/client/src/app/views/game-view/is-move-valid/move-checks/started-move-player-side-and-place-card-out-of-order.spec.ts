@@ -23,15 +23,15 @@ describe('[Move Check]: started move player side and place card out of order', (
   });
 
   it('should return true when guests first move is on their second position', () => {
-    const playerIsHost = true;
+    const playerIsHost = false;
     const targetRowIndex = 5;
     const result = getTestResult(playerIsHost, targetRowIndex);
 
-    expect(result).toBe(false);
+    expect(result).toBe(true);
   });
 
   it('should return false when guests first move is on their first position', () => {
-    const playerIsHost = true;
+    const playerIsHost = false;
     const targetRowIndex = 6;
     const result = getTestResult(playerIsHost, targetRowIndex);
 
