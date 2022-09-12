@@ -1,41 +1,29 @@
-import { KindModel } from 'projects/client/src/app/models/kind.model';
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
-import { SuitModel } from 'projects/client/src/app/models/suit.model';
+import { MoveBuilder } from '../testing/move-builder';
+import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
 import { isAnyPlaceCardAttemptInMiddle } from './is-any-place-card-attempt-in-middle';
 
 describe('[Move Check]: is any place card attempt in middle', () => {
   it('should return true when a place card attempt is in the middle', () => {
-    const targetLaneIndex = 3;
-    const move = getTestMove(targetLaneIndex);
-    const result = isAnyPlaceCardAttemptInMiddle(move);
+    const placeCardAttempt = new PlaceCardAttemptBuilder()
+      .setTargetRowIndex(3) // Middle row index
+      .build();
 
-    expect(result).toBe(true);
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(placeCardAttempt)
+      .build();
+
+    expect(isAnyPlaceCardAttemptInMiddle(move)).toBe(true);
   });
 
   it('should return false when there are no place card attempts in middle', () => {
-    const targetLaneIndex = 0;
-    const move = getTestMove(targetLaneIndex);
-    const result = isAnyPlaceCardAttemptInMiddle(move);
+    const placeCardAttempt = new PlaceCardAttemptBuilder()
+      .setTargetRowIndex(2) // Not the middle row index
+      .build();
 
-    expect(result).toBe(false);
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(placeCardAttempt)
+      .build();
+
+    expect(isAnyPlaceCardAttemptInMiddle(move)).toBe(false);
   });
-
-  function getTestMove(TargetRowIndex: number) {
-    const move: MoveModel = {
-      PlaceCardAttempts: [
-        {
-          Card: {
-            Kind: KindModel.Ace,
-            Suit: SuitModel.Spades,
-            PlayedBy: PlayerOrNoneModel.Host,
-          },
-          TargetLaneIndex: 0,
-          TargetRowIndex: TargetRowIndex,
-        },
-      ],
-    };
-
-    return move;
-  }
 });
