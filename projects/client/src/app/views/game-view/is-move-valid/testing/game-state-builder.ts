@@ -69,6 +69,16 @@ export class GameStateBuilder {
     return this;
   }
 
+  setGuestLaneAdvantage(laneIndex: number) {
+    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNoneModel.Guest;
+    return this;
+  }
+
+  setHostLaneAdvantage(laneIndex: number) {
+    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNoneModel.Host;
+    return this;
+  }
+
   build() {
     return this.gameState;
   }
