@@ -1,46 +1,22 @@
-import { KindModel } from 'projects/client/src/app/models/kind.model';
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlaceCardAttemptModel } from 'projects/client/src/app/models/place-card-attempt.model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
-import { SuitModel } from 'projects/client/src/app/models/suit.model';
+import { MoveBuilder } from '../testing/move-builder';
+import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
 import { moveHasNoPlaceCardAttempts } from './move-has-no-place-card-attempts';
 
 describe('[Move Check]: move has no place card attempts', () => {
   it('should return true if the move has no place card attempts', () => {
-    const numPlaceCardAttempts = 0;
-    const move = getTestMove(numPlaceCardAttempts);
-    const result = moveHasNoPlaceCardAttempts(move);
-
-    expect(result).toBe(true);
+    const move = new MoveBuilder().build();
+    expect(moveHasNoPlaceCardAttempts(move)).toBe(true);
   });
 
   it('should return false if the move has place card attempts', () => {
-    const numPlaceCardAttempts = 3;
-    const move = getTestMove(numPlaceCardAttempts);
-    const result = moveHasNoPlaceCardAttempts(move);
+    const placeCardAttempt1 = new PlaceCardAttemptBuilder().build();
+    const placeCardAttempt2 = new PlaceCardAttemptBuilder().build();
 
-    expect(result).toBe(false);
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(placeCardAttempt1)
+      .addPlaceCardAttempt(placeCardAttempt2)
+      .build();
+
+    expect(moveHasNoPlaceCardAttempts(move)).toBe(false);
   });
 });
-
-function getTestMove(numPlaceCardAttempts: number) {
-  const placeCardAttempt: PlaceCardAttemptModel = {
-    Card: {
-      Kind: KindModel.Ace,
-      Suit: SuitModel.Spades,
-      PlayedBy: PlayerOrNoneModel.Host,
-    },
-    TargetLaneIndex: 0,
-    TargetRowIndex: 0,
-  };
-
-  const move: MoveModel = {
-    PlaceCardAttempts: [],
-  };
-
-  for (let i = 0; i < numPlaceCardAttempts; i++) {
-    move.PlaceCardAttempts.push(placeCardAttempt);
-  }
-
-  return move;
-}
