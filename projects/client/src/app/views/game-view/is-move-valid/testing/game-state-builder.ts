@@ -64,6 +64,11 @@ export class GameStateBuilder {
     return this;
   }
 
+  setNoLaneAdvantage(laneIndex: number) {
+    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNoneModel.None;
+    return this;
+  }
+
   build() {
     return this.gameState;
   }

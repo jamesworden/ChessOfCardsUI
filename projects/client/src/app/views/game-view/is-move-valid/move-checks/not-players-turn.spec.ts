@@ -1,4 +1,3 @@
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 import { GameStateBuilder } from '../testing/game-state-builder';
 import { notPlayersTurn } from './not-players-turn';
 
