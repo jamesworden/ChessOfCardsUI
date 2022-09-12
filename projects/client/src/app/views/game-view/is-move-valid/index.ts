@@ -10,7 +10,7 @@ import { startedMovePlayerSideAndPlaceCardOutOfOrder } from './move-checks/start
 import { startedMovePlayerSideWhenPlayerHasAdvantage } from './move-checks/started-move-player-side-when-player-has-advantage';
 import { suitOrKindNotMatchAndNotPlayedAceToNukeRow } from './move-checks/suit-or-kind-not-match-and-not-played-ace-to-nuke-row';
 import { targetLaneHasBeenWon } from './move-checks/target-lane-has-been-won';
-import { triedToCaptureLesserCard } from './move-checks/tried-to-capture-lesser-card';
+import { triedToCaptureGreaterCard } from './move-checks/tried-to-capture-greater-card';
 import { triedToReinforceWithDifferentSuit } from './move-checks/tried-to-reinforce-with-different-suit';
 import { triedToReinforceWithLesserCard } from './move-checks/tried-to-reinforce-with-lesser-card';
 
@@ -63,7 +63,7 @@ export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
     return false;
   }
 
-  if (triedToCaptureLesserCard(gameState, move)) {
+  if (triedToCaptureGreaterCard(gameState, move)) {
     return false;
   }
 
