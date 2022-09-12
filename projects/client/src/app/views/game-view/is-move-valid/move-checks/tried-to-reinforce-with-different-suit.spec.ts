@@ -60,7 +60,55 @@ describe('[Move Check]: tried to reinforce with different suit', () => {
     expect(triedToReinforceWithDifferentSuit(gameState, move)).toBe(true);
   });
 
-  it('should return false when host tried to reinforce with same suit', () => {});
+  it('should return false when host tried to reinforce with same suit', () => {
+    const placeCardAttempt = new PlaceCardAttemptBuilder()
+      .setCardKind(KindModel.Ace)
+      .setCardSuit(SuitModel.Clubs)
+      .setTargetLaneIndex(0)
+      .setTargetRowIndex(0)
+      .build();
 
-  it('should return false when guest tried to reinforce with same suit', () => {});
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(placeCardAttempt)
+      .build();
+
+    const card: CardModel = {
+      Kind: KindModel.King,
+      Suit: SuitModel.Clubs,
+      PlayedBy: PlayerOrNoneModel.Host,
+    };
+
+    const gameState = new GameStateBuilder()
+      .addCardToLaneOnRow(card, 0, 0)
+      .setIsHost(true)
+      .build();
+
+    expect(triedToReinforceWithDifferentSuit(gameState, move)).toBe(false);
+  });
+
+  it('should return false when guest tried to reinforce with same suit', () => {
+    const placeCardAttempt = new PlaceCardAttemptBuilder()
+      .setCardKind(KindModel.Ace)
+      .setCardSuit(SuitModel.Clubs)
+      .setTargetLaneIndex(0)
+      .setTargetRowIndex(0)
+      .build();
+
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(placeCardAttempt)
+      .build();
+
+    const card: CardModel = {
+      Kind: KindModel.King,
+      Suit: SuitModel.Clubs,
+      PlayedBy: PlayerOrNoneModel.Guest,
+    };
+
+    const gameState = new GameStateBuilder()
+      .addCardToLaneOnRow(card, 0, 0)
+      .setIsHost(false)
+      .build();
+
+    expect(triedToReinforceWithDifferentSuit(gameState, move)).toBe(false);
+  });
 });
