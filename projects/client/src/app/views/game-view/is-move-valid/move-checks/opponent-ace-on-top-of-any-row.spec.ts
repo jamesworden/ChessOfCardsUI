@@ -18,10 +18,7 @@ describe('[Move Check Shared Logic] opponent ace on top of any row', () => {
       .setIsHost(true)
       .build();
 
-    const lane = gameState.Lanes[0];
-    const playerIsHost = gameState.IsHost;
-
-    expect(opponentAceOnTopOfAnyRow(lane, playerIsHost)).toBe(true);
+    expect(opponentAceOnTopOfAnyRow(gameState)).toBe(true);
   });
 
   it('should return false when player is host and host ace is on row 4', () => {
@@ -36,10 +33,7 @@ describe('[Move Check Shared Logic] opponent ace on top of any row', () => {
       .setIsHost(true)
       .build();
 
-    const lane = gameState.Lanes[0];
-    const playerIsHost = gameState.IsHost;
-
-    expect(opponentAceOnTopOfAnyRow(lane, playerIsHost)).toBe(false);
+    expect(opponentAceOnTopOfAnyRow(gameState)).toBe(false);
   });
 
   it('should return true when player is guest and host ace is on row 0', () => {
@@ -54,10 +48,7 @@ describe('[Move Check Shared Logic] opponent ace on top of any row', () => {
       .setIsHost(false)
       .build();
 
-    const lane = gameState.Lanes[0];
-    const playerIsHost = gameState.IsHost;
-
-    expect(opponentAceOnTopOfAnyRow(lane, playerIsHost)).toBe(true);
+    expect(opponentAceOnTopOfAnyRow(gameState)).toBe(true);
   });
 
   it('should return false when player is guest and guest ace is on row 4', () => {
@@ -72,9 +63,6 @@ describe('[Move Check Shared Logic] opponent ace on top of any row', () => {
       .setIsHost(false)
       .build();
 
-    const lane = gameState.Lanes[0];
-    const playerIsHost = gameState.IsHost;
-
-    expect(opponentAceOnTopOfAnyRow(lane, playerIsHost)).toBe(false);
+    expect(opponentAceOnTopOfAnyRow(gameState)).toBe(false);
   });
 });
