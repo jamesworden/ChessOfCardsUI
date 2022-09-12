@@ -90,6 +90,11 @@ export class GameStateBuilder {
     return this;
   }
 
+  setLastCardPlayedOnLane(card: CardModel, laneIndex: number) {
+    this.gameState.Lanes[laneIndex].LastCardPlayed = card;
+    return this;
+  }
+
   build() {
     return this.gameState;
   }

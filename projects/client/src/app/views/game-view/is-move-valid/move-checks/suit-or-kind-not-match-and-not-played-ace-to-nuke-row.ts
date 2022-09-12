@@ -8,7 +8,7 @@ export function suitOrKindNotMatchAndNotPlayedAceToNukeRow(
   move: MoveModel
 ) {
   // TODO: For now, assume each move has one place card attempt
-  const { Card, TargetLaneIndex, TargetRowIndex } = move.PlaceCardAttempts[0];
+  const { Card, TargetLaneIndex } = move.PlaceCardAttempts[0];
   const { LastCardPlayed } = gameState.Lanes[TargetLaneIndex];
 
   if (!LastCardPlayed) {
