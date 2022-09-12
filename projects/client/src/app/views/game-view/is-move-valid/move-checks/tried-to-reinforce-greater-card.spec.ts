@@ -34,5 +34,29 @@ describe('[Move Check]: tried to reinforce greater card', () => {
     expect(triedToReinforceGreaterCard(gameState, hostMove)).toBe(true);
   });
 
-  it('should return true when guest tried to reinforce greater card', () => {});
+  it('should return true when guest tried to reinforce greater card', () => {
+    const hostPlaceCardAttempt = new PlaceCardAttemptBuilder()
+      .setCardKind(KindModel.Three)
+      .setCardSuit(SuitModel.Spades)
+      .setTargetLaneIndex(0)
+      .setTargetRowIndex(0)
+      .build();
+
+    const hostMove = new MoveBuilder()
+      .addPlaceCardAttempt(hostPlaceCardAttempt)
+      .build();
+
+    const greaterHostCard: CardModel = {
+      Kind: KindModel.Four,
+      Suit: SuitModel.Spades,
+      PlayedBy: PlayerOrNoneModel.Guest,
+    };
+
+    const gameState = new GameStateBuilder()
+      .addCardToLaneOnRow(greaterHostCard, 0, 0)
+      .setIsHost(false)
+      .build();
+
+    expect(triedToReinforceGreaterCard(gameState, hostMove)).toBe(true);
+  });
 });
