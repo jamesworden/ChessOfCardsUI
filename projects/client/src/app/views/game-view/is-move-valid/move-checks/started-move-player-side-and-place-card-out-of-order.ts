@@ -8,10 +8,13 @@ export function startedMovePlayerSideAndPlaceCardOutOfOrder(
   move: MoveModel
 ) {
   const firstPlaceCardAttempt = move.PlaceCardAttempts[0];
+
   const startedMoveOnPlayerSide = gameState.IsHost
     ? firstPlaceCardAttempt.TargetRowIndex < 3
     : firstPlaceCardAttempt.TargetRowIndex > 3;
+
   const lane = gameState.Lanes[firstPlaceCardAttempt.TargetLaneIndex];
+
   const placeCardInOrder = gameState.IsHost
     ? allPreviousRowsTopCardPlayedByPlayer(
         lane,

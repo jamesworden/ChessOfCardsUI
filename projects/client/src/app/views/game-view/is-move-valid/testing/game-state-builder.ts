@@ -1,3 +1,4 @@
+import { CardModel } from 'projects/client/src/app/models/card.model';
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
 
@@ -17,37 +18,27 @@ export class GameStateBuilder {
       Lanes: [
         {
           LaneAdvantage: PlayerOrNoneModel.None,
-          Rows: [],
+          Rows: [[], [], [], [], [], [], []],
           WonBy: PlayerOrNoneModel.None,
         },
         {
           LaneAdvantage: PlayerOrNoneModel.None,
-          Rows: [],
+          Rows: [[], [], [], [], [], [], []],
           WonBy: PlayerOrNoneModel.None,
         },
         {
           LaneAdvantage: PlayerOrNoneModel.None,
-          Rows: [],
+          Rows: [[], [], [], [], [], [], []],
           WonBy: PlayerOrNoneModel.None,
         },
         {
           LaneAdvantage: PlayerOrNoneModel.None,
-          Rows: [],
+          Rows: [[], [], [], [], [], [], []],
           WonBy: PlayerOrNoneModel.None,
         },
         {
           LaneAdvantage: PlayerOrNoneModel.None,
-          Rows: [],
-          WonBy: PlayerOrNoneModel.None,
-        },
-        {
-          LaneAdvantage: PlayerOrNoneModel.None,
-          Rows: [],
-          WonBy: PlayerOrNoneModel.None,
-        },
-        {
-          LaneAdvantage: PlayerOrNoneModel.None,
-          Rows: [],
+          Rows: [[], [], [], [], [], [], []],
           WonBy: PlayerOrNoneModel.None,
         },
       ],
@@ -76,6 +67,11 @@ export class GameStateBuilder {
 
   setHostLaneAdvantage(laneIndex: number) {
     this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNoneModel.Host;
+    return this;
+  }
+
+  addCardToLaneOnRow(card: CardModel, laneIndex: number, rowIndex: number) {
+    this.gameState.Lanes[laneIndex].Rows[rowIndex].push(card);
     return this;
   }
 
