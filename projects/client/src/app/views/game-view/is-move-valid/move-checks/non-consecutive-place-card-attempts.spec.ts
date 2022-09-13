@@ -18,28 +18,28 @@ describe('[Move Check]: non consecutive place card attempts', () => {
     expect(nonConsecutivePlaceCardAttempts(move)).toBe(true);
   });
 
-  // it('should return false if there is no gap in host place card attempts (not counting middle row)', () => {
-  //   const indexOne = new PlaceCardAttemptBuilder().setTargetRowIndex(1).build();
+  it('should return false if there is no gap in host place card attempts (not counting middle row)', () => {
+    const indexOne = new PlaceCardAttemptBuilder().setTargetRowIndex(1).build();
 
-  //   const indexTwo = new PlaceCardAttemptBuilder().setTargetRowIndex(2).build();
+    const indexTwo = new PlaceCardAttemptBuilder().setTargetRowIndex(2).build();
 
-  //   const indexFour = new PlaceCardAttemptBuilder()
-  //     .setTargetRowIndex(4)
-  //     .build();
+    const indexFour = new PlaceCardAttemptBuilder()
+      .setTargetRowIndex(4)
+      .build();
 
-  //   const indexFive = new PlaceCardAttemptBuilder()
-  //     .setTargetRowIndex(5)
-  //     .build();
+    const indexFive = new PlaceCardAttemptBuilder()
+      .setTargetRowIndex(5)
+      .build();
 
-  //   const move = new MoveBuilder()
-  //     .addPlaceCardAttempt(indexOne)
-  //     .addPlaceCardAttempt(indexTwo)
-  //     .addPlaceCardAttempt(indexFour)
-  //     .addPlaceCardAttempt(indexFive)
-  //     .build();
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(indexOne)
+      .addPlaceCardAttempt(indexTwo)
+      .addPlaceCardAttempt(indexFour)
+      .addPlaceCardAttempt(indexFive)
+      .build();
 
-  //   expect(nonConsecutivePlaceCardAttempts(move)).toBe(false);
-  // });
+    expect(nonConsecutivePlaceCardAttempts(move)).toBe(false);
+  });
 
   // it('should return true if there is a gap in guest place card attempts (not counting middle row)', () => {
   //   const indexSix = new PlaceCardAttemptBuilder().setTargetRowIndex(6).build();

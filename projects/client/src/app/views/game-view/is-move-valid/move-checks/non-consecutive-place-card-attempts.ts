@@ -7,7 +7,8 @@ import { MoveModel } from 'projects/client/src/app/models/move.model';
  * on the middle row.
  *
  * Example: if my place card attempts are on rows 1, 2, and 4, this would return false
- * as they are in order and ignoring the index 3.
+ * as they are in order and ignoring the index 3. (4, 2, and 1 would also work as the
+ * function should sort the place card attempts by row.)
  */
 export function nonConsecutivePlaceCardAttempts(move: MoveModel) {
   const targetRowIndexes = move.PlaceCardAttempts.map((p) => p.TargetRowIndex);
@@ -16,43 +17,19 @@ export function nonConsecutivePlaceCardAttempts(move: MoveModel) {
     return false;
   }
 
-  if (duplicateNumbers(targetRowIndexes)) {
-    return false;
-  }
+  let prevRowIndex = targetRowIndexes[0];
+  const ascendingRowIndexes = targetRowIndexes.sort((a, b) => a - b);
 
-  return nonConsecutiveNumbers(targetRowIndexes);
-}
+  for (let i = 0; i < ascendingRowIndexes.length; i++) {
+    const rowIndex = ascendingRowIndexes[i];
+    const middleRowIndexSkipped = rowIndex === 4 && prevRowIndex === 2;
+    const differenceBetweenRows = Math.abs(rowIndex - prevRowIndex);
 
-function duplicateNumbers(numbers: number[]) {
-  const uniqueNumbers = new Set<number>();
-
-  for (const number of numbers) {
-    uniqueNumbers.add(number);
-  }
-
-  return uniqueNumbers.size < numbers.length;
-}
-
-function nonConsecutiveNumbers(numbers: number[]) {
-  const ascendingNumbers = numbers.sort((a, b) => a - b);
-  let prevNumber: number = -1;
-
-  for (let i = 0; i < ascendingNumbers.length; i++) {
-    const number = ascendingNumbers[i];
-    if (prevNumber === -1) {
-      prevNumber = number;
-      continue;
-    }
-
-    const middleRowIndexSkipped = number === 4 && prevNumber === 2;
-    if (middleRowIndexSkipped) {
-      continue;
-    }
-
-    const differential = Math.abs(number - prevNumber);
-    if (differential > 1) {
+    if (!middleRowIndexSkipped && differenceBetweenRows > 1) {
       return true;
     }
+
+    prevRowIndex = rowIndex;
   }
 
   return false;
