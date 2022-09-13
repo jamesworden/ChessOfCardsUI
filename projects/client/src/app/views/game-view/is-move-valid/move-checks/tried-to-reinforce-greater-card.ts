@@ -1,7 +1,7 @@
 import { MoveModel } from 'projects/client/src/app/models/move.model';
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
-import { cardTrumpsCard } from '../shared-logic/card-trumps-card';
+import { cardTrumpsCard } from './logic/card-trumps-card';
 
 export function triedToReinforceGreaterCard(
   gameState: PlayerGameStateModel,

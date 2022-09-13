@@ -1,6 +1,6 @@
 import { MoveModel } from 'projects/client/src/app/models/move.model';
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
-import { cardTrumpsCard } from '../shared-logic/card-trumps-card';
+import { cardTrumpsCard } from './logic/card-trumps-card';
 
 export function triedToCaptureGreaterCard(
   gameState: PlayerGameStateModel,
