@@ -7,7 +7,7 @@ import { firstPlaceCardAttemptOutOfOrder } from './move-checks/first-place-card-
 import { laneHasNoAdvantage } from './move-checks/lane-has-no-advantage';
 import { moreThanFourPlaceCardAttempts } from './move-checks/more-than-four-place-card-attempts';
 import { moveHasNoPlaceCardAttempts } from './move-checks/move-has-no-place-card-attempts';
-import { multiplePlaceCardAttemptsOnSameRow } from './move-checks/multiple-place-card-attempts-on-same-row';
+import { placeCardAttemptsTargetSameRow } from './move-checks/place-card-attempts-target-same-row';
 import { nonConsecutivePlaceCardAttempts } from './move-checks/non-consecutive-place-card-attempts';
 import { notPlayersTurn } from './move-checks/not-players-turn';
 import { opponentCapturedAnyRowWithAce } from './move-checks/opponent-captured-any-row-with-ace';
@@ -22,11 +22,15 @@ import { triedToReinforceGreaterCard } from './move-checks/tried-to-reinforce-gr
 import { triedToReinforceWithDifferentSuit } from './move-checks/tried-to-reinforce-with-different-suit';
 
 export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
-  if (anyPlaceCardAttemptInMiddle(move)) {
+  if (notPlayersTurn(gameState)) {
     return false;
   }
 
   if (moveHasNoPlaceCardAttempts(move)) {
+    return false;
+  }
+
+  if (anyPlaceCardAttemptInMiddle(move)) {
     return false;
   }
 
@@ -38,7 +42,7 @@ export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
     return false;
   }
 
-  if (multiplePlaceCardAttemptsOnSameRow(move)) {
+  if (placeCardAttemptsTargetSameRow(move)) {
     return false;
   }
 
@@ -51,10 +55,6 @@ export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
   }
 
   if (firstPlaceCardAttemptOutOfOrder(gameState, move)) {
-    return false;
-  }
-
-  if (notPlayersTurn(gameState)) {
     return false;
   }
 

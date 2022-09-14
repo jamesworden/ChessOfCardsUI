@@ -1,8 +1,8 @@
 import { MoveBuilder } from '../testing/move-builder';
 import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
-import { multiplePlaceCardAttemptsOnSameRow } from './multiple-place-card-attempts-on-same-row';
+import { placeCardAttemptsTargetSameRow } from './place-card-attempts-target-same-row';
 
-describe('[Move Check]: multiple place card attempts on same row', () => {
+describe('[Move Check]: place card attempts target same row', () => {
   it('should return true if there are', () => {
     const pca1 = new PlaceCardAttemptBuilder().setTargetRowIndex(2).build();
     const pca2 = new PlaceCardAttemptBuilder().setTargetRowIndex(2).build();
@@ -14,7 +14,7 @@ describe('[Move Check]: multiple place card attempts on same row', () => {
       .addPlaceCardAttempt(pca3)
       .build();
 
-    const result = multiplePlaceCardAttemptsOnSameRow(move);
+    const result = placeCardAttemptsTargetSameRow(move);
 
     expect(result).toBe(true);
   });
@@ -30,7 +30,7 @@ describe('[Move Check]: multiple place card attempts on same row', () => {
       .addPlaceCardAttempt(pca3)
       .build();
 
-    const result = multiplePlaceCardAttemptsOnSameRow(move);
+    const result = placeCardAttemptsTargetSameRow(move);
 
     expect(result).toBe(false);
   });

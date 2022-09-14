@@ -1,6 +1,6 @@
 import { MoveModel } from 'projects/client/src/app/models/move.model';
 
-export function multiplePlaceCardAttemptsOnSameRow(move: MoveModel) {
+export function placeCardAttemptsTargetSameRow(move: MoveModel) {
   const targetRowIndexes = move.PlaceCardAttempts.map((p) => p.TargetRowIndex);
   const uniqueIndexes = new Set<number>();
 
