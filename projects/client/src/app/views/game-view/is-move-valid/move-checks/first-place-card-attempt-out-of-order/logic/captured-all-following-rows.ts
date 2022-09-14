@@ -1,7 +1,7 @@
 import { LaneModel } from 'projects/client/src/app/models/lane.model';
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
 
-export function allFollowingRowsTopCardPlayedByPlayer(
+export function capturedAllFollowingRows(
   lane: LaneModel,
   targetRowIndex: number,
   isPlayerHost: boolean

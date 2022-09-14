@@ -3,20 +3,16 @@ import { KindModel } from 'projects/client/src/app/models/kind.model';
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
 import { SuitModel } from 'projects/client/src/app/models/suit.model';
 import { GameStateBuilder } from '../../../testing/game-state-builder';
-import { allFollowingRowsTopCardPlayedByPlayer } from './all-following-rows-top-card-played-by-player';
+import { capturedAllFollowingRows } from './captured-all-following-rows';
 
-describe('[Move Check Shared Logic]: all following rows top card played by player', () => {
+describe('[Move Check Shared Logic]: captured all following rows', () => {
   it('should return true when guest plays card on their first position', () => {
     const targetRowIndex = 6;
     const playerIsHost = false;
     const gameState = new GameStateBuilder().build();
     const lane = gameState.Lanes[0];
 
-    const result = allFollowingRowsTopCardPlayedByPlayer(
-      lane,
-      targetRowIndex,
-      playerIsHost
-    );
+    const result = capturedAllFollowingRows(lane, targetRowIndex, playerIsHost);
 
     expect(result).toBe(true);
   });
@@ -37,11 +33,7 @@ describe('[Move Check Shared Logic]: all following rows top card played by playe
 
     const lane = gameState.Lanes[0];
 
-    const result = allFollowingRowsTopCardPlayedByPlayer(
-      lane,
-      targetRowIndex,
-      playerIsHost
-    );
+    const result = capturedAllFollowingRows(lane, targetRowIndex, playerIsHost);
 
     expect(result).toBe(true);
   });
@@ -62,11 +54,7 @@ describe('[Move Check Shared Logic]: all following rows top card played by playe
 
     const lane = gameState.Lanes[0];
 
-    const result = allFollowingRowsTopCardPlayedByPlayer(
-      lane,
-      targetRowIndex,
-      playerIsHost
-    );
+    const result = capturedAllFollowingRows(lane, targetRowIndex, playerIsHost);
 
     expect(result).toBe(false);
   });
