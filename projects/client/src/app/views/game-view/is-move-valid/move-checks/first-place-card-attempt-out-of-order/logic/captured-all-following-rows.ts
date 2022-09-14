@@ -4,12 +4,13 @@ import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none
 
 export function capturedAllFollowingRows(
   gameState: PlayerGameStateModel,
-  firstPlaceCardAttempt: PlaceCardAttemptModel
+  firstPlaceCardAttempt: PlaceCardAttemptModel,
+  endIndex = 6
 ) {
   const { TargetLaneIndex, TargetRowIndex } = firstPlaceCardAttempt;
   const lane = gameState.Lanes[TargetLaneIndex];
 
-  for (let i = lane.Rows.length - 1; i > TargetRowIndex; i--) {
+  for (let i = endIndex; i > TargetRowIndex; i--) {
     const followingRow = lane.Rows[i];
     const followingRowNotOccupied = followingRow.length == 0;
 

@@ -11,18 +11,16 @@ export function firstPlaceCardAttemptOutOfOrder(
   move: MoveModel
 ) {
   const firstPlaceCardAttempt = getFirstPlaceCardAttempt(gameState, move);
-  const { TargetLaneIndex, TargetRowIndex } = firstPlaceCardAttempt;
-  const lane = gameState.Lanes[TargetLaneIndex];
 
   if (gameState.IsHost) {
-    return startedMovePlayerSide(gameState, move)
-      ? capturedAllPreviousRows(gameState, firstPlaceCardAttempt)
-      : null; // capturedAllPreviousRowsStartingFromMiddle()
-  } else {
-    return startedMoveOpponentSide(gameState, move)
-      ? null // capturedAllFollowingRowsEndingAtMiddle()
-      : capturedAllFollowingRows(gameState, firstPlaceCardAttempt);
+    const startIndex = startedMovePlayerSide(gameState, move) ? 0 : 3;
+    return capturedAllPreviousRows(
+      gameState,
+      firstPlaceCardAttempt,
+      startIndex
+    );
   }
 
-  return false;
+  const endIndex = startedMoveOpponentSide(gameState, move) ? 3 : 6;
+  return capturedAllFollowingRows(gameState, firstPlaceCardAttempt, endIndex);
 }
