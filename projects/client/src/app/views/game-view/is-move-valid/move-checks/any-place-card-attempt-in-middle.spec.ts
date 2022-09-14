@@ -1,8 +1,8 @@
 import { MoveBuilder } from '../testing/move-builder';
 import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
-import { isAnyPlaceCardAttemptInMiddle } from './any-place-card-attempt-is-in-middle';
+import { anyPlaceCardAttemptInMiddle } from './any-place-card-attempt-in-middle';
 
-describe('[Move Check]: is any place card attempt in middle', () => {
+describe('[Move Check]: any place card attempt in middle', () => {
   it('should return true when a place card attempt is in the middle', () => {
     const placeCardAttempt = new PlaceCardAttemptBuilder()
       .setTargetRowIndex(3)
@@ -12,7 +12,7 @@ describe('[Move Check]: is any place card attempt in middle', () => {
       .addPlaceCardAttempt(placeCardAttempt)
       .build();
 
-    expect(isAnyPlaceCardAttemptInMiddle(move)).toBe(true);
+    expect(anyPlaceCardAttemptInMiddle(move)).toBe(true);
   });
 
   it('should return false when there are no place card attempts in middle', () => {
@@ -24,6 +24,6 @@ describe('[Move Check]: is any place card attempt in middle', () => {
       .addPlaceCardAttempt(placeCardAttempt)
       .build();
 
-    expect(isAnyPlaceCardAttemptInMiddle(move)).toBe(false);
+    expect(anyPlaceCardAttemptInMiddle(move)).toBe(false);
   });
 });
