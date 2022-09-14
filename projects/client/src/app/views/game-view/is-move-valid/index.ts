@@ -89,7 +89,7 @@ export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
 
   if (
     suitOrKindNotMatchLastCardPlayed(gameState, move) &&
-    opponentCapturedAnyRowWithAce(gameState)
+    !opponentCapturedAnyRowWithAce(gameState)
   ) {
     return false;
   }

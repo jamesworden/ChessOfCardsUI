@@ -10,7 +10,6 @@ export function suitOrKindNotMatchLastCardPlayed(
   move: MoveModel
 ) {
   const firstPlaceCardAttempt = getFirstPlaceCardAttempt(gameState, move);
-
   const { Card, TargetLaneIndex } = firstPlaceCardAttempt;
   const { LastCardPlayed } = gameState.Lanes[TargetLaneIndex];
 
