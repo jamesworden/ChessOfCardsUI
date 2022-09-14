@@ -13,14 +13,14 @@ export function triedToCaptureDistantRow(
   const firstPlaceCardAttempt = getFirstPlaceCardAttempt(gameState, move);
 
   if (gameState.IsHost) {
-    const startIndex = startedMovePlayerSide(gameState, move) ? 0 : 3;
-    return capturedAllPreviousRows(
+    const startIndex = startedMovePlayerSide(gameState, move) ? 0 : 4;
+    return !capturedAllPreviousRows(
       gameState,
       firstPlaceCardAttempt,
       startIndex
     );
   }
 
-  const endIndex = startedMoveOpponentSide(gameState, move) ? 3 : 6;
-  return capturedAllFollowingRows(gameState, firstPlaceCardAttempt, endIndex);
+  const endIndex = startedMoveOpponentSide(gameState, move) ? 4 : 6;
+  return !capturedAllFollowingRows(gameState, firstPlaceCardAttempt, endIndex);
 }
