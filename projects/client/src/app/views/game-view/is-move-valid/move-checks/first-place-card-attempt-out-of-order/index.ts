@@ -16,8 +16,11 @@ export function firstPlaceCardAttemptOutOfOrder(
   if (gameState.IsHost) {
     return startedMovePlayerSide(gameState, move)
       ? capturedAllPreviousRows(gameState, firstPlaceCardAttempt)
-      : capturedAllFollowingRows(gameState, firstPlaceCardAttempt);
+      : null; // capturedAllPreviousRowsStartingFromMiddle()
   } else {
+    return true // startedMoveOpponentSide
+      ? null // capturedAllFollowingRowsEndingAtMiddle()
+      : capturedAllFollowingRows(gameState, firstPlaceCardAttempt);
   }
 
   return false;
