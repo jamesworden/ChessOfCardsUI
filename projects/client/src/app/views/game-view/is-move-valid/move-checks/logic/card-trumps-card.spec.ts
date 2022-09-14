@@ -4,7 +4,7 @@ import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none
 import { SuitModel } from 'projects/client/src/app/models/suit.model';
 import { cardTrumpsCard } from './card-trumps-card';
 
-describe('[Move Check Shared Logic]: card trumps card', () => {
+describe('[Move Check Logic]: card trumps card', () => {
   it('should return true for when a card trumps another card of same suit', () => {
     {
       const attackingCard: CardModel = {
