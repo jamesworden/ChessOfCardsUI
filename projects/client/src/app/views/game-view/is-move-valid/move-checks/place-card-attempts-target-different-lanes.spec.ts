@@ -22,7 +22,7 @@ describe('[Move Check]: place card attempts target different lanes', () => {
       .addPlaceCardAttempt(laneIndexTwo)
       .build();
 
-    expect(placeCardAttemptsTargetDifferentLanes(move)).toBe(true);
+    expect(placeCardAttemptsTargetDifferentLanes(move)).toBeTrue();
   });
 
   it('should return false when move has place card attempts on only one target lane', () => {

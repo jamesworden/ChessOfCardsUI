@@ -19,7 +19,7 @@ describe('[Move Check Logic]: card trumps card', () => {
         PlayedBy: PlayerOrNoneModel.None,
       };
 
-      expect(cardTrumpsCard(attackingCard, defendingCard)).toBe(true);
+      expect(cardTrumpsCard(attackingCard, defendingCard)).toBeTrue();
     }
 
     {
@@ -35,7 +35,7 @@ describe('[Move Check Logic]: card trumps card', () => {
         PlayedBy: PlayerOrNoneModel.None,
       };
 
-      expect(cardTrumpsCard(attackingCard, defendingCard)).toBe(true);
+      expect(cardTrumpsCard(attackingCard, defendingCard)).toBeTrue();
     }
 
     {
@@ -51,7 +51,7 @@ describe('[Move Check Logic]: card trumps card', () => {
         PlayedBy: PlayerOrNoneModel.None,
       };
 
-      expect(cardTrumpsCard(attackingCard, defendingCard)).toBe(true);
+      expect(cardTrumpsCard(attackingCard, defendingCard)).toBeTrue();
     }
   });
 
@@ -119,7 +119,7 @@ describe('[Move Check Logic]: card trumps card', () => {
         PlayedBy: PlayerOrNoneModel.None,
       };
 
-      expect(cardTrumpsCard(attackingCard, defendingCard)).toBe(true);
+      expect(cardTrumpsCard(attackingCard, defendingCard)).toBeTrue();
     }
 
     {
@@ -135,7 +135,7 @@ describe('[Move Check Logic]: card trumps card', () => {
         PlayedBy: PlayerOrNoneModel.None,
       };
 
-      expect(cardTrumpsCard(attackingCard, defendingCard)).toBe(true);
+      expect(cardTrumpsCard(attackingCard, defendingCard)).toBeTrue();
     }
 
     {
@@ -151,7 +151,7 @@ describe('[Move Check Logic]: card trumps card', () => {
         PlayedBy: PlayerOrNoneModel.None,
       };
 
-      expect(cardTrumpsCard(attackingCard, defendingCard)).toBe(true);
+      expect(cardTrumpsCard(attackingCard, defendingCard)).toBeTrue();
     }
   });
 });

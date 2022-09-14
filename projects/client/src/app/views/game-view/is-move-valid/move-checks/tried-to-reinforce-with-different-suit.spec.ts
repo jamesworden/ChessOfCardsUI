@@ -31,7 +31,7 @@ describe('[Move Check]: tried to reinforce with different suit', () => {
       .setIsHost(true)
       .build();
 
-    expect(triedToReinforceWithDifferentSuit(gameState, move)).toBe(true);
+    expect(triedToReinforceWithDifferentSuit(gameState, move)).toBeTrue();
   });
 
   it('should return true when guest tried to reinforce with different suit', () => {
@@ -57,7 +57,7 @@ describe('[Move Check]: tried to reinforce with different suit', () => {
       .setIsHost(false)
       .build();
 
-    expect(triedToReinforceWithDifferentSuit(gameState, move)).toBe(true);
+    expect(triedToReinforceWithDifferentSuit(gameState, move)).toBeTrue();
   });
 
   it('should return false when host tried to reinforce with same suit', () => {

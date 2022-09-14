@@ -15,7 +15,7 @@ describe('[Move Check]: lane has no advantage', () => {
 
     const gameState = new GameStateBuilder().setNoLaneAdvantage(0).build();
 
-    expect(laneHasNoAdvantage(gameState, move)).toBeTruthy();
+    expect(laneHasNoAdvantage(gameState, move)).toBeTrue();
   });
 
   it('should return false when lane has host advantage', () => {
@@ -29,7 +29,7 @@ describe('[Move Check]: lane has no advantage', () => {
 
     const gameState = new GameStateBuilder().setHostLaneAdvantage(0).build();
 
-    expect(laneHasNoAdvantage(gameState, move)).toBeFalsy();
+    expect(laneHasNoAdvantage(gameState, move)).toBeFalse();
   });
 
   it('should return false when lane has guest advantage', () => {
@@ -43,6 +43,6 @@ describe('[Move Check]: lane has no advantage', () => {
 
     const gameState = new GameStateBuilder().setGuestLaneAdvantage(0).build();
 
-    expect(laneHasNoAdvantage(gameState, move)).toBeFalsy();
+    expect(laneHasNoAdvantage(gameState, move)).toBeFalse();
   });
 });

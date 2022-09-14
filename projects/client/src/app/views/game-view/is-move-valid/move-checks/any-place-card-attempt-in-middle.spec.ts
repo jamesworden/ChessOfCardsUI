@@ -12,7 +12,7 @@ describe('[Move Check]: any place card attempt in middle', () => {
       .addPlaceCardAttempt(placeCardAttempt)
       .build();
 
-    expect(anyPlaceCardAttemptInMiddle(move)).toBe(true);
+    expect(anyPlaceCardAttemptInMiddle(move)).toBeTrue();
   });
 
   it('should return false when there are no place card attempts in middle', () => {

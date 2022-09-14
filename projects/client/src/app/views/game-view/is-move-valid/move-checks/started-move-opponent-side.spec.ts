@@ -15,7 +15,7 @@ describe('[Move Check]: started move opponent side', () => {
 
     const gameState = new GameStateBuilder().setIsHost(true).build();
 
-    expect(startedMoveOpponentSide(gameState, move)).toBe(true);
+    expect(startedMoveOpponentSide(gameState, move)).toBeTrue();
   });
 
   it('should return false when host moved host side', () => {
@@ -43,7 +43,7 @@ describe('[Move Check]: started move opponent side', () => {
 
     const gameState = new GameStateBuilder().setIsHost(false).build();
 
-    expect(startedMoveOpponentSide(gameState, move)).toBe(true);
+    expect(startedMoveOpponentSide(gameState, move)).toBeTrue();
   });
 
   it('should return false when guest moved guest side', () => {

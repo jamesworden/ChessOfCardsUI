@@ -17,7 +17,7 @@ describe('[Move Check Shared Logic]: captured all previous rows', () => {
 
     const result = capturedAllPreviousRows(gameState, placeCardAttempt);
 
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return true when host plays card on their second position and the first has a card of theirs', () => {
@@ -39,7 +39,7 @@ describe('[Move Check Shared Logic]: captured all previous rows', () => {
 
     const result = capturedAllPreviousRows(gameState, placeCardAttempt);
 
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return false when host plays card on their second position and the first has a guest card', () => {

@@ -1,4 +1,4 @@
-import { playerHasAdvantage } from 'archive/player-has-advantage';
+import { playerHasAdvantage } from './player-has-advantage';
 import { GameStateBuilder } from '../testing/game-state-builder';
 import { MoveBuilder } from '../testing/move-builder';
 import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
@@ -18,7 +18,7 @@ describe('[Move Check]: player has advantage', () => {
       .setIsHost(true)
       .build();
 
-    expect(playerHasAdvantage(gameState, move)).toBeTruthy();
+    expect(playerHasAdvantage(gameState, move)).toBeTrue();
   });
 
   it('should return false when player is host and guest has lane advantage', () => {
@@ -35,7 +35,7 @@ describe('[Move Check]: player has advantage', () => {
       .setIsHost(true)
       .build();
 
-    expect(playerHasAdvantage(gameState, move)).toBeFalsy();
+    expect(playerHasAdvantage(gameState, move)).toBeFalse();
   });
 
   it('should return true when player is guest and guest has lane advantage', () => {
@@ -69,6 +69,6 @@ describe('[Move Check]: player has advantage', () => {
       .setIsHost(false)
       .build();
 
-    expect(playerHasAdvantage(gameState, move)).toBeFalsy();
+    expect(playerHasAdvantage(gameState, move)).toBeFalse();
   });
 });

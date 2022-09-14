@@ -31,7 +31,7 @@ describe('[Move Check]: tried to reinforce greater card', () => {
       .setIsHost(true)
       .build();
 
-    expect(triedToReinforceGreaterCard(gameState, hostMove)).toBe(true);
+    expect(triedToReinforceGreaterCard(gameState, hostMove)).toBeTrue();
   });
 
   it('should return true when guest tried to reinforce greater card', () => {
@@ -57,7 +57,7 @@ describe('[Move Check]: tried to reinforce greater card', () => {
       .setIsHost(false)
       .build();
 
-    expect(triedToReinforceGreaterCard(gameState, guestMove)).toBe(true);
+    expect(triedToReinforceGreaterCard(gameState, guestMove)).toBeTrue();
   });
 
   it('should return false when host tried to reinforce lesser card', () => {

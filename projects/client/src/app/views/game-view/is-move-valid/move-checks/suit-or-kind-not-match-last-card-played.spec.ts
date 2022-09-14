@@ -33,7 +33,7 @@ describe('[Move Check]: suit or kind not match and not played ace to nuke row', 
 
     const result = suitOrKindNotMatchLastCardPlayed(gameState, move);
 
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return true when guest played card that does not match suit or kind of last card played', () => {
@@ -61,7 +61,7 @@ describe('[Move Check]: suit or kind not match and not played ace to nuke row', 
 
     const result = suitOrKindNotMatchLastCardPlayed(gameState, move);
 
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return false when host played card that matches suit of last card played', () => {

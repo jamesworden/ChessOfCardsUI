@@ -17,19 +17,17 @@ export function nonConsecutivePlaceCardAttempts(move: MoveModel) {
     return false;
   }
 
-  let prevRowIndex = targetRowIndexes[0];
   const ascendingRowIndexes = targetRowIndexes.sort((a, b) => a - b);
 
-  for (let i = 0; i < ascendingRowIndexes.length; i++) {
+  for (let i = 1; i < ascendingRowIndexes.length; i++) {
     const rowIndex = ascendingRowIndexes[i];
-    const middleRowIndexSkipped = rowIndex === 4 && prevRowIndex === 2;
+    const prevRowIndex = ascendingRowIndexes[i - 1];
+    const middleRowIndexSkipped = prevRowIndex === 2 && rowIndex === 4;
     const differenceBetweenRows = Math.abs(rowIndex - prevRowIndex);
 
     if (!middleRowIndexSkipped && differenceBetweenRows > 1) {
       return true;
     }
-
-    prevRowIndex = rowIndex;
   }
 
   return false;

@@ -8,7 +8,7 @@ describe('[Move Check]: not players turn', () => {
       .setIsHostPlayersTurn(false)
       .build();
 
-    expect(notPlayersTurn(gameState)).toBe(true);
+    expect(notPlayersTurn(gameState)).toBeTrue();
   });
 
   it('should return true when player is guest and it is hosts turn', () => {
@@ -17,7 +17,7 @@ describe('[Move Check]: not players turn', () => {
       .setIsHostPlayersTurn(true)
       .build();
 
-    expect(notPlayersTurn(gameState)).toBe(true);
+    expect(notPlayersTurn(gameState)).toBeTrue();
   });
 
   it('should return false when player is host and it is hosts turn', () => {

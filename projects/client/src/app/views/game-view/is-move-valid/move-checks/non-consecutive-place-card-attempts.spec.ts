@@ -15,7 +15,7 @@ describe('[Move Check]: non consecutive place card attempts', () => {
       .addPlaceCardAttempt(indexTwo)
       .build();
 
-    expect(nonConsecutivePlaceCardAttempts(move)).toBe(true);
+    expect(nonConsecutivePlaceCardAttempts(move)).toBeTrue();
   });
 
   it('should return false if there is no gap in host place card attempts (not counting middle row)', () => {
@@ -41,41 +41,41 @@ describe('[Move Check]: non consecutive place card attempts', () => {
     expect(nonConsecutivePlaceCardAttempts(move)).toBe(false);
   });
 
-  // it('should return true if there is a gap in guest place card attempts (not counting middle row)', () => {
-  //   const indexSix = new PlaceCardAttemptBuilder().setTargetRowIndex(6).build();
+  it('should return true if there is a gap in guest place card attempts (not counting middle row)', () => {
+    const indexSix = new PlaceCardAttemptBuilder().setTargetRowIndex(6).build();
 
-  //   const indexFour = new PlaceCardAttemptBuilder()
-  //     .setTargetRowIndex(4)
-  //     .build();
+    const indexFour = new PlaceCardAttemptBuilder()
+      .setTargetRowIndex(4)
+      .build();
 
-  //   const move = new MoveBuilder()
-  //     .addPlaceCardAttempt(indexSix)
-  //     .addPlaceCardAttempt(indexFour)
-  //     .build();
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(indexSix)
+      .addPlaceCardAttempt(indexFour)
+      .build();
 
-  //   expect(nonConsecutivePlaceCardAttempts(move)).toBe(true);
-  // });
+    expect(nonConsecutivePlaceCardAttempts(move)).toBeTrue();
+  });
 
-  // it('should return false if there is no gap in guest place card attempts (not counting middle row)', () => {
-  //   const indexFive = new PlaceCardAttemptBuilder()
-  //     .setTargetRowIndex(5)
-  //     .build();
+  it('should return false if there is no gap in guest place card attempts (not counting middle row)', () => {
+    const indexFive = new PlaceCardAttemptBuilder()
+      .setTargetRowIndex(5)
+      .build();
 
-  //   const indexFour = new PlaceCardAttemptBuilder()
-  //     .setTargetRowIndex(4)
-  //     .build();
+    const indexFour = new PlaceCardAttemptBuilder()
+      .setTargetRowIndex(4)
+      .build();
 
-  //   const indexTwo = new PlaceCardAttemptBuilder().setTargetRowIndex(2).build();
+    const indexTwo = new PlaceCardAttemptBuilder().setTargetRowIndex(2).build();
 
-  //   const indexOne = new PlaceCardAttemptBuilder().setTargetRowIndex(1).build();
+    const indexOne = new PlaceCardAttemptBuilder().setTargetRowIndex(1).build();
 
-  //   const move = new MoveBuilder()
-  //     .addPlaceCardAttempt(indexFive)
-  //     .addPlaceCardAttempt(indexFour)
-  //     .addPlaceCardAttempt(indexTwo)
-  //     .addPlaceCardAttempt(indexOne)
-  //     .build();
+    const move = new MoveBuilder()
+      .addPlaceCardAttempt(indexFive)
+      .addPlaceCardAttempt(indexFour)
+      .addPlaceCardAttempt(indexTwo)
+      .addPlaceCardAttempt(indexOne)
+      .build();
 
-  //   expect(nonConsecutivePlaceCardAttempts(move)).toBe(false);
-  // });
+    expect(nonConsecutivePlaceCardAttempts(move)).toBeFalse();
+  });
 });

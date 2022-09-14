@@ -14,7 +14,7 @@ describe('[Move Check]: more than four place card attempts', () => {
       .addPlaceCardAttempt(placeCardAttempt)
       .build();
 
-    expect(moreThanFourPlaceCardAttempts(move)).toBe(true);
+    expect(moreThanFourPlaceCardAttempts(move)).toBeTrue();
   });
 
   it('should return false where there are less than four place card attempts', () => {

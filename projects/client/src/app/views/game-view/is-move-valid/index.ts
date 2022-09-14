@@ -1,5 +1,3 @@
-import { opponentHasAdvantage } from 'archive/opponent-has-advantage';
-import { playerHasAdvantage } from 'archive/player-has-advantage';
 import { MoveModel } from 'projects/client/src/app/models/move.model';
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 import { anyPlaceCardAttemptInMiddle } from './move-checks/any-place-card-attempt-in-middle';
@@ -20,6 +18,8 @@ import { triedToCaptureGreaterCard } from './move-checks/tried-to-capture-greate
 import { triedToReinforceGreaterCard } from './move-checks/tried-to-reinforce-greater-card';
 import { triedToReinforceWithDifferentSuit } from './move-checks/tried-to-reinforce-with-different-suit';
 import { triedToCaptureDistantRow } from './move-checks/tried-to-capture-distant-row';
+import { opponentHasAdvantage } from './move-checks/opponent-has-advantage';
+import { playerHasAdvantage } from './move-checks/player-has-advantage';
 
 export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
   if (notPlayersTurn(gameState)) {

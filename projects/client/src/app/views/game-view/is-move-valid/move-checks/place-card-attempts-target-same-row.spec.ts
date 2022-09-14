@@ -16,7 +16,7 @@ describe('[Move Check]: place card attempts target same row', () => {
 
     const result = placeCardAttemptsTargetSameRow(move);
 
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return false if there are not', () => {

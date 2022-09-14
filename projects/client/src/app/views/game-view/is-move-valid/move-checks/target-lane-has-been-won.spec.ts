@@ -15,7 +15,7 @@ describe('[Move Check]: target lane has been won', () => {
 
     const gameState = new GameStateBuilder().setHostWonBy(0).build();
 
-    expect(targetLaneHasBeenWon(gameState, move)).toBe(true);
+    expect(targetLaneHasBeenWon(gameState, move)).toBeTrue();
   });
 
   it('should return true if the target lane was won by guest', () => {
@@ -29,7 +29,7 @@ describe('[Move Check]: target lane has been won', () => {
 
     const gameState = new GameStateBuilder().setGuestWonBy(0).build();
 
-    expect(targetLaneHasBeenWon(gameState, move)).toBe(true);
+    expect(targetLaneHasBeenWon(gameState, move)).toBeTrue();
   });
 
   it('should return false if the target lane was not won', () => {

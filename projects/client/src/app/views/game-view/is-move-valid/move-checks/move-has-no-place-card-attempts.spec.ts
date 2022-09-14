@@ -5,7 +5,7 @@ import { moveHasNoPlaceCardAttempts } from './move-has-no-place-card-attempts';
 describe('[Move Check]: move has no place card attempts', () => {
   it('should return true if the move has no place card attempts', () => {
     const move = new MoveBuilder().build();
-    expect(moveHasNoPlaceCardAttempts(move)).toBe(true);
+    expect(moveHasNoPlaceCardAttempts(move)).toBeTrue();
   });
 
   it('should return false if the move has place card attempts', () => {

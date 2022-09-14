@@ -18,7 +18,7 @@ describe('[Move Check]: place card attempts have different kinds', () => {
       .addPlaceCardAttempt(eight)
       .build();
 
-    expect(placeCardAttemptsHaveDifferentKinds(move)).toBe(true);
+    expect(placeCardAttemptsHaveDifferentKinds(move)).toBeTrue();
   });
 
   it('should return false when place card attempts have same kinds', () => {

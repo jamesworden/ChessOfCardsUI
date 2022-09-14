@@ -32,7 +32,7 @@ describe('[Move Check]: tried to capture greater card', () => {
       .addCardToLaneOnRow(greaterGuestCard, 0, 0)
       .build();
 
-    expect(triedToCaptureGreaterCard(gameState, hostMove)).toBe(true);
+    expect(triedToCaptureGreaterCard(gameState, hostMove)).toBeTrue();
   });
 
   it('should return false when guest tried to capture lesser host card', () => {
