@@ -15,7 +15,7 @@ export function firstPlaceCardAttemptOutOfOrder(
 
   if (gameState.IsHost) {
     return startedMovePlayerSide(gameState, move)
-      ? capturedAllPreviousRows(lane, TargetRowIndex, gameState.IsHost)
+      ? capturedAllPreviousRows(gameState, firstPlaceCardAttempt)
       : capturedAllFollowingRows(gameState, firstPlaceCardAttempt);
   } else {
   }
