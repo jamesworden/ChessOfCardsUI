@@ -3,7 +3,6 @@ import { playerHasAdvantage } from 'archive/player-has-advantage';
 import { MoveModel } from 'projects/client/src/app/models/move.model';
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 import { anyPlaceCardAttemptInMiddle } from './move-checks/any-place-card-attempt-in-middle';
-import { firstPlaceCardAttemptOutOfOrder } from './move-checks/first-place-card-attempt-out-of-order';
 import { laneHasNoAdvantage } from './move-checks/lane-has-no-advantage';
 import { moreThanFourPlaceCardAttempts } from './move-checks/more-than-four-place-card-attempts';
 import { moveHasNoPlaceCardAttempts } from './move-checks/move-has-no-place-card-attempts';
@@ -20,6 +19,7 @@ import { targetLaneHasBeenWon } from './move-checks/target-lane-has-been-won';
 import { triedToCaptureGreaterCard } from './move-checks/tried-to-capture-greater-card';
 import { triedToReinforceGreaterCard } from './move-checks/tried-to-reinforce-greater-card';
 import { triedToReinforceWithDifferentSuit } from './move-checks/tried-to-reinforce-with-different-suit';
+import { triedToCaptureDistantRow } from './move-checks/tried-to-capture-distant-row';
 
 export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
   if (notPlayersTurn(gameState)) {
@@ -54,7 +54,7 @@ export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
     return false;
   }
 
-  if (firstPlaceCardAttemptOutOfOrder(gameState, move)) {
+  if (triedToCaptureDistantRow(gameState, move)) {
     return false;
   }
 

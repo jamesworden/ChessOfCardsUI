@@ -6,7 +6,7 @@ import { startedMovePlayerSide } from '../started-move-player-side';
 import { capturedAllFollowingRows } from './logic/captured-all-following-rows';
 import { capturedAllPreviousRows } from './logic/captured-all-previous-rows';
 
-export function firstPlaceCardAttemptOutOfOrder(
+export function triedToCaptureDistantRow(
   gameState: PlayerGameStateModel,
   move: MoveModel
 ) {
