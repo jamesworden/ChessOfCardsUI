@@ -1,12 +1,15 @@
-import { LaneModel } from 'projects/client/src/app/models/lane.model';
+import { PlaceCardAttemptModel } from 'projects/client/src/app/models/place-card-attempt.model';
+import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
 
 export function capturedAllFollowingRows(
-  lane: LaneModel,
-  targetRowIndex: number,
-  isPlayerHost: boolean
+  gameState: PlayerGameStateModel,
+  firstPlaceCardAttempt: PlaceCardAttemptModel
 ) {
-  for (let i = lane.Rows.length - 1; i > targetRowIndex; i--) {
+  const { TargetLaneIndex, TargetRowIndex } = firstPlaceCardAttempt;
+  const lane = gameState.Lanes[TargetLaneIndex];
+
+  for (let i = lane.Rows.length - 1; i > TargetRowIndex; i--) {
     const followingRow = lane.Rows[i];
     const followingRowNotOccupied = followingRow.length == 0;
 
@@ -15,7 +18,7 @@ export function capturedAllFollowingRows(
     }
 
     const topCard = followingRow[followingRow.length - 1];
-    const topCardPlayedByPlayer = isPlayerHost
+    const topCardPlayedByPlayer = gameState.IsHost
       ? topCard.PlayedBy == PlayerOrNoneModel.Host
       : topCard.PlayedBy == PlayerOrNoneModel.Guest;
 
