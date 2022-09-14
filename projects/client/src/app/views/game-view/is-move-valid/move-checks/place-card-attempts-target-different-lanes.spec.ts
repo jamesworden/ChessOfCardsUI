@@ -1,8 +1,8 @@
 import { MoveBuilder } from '../testing/move-builder';
 import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
-import { moveOnDifferentLanes } from './place-card-attempts-target-different-lanes';
+import { placeCardAttemptsTargetDifferentLanes } from './place-card-attempts-target-different-lanes';
 
-describe('[Move Check]: place card attempts target lanes', () => {
+describe('[Move Check]: place card attempts target different lanes', () => {
   it('should return true when move has place card attempts on different target lanes', () => {
     const laneIndexZero = new PlaceCardAttemptBuilder()
       .setTargetLaneIndex(0)
@@ -22,7 +22,7 @@ describe('[Move Check]: place card attempts target lanes', () => {
       .addPlaceCardAttempt(laneIndexTwo)
       .build();
 
-    expect(moveOnDifferentLanes(move)).toBe(true);
+    expect(placeCardAttemptsTargetDifferentLanes(move)).toBe(true);
   });
 
   it('should return false when move has place card attempts on only one target lane', () => {
@@ -44,6 +44,6 @@ describe('[Move Check]: place card attempts target lanes', () => {
       .addPlaceCardAttempt(laneIndexTwo)
       .build();
 
-    expect(moveOnDifferentLanes(move)).toBe(false);
+    expect(placeCardAttemptsTargetDifferentLanes(move)).toBe(false);
   });
 });
