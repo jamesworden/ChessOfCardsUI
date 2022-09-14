@@ -1,14 +1,21 @@
+import { opponentHasAdvantage } from 'archive/opponent-has-advantage';
+import { playerHasAdvantage } from 'archive/player-has-advantage';
 import { MoveModel } from 'projects/client/src/app/models/move.model';
 import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 import { anyPlaceCardAttemptInMiddle } from './move-checks/any-place-card-attempt-in-middle';
 import { firstPlaceCardAttemptOutOfOrder } from './move-checks/first-place-card-attempt-out-of-order';
+import { laneHasNoAdvantage } from './move-checks/lane-has-no-advantage';
 import { moreThanFourPlaceCardAttempts } from './move-checks/more-than-four-place-card-attempts';
 import { moveHasNoPlaceCardAttempts } from './move-checks/move-has-no-place-card-attempts';
 import { multiplePlaceCardAttemptsOnSameRow } from './move-checks/multiple-place-card-attempts-on-same-row';
 import { nonConsecutivePlaceCardAttempts } from './move-checks/non-consecutive-place-card-attempts';
 import { notPlayersTurn } from './move-checks/not-players-turn';
+import { opponentCapturedAnyRowWithAce } from './move-checks/opponent-captured-any-row-with-ace';
 import { placeCardAttemptsHaveDifferentKinds } from './move-checks/place-card-attempts-have-different-kinds';
 import { placeCardAttemptsTargetDifferentLanes } from './move-checks/place-card-attempts-target-different-lanes';
+import { startedMoveOpponentSide } from './move-checks/started-move-opponent-side';
+import { startedMovePlayerSide } from './move-checks/started-move-player-side';
+import { suitOrKindNotMatchLastCardPlayed } from './move-checks/suit-or-kind-not-match-last-card-played';
 import { targetLaneHasBeenWon } from './move-checks/target-lane-has-been-won';
 import { triedToCaptureGreaterCard } from './move-checks/tried-to-capture-greater-card';
 import { triedToReinforceGreaterCard } from './move-checks/tried-to-reinforce-greater-card';
@@ -59,7 +66,33 @@ export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
     return false;
   }
 
-  // Simple logic
+  if (
+    startedMovePlayerSide(gameState, move) &&
+    playerHasAdvantage(gameState, move)
+  ) {
+    return false;
+  }
+
+  if (
+    startedMoveOpponentSide(gameState, move) &&
+    opponentHasAdvantage(gameState, move)
+  ) {
+    return false;
+  }
+
+  if (
+    startedMoveOpponentSide(gameState, move) &&
+    laneHasNoAdvantage(gameState, move)
+  ) {
+    return false;
+  }
+
+  if (
+    suitOrKindNotMatchLastCardPlayed(gameState, move) &&
+    opponentCapturedAnyRowWithAce(gameState)
+  ) {
+    return false;
+  }
 
   if (triedToReinforceWithDifferentSuit(gameState, move)) {
     return false;
