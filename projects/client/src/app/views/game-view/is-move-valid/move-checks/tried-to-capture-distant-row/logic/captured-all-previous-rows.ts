@@ -12,7 +12,7 @@ export function capturedAllPreviousRows(
 
   for (let i = startIndex; i < TargetRowIndex; i++) {
     const previousRow = lane.Rows[i];
-    const previousRowNotOccupied = previousRow.length == 0;
+    const previousRowNotOccupied = previousRow.length === 0;
 
     if (previousRowNotOccupied) {
       return false;

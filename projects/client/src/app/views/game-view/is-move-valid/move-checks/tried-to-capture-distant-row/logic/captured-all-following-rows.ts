@@ -12,7 +12,7 @@ export function capturedAllFollowingRows(
 
   for (let i = endIndex; i > TargetRowIndex; i--) {
     const followingRow = lane.Rows[i];
-    const followingRowNotOccupied = followingRow.length == 0;
+    const followingRowNotOccupied = followingRow.length === 0;
 
     if (followingRowNotOccupied) {
       return false;
