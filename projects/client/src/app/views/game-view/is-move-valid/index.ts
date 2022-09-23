@@ -30,15 +30,15 @@ export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
     return false;
   }
 
+  if (moreThanFourPlaceCardAttempts(move)) {
+    return false;
+  }
+
   if (anyPlaceCardAttemptInMiddle(move)) {
     return false;
   }
 
   if (placeCardAttemptsTargetDifferentLanes(move)) {
-    return false;
-  }
-
-  if (moreThanFourPlaceCardAttempts(move)) {
     return false;
   }
 
