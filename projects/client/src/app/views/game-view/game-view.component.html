@@ -40,6 +40,14 @@
               [isPlayedBy]="getTopCard(lane.Rows[6 - rowIndex]).PlayedBy"
               [isHost]="true"
             ></app-card>
+
+            <app-card
+              *ngIf="
+                lane.Rows[6 - rowIndex].length <= 0 && lane.WonBy != WonBy.None
+              "
+              cardImageFileName="card_joker_red.png"
+              [isHost]="true"
+            ></app-card>
           </app-position>
         </ng-container>
       </div>
@@ -93,6 +101,12 @@
               [isMiddleCard]="rowIndex === 3"
               [isPlayedBy]="getTopCard(row).PlayedBy"
               [isHost]="false"
+            ></app-card>
+
+            <app-card
+              *ngIf="row.length <= 0 && lane.WonBy != WonBy.None"
+              [isHost]="false"
+              cardImageFileName="card_joker_red.png"
             ></app-card>
           </app-position>
         </ng-container>

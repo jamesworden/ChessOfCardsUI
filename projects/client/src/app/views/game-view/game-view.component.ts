@@ -10,7 +10,7 @@ import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { PlayerGameState } from '../../state/player-game-state.state';
-import { isMoveValid } from './is-move-valid';
+import { isMoveValid } from './logic/is-move-valid';
 
 @Component({
   selector: 'app-game-view',
