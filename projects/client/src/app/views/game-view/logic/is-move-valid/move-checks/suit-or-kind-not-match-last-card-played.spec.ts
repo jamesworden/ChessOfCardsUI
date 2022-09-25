@@ -2,9 +2,9 @@ import { CardModel } from 'projects/client/src/app/models/card.model';
 import { KindModel } from 'projects/client/src/app/models/kind.model';
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
 import { SuitModel } from 'projects/client/src/app/models/suit.model';
-import { GameStateBuilder } from 'projects/client/src/app/views/game-view/is-move-valid/testing/game-state-builder';
-import { MoveBuilder } from 'projects/client/src/app/views/game-view/is-move-valid/testing/move-builder';
-import { PlaceCardAttemptBuilder } from 'projects/client/src/app/views/game-view/is-move-valid/testing/place-card-attempt-builder';
+import { GameStateBuilder } from 'projects/client/src/app/views/game-view/logic/is-move-valid/testing/game-state-builder';
+import { MoveBuilder } from 'projects/client/src/app/views/game-view/logic/is-move-valid/testing/move-builder';
+import { PlaceCardAttemptBuilder } from 'projects/client/src/app/views/game-view/logic/is-move-valid/testing/place-card-attempt-builder';
 import { suitOrKindNotMatchLastCardPlayed } from './suit-or-kind-not-match-last-card-played';
 
 describe('[Move Check]: suit or kind not match and not played ace to nuke row', () => {
