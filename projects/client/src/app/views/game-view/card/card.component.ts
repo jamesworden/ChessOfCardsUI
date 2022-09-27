@@ -7,14 +7,13 @@ import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
   styleUrls: ['./card.component.css'],
 })
 export class CardComponent implements OnChanges {
-  @Input() cardImageFileName: string;
+  @Input() cardImageFileName?: string | null;
   @Input() playerCanDrag = false;
   @Input() suit: string;
   @Input() kind: string;
   @Input() isMiddleCard: boolean;
   @Input() isPlayedBy: PlayerOrNoneModel;
   @Input() isHost: boolean;
-  @Input() joker = false;
 
   tiltDegrees = 0;
 

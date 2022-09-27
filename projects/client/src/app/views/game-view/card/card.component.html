@@ -1,21 +1,8 @@
 <img
-  *ngIf="!joker"
+  *ngIf="cardImageFileName"
   style="transform: rotate(45)"
   class="card"
   src="../../../../assets/images/{{ cardImageFileName }}"
-  alt=""
-  cdkDrag
-  [cdkDragDisabled]="!playerCanDrag"
-  cdkDragBoundary=".game"
-  [cdkDragData]="{suit, kind}"
-  [ngStyle]="{ rotate: tiltDegrees + 'deg' }"
-/>
-
-<img
-  *ngIf="joker"
-  style="transform: rotate(45)"
-  class="card"
-  src="../../../../assets/images/card_joker_black.png"
   alt=""
   cdkDrag
   [cdkDragDisabled]="!playerCanDrag"

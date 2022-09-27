@@ -43,10 +43,14 @@
 
             <app-card
               *ngIf="
-                lane.Rows[6 - rowIndex].length <= 0 && lane.WonBy != WonBy.None
+                lane.Rows[6 - rowIndex].length <= 0 &&
+                lane.WonBy != WonBy.None &&
+                rowIndex === 3
               "
-              cardImageFileName="card_joker_red.png"
-              [isHost]="true"
+              [cardImageFileName]="getJokerImageFileName(laneIndex)"
+              [isMiddleCard]="rowIndex === 3"
+              [isPlayedBy]="lane.WonBy"
+              [isHost]="false"
             ></app-card>
           </app-position>
         </ng-container>
@@ -104,9 +108,15 @@
             ></app-card>
 
             <app-card
-              *ngIf="row.length <= 0 && lane.WonBy != WonBy.None"
+              *ngIf="
+                row.length <= 0 &&
+                playerGameState.Lanes[4 - laneIndex].WonBy != WonBy.None &&
+                rowIndex === 3
+              "
+              [cardImageFileName]="getJokerImageFileName(4 - laneIndex)"
+              [isMiddleCard]="rowIndex === 3"
+              [isPlayedBy]="playerGameState.Lanes[4 - laneIndex].WonBy"
               [isHost]="false"
-              cardImageFileName="card_joker_red.png"
             ></app-card>
           </app-position>
         </ng-container>

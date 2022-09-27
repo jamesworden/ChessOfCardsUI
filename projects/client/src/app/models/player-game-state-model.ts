@@ -9,4 +9,6 @@ export type PlayerGameStateModel = {
   NumCardsInPlayersDeck: number;
   IsHost: boolean;
   IsHostPlayersTurn: boolean;
+  RedJokerLaneIndex?: number;
+  BlackJokerLaneIndex?: number;
 };

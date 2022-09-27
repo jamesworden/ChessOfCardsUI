@@ -40,6 +40,19 @@ export class GameViewComponent {
     });
   }
 
+  getJokerImageFileName(laneIndex: number) {
+    const { RedJokerLaneIndex, BlackJokerLaneIndex } =
+      this.latestGameStateSnapshot;
+
+    if (RedJokerLaneIndex === laneIndex) {
+      return 'card_joker_red.png';
+    } else if (BlackJokerLaneIndex === laneIndex) {
+      return 'card_joker_black.png';
+    } else {
+      return null; // Both jokers played already.
+    }
+  }
+
   getCardImageFileName(card: CardModel) {
     const { Suit, Kind } = card;
     return `card_${Suit.toLowerCase()}_${Kind.toLowerCase()}.png`;

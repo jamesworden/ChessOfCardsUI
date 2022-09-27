@@ -21,6 +21,6 @@ export function triedToCaptureDistantRow(
     );
   }
 
-  const endIndex = startedMoveOpponentSide(gameState, move) ? 4 : 6;
+  const endIndex = startedMoveOpponentSide(gameState, move) ? 2 : 6;
   return !capturedAllFollowingRows(gameState, firstPlaceCardAttempt, endIndex);
 }
