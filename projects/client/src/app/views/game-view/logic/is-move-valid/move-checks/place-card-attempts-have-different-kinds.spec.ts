@@ -1,4 +1,4 @@
-import { KindModel } from 'projects/client/src/app/models/kind.model';
+import { KindModel } from '../../../../../models/kind.model';
 import { MoveBuilder } from '../testing/move-builder';
 import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
 import { placeCardAttemptsHaveDifferentKinds } from './place-card-attempts-have-different-kinds';
