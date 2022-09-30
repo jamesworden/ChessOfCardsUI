@@ -21,114 +21,89 @@ import { triedToCaptureDistantRow } from './move-checks/tried-to-capture-distant
 import { opponentHasAdvantage } from './move-checks/opponent-has-advantage';
 import { playerHasAdvantage } from './move-checks/player-has-advantage';
 
-export function isMoveValid(gameState: PlayerGameStateModel, move: MoveModel) {
+export function getReasonIfMoveInvalid(
+  gameState: PlayerGameStateModel,
+  move: MoveModel
+): string | null {
   if (notPlayersTurn(gameState)) {
-    console.log('[Invalid Move]: It is not the players turn.');
-    return false;
+    return "It's not your turn!";
   }
 
   if (moveHasNoPlaceCardAttempts(move)) {
-    console.log('[Invalid Move]: The move has no place card attempts.');
-    return false;
+    return 'You need to place a card!';
   }
 
   if (moreThanFourPlaceCardAttempts(move)) {
-    console.log(
-      '[Invalid Move]: There are more than four place card attempts in the players move.'
-    );
-    return false;
+    return 'You placed too many cards!';
   }
 
   if (anyPlaceCardAttemptInMiddle(move)) {
-    console.log('[Invalid Move]: A place card attempt is in the middle.');
-    return false;
+    return "You can't place a card in the middle!";
   }
 
   if (placeCardAttemptsTargetDifferentLanes(move)) {
-    console.log('[Invalid Move]: Place card attempts target different lanes.');
-    return false;
+    return "You can't place cards on different lanes!";
   }
 
   if (placeCardAttemptsTargetSameRow(move)) {
-    console.log('[Invalid Move]: Place card attempts target same row.');
-    return false;
+    return "You can't place cards on the same position!";
   }
 
   if (nonConsecutivePlaceCardAttempts(move)) {
-    return false;
+    return "You can't place cards that are separate from one another!";
   }
 
   if (placeCardAttemptsHaveDifferentKinds(move)) {
-    console.log('[Invalid Move]: Place card attempts have different kinds.');
-    return false;
+    return 'Placing multiple cards must be of the same kind!';
   }
 
   if (triedToCaptureDistantRow(gameState, move)) {
-    console.log('[Invalid Move]: Player tried to capture distant row.');
-    return false;
+    return "You can't capture this position yet!";
   }
 
   if (targetLaneHasBeenWon(gameState, move)) {
-    console.log('[Invalid Move]: Target lane has been won.');
-    return false;
+    return 'This lane was won already!';
   }
 
   if (triedToCaptureGreaterCard(gameState, move)) {
-    console.log('[Invalid Move]: Player tried to capture greater card.');
-    return false;
+    return "You can't capture a greater card!";
   }
 
   if (
     startedMovePlayerSide(gameState, move) &&
     playerHasAdvantage(gameState, move)
   ) {
-    console.log(
-      '[Invalid Move]: Started move on the player side and the player has advantage.'
-    );
-    return false;
+    return 'You must attack this lane!';
   }
 
   if (
     startedMoveOpponentSide(gameState, move) &&
     opponentHasAdvantage(gameState, move)
   ) {
-    console.log(
-      '[Invalid Move]: Started move on the opponent side and the opponent has an advantage.'
-    );
-    return false;
+    return 'You must defend this lane!';
   }
 
   if (
     startedMoveOpponentSide(gameState, move) &&
     laneHasNoAdvantage(gameState, move)
   ) {
-    console.log(
-      '[Invalid Move]: Started move on the opponent side and the lane has no advantage.'
-    );
-    return false;
+    return "You aren't ready to attack here yet.";
   }
 
   if (
     suitOrKindNotMatchLastCardPlayed(gameState, move) &&
     !opponentCapturedAnyRowWithAce(gameState)
   ) {
-    console.log(
-      '[Invalid Move]: Suit or kind not match last card played and the opponent did not capture any row with an ace.'
-    );
-    return false;
+    return "This card can't be placed here.";
   }
 
   if (triedToReinforceWithDifferentSuit(gameState, move)) {
-    console.log(
-      '[Invalid Move]: Player tried to reinforce with different suit.'
-    );
-    return false;
+    return "Can't reinforce with a different suit!";
   }
 
   if (triedToReinforceGreaterCard(gameState, move)) {
-    console.log('[Invalid Move]: Player tried to reinforce with greater card.');
-    return false;
+    return "Can't reinforce a greater card!";
   }
 
-  return true;
+  return null;
 }

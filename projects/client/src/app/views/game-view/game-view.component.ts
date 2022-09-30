@@ -13,9 +13,10 @@ import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
 import { SignalrService } from '../../services/SignalRService';
 import { GameState } from '../../state/game.state';
-import { isMoveValid } from './logic/is-move-valid';
+import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-game-view',
@@ -36,7 +37,8 @@ export class GameViewComponent {
   constructor(
     public modal: MatDialog,
     private signalrService: SignalrService,
-    private store: Store
+    private store: Store,
+    private snackBar: MatSnackBar
   ) {
     this.gameOverMessage$.subscribe((message) => {
       if (!message) {
@@ -124,7 +126,17 @@ export class GameViewComponent {
   }
 
   private attemptMove(move: MoveModel) {
-    if (!isMoveValid(this.latestGameStateSnapshot, move)) {
+    const invalidMoveMessage = getReasonIfMoveInvalid(
+      this.latestGameStateSnapshot,
+      move
+    );
+
+    if (invalidMoveMessage) {
+      this.snackBar.open(invalidMoveMessage, undefined, {
+        duration: 1500,
+        verticalPosition: 'top',
+      });
+
       return;
     }
 
