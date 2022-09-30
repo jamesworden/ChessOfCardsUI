@@ -7,7 +7,7 @@ import {
 } from '@microsoft/signalr';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { UpdateGameState } from '../actions/player-game-state.actions';
+import { GameOver, UpdateGameState } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { MoveModel } from '../models/move.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
@@ -20,7 +20,6 @@ export class SignalrService {
   gameCode$ = new BehaviorSubject<string>('');
   invalidGameCode$ = new Subject<boolean>();
   gameStarted$ = new Subject<null>();
-  gameOverMessage$ = new BehaviorSubject<string>('');
 
   private hubConnection: HubConnection;
 
@@ -35,7 +34,7 @@ export class SignalrService {
     this.registerOnServerEvents();
   }
 
-  private startConnection() {
+  public startConnection() {
     if (this.hubConnection.state === HubConnectionState.Connected) {
       return;
     }
@@ -64,21 +63,23 @@ export class SignalrService {
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
       this.gameStarted$.next();
-      const playerGameState: PlayerGameStateModel =
-        JSON.parse(stringifiedGameState);
-      this.store.dispatch(new UpdateGameState(playerGameState));
+      this.parseAndUpdateGameState(stringifiedGameState);
     });
 
     this.hubConnection.on('GameOver', (message) => {
-      this.gameOverMessage$.next(message);
+      this.store.dispatch(new GameOver(message));
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
-      const playerGameState: PlayerGameStateModel =
-        JSON.parse(stringifiedGameState);
-      console.log(playerGameState);
-      this.store.dispatch(new UpdateGameState(playerGameState));
+      this.parseAndUpdateGameState(stringifiedGameState);
     });
+  }
+
+  private parseAndUpdateGameState(stringifiedGameState: string) {
+    const playerGameState: PlayerGameStateModel =
+      JSON.parse(stringifiedGameState);
+    console.log(playerGameState);
+    this.store.dispatch(new UpdateGameState(playerGameState));
   }
 
   public createGame() {
@@ -90,12 +91,12 @@ export class SignalrService {
     this.hubConnection.invoke('JoinGame', gameCode);
   }
 
-  rearrangeHand(cards: CardModel[]) {
+  public rearrangeHand(cards: CardModel[]) {
     const stringifiedCards = JSON.stringify(cards);
     this.hubConnection.invoke('RearrangeHand', stringifiedCards);
   }
 
-  makeMove(move: MoveModel) {
+  public makeMove(move: MoveModel) {
     const stringifiedMove = JSON.stringify(move);
     this.hubConnection.invoke('MakeMove', stringifiedMove);
   }

@@ -1,7 +1,3 @@
-<div *ngIf="!gameIsRunning">
-  <span *ngIf="gameOverMessage">❌ Game Over: {{ gameOverMessage }} ❌</span>
-</div>
-
 <div class="game-container">
   <div
     class="game"
@@ -27,7 +23,7 @@
           <app-position
             [laneIndex]="laneIndex"
             [rowIndex]="6 - rowIndex"
-            (attemptMove)="attemptMove($event)"
+            (placeCardAttempted)="checkForPairsThenAttemptMove($event)"
           >
             <app-card
               *ngIf="lane.Rows[6 - rowIndex].length > 0"
@@ -44,7 +40,7 @@
             <app-card
               *ngIf="
                 lane.Rows[6 - rowIndex].length <= 0 &&
-                lane.WonBy != WonBy.None &&
+                lane.WonBy != PlayerOrNone.None &&
                 rowIndex === 3
               "
               [cardImageFileName]="getJokerImageFileName(laneIndex)"
@@ -95,7 +91,7 @@
           <app-position
             [laneIndex]="4 - laneIndex"
             [rowIndex]="rowIndex"
-            (attemptMove)="attemptMove($event)"
+            (placeCardAttempted)="checkForPairsThenAttemptMove($event)"
           >
             <app-card
               *ngIf="row.length > 0"
@@ -110,7 +106,8 @@
             <app-card
               *ngIf="
                 row.length <= 0 &&
-                playerGameState.Lanes[4 - laneIndex].WonBy != WonBy.None &&
+                playerGameState.Lanes[4 - laneIndex].WonBy !=
+                  PlayerOrNone.None &&
                 rowIndex === 3
               "
               [cardImageFileName]="getJokerImageFileName(4 - laneIndex)"

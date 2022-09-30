@@ -2,7 +2,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CardModel } from '../../../models/card.model';
 import { KindModel } from '../../../models/kind.model';
-import { MoveModel } from '../../../models/move.model';
+import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
 import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
 import { SuitModel } from '../../../models/suit.model';
 
@@ -11,14 +11,13 @@ import { SuitModel } from '../../../models/suit.model';
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.css'],
 })
-export class PositionComponent implements OnInit {
+export class PositionComponent {
   @Input() laneIndex: number;
   @Input() rowIndex: number;
-  @Output() attemptMove: EventEmitter<MoveModel> = new EventEmitter();
+  @Output() placeCardAttempted: EventEmitter<PlaceCardAttemptModel> =
+    new EventEmitter();
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
     const Suit = event.item.data.suit as SuitModel;
@@ -31,16 +30,12 @@ export class PositionComponent implements OnInit {
       PlayedBy,
     };
 
-    const placeCardAttempt = {
+    const placeCardAttempt: PlaceCardAttemptModel = {
       Card,
       TargetLaneIndex: this.laneIndex,
       TargetRowIndex: this.rowIndex,
     };
 
-    const move: MoveModel = {
-      PlaceCardAttempts: [placeCardAttempt],
-    };
-
-    this.attemptMove.emit(move);
+    this.placeCardAttempted.emit(placeCardAttempt);
   }
 }

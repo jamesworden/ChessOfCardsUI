@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NgxsModule } from '@ngxs/store';
-import { PlayerGameState } from '../state/player-game-state.state';
+import { GameState } from '../state/game.state';
 
 import { SignalrService } from './SignalRService';
 
@@ -9,7 +9,7 @@ describe('SignalrServiceService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NgxsModule.forRoot([PlayerGameState])],
+      imports: [NgxsModule.forRoot([GameState])],
     });
     service = TestBed.inject(SignalrService);
   });

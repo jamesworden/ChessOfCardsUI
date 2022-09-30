@@ -2,12 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
 import { AppComponent } from './app.component';
-import { PlayerGameState } from './state/player-game-state.state';
+import { GameState } from './state/game.state';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, NgxsModule.forRoot([PlayerGameState])],
+      imports: [RouterTestingModule, NgxsModule.forRoot([GameState])],
       declarations: [AppComponent],
     }).compileComponents();
   });

@@ -4,7 +4,7 @@ import { NgxsModule } from '@ngxs/store';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PlayerGameState } from './state/player-game-state.state';
+import { GameState } from './state/game.state';
 import { GameViewComponent } from './views/game-view/game-view.component';
 import { HomeViewComponent } from './views/home-view/home-view.component';
 import { HostViewComponent } from './views/host-view/host-view.component';
@@ -16,6 +16,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PositionComponent } from './views/game-view/position/position.component';
+import { ModalComponent } from './views/game-view/modal/modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -28,14 +30,16 @@ import { PositionComponent } from './views/game-view/position/position.component
     CardComponent,
     DeckComponent,
     PositionComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([PlayerGameState]),
+    NgxsModule.forRoot([GameState]),
     BrowserAnimationsModule,
     MatTooltipModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

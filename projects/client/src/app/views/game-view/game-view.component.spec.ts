@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxsModule } from '@ngxs/store';
-import { PlayerGameState } from '../../state/player-game-state.state';
+import { GameState } from '../../state/game.state';
 
 import { GameViewComponent } from './game-view.component';
 
@@ -11,7 +11,7 @@ describe('GameViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [GameViewComponent],
-      imports: [NgxsModule.forRoot([PlayerGameState])],
+      imports: [NgxsModule.forRoot([GameState])],
     }).compileComponents();
   });
 

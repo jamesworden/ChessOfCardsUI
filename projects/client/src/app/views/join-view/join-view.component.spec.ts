@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxsModule } from '@ngxs/store';
-import { SignalrService } from '../../services/SignalRService';
-import { PlayerGameState } from '../../state/player-game-state.state';
+import { GameState } from '../../state/game.state';
 
 import { JoinViewComponent } from './join-view.component';
 
@@ -12,7 +11,7 @@ describe('JoinViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [JoinViewComponent],
-      imports: [NgxsModule.forRoot([PlayerGameState])],
+      imports: [NgxsModule.forRoot([GameState])],
     }).compileComponents();
   });
 
