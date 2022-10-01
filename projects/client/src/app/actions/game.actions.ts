@@ -19,5 +19,5 @@ export class StartPlacingMultipleCards {
 
 export class FinishPlacingMultipleCards {
   static readonly type = '[GameState] Finish Placing Multiple Cards';
-  constructor(public move: MoveModel) {}
+  constructor(public move?: MoveModel) {}
 }

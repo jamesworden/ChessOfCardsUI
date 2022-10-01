@@ -23,7 +23,7 @@
           <app-position
             [laneIndex]="laneIndex"
             [rowIndex]="6 - rowIndex"
-            (placeCardAttempted)="checkForPairsThenAttemptMove($event)"
+            (placeCardAttempted)="attemptMove($event)"
           >
             <app-card
               *ngIf="lane.Rows[6 - rowIndex].length > 0"
@@ -91,7 +91,7 @@
           <app-position
             [laneIndex]="4 - laneIndex"
             [rowIndex]="rowIndex"
-            (placeCardAttempted)="checkForPairsThenAttemptMove($event)"
+            (placeCardAttempted)="attemptMove($event)"
           >
             <app-card
               *ngIf="row.length > 0"
@@ -142,15 +142,32 @@
     </div>
 
     <div class="button-toolbar">
-      <button
-        (click)="passMove()"
-        mat-raised-button
-        color="primary"
-        class="pass-button"
-        [disabled]="!isPlayersTurn"
-      >
-        Pass
-      </button>
+      <ng-container *ngIf="placingMultipleCards$ | async">
+        <button mat-raised-button class="confirm-button" color="primary">
+          Confirm
+        </button>
+        <div class="button-divider"></div>
+        <button
+          mat-raised-button
+          class="cancel-button"
+          color="warn"
+          (click)="cancelPlacingMultipleCards()"
+        >
+          Cancel
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="!(placingMultipleCards$ | async)">
+        <button
+          (click)="passMove()"
+          mat-raised-button
+          color="primary"
+          class="pass-button"
+          [disabled]="!isPlayersTurn"
+        >
+          Pass
+        </button>
+      </ng-container>
     </div>
   </div>
 </div>

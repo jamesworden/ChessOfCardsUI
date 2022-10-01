@@ -50,3 +50,15 @@
 .pass-button {
   flex: 1;
 }
+
+.confirm-button {
+  flex: 3;
+}
+
+.cancel-button {
+  flex: 2;
+}
+
+.button-divider {
+  flex: 0.15;
+}

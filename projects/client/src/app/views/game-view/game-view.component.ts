@@ -4,6 +4,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
+  FinishPlacingMultipleCards,
   StartPlacingMultipleCards,
   UpdateGameState,
 } from 'projects/client/src/app/actions/game.actions';
@@ -30,6 +31,9 @@ export class GameViewComponent {
 
   @Select(GameState.gameData)
   playerGameState$!: Observable<PlayerGameStateModel>;
+
+  @Select(GameState.placingMultipleCards)
+  placingMultipleCards$!: Observable<boolean>;
 
   PlayerOrNone = PlayerOrNoneModel;
 
@@ -126,21 +130,6 @@ export class GameViewComponent {
     console.log('player hand', event);
   }
 
-  checkForPairsThenAttemptMove(placeCardAttempt: PlaceCardAttemptModel) {
-    // for (const card of this.latestGameStateSnapshot.Hand.Cards) {
-    //   if (card.Kind === placeCardAttempt.Card.Kind) {
-    //     this.store.dispatch(new StartPlacingMultipleCards(placeCardAttempt));
-    //     return;
-    //   }
-    // }
-
-    const move: MoveModel = {
-      PlaceCardAttempts: [placeCardAttempt],
-    };
-
-    this.attemptMove(move);
-  }
-
   passMove() {
     let snackBarMessage = "It's not your turn!";
 
@@ -155,7 +144,11 @@ export class GameViewComponent {
     });
   }
 
-  private attemptMove(move: MoveModel) {
+  attemptMove(placeCardAttempt: PlaceCardAttemptModel) {
+    const move: MoveModel = {
+      PlaceCardAttempts: [placeCardAttempt],
+    };
+
     const invalidMoveMessage = getReasonIfMoveInvalid(
       this.latestGameStateSnapshot,
       move
@@ -170,6 +163,24 @@ export class GameViewComponent {
       return;
     }
 
+    const { IsHost } = this.latestGameStateSnapshot;
+    const defendingAsHost = IsHost && placeCardAttempt.TargetRowIndex < 3;
+    const defendingAsGuest = !IsHost && placeCardAttempt.TargetRowIndex > 3;
+    const isDefensiveMove = defendingAsHost || defendingAsGuest;
+
+    const hasOtherPotentialPairCards =
+      this.latestGameStateSnapshot.Hand.Cards.some((card) => {
+        const suitNotMatch = card.Suit != placeCardAttempt.Card.Suit;
+        const kindMatches = card.Kind === placeCardAttempt.Card.Kind;
+
+        return suitNotMatch && kindMatches;
+      });
+
+    if (isDefensiveMove && hasOtherPotentialPairCards) {
+      this.store.dispatch(new StartPlacingMultipleCards(placeCardAttempt));
+      return;
+    }
+
     for (const placeCardAttempt of move.PlaceCardAttempts) {
       this.moveCardToLane(placeCardAttempt);
       this.removeCardFromHand(placeCardAttempt);
@@ -178,6 +189,10 @@ export class GameViewComponent {
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
 
     this.signalrService.makeMove(move);
+  }
+
+  cancelPlacingMultipleCards() {
+    this.store.dispatch(new FinishPlacingMultipleCards());
   }
 
   private moveCardToLane(placeCardAttempt: PlaceCardAttemptModel) {

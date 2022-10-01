@@ -20,6 +20,7 @@ import { ModalComponent } from './views/game-view/modal/modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatDialogModule,
     MatSnackBarModule,
     MatButtonModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
