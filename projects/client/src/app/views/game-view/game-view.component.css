@@ -44,4 +44,9 @@
 .button-toolbar {
   display: flex;
   justify-content: space-between;
+  margin: 0px var(--gutter-width);
+}
+
+.pass-button {
+  flex: 1;
 }

@@ -2,6 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   StartPlacingMultipleCards,
   UpdateGameState,
@@ -25,14 +26,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class GameViewComponent {
   @Select(GameState.gameOverMessage)
-  gameOverMessage$: Observable<string>;
+  gameOverMessage$!: Observable<string>;
 
   @Select(GameState.gameData)
-  playerGameState$: Observable<PlayerGameStateModel>;
+  playerGameState$!: Observable<PlayerGameStateModel>;
 
   PlayerOrNone = PlayerOrNoneModel;
 
   latestGameStateSnapshot: PlayerGameStateModel;
+
+  isPlayersTurn = false;
 
   constructor(
     public modal: MatDialog,
@@ -50,6 +53,12 @@ export class GameViewComponent {
 
     this.playerGameState$.subscribe((playerGameState) => {
       this.latestGameStateSnapshot = playerGameState;
+
+      const { IsHost, IsHostPlayersTurn } = this.latestGameStateSnapshot;
+
+      const hostAndHostTurn = IsHost && IsHostPlayersTurn;
+      const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
+      this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
     });
 
     this.signalrService.opponentPassedMove$.subscribe(() => {
@@ -133,20 +142,17 @@ export class GameViewComponent {
   }
 
   passMove() {
-    const { IsHost, IsHostPlayersTurn } = this.latestGameStateSnapshot;
+    let snackBarMessage = "It's not your turn!";
 
-    const hostAndHostTurn = IsHost && IsHostPlayersTurn;
-    const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
-    const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
-
-    if (!isPlayersTurn) {
-      this.snackBar.open("It's not your turn!", undefined, {
-        duration: 1500,
-        verticalPosition: 'top',
-      });
+    if (this.isPlayersTurn) {
+      snackBarMessage = 'Move passed.';
+      this.signalrService.passMove();
     }
 
-    this.signalrService.passMove();
+    this.snackBar.open(snackBarMessage, undefined, {
+      duration: 1500,
+      verticalPosition: 'top',
+    });
   }
 
   private attemptMove(move: MoveModel) {

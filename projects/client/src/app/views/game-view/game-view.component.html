@@ -142,7 +142,15 @@
     </div>
 
     <div class="button-toolbar">
-      <button (click)="passMove()">Pass</button>
+      <button
+        (click)="passMove()"
+        mat-raised-button
+        color="primary"
+        class="pass-button"
+        [disabled]="!isPlayersTurn"
+      >
+        Pass
+      </button>
     </div>
   </div>
 </div>

@@ -19,6 +19,7 @@ import { PositionComponent } from './views/game-view/position/position.component
 import { ModalComponent } from './views/game-view/modal/modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
