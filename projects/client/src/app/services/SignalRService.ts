@@ -16,10 +16,11 @@ import { PlayerGameStateModel } from '../models/player-game-state-model';
   providedIn: 'root',
 })
 export class SignalrService {
-  connectionEstablished$ = new BehaviorSubject<boolean>(false);
-  gameCode$ = new BehaviorSubject<string>('');
-  invalidGameCode$ = new Subject<boolean>();
-  gameStarted$ = new Subject<null>();
+  public connectionEstablished$ = new BehaviorSubject<boolean>(false);
+  public gameCode$ = new BehaviorSubject<string>('');
+  public invalidGameCode$ = new Subject<boolean>();
+  public gameStarted$ = new Subject();
+  public opponentPassedMove$ = new Subject();
 
   private hubConnection: HubConnection;
 
@@ -73,6 +74,19 @@ export class SignalrService {
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
       this.parseAndUpdateGameState(stringifiedGameState);
     });
+
+    this.hubConnection.on('PassedMove', (stringifiedGameState) => {
+      const gameState = this.parseAndUpdateGameState(stringifiedGameState);
+
+      const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
+      const guestAndGuestTurn =
+        !gameState.IsHostPlayersTurn && !gameState.IsHost;
+      const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+
+      if (isPlayersTurn) {
+        this.opponentPassedMove$.next();
+      }
+    });
   }
 
   private parseAndUpdateGameState(stringifiedGameState: string) {
@@ -80,6 +94,8 @@ export class SignalrService {
       JSON.parse(stringifiedGameState);
     console.log(playerGameState);
     this.store.dispatch(new UpdateGameState(playerGameState));
+
+    return playerGameState;
   }
 
   public createGame() {
@@ -99,5 +115,9 @@ export class SignalrService {
   public makeMove(move: MoveModel) {
     const stringifiedMove = JSON.stringify(move);
     this.hubConnection.invoke('MakeMove', stringifiedMove);
+  }
+
+  public passMove() {
+    this.hubConnection.invoke('PassMove');
   }
 }

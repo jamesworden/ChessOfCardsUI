@@ -51,6 +51,13 @@ export class GameViewComponent {
     this.playerGameState$.subscribe((playerGameState) => {
       this.latestGameStateSnapshot = playerGameState;
     });
+
+    this.signalrService.opponentPassedMove$.subscribe(() => {
+      this.snackBar.open('Opponent passed their move.', 'Your turn!', {
+        duration: 2000,
+        verticalPosition: 'top',
+      });
+    });
   }
 
   openModal(message: string): void {
@@ -123,6 +130,23 @@ export class GameViewComponent {
     };
 
     this.attemptMove(move);
+  }
+
+  passMove() {
+    const { IsHost, IsHostPlayersTurn } = this.latestGameStateSnapshot;
+
+    const hostAndHostTurn = IsHost && IsHostPlayersTurn;
+    const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
+    const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+
+    if (!isPlayersTurn) {
+      this.snackBar.open("It's not your turn!", undefined, {
+        duration: 1500,
+        verticalPosition: 'top',
+      });
+    }
+
+    this.signalrService.passMove();
   }
 
   private attemptMove(move: MoveModel) {
