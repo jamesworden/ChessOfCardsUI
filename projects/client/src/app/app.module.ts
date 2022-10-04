@@ -21,6 +21,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { PlaceMultipleCardsLaneComponent } from './views/game-view/place-multiple-cards-lane/place-multiple-cards-lane.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { MatIconModule } from '@angular/material/icon';
     DeckComponent,
     PositionComponent,
     ModalComponent,
+    PlaceMultipleCardsLaneComponent,
   ],
   imports: [
     BrowserModule,
