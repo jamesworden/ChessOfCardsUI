@@ -58,11 +58,9 @@
           </div>
         </ng-container>
 
-        <ng-container
+        <app-place-multiple-cards-lane
           *ngIf="(placingMultipleCardsLaneIndex$ | async) === laneIndex"
-        >
-          Show special lane
-        </ng-container>
+        ></app-place-multiple-cards-lane>
       </ng-container>
 
       <div class="gutter">
@@ -138,11 +136,9 @@
           </div>
         </ng-container>
 
-        <ng-container
+        <app-place-multiple-cards-lane
           *ngIf="(placingMultipleCardsLaneIndex$ | async) === 4 - laneIndex"
-        >
-          Show special lane
-        </ng-container>
+        ></app-place-multiple-cards-lane>
       </ng-container>
 
       <div class="gutter"></div>
