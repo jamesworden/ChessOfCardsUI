@@ -32,8 +32,8 @@ export class GameViewComponent {
   @Select(GameState.gameData)
   playerGameState$!: Observable<PlayerGameStateModel>;
 
-  @Select(GameState.placingMultipleCards)
-  placingMultipleCards$!: Observable<boolean>;
+  @Select(GameState.placingMultipleCardsLaneIndex)
+  placingMultipleCardsLaneIndex$!: Observable<number | null>;
 
   PlayerOrNone = PlayerOrNoneModel;
 

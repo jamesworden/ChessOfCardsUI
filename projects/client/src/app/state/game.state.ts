@@ -11,7 +11,7 @@ import { PlayerGameStateModel } from '../models/player-game-state-model';
 type GameStateModel = {
   gameData: PlayerGameStateModel;
   gameOverMessage: string;
-  placingMultipleCards: boolean;
+  placingMultipleCardsLaneIndex: null | number;
 };
 
 @State<GameStateModel>({
@@ -25,7 +25,7 @@ export class GameState {
       const updatedState: GameStateModel = { ...state };
 
       updatedState.gameData = action.playerGameState;
-      updatedState.placingMultipleCards = false;
+      updatedState.placingMultipleCardsLaneIndex = null;
       return updatedState;
     });
 
@@ -61,17 +61,18 @@ export class GameState {
   @Action(StartPlacingMultipleCards)
   startPlacingMultipleCards(
     ctx: StateContext<GameStateModel>,
-    _: StartPlacingMultipleCards
+    action: StartPlacingMultipleCards
   ) {
     ctx.setState((state) => {
       const updatedState: GameStateModel = { ...state };
 
-      updatedState.placingMultipleCards = true;
+      updatedState.placingMultipleCardsLaneIndex =
+        action.placeCardAttempt.TargetLaneIndex;
       return updatedState;
     });
 
     ctx.patchState({
-      placingMultipleCards: true,
+      placingMultipleCardsLaneIndex: action.placeCardAttempt.TargetLaneIndex,
     });
   }
 
@@ -88,19 +89,19 @@ export class GameState {
         // Validate move is valid again
         // Signal R Service - make move
       } else {
-        updatedState.placingMultipleCards = false;
+        updatedState.placingMultipleCardsLaneIndex = null;
       }
 
       return updatedState;
     });
 
     ctx.patchState({
-      placingMultipleCards: false,
+      placingMultipleCardsLaneIndex: null,
     });
   }
 
   @Selector()
-  static placingMultipleCards(state: GameStateModel) {
-    return state.placingMultipleCards;
+  static placingMultipleCardsLaneIndex(state: GameStateModel) {
+    return state.placingMultipleCardsLaneIndex;
   }
 }

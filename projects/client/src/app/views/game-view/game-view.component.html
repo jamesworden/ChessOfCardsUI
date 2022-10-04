@@ -12,45 +12,58 @@
       ></app-face-down-card>
     </div>
 
+    <!-- Host Board View -->
+
     <div class="board" *ngIf="playerGameState.IsHost">
       <div class="gutter"></div>
 
-      <div
-        class="lane"
+      <ng-container
         *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
       >
-        <ng-container *ngFor="let row of lane.Rows; let rowIndex = index">
-          <app-position
-            [laneIndex]="laneIndex"
-            [rowIndex]="6 - rowIndex"
-            (placeCardAttempted)="attemptMove($event)"
-          >
-            <app-card
-              *ngIf="lane.Rows[6 - rowIndex].length > 0"
-              [suit]="getTopCard(lane.Rows[6 - rowIndex]).Suit"
-              [kind]="getTopCard(lane.Rows[6 - rowIndex]).Kind"
-              [cardImageFileName]="
-                getCardImageFileName(getTopCard(lane.Rows[6 - rowIndex]))
-              "
-              [isMiddleCard]="rowIndex === 3"
-              [isPlayedBy]="getTopCard(lane.Rows[6 - rowIndex]).PlayedBy"
-              [isHost]="true"
-            ></app-card>
+        <ng-container
+          *ngIf="(placingMultipleCardsLaneIndex$ | async) != laneIndex"
+        >
+          <div class="lane">
+            <ng-container *ngFor="let row of lane.Rows; let rowIndex = index">
+              <app-position
+                [laneIndex]="laneIndex"
+                [rowIndex]="6 - rowIndex"
+                (placeCardAttempted)="attemptMove($event)"
+              >
+                <app-card
+                  *ngIf="lane.Rows[6 - rowIndex].length > 0"
+                  [suit]="getTopCard(lane.Rows[6 - rowIndex]).Suit"
+                  [kind]="getTopCard(lane.Rows[6 - rowIndex]).Kind"
+                  [cardImageFileName]="
+                    getCardImageFileName(getTopCard(lane.Rows[6 - rowIndex]))
+                  "
+                  [isMiddleCard]="rowIndex === 3"
+                  [isPlayedBy]="getTopCard(lane.Rows[6 - rowIndex]).PlayedBy"
+                  [isHost]="true"
+                ></app-card>
 
-            <app-card
-              *ngIf="
-                lane.Rows[6 - rowIndex].length <= 0 &&
-                lane.WonBy != PlayerOrNone.None &&
-                rowIndex === 3
-              "
-              [cardImageFileName]="getJokerImageFileName(laneIndex)"
-              [isMiddleCard]="rowIndex === 3"
-              [isPlayedBy]="lane.WonBy"
-              [isHost]="false"
-            ></app-card>
-          </app-position>
+                <app-card
+                  *ngIf="
+                    lane.Rows[6 - rowIndex].length <= 0 &&
+                    lane.WonBy != PlayerOrNone.None &&
+                    rowIndex === 3
+                  "
+                  [cardImageFileName]="getJokerImageFileName(laneIndex)"
+                  [isMiddleCard]="rowIndex === 3"
+                  [isPlayedBy]="lane.WonBy"
+                  [isHost]="false"
+                ></app-card>
+              </app-position>
+            </ng-container>
+          </div>
         </ng-container>
-      </div>
+
+        <ng-container
+          *ngIf="(placingMultipleCardsLaneIndex$ | async) === laneIndex"
+        >
+          Show special lane
+        </ng-container>
+      </ng-container>
 
       <div class="gutter">
         <app-deck
@@ -65,6 +78,8 @@
       </div>
     </div>
 
+    <!-- Guest Board View -->
+
     <div class="board" *ngIf="!playerGameState.IsHost">
       <div class="gutter">
         <app-deck
@@ -78,46 +93,57 @@
         ></app-deck>
       </div>
 
-      <div
-        class="lane"
+      <ng-container
         *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
       >
         <ng-container
-          *ngFor="
-            let row of playerGameState.Lanes[4 - laneIndex].Rows;
-            let rowIndex = index
-          "
+          *ngIf="(placingMultipleCardsLaneIndex$ | async) != 4 - laneIndex"
         >
-          <app-position
-            [laneIndex]="4 - laneIndex"
-            [rowIndex]="rowIndex"
-            (placeCardAttempted)="attemptMove($event)"
-          >
-            <app-card
-              *ngIf="row.length > 0"
-              [suit]="getTopCard(row).Suit"
-              [kind]="getTopCard(row).Kind"
-              [cardImageFileName]="getCardImageFileName(getTopCard(row))"
-              [isMiddleCard]="rowIndex === 3"
-              [isPlayedBy]="getTopCard(row).PlayedBy"
-              [isHost]="false"
-            ></app-card>
-
-            <app-card
-              *ngIf="
-                row.length <= 0 &&
-                playerGameState.Lanes[4 - laneIndex].WonBy !=
-                  PlayerOrNone.None &&
-                rowIndex === 3
+          <div class="lane">
+            <ng-container
+              *ngFor="
+                let row of playerGameState.Lanes[4 - laneIndex].Rows;
+                let rowIndex = index
               "
-              [cardImageFileName]="getJokerImageFileName(4 - laneIndex)"
-              [isMiddleCard]="rowIndex === 3"
-              [isPlayedBy]="playerGameState.Lanes[4 - laneIndex].WonBy"
-              [isHost]="false"
-            ></app-card>
-          </app-position>
+            >
+              <app-position
+                [laneIndex]="4 - laneIndex"
+                [rowIndex]="rowIndex"
+                (placeCardAttempted)="attemptMove($event)"
+              >
+                <app-card
+                  *ngIf="row.length > 0"
+                  [suit]="getTopCard(row).Suit"
+                  [kind]="getTopCard(row).Kind"
+                  [cardImageFileName]="getCardImageFileName(getTopCard(row))"
+                  [isMiddleCard]="rowIndex === 3"
+                  [isPlayedBy]="getTopCard(row).PlayedBy"
+                  [isHost]="false"
+                ></app-card>
+
+                <app-card
+                  *ngIf="
+                    row.length <= 0 &&
+                    playerGameState.Lanes[4 - laneIndex].WonBy !=
+                      PlayerOrNone.None &&
+                    rowIndex === 3
+                  "
+                  [cardImageFileName]="getJokerImageFileName(4 - laneIndex)"
+                  [isMiddleCard]="rowIndex === 3"
+                  [isPlayedBy]="playerGameState.Lanes[4 - laneIndex].WonBy"
+                  [isHost]="false"
+                ></app-card>
+              </app-position>
+            </ng-container>
+          </div>
         </ng-container>
-      </div>
+
+        <ng-container
+          *ngIf="(placingMultipleCardsLaneIndex$ | async) === 4 - laneIndex"
+        >
+          Show special lane
+        </ng-container>
+      </ng-container>
 
       <div class="gutter"></div>
     </div>
@@ -142,7 +168,7 @@
     </div>
 
     <div class="button-toolbar">
-      <ng-container *ngIf="placingMultipleCards$ | async">
+      <ng-container *ngIf="(placingMultipleCardsLaneIndex$ | async) != null">
         <button mat-raised-button class="confirm-button" color="primary">
           Confirm
         </button>
@@ -157,7 +183,7 @@
         </button>
       </ng-container>
 
-      <ng-container *ngIf="!(placingMultipleCards$ | async)">
+      <ng-container *ngIf="(placingMultipleCardsLaneIndex$ | async) === null">
         <button
           (click)="passMove()"
           mat-raised-button
