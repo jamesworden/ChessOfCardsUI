@@ -6,6 +6,15 @@ import { map } from 'rxjs/operators';
 import { PlayerGameStateModel } from '../../../models/player-game-state-model';
 import { CardModel } from '../../../models/card.model';
 import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import { SuitModel } from '../../../models/suit.model';
+import { KindModel } from '../../../models/kind.model';
+import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
 
 // TODO:
 // 1) Calculate which row indexes are visible (Host and Guest views).
@@ -56,10 +65,75 @@ export class PlaceMultipleCardsLaneComponent {
     })
   );
 
-  constructor() {}
+  initialMultiplePlaceCardAttempt: PlaceCardAttemptModel | null;
+
+  cards: CardModel[];
+
+  constructor() {
+    this.initialMultiplePlaceCardAttempt$.subscribe((placeCardAttempt) => {
+      this.initialMultiplePlaceCardAttempt = placeCardAttempt;
+
+      if (placeCardAttempt == null) {
+        return;
+      }
+
+      this.cards = [placeCardAttempt.Card];
+    });
+  }
 
   getCardImageFileName(card: CardModel) {
     const { Suit, Kind } = card;
     return `card_${Suit.toLowerCase()}_${Kind.toLowerCase()}.png`;
+  }
+
+  /**
+   * Angular is annoying: this.memberVariable returns undefined when passing the predicate
+   * function in itself. We wrap the predicate in this one so we can access the card attempt.
+   */
+  getEnterPredicate(initialPlaceCardAttempt: PlaceCardAttemptModel | null) {
+    return function (dragData: CdkDrag<{ suit: string; kind: string }>) {
+      if (!initialPlaceCardAttempt) {
+        return false;
+      }
+
+      const kindOfAttemptedCard = dragData.data.kind as KindModel;
+      const { Kind: kindOfInitialCard } = initialPlaceCardAttempt.Card;
+
+      return kindOfAttemptedCard == kindOfInitialCard;
+    };
+  }
+
+  drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
+    const Suit = event.item.data.suit as SuitModel;
+    const Kind = event.item.data.kind as KindModel;
+    const PlayedBy = PlayerOrNoneModel.None;
+
+    const card: CardModel = {
+      Suit,
+      Kind,
+      PlayedBy,
+    };
+
+    // if (event.previousContainer === event.container) {
+    //   moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
+    // } else {
+    //   transferArrayItem(
+    //     event.previousContainer.data,
+    //     event.container.data,
+    //     event.previousIndex,
+    //     event.currentIndex,
+    //   );
+    // }
+
+    moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
+
+    const cardAlreadyExistsInRow = this.cards.some(
+      (card) => card.Kind == Kind && card.Suit == Suit
+    );
+    if (cardAlreadyExistsInRow) {
+      return;
+    }
+
+    this.cards.push(card);
   }
 }

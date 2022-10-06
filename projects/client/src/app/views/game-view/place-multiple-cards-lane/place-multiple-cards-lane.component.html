@@ -1,8 +1,26 @@
 <div class="lane" *ngIf="playerGameState$ | async as playerGameState">
-  <div class="cards">
-    <div>x</div>
-    <div>y</div>
-    <div>z</div>
+  <div
+    id="place-multiple-cards-list"
+    class="place-multiple-cards-list"
+    cdkDropList
+    cdkDropListData="place-multiple-cards-list"
+    cdkDropListConnectedTo="player-hand"
+    cdkDropListOrientation="vertical"
+    (cdkDropListDropped)="drop($event)"
+    [cdkDropListEnterPredicate]="
+      getEnterPredicate(initialMultiplePlaceCardAttempt)
+    "
+  >
+    <app-card
+      *ngFor="let card of this.cards"
+      class="card-container"
+      [suit]="card.Suit"
+      [kind]="card.Kind"
+      [cardImageFileName]="getCardImageFileName(card)"
+      [playerCanDrag]="true"
+      cdkDrag
+      [cdkDragData]="card"
+    ></app-card>
   </div>
 
   <div class="existing-cards">

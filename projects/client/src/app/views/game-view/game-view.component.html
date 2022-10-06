@@ -160,7 +160,9 @@
       class="player-hand"
       id="player-hand"
       cdkDropList
-      cdkDropListConnectedTo="position"
+      [cdkDropListConnectedTo]="
+        isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
+      "
       (cdkDropListDropped)="rearrangeHand($event)"
       cdkDropListData="player-hand"
       cdkDropListOrientation="horizontal"

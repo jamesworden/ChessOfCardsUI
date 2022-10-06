@@ -40,6 +40,8 @@ export class GameViewComponent {
 
   isPlayersTurn = false;
 
+  isPlacingMultipleCards = false;
+
   constructor(
     public modal: MatDialog,
     private signalrService: SignalrService,
@@ -69,6 +71,10 @@ export class GameViewComponent {
         duration: 2000,
         verticalPosition: 'top',
       });
+    });
+
+    this.initialMultiplePlaceCardAttempt$.subscribe((placeCardAttempt) => {
+      this.isPlacingMultipleCards = placeCardAttempt != null;
     });
   }
 
@@ -144,6 +150,10 @@ export class GameViewComponent {
   }
 
   attemptMove(placeCardAttempt: PlaceCardAttemptModel) {
+    if (this.isPlacingMultipleCards) {
+      return;
+    }
+
     const move: MoveModel = {
       PlaceCardAttempts: [placeCardAttempt],
     };

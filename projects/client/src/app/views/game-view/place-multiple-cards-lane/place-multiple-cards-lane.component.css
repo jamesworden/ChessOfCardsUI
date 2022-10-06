@@ -12,10 +12,12 @@
   justify-content: space-around;
 }
 
-.cards {
+.place-multiple-cards-list {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  flex-direction: column-reverse;
+  outline: dotted darkgray 2px;
+  border-radius: 6px;
+  min-height: calc(4 * 72px); /* 64px card + some buffer for card badges */
 }
 
 .existing-cards {
