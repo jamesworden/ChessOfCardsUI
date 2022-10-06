@@ -1,0 +1,24 @@
+.lane {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.card-container {
+  height: 64px;
+  width: 64px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.existing-cards {
+  display: flex;
+  flex-direction: column;
+}

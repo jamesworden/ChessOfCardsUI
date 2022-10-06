@@ -1,1 +1,18 @@
-<p>place-multiple-cards-lane works!</p>
+<div class="lane" *ngIf="playerGameState$ | async as playerGameState">
+  <div class="cards">
+    <div>x</div>
+    <div>y</div>
+    <div>z</div>
+  </div>
+
+  <div class="existing-cards">
+    <app-card
+      class="card-container"
+      *ngFor="let card of orderedExistingCards$ | async"
+      [suit]="card.Suit"
+      [kind]="card.Kind"
+      [cardImageFileName]="getCardImageFileName(card)"
+      [playerCanDrag]="false"
+    ></app-card>
+  </div>
+</div>

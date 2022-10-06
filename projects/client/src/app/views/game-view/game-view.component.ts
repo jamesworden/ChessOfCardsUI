@@ -2,7 +2,6 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
   FinishPlacingMultipleCards,
   StartPlacingMultipleCards,
@@ -32,8 +31,8 @@ export class GameViewComponent {
   @Select(GameState.gameData)
   playerGameState$!: Observable<PlayerGameStateModel>;
 
-  @Select(GameState.placingMultipleCardsLaneIndex)
-  placingMultipleCardsLaneIndex$!: Observable<number | null>;
+  @Select(GameState.initialMultiplePlaceCardAttempt)
+  initialMultiplePlaceCardAttempt$!: Observable<null | PlaceCardAttemptModel>;
 
   PlayerOrNone = PlayerOrNoneModel;
 

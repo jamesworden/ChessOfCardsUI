@@ -6,12 +6,13 @@ import {
   StartPlacingMultipleCards,
   UpdateGameState,
 } from '../actions/game.actions';
+import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 
 type GameStateModel = {
   gameData: PlayerGameStateModel;
   gameOverMessage: string;
-  placingMultipleCardsLaneIndex: null | number;
+  initialMultiplePlaceCardAttempt: null | PlaceCardAttemptModel;
 };
 
 @State<GameStateModel>({
@@ -25,7 +26,7 @@ export class GameState {
       const updatedState: GameStateModel = { ...state };
 
       updatedState.gameData = action.playerGameState;
-      updatedState.placingMultipleCardsLaneIndex = null;
+      updatedState.initialMultiplePlaceCardAttempt = null;
       return updatedState;
     });
 
@@ -66,13 +67,12 @@ export class GameState {
     ctx.setState((state) => {
       const updatedState: GameStateModel = { ...state };
 
-      updatedState.placingMultipleCardsLaneIndex =
-        action.placeCardAttempt.TargetLaneIndex;
+      updatedState.initialMultiplePlaceCardAttempt = action.placeCardAttempt;
       return updatedState;
     });
 
     ctx.patchState({
-      placingMultipleCardsLaneIndex: action.placeCardAttempt.TargetLaneIndex,
+      initialMultiplePlaceCardAttempt: action.placeCardAttempt,
     });
   }
 
@@ -89,19 +89,19 @@ export class GameState {
         // Validate move is valid again
         // Signal R Service - make move
       } else {
-        updatedState.placingMultipleCardsLaneIndex = null;
+        updatedState.initialMultiplePlaceCardAttempt = null;
       }
 
       return updatedState;
     });
 
     ctx.patchState({
-      placingMultipleCardsLaneIndex: null,
+      initialMultiplePlaceCardAttempt: null,
     });
   }
 
   @Selector()
-  static placingMultipleCardsLaneIndex(state: GameStateModel) {
-    return state.placingMultipleCardsLaneIndex;
+  static initialMultiplePlaceCardAttempt(state: GameStateModel) {
+    return state.initialMultiplePlaceCardAttempt;
   }
 }

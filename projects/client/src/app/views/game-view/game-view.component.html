@@ -21,7 +21,10 @@
         *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
       >
         <ng-container
-          *ngIf="(placingMultipleCardsLaneIndex$ | async) != laneIndex"
+          *ngIf="
+            (initialMultiplePlaceCardAttempt$ | async)?.TargetLaneIndex !=
+            laneIndex
+          "
         >
           <div class="lane">
             <ng-container *ngFor="let row of lane.Rows; let rowIndex = index">
@@ -59,7 +62,10 @@
         </ng-container>
 
         <app-place-multiple-cards-lane
-          *ngIf="(placingMultipleCardsLaneIndex$ | async) === laneIndex"
+          *ngIf="
+            (initialMultiplePlaceCardAttempt$ | async)?.TargetLaneIndex ===
+            laneIndex
+          "
         ></app-place-multiple-cards-lane>
       </ng-container>
 
@@ -95,7 +101,10 @@
         *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
       >
         <ng-container
-          *ngIf="(placingMultipleCardsLaneIndex$ | async) != 4 - laneIndex"
+          *ngIf="
+            (initialMultiplePlaceCardAttempt$ | async)?.TargetLaneIndex !=
+            4 - laneIndex
+          "
         >
           <div class="lane">
             <ng-container
@@ -137,7 +146,10 @@
         </ng-container>
 
         <app-place-multiple-cards-lane
-          *ngIf="(placingMultipleCardsLaneIndex$ | async) === 4 - laneIndex"
+          *ngIf="
+            (initialMultiplePlaceCardAttempt$ | async)?.TargetLaneIndex ===
+            4 - laneIndex
+          "
         ></app-place-multiple-cards-lane>
       </ng-container>
 
@@ -164,7 +176,7 @@
     </div>
 
     <div class="button-toolbar">
-      <ng-container *ngIf="(placingMultipleCardsLaneIndex$ | async) != null">
+      <ng-container *ngIf="(initialMultiplePlaceCardAttempt$ | async) != null">
         <button mat-raised-button class="confirm-button" color="primary">
           Confirm
         </button>
@@ -179,7 +191,7 @@
         </button>
       </ng-container>
 
-      <ng-container *ngIf="(placingMultipleCardsLaneIndex$ | async) === null">
+      <ng-container *ngIf="(initialMultiplePlaceCardAttempt$ | async) === null">
         <button
           (click)="passMove()"
           mat-raised-button
