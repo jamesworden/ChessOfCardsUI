@@ -124,7 +124,6 @@ export class GameViewComponent {
       previousIndex,
       currentIndex
     );
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
 
     const { Cards } = this.latestGameStateSnapshot.Hand;
 
