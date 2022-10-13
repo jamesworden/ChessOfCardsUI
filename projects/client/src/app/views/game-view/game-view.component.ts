@@ -127,6 +127,8 @@ export class GameViewComponent {
 
     const { Cards } = this.latestGameStateSnapshot.Hand;
 
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+
     this.signalrService.rearrangeHand(Cards);
   }
 

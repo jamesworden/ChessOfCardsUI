@@ -178,7 +178,7 @@
     </div>
 
     <div class="button-toolbar">
-      <ng-container *ngIf="(initialMultiplePlaceCardAttempt$ | async) != null">
+      <ng-container *ngIf="initialMultiplePlaceCardAttempt$ | async">
         <button mat-raised-button class="confirm-button" color="primary">
           Confirm
         </button>
@@ -193,7 +193,7 @@
         </button>
       </ng-container>
 
-      <ng-container *ngIf="(initialMultiplePlaceCardAttempt$ | async) === null">
+      <ng-container *ngIf="!(initialMultiplePlaceCardAttempt$ | async)">
         <button
           (click)="passMove()"
           mat-raised-button

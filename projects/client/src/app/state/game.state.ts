@@ -26,7 +26,7 @@ export class GameState {
       const updatedState: GameStateModel = { ...state };
 
       updatedState.gameData = action.playerGameState;
-      updatedState.initialMultiplePlaceCardAttempt = null;
+
       return updatedState;
     });
 
