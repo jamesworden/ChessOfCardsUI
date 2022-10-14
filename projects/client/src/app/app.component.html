@@ -1,10 +1,10 @@
 <ng-container [ngSwitch]="currentView">
-  <app-host-view *ngSwitchCase="views.Host"> </app-host-view>
-
-  <app-join-view *ngSwitchCase="views.Join"> </app-join-view>
-
-  <app-game-view *ngSwitchCase="views.Game"></app-game-view>
-
+  <app-host-view *ngSwitchCase="views.Host"></app-host-view>
+  <app-join-view *ngSwitchCase="views.Join"></app-join-view>
+  <app-game-view
+    *ngSwitchCase="views.Game"
+    (gameEnded)="onGameEnded()"
+  ></app-game-view>
   <app-home-view
     *ngSwitchDefault
     (clickHostGameEvent)="onClickHostGameEvent()"

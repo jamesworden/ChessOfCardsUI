@@ -46,6 +46,10 @@ export class AppComponent {
     this.currentView = Views.Join;
   }
 
+  onGameEnded() {
+    this.currentView = Views.Home;
+  }
+
   private openCantConnectModal() {
     const modalRef = this.modal.open(ModalComponent, {
       width: '250px',

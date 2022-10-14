@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import {
@@ -27,6 +27,8 @@ import { KindModel } from '../../models/kind.model';
   styleUrls: ['./game-view.component.css'],
 })
 export class GameViewComponent {
+  @Output() gameEnded = new EventEmitter();
+
   @Select(GameState.gameOverMessage)
   gameOverMessage$!: Observable<string>;
 
@@ -241,7 +243,7 @@ export class GameViewComponent {
     });
 
     modalRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
+      this.gameEnded.emit();
     });
   }
 
