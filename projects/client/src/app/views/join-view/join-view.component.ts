@@ -1,20 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { SignalrService } from '../../services/SignalRService';
+import { SubscriptionManager } from '../../util/subscription-manager';
 
 @Component({
   selector: 'app-join-view',
   templateUrl: './join-view.component.html',
   styleUrls: ['./join-view.component.css'],
 })
-export class JoinViewComponent implements OnInit {
+export class JoinViewComponent implements OnDestroy {
+  private sm = new SubscriptionManager();
+
   @Input() invalidGameCode = false;
 
   gameCodeInput = '';
 
   constructor(public signalrService: SignalrService) {
-    signalrService.invalidGameCode$.subscribe((invalidGameCode) => {
-      this.invalidGameCode = invalidGameCode;
-    });
+    this.sm.add(
+      signalrService.invalidGameCode$.subscribe((invalidGameCode) => {
+        this.invalidGameCode = invalidGameCode;
+      })
+    );
 
     document.addEventListener('keypress', ({ key }) => {
       this.attemptType(key);
@@ -27,7 +32,9 @@ export class JoinViewComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnDestroy() {
+    this.sm.unsubscribe();
+  }
 
   attemptType(key: string) {
     if (key.length != 1) {

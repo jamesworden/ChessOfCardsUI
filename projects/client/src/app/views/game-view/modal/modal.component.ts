@@ -14,14 +14,8 @@ export class ModalComponent implements OnInit {
     public data: {
       header: string;
       message: string;
-    },
-    private store: Store
-  ) {
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('Switch to home view.');
-      // this.store.dispatch(new SwitchView(Views.Home));
-    });
-  }
+    }
+  ) {}
 
   ngOnInit(): void {}
 }
