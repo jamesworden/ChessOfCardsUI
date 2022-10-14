@@ -31,7 +31,7 @@
               <app-position
                 [laneIndex]="laneIndex"
                 [rowIndex]="6 - rowIndex"
-                (placeCardAttempted)="attemptMove($event)"
+                (placeCardAttempted)="onPlaceCardAttempted($event)"
               >
                 <app-card
                   *ngIf="lane.Rows[6 - rowIndex].length > 0"
@@ -116,7 +116,7 @@
               <app-position
                 [laneIndex]="4 - laneIndex"
                 [rowIndex]="rowIndex"
-                (placeCardAttempted)="attemptMove($event)"
+                (placeCardAttempted)="onPlaceCardAttempted($event)"
               >
                 <app-card
                   *ngIf="row.length > 0"
@@ -165,7 +165,7 @@
       [cdkDropListConnectedTo]="
         isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
       "
-      (cdkDropListDropped)="dropOntoPlayerHand($event)"
+      (cdkDropListDropped)="onPlayerHandCardDrop($event)"
       cdkDropListData="player-hand"
       cdkDropListOrientation="horizontal"
       *ngIf="playerGameState.Hand"
@@ -193,7 +193,7 @@
           mat-raised-button
           class="cancel-button"
           color="warn"
-          (click)="cancelPlacingMultipleCards()"
+          (click)="onCancelButtonClicked()"
         >
           Cancel
         </button>
@@ -201,7 +201,7 @@
 
       <ng-container *ngIf="!isPlacingMultipleCards">
         <button
-          (click)="passMove()"
+          (click)="onPassButtonClicked()"
           mat-raised-button
           color="primary"
           class="pass-button"

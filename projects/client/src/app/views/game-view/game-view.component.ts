@@ -20,7 +20,6 @@ import { ModalComponent } from './modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuitModel } from '../../models/suit.model';
 import { KindModel } from '../../models/kind.model';
-import { HandModel } from '../../models/hand.model';
 
 @Component({
   selector: 'app-game-view',
@@ -98,30 +97,21 @@ export class GameViewComponent {
     });
   }
 
-  openModal(message: string): void {
-    const modalRef = this.modal.open(ModalComponent, {
-      width: '250px',
-      data: { message },
-    });
-
-    modalRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-    });
-  }
-
   getJokerImageFileName(laneIndex: number) {
     const { RedJokerLaneIndex, BlackJokerLaneIndex } =
       this.latestGameStateSnapshot;
 
-    if (RedJokerLaneIndex === laneIndex) {
-      return 'card_joker_red.png';
+    switch (laneIndex) {
+      case RedJokerLaneIndex: {
+        return 'card_joker_red.png';
+      }
+      case BlackJokerLaneIndex: {
+        return 'card_joker_black.png';
+      }
+      default: {
+        return null; // Both jokers played already.
+      }
     }
-
-    if (BlackJokerLaneIndex === laneIndex) {
-      return 'card_joker_black.png';
-    }
-
-    return null; // Both jokers played already.
   }
 
   getCardImageFileName(card: CardModel) {
@@ -134,25 +124,35 @@ export class GameViewComponent {
     return row[lastIndex];
   }
 
-  rearrangeHand({ previousIndex, currentIndex }: CdkDragDrop<string>) {
-    if (previousIndex === currentIndex) {
+  onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
+    if (this.isPlacingMultipleCards) {
       return;
     }
 
-    moveItemInArray(
-      this.latestGameStateSnapshot.Hand.Cards,
-      previousIndex,
-      currentIndex
+    const move: MoveModel = {
+      PlaceCardAttempts: [placeCardAttempt],
+    };
+
+    const invalidMoveMessage = getReasonIfMoveInvalid(
+      this.latestGameStateSnapshot,
+      move
     );
 
-    const { Cards } = this.latestGameStateSnapshot.Hand;
+    if (invalidMoveMessage) {
+      this.snackBar.open(invalidMoveMessage, undefined, {
+        duration: 1500,
+        verticalPosition: 'top',
+      });
 
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+      return;
+    }
 
-    this.signalrService.rearrangeHand(Cards);
+    this.shouldPlaceMultipleCards(placeCardAttempt)
+      ? this.initiatePlaceMultipleCards(placeCardAttempt)
+      : this.makeMove(move);
   }
 
-  dropOntoPlayerHand(event: CdkDragDrop<string>) {
+  onPlayerHandCardDrop(event: CdkDragDrop<string>) {
     const Suit = event.item.data.suit as SuitModel;
     const Kind = event.item.data.kind as KindModel;
     const PlayedBy = PlayerOrNoneModel.None;
@@ -177,7 +177,7 @@ export class GameViewComponent {
     this.latestGameStateSnapshot.Hand.Cards.push(card);
   }
 
-  passMove() {
+  onPassButtonClicked() {
     let snackBarMessage = "It's not your turn!";
 
     if (this.isPlayersTurn) {
@@ -191,62 +191,7 @@ export class GameViewComponent {
     });
   }
 
-  attemptMove(placeCardAttempt: PlaceCardAttemptModel) {
-    if (this.isPlacingMultipleCards) {
-      return;
-    }
-
-    const move: MoveModel = {
-      PlaceCardAttempts: [placeCardAttempt],
-    };
-
-    const invalidMoveMessage = getReasonIfMoveInvalid(
-      this.latestGameStateSnapshot,
-      move
-    );
-
-    if (invalidMoveMessage) {
-      this.snackBar.open(invalidMoveMessage, undefined, {
-        duration: 1500,
-        verticalPosition: 'top',
-      });
-
-      return;
-    }
-
-    const shouldPlaceMultipleCards =
-      this.shouldPlaceMultipleCards(placeCardAttempt);
-
-    if (shouldPlaceMultipleCards) {
-      const cardsInPlayerHand = this.latestGameStateSnapshot.Hand.Cards.filter(
-        (card) => {
-          const kindMatches = card.Kind === placeCardAttempt.Card.Kind;
-          const suitMatches = card.Suit === placeCardAttempt.Card.Suit;
-          const cardMatches = kindMatches && suitMatches;
-          return !cardMatches;
-        }
-      );
-
-      console.log(cardsInPlayerHand);
-
-      this.store.dispatch(
-        new StartPlacingMultipleCards(placeCardAttempt, cardsInPlayerHand)
-      );
-
-      return;
-    }
-
-    for (const placeCardAttempt of move.PlaceCardAttempts) {
-      this.moveCardToLane(placeCardAttempt);
-      this.removeCardFromHand(placeCardAttempt.Card);
-    }
-
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-
-    this.signalrService.makeMove(move);
-  }
-
-  cancelPlacingMultipleCards() {
+  onCancelButtonClicked() {
     this.store.dispatch(new FinishPlacingMultipleCards());
   }
 
@@ -287,5 +232,60 @@ export class GameViewComponent {
       isDefensiveMove && hasOtherPotentialPairCards;
 
     return shouldPlaceMultipleCards;
+  }
+
+  private openModal(message: string): void {
+    const modalRef = this.modal.open(ModalComponent, {
+      width: '250px',
+      data: { message },
+    });
+
+    modalRef.afterClosed().subscribe(() => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
+    const cardsInPlayerHand = this.latestGameStateSnapshot.Hand.Cards.filter(
+      (card) => {
+        const kindMatches = card.Kind === placeCardAttempt.Card.Kind;
+        const suitMatches = card.Suit === placeCardAttempt.Card.Suit;
+        const cardMatches = kindMatches && suitMatches;
+        return !cardMatches;
+      }
+    );
+
+    this.store.dispatch(
+      new StartPlacingMultipleCards(placeCardAttempt, cardsInPlayerHand)
+    );
+  }
+
+  private makeMove(move: MoveModel) {
+    for (const placeCardAttempt of move.PlaceCardAttempts) {
+      this.moveCardToLane(placeCardAttempt);
+      this.removeCardFromHand(placeCardAttempt.Card);
+    }
+
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+
+    this.signalrService.makeMove(move);
+  }
+
+  private rearrangeHand({ previousIndex, currentIndex }: CdkDragDrop<string>) {
+    if (previousIndex === currentIndex) {
+      return;
+    }
+
+    moveItemInArray(
+      this.latestGameStateSnapshot.Hand.Cards,
+      previousIndex,
+      currentIndex
+    );
+
+    const { Cards } = this.latestGameStateSnapshot.Hand;
+
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+
+    this.signalrService.rearrangeHand(Cards);
   }
 }
