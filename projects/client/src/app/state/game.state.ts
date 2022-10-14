@@ -6,13 +6,17 @@ import {
   StartPlacingMultipleCards,
   UpdateGameState,
 } from '../actions/game.actions';
+import { CardModel } from '../models/card.model';
 import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 
 type GameStateModel = {
   gameData: PlayerGameStateModel;
   gameOverMessage: string;
-  initialMultiplePlaceCardAttempt: null | PlaceCardAttemptModel;
+  isPlacingMultipleCards: boolean;
+  initalPlaceMultipleCardAttempt: PlaceCardAttemptModel | null;
+  placeMultipleCardsHand: CardModel[] | null;
+  placeMultipleCards: CardModel[] | null;
 };
 
 @State<GameStateModel>({
@@ -20,38 +24,9 @@ type GameStateModel = {
 })
 @Injectable()
 export class GameState {
-  @Action(UpdateGameState)
-  updateGameState(ctx: StateContext<GameStateModel>, action: UpdateGameState) {
-    ctx.setState((state) => {
-      const updatedState: GameStateModel = { ...state };
-
-      updatedState.gameData = action.playerGameState;
-
-      return updatedState;
-    });
-
-    ctx.patchState({
-      gameData: action.playerGameState,
-    });
-  }
-
   @Selector()
   static gameData(state: GameStateModel) {
     return state.gameData;
-  }
-
-  @Action(GameOver)
-  gameOver(ctx: StateContext<GameStateModel>, action: GameOver) {
-    ctx.setState((state) => {
-      const updatedState: GameStateModel = { ...state };
-
-      updatedState.gameOverMessage = action.message;
-      return updatedState;
-    });
-
-    ctx.patchState({
-      gameOverMessage: action.message,
-    });
   }
 
   @Selector()
@@ -59,49 +34,66 @@ export class GameState {
     return state.gameOverMessage;
   }
 
+  @Selector()
+  static isPlacingMultipleCards(state: GameStateModel) {
+    return state.isPlacingMultipleCards;
+  }
+
+  @Selector()
+  static placeMultipleCardsHand(state: GameStateModel) {
+    return state.placeMultipleCardsHand;
+  }
+
+  @Selector()
+  static placeMultipleCards(state: GameStateModel) {
+    return state.placeMultipleCards;
+  }
+
+  @Selector()
+  static initialPlaceMultipleCardAttempt(state: GameStateModel) {
+    return state.initalPlaceMultipleCardAttempt;
+  }
+
+  @Action(UpdateGameState)
+  updateGameState(ctx: StateContext<GameStateModel>, action: UpdateGameState) {
+    ctx.patchState({
+      gameData: action.playerGameState,
+    });
+  }
+
+  @Action(GameOver)
+  gameOver(ctx: StateContext<GameStateModel>, action: GameOver) {
+    ctx.patchState({
+      gameOverMessage: action.message,
+    });
+  }
+
   @Action(StartPlacingMultipleCards)
   startPlacingMultipleCards(
     ctx: StateContext<GameStateModel>,
     action: StartPlacingMultipleCards
   ) {
-    ctx.setState((state) => {
-      const updatedState: GameStateModel = { ...state };
-
-      updatedState.initialMultiplePlaceCardAttempt = action.placeCardAttempt;
-      return updatedState;
-    });
-
     ctx.patchState({
-      initialMultiplePlaceCardAttempt: action.placeCardAttempt,
+      isPlacingMultipleCards: true,
+      placeMultipleCards: [action.placeCardAttempt.Card],
+      placeMultipleCardsHand: action.cardsInPlayerHand,
+      initalPlaceMultipleCardAttempt: action.placeCardAttempt,
     });
   }
 
   @Action(FinishPlacingMultipleCards)
   stopPlacingMultipleCards(
     ctx: StateContext<GameStateModel>,
-    action: FinishPlacingMultipleCards
+    _: FinishPlacingMultipleCards
   ) {
-    ctx.setState((state) => {
-      const updatedState: GameStateModel = { ...state };
-      const { move } = action;
-
-      if (move) {
-        // Validate move is valid again
-        // Signal R Service - make move
-      } else {
-        updatedState.initialMultiplePlaceCardAttempt = null;
-      }
-
-      return updatedState;
-    });
+    // TODO: If a move exists, validate it and signal r service it move again
+    // TODO: mave move with signal r service
 
     ctx.patchState({
-      initialMultiplePlaceCardAttempt: null,
+      isPlacingMultipleCards: false,
+      placeMultipleCards: null,
+      placeMultipleCardsHand: null,
+      initalPlaceMultipleCardAttempt: null,
     });
-  }
-
-  @Selector()
-  static initialMultiplePlaceCardAttempt(state: GameStateModel) {
-    return state.initialMultiplePlaceCardAttempt;
   }
 }

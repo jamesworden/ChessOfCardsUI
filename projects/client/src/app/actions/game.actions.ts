@@ -1,3 +1,5 @@
+import { CardModel } from '../models/card.model';
+import { HandModel } from '../models/hand.model';
 import { MoveModel } from '../models/move.model';
 import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
@@ -14,7 +16,10 @@ export class GameOver {
 
 export class StartPlacingMultipleCards {
   static readonly type = '[GameState] Start Placing Multiple Cards';
-  constructor(public placeCardAttempt: PlaceCardAttemptModel) {}
+  constructor(
+    public placeCardAttempt: PlaceCardAttemptModel,
+    public cardsInPlayerHand: CardModel[]
+  ) {}
 }
 
 export class FinishPlacingMultipleCards {

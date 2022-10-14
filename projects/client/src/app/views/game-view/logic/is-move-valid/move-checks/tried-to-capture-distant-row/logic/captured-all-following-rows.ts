@@ -10,8 +10,6 @@ export function capturedAllFollowingRows(
   const { TargetLaneIndex, TargetRowIndex } = firstPlaceCardAttempt;
   const lane = gameState.Lanes[TargetLaneIndex];
 
-  console.log(endIndex, TargetRowIndex);
-
   for (let i = endIndex; i > TargetRowIndex; i--) {
     const followingRow = lane.Rows[i];
     const followingRowNotOccupied = followingRow.length === 0;

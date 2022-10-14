@@ -8,11 +8,11 @@
     cdkDropListOrientation="vertical"
     (cdkDropListDropped)="drop($event)"
     [cdkDropListEnterPredicate]="
-      getEnterPredicate(initialMultiplePlaceCardAttempt)
+      getEnterPredicate(initialPlaceMultipleCardAttempt$ | async)
     "
   >
     <app-card
-      *ngFor="let card of this.cards"
+      *ngFor="let card of placeMultipleCards$ | async"
       class="card-container"
       [suit]="card.Suit"
       [kind]="card.Kind"
@@ -26,7 +26,7 @@
   <div class="existing-cards">
     <app-card
       class="card-container"
-      *ngFor="let card of orderedExistingCards$ | async"
+      *ngFor="let card of previouslyCapturedCards$ | async"
       [suit]="card.Suit"
       [kind]="card.Kind"
       [cardImageFileName]="getCardImageFileName(card)"

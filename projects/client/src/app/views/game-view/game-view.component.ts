@@ -18,6 +18,9 @@ import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SuitModel } from '../../models/suit.model';
+import { KindModel } from '../../models/kind.model';
+import { HandModel } from '../../models/hand.model';
 
 @Component({
   selector: 'app-game-view',
@@ -31,16 +34,24 @@ export class GameViewComponent {
   @Select(GameState.gameData)
   playerGameState$!: Observable<PlayerGameStateModel>;
 
-  @Select(GameState.initialMultiplePlaceCardAttempt)
-  initialMultiplePlaceCardAttempt$!: Observable<null | PlaceCardAttemptModel>;
+  @Select(GameState.isPlacingMultipleCards)
+  isPlacingMultipleCards$!: Observable<boolean>;
+
+  @Select(GameState.placeMultipleCardsHand)
+  placeMultipleCardsHand$!: Observable<CardModel[] | null>;
+
+  @Select(GameState.placeMultipleCards)
+  placeMultipleCards$!: Observable<CardModel[] | null>;
+
+  @Select(GameState.initialPlaceMultipleCardAttempt)
+  initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
 
   PlayerOrNone = PlayerOrNoneModel;
 
   latestGameStateSnapshot: PlayerGameStateModel;
-
   isPlayersTurn = false;
-
   isPlacingMultipleCards = false;
+  firstPlaceMultipleCardAttempt: CardModel | null = null;
 
   constructor(
     public modal: MatDialog,
@@ -73,8 +84,17 @@ export class GameViewComponent {
       });
     });
 
-    this.initialMultiplePlaceCardAttempt$.subscribe((placeCardAttempt) => {
-      this.isPlacingMultipleCards = placeCardAttempt != null;
+    this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
+      this.isPlacingMultipleCards = isPlacingMultipleCards;
+    });
+
+    this.placeMultipleCards$.subscribe((placeMultipleCards) => {
+      if (placeMultipleCards) {
+        this.firstPlaceMultipleCardAttempt = placeMultipleCards[0];
+        return;
+      }
+
+      this.firstPlaceMultipleCardAttempt = null;
     });
   }
 
@@ -132,8 +152,29 @@ export class GameViewComponent {
     this.signalrService.rearrangeHand(Cards);
   }
 
-  drop(event: CdkDragDrop<string>) {
-    console.log('player hand', event);
+  dropOntoPlayerHand(event: CdkDragDrop<string>) {
+    const Suit = event.item.data.suit as SuitModel;
+    const Kind = event.item.data.kind as KindModel;
+    const PlayedBy = PlayerOrNoneModel.None;
+
+    const card: CardModel = {
+      Suit,
+      Kind,
+      PlayedBy,
+    };
+
+    const cardExistsInHand = this.latestGameStateSnapshot.Hand.Cards.some(
+      (card) => card.Kind === Kind && card.Suit === Suit
+    );
+
+    if (cardExistsInHand) {
+      this.rearrangeHand(event);
+      return;
+    }
+
+    // this.store.dispatch(new RemoveCardFromMultipleLane(card));
+    this.signalrService.rearrangeHand(this.latestGameStateSnapshot.Hand.Cards);
+    this.latestGameStateSnapshot.Hand.Cards.push(card);
   }
 
   passMove() {
@@ -173,27 +214,31 @@ export class GameViewComponent {
       return;
     }
 
-    const { IsHost } = this.latestGameStateSnapshot;
-    const defendingAsHost = IsHost && placeCardAttempt.TargetRowIndex < 3;
-    const defendingAsGuest = !IsHost && placeCardAttempt.TargetRowIndex > 3;
-    const isDefensiveMove = defendingAsHost || defendingAsGuest;
+    const shouldPlaceMultipleCards =
+      this.shouldPlaceMultipleCards(placeCardAttempt);
 
-    const hasOtherPotentialPairCards =
-      this.latestGameStateSnapshot.Hand.Cards.some((card) => {
-        const suitNotMatch = card.Suit != placeCardAttempt.Card.Suit;
-        const kindMatches = card.Kind === placeCardAttempt.Card.Kind;
+    if (shouldPlaceMultipleCards) {
+      const cardsInPlayerHand = this.latestGameStateSnapshot.Hand.Cards.filter(
+        (card) => {
+          const kindMatches = card.Kind === placeCardAttempt.Card.Kind;
+          const suitMatches = card.Suit === placeCardAttempt.Card.Suit;
+          const cardMatches = kindMatches && suitMatches;
+          return !cardMatches;
+        }
+      );
 
-        return suitNotMatch && kindMatches;
-      });
+      console.log(cardsInPlayerHand);
 
-    if (isDefensiveMove && hasOtherPotentialPairCards) {
-      this.store.dispatch(new StartPlacingMultipleCards(placeCardAttempt));
+      this.store.dispatch(
+        new StartPlacingMultipleCards(placeCardAttempt, cardsInPlayerHand)
+      );
+
       return;
     }
 
     for (const placeCardAttempt of move.PlaceCardAttempts) {
       this.moveCardToLane(placeCardAttempt);
-      this.removeCardFromHand(placeCardAttempt);
+      this.removeCardFromHand(placeCardAttempt.Card);
     }
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
@@ -212,15 +257,35 @@ export class GameViewComponent {
     targetRow.push(Card);
   }
 
-  private removeCardFromHand(placeCardAttempt: PlaceCardAttemptModel) {
+  private removeCardFromHand(card: CardModel) {
     for (let i = 0; i < this.latestGameStateSnapshot.Hand.Cards.length; i++) {
-      const card = this.latestGameStateSnapshot.Hand.Cards[i];
-      const sameSuit = placeCardAttempt.Card.Suit === card.Suit;
-      const sameKind = placeCardAttempt.Card.Kind === card.Kind;
+      const cardInHand = this.latestGameStateSnapshot.Hand.Cards[i];
+      const sameSuit = card.Suit === cardInHand.Suit;
+      const sameKind = card.Kind === cardInHand.Kind;
 
       if (sameSuit && sameKind) {
         this.latestGameStateSnapshot.Hand.Cards.splice(i, 1);
       }
     }
+  }
+
+  private shouldPlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
+    const { IsHost } = this.latestGameStateSnapshot;
+    const defendingAsHost = IsHost && placeCardAttempt.TargetRowIndex < 3;
+    const defendingAsGuest = !IsHost && placeCardAttempt.TargetRowIndex > 3;
+    const isDefensiveMove = defendingAsHost || defendingAsGuest;
+
+    const hasOtherPotentialPairCards =
+      this.latestGameStateSnapshot.Hand.Cards.some((card) => {
+        const suitNotMatch = card.Suit != placeCardAttempt.Card.Suit;
+        const kindMatches = card.Kind === placeCardAttempt.Card.Kind;
+
+        return suitNotMatch && kindMatches;
+      });
+
+    const shouldPlaceMultipleCards =
+      isDefensiveMove && hasOtherPotentialPairCards;
+
+    return shouldPlaceMultipleCards;
   }
 }

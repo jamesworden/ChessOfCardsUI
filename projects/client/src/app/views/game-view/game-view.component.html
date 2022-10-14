@@ -22,7 +22,7 @@
       >
         <ng-container
           *ngIf="
-            (initialMultiplePlaceCardAttempt$ | async)?.TargetLaneIndex !=
+            (initialPlaceMultipleCardAttempt$ | async)?.TargetLaneIndex !=
             laneIndex
           "
         >
@@ -63,7 +63,7 @@
 
         <app-place-multiple-cards-lane
           *ngIf="
-            (initialMultiplePlaceCardAttempt$ | async)?.TargetLaneIndex ===
+            (initialPlaceMultipleCardAttempt$ | async)?.TargetLaneIndex ===
             laneIndex
           "
         ></app-place-multiple-cards-lane>
@@ -102,7 +102,7 @@
       >
         <ng-container
           *ngIf="
-            (initialMultiplePlaceCardAttempt$ | async)?.TargetLaneIndex !=
+            (initialPlaceMultipleCardAttempt$ | async)?.TargetLaneIndex !=
             4 - laneIndex
           "
         >
@@ -147,7 +147,7 @@
 
         <app-place-multiple-cards-lane
           *ngIf="
-            (initialMultiplePlaceCardAttempt$ | async)?.TargetLaneIndex ===
+            (initialPlaceMultipleCardAttempt$ | async)?.TargetLaneIndex ===
             4 - laneIndex
           "
         ></app-place-multiple-cards-lane>
@@ -156,6 +156,8 @@
       <div class="gutter"></div>
     </div>
 
+    <!-- End Board Views -->
+
     <div
       class="player-hand"
       id="player-hand"
@@ -163,13 +165,17 @@
       [cdkDropListConnectedTo]="
         isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
       "
-      (cdkDropListDropped)="rearrangeHand($event)"
+      (cdkDropListDropped)="dropOntoPlayerHand($event)"
       cdkDropListData="player-hand"
       cdkDropListOrientation="horizontal"
       *ngIf="playerGameState.Hand"
     >
       <app-card
-        *ngFor="let card of playerGameState.Hand.Cards"
+        *ngFor="
+          let card of isPlacingMultipleCards
+            ? (placeMultipleCardsHand$ | async) ?? []
+            : playerGameState.Hand.Cards
+        "
         [suit]="card.Suit"
         [kind]="card.Kind"
         [cardImageFileName]="getCardImageFileName(card)"
@@ -178,7 +184,7 @@
     </div>
 
     <div class="button-toolbar">
-      <ng-container *ngIf="initialMultiplePlaceCardAttempt$ | async">
+      <ng-container *ngIf="isPlacingMultipleCards">
         <button mat-raised-button class="confirm-button" color="primary">
           Confirm
         </button>
@@ -193,7 +199,7 @@
         </button>
       </ng-container>
 
-      <ng-container *ngIf="!(initialMultiplePlaceCardAttempt$ | async)">
+      <ng-container *ngIf="!isPlacingMultipleCards">
         <button
           (click)="passMove()"
           mat-raised-button

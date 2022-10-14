@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { GameState } from '../../../state/game.state';
 import { Observable, combineLatest } from 'rxjs';
@@ -6,20 +6,10 @@ import { map } from 'rxjs/operators';
 import { PlayerGameStateModel } from '../../../models/player-game-state-model';
 import { CardModel } from '../../../models/card.model';
 import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
-import {
-  CdkDrag,
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { SuitModel } from '../../../models/suit.model';
+import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { KindModel } from '../../../models/kind.model';
+import { SuitModel } from '../../../models/suit.model';
 import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
-
-// TODO:
-// 1) Calculate which row indexes are visible (Host and Guest views).
-// 2) Card that user placed should be stored in memory in this component and the badge should reflect that it's number 1.
-// 3) Angular material - drag drop list - vertical - above the lane with the full opacity cards that were already played
 
 @Component({
   selector: 'app-place-multiple-cards-lane',
@@ -30,12 +20,15 @@ export class PlaceMultipleCardsLaneComponent {
   @Select(GameState.gameData)
   playerGameState$!: Observable<PlayerGameStateModel>;
 
-  @Select(GameState.initialMultiplePlaceCardAttempt)
-  initialMultiplePlaceCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
+  @Select(GameState.initialPlaceMultipleCardAttempt)
+  initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
 
-  orderedExistingCards$ = combineLatest([
+  @Select(GameState.placeMultipleCards)
+  placeMultipleCards$!: Observable<CardModel[] | null>;
+
+  previouslyCapturedCards$ = combineLatest([
     this.playerGameState$,
-    this.initialMultiplePlaceCardAttempt$,
+    this.initialPlaceMultipleCardAttempt$,
   ]).pipe(
     map(([playerGameState, initialMultiplePlaceCardAttempt]) => {
       if (!initialMultiplePlaceCardAttempt) {
@@ -65,21 +58,7 @@ export class PlaceMultipleCardsLaneComponent {
     })
   );
 
-  initialMultiplePlaceCardAttempt: PlaceCardAttemptModel | null;
-
-  cards: CardModel[];
-
-  constructor() {
-    this.initialMultiplePlaceCardAttempt$.subscribe((placeCardAttempt) => {
-      this.initialMultiplePlaceCardAttempt = placeCardAttempt;
-
-      if (placeCardAttempt == null) {
-        return;
-      }
-
-      this.cards = [placeCardAttempt.Card];
-    });
-  }
+  constructor() {}
 
   getCardImageFileName(card: CardModel) {
     const { Suit, Kind } = card;
@@ -114,26 +93,10 @@ export class PlaceMultipleCardsLaneComponent {
       PlayedBy,
     };
 
-    // if (event.previousContainer === event.container) {
-    //   moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
-    // } else {
-    //   transferArrayItem(
-    //     event.previousContainer.data,
-    //     event.container.data,
-    //     event.previousIndex,
-    //     event.currentIndex,
-    //   );
-    // }
+    console.log(card);
 
-    moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
-
-    const cardAlreadyExistsInRow = this.cards.some(
-      (card) => card.Kind == Kind && card.Suit == Suit
-    );
-    if (cardAlreadyExistsInRow) {
-      return;
-    }
-
-    this.cards.push(card);
+    // Dispatch new event with latest array of cards. Like if it was just a re-arrangement,
+    // or a new card was added here, do that.
+    // Also dispatch a player hand updated too for this state.
   }
 }
