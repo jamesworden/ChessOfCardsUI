@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import {
@@ -20,17 +20,17 @@ import { ModalComponent } from './modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuitModel } from '../../models/suit.model';
 import { KindModel } from '../../models/kind.model';
+import { SubscriptionManager } from '../../util/subscription-manager';
 
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
   styleUrls: ['./game-view.component.css'],
 })
-export class GameViewComponent {
-  @Output() gameEnded = new EventEmitter();
+export class GameViewComponent implements OnDestroy {
+  private sm = new SubscriptionManager();
 
-  @Select(GameState.gameOverMessage)
-  gameOverMessage$!: Observable<string>;
+  @Output() gameEnded = new EventEmitter();
 
   @Select(GameState.gameData)
   playerGameState$!: Observable<PlayerGameStateModel>;
@@ -60,43 +60,62 @@ export class GameViewComponent {
     private store: Store,
     private snackBar: MatSnackBar
   ) {
-    this.gameOverMessage$.subscribe((message) => {
-      if (!message) {
-        return;
-      }
+    this.sm.add(
+      this.signalrService.gameOverMessage$.subscribe((message) => {
+        console.log(message);
 
-      this.openModal(message);
-    });
+        if (!message) {
+          return;
+        }
 
-    this.playerGameState$.subscribe((playerGameState) => {
-      this.latestGameStateSnapshot = playerGameState;
+        const modalRef = this.modal.open(ModalComponent, {
+          width: '250px',
+          data: { message },
+        });
 
-      const { IsHost, IsHostPlayersTurn } = this.latestGameStateSnapshot;
+        modalRef.afterClosed().subscribe(() => {
+          this.gameEnded.emit();
+        });
+      })
+    );
+    this.sm.add(
+      this.playerGameState$.subscribe((playerGameState) => {
+        this.latestGameStateSnapshot = playerGameState;
 
-      const hostAndHostTurn = IsHost && IsHostPlayersTurn;
-      const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
-      this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
-    });
+        const { IsHost, IsHostPlayersTurn } = this.latestGameStateSnapshot;
 
-    this.signalrService.opponentPassedMove$.subscribe(() => {
-      this.snackBar.open('Opponent passed their move.', 'Your turn!', {
-        duration: 2000,
-        verticalPosition: 'top',
-      });
-    });
+        const hostAndHostTurn = IsHost && IsHostPlayersTurn;
+        const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
+        this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+      })
+    );
+    this.sm.add(
+      this.signalrService.opponentPassedMove$.subscribe(() => {
+        this.snackBar.open('Opponent passed their move.', 'Your turn!', {
+          duration: 2000,
+          verticalPosition: 'top',
+        });
+      })
+    );
+    this.sm.add(
+      this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
+        this.isPlacingMultipleCards = isPlacingMultipleCards;
+      })
+    );
+    this.sm.add(
+      this.placeMultipleCards$.subscribe((placeMultipleCards) => {
+        if (placeMultipleCards) {
+          this.firstPlaceMultipleCardAttempt = placeMultipleCards[0];
+          return;
+        }
 
-    this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
-      this.isPlacingMultipleCards = isPlacingMultipleCards;
-    });
+        this.firstPlaceMultipleCardAttempt = null;
+      })
+    );
+  }
 
-    this.placeMultipleCards$.subscribe((placeMultipleCards) => {
-      if (placeMultipleCards) {
-        this.firstPlaceMultipleCardAttempt = placeMultipleCards[0];
-        return;
-      }
-
-      this.firstPlaceMultipleCardAttempt = null;
-    });
+  ngOnDestroy() {
+    this.sm.unsubscribe();
   }
 
   getJokerImageFileName(laneIndex: number) {
@@ -234,17 +253,6 @@ export class GameViewComponent {
       isDefensiveMove && hasOtherPotentialPairCards;
 
     return shouldPlaceMultipleCards;
-  }
-
-  private openModal(message: string): void {
-    const modalRef = this.modal.open(ModalComponent, {
-      width: '250px',
-      data: { message },
-    });
-
-    modalRef.afterClosed().subscribe(() => {
-      this.gameEnded.emit();
-    });
   }
 
   private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {

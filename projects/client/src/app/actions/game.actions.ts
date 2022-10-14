@@ -1,5 +1,4 @@
 import { CardModel } from '../models/card.model';
-import { HandModel } from '../models/hand.model';
 import { MoveModel } from '../models/move.model';
 import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
@@ -7,11 +6,6 @@ import { PlayerGameStateModel } from '../models/player-game-state-model';
 export class UpdateGameState {
   static readonly type = '[GameState] Update Game State';
   constructor(public playerGameState: PlayerGameStateModel) {}
-}
-
-export class GameOver {
-  static readonly type = '[GameState] Game Over';
-  constructor(public message: string) {}
 }
 
 export class StartPlacingMultipleCards {

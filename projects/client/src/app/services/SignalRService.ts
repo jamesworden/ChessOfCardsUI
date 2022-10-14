@@ -7,7 +7,7 @@ import {
 } from '@microsoft/signalr';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { GameOver, UpdateGameState } from '../actions/game.actions';
+import { UpdateGameState } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { MoveModel } from '../models/move.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
@@ -16,13 +16,14 @@ import { PlayerGameStateModel } from '../models/player-game-state-model';
   providedIn: 'root',
 })
 export class SignalrService {
+  private hubConnection: HubConnection;
+
   public connectionEstablished$ = new BehaviorSubject<boolean>(false);
   public gameCode$ = new BehaviorSubject<string>('');
   public invalidGameCode$ = new Subject<boolean>();
   public gameStarted$ = new Subject();
   public opponentPassedMove$ = new Subject();
-
-  private hubConnection: HubConnection;
+  public gameOverMessage$ = new Subject<string | null>();
 
   constructor(private store: Store) {
     this.hubConnection = new HubConnectionBuilder()
@@ -68,7 +69,7 @@ export class SignalrService {
     });
 
     this.hubConnection.on('GameOver', (message) => {
-      this.store.dispatch(new GameOver(message));
+      this.gameOverMessage$.next(message);
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
