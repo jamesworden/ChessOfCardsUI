@@ -41,8 +41,6 @@ export class AppComponent {
       return;
     }
 
-    this.signalrService.createGame();
-
     this.currentView = Views.Join;
   }
 
