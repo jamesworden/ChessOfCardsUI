@@ -229,7 +229,7 @@ export class GameViewComponent implements OnDestroy {
     }
 
     let { TargetLaneIndex, TargetRowIndex } = initialPlaceMultipleCardAttempt;
-    const { IsHost } = this.store.selectSnapshot(GameState.gameData);
+    const playerGameState = this.store.selectSnapshot(GameState.gameData);
 
     // Place multiple cards are stored from top to bottom in state. Reverse the array
     // without mutating the original one.
@@ -238,7 +238,7 @@ export class GameViewComponent implements OnDestroy {
       .map((Card, index) => {
         let targetRowIndex: number;
 
-        if (IsHost) {
+        if (playerGameState.IsHost) {
           targetRowIndex = TargetRowIndex + index;
 
           if (targetRowIndex === 3) {
@@ -266,6 +266,17 @@ export class GameViewComponent implements OnDestroy {
     const move: MoveModel = {
       PlaceCardAttempts: placeCardAttempts,
     };
+
+    const invalidMoveMessage = getReasonIfMoveInvalid(playerGameState, move);
+
+    if (invalidMoveMessage) {
+      this.snackBar.open(invalidMoveMessage, 'Out of order!', {
+        duration: 1500,
+        verticalPosition: 'top',
+      });
+
+      return;
+    }
 
     this.store.dispatch(new FinishPlacingMultipleCards());
     this.signalrService.makeMove(move);
