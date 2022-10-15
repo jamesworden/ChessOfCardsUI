@@ -90,11 +90,10 @@ export function getReasonIfMoveInvalid(
     return "You aren't ready to attack here yet.";
   }
 
-  if (
-    suitOrKindNotMatchLastCardPlayed(gameState, move) &&
-    !opponentCapturedAnyRowWithAce(gameState)
-  ) {
-    return "This card can't be placed here.";
+  if (suitOrKindNotMatchLastCardPlayed(gameState, move)) {
+    if (!opponentCapturedAnyRowWithAce(gameState)) {
+      return "This card can't be placed here.";
+    }
   }
 
   if (triedToReinforceWithDifferentSuit(gameState, move)) {

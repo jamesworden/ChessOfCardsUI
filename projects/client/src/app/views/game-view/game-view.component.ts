@@ -364,7 +364,7 @@ export class GameViewComponent implements OnDestroy {
 
     const currentIndex = getIndexOfCardInArray(card, Cards);
 
-    if (!currentIndex) {
+    if (currentIndex === null) {
       return;
     }
 
