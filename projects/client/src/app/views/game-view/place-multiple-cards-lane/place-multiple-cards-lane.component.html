@@ -1,4 +1,14 @@
 <div class="lane" *ngIf="playerGameState$ | async as playerGameState">
+  <div class="existing-cards">
+    <app-card
+      *ngFor="let card of previouslyCapturedCards$ | async"
+      [suit]="card.Suit"
+      [kind]="card.Kind"
+      [cardImageFileName]="getCardImageFileName(card)"
+      [playerCanDrag]="false"
+    ></app-card>
+  </div>
+
   <div
     id="place-multiple-cards-list"
     class="place-multiple-cards-list"
@@ -17,16 +27,6 @@
       [kind]="card.Kind"
       [cardImageFileName]="getCardImageFileName(card)"
       [playerCanDrag]="true"
-    ></app-card>
-  </div>
-
-  <div class="existing-cards">
-    <app-card
-      *ngFor="let card of previouslyCapturedCards$ | async"
-      [suit]="card.Suit"
-      [kind]="card.Kind"
-      [cardImageFileName]="getCardImageFileName(card)"
-      [playerCanDrag]="false"
     ></app-card>
   </div>
 </div>
