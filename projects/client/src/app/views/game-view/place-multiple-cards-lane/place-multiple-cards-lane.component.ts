@@ -1,15 +1,21 @@
 import { Component } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { GameState } from '../../../state/game.state';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PlayerGameStateModel } from '../../../models/player-game-state-model';
 import { CardModel } from '../../../models/card.model';
 import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
-import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { KindModel } from '../../../models/kind.model';
-import { SuitModel } from '../../../models/suit.model';
-import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
+import { cardExistsInArray } from '../logic/card-exists-in-array';
+import { getIndexOfCardInArray } from '../logic/get-index-of-card-in-array';
+import {
+  SetPlaceMultipleCards,
+  SetPlaceMultipleCardsHand,
+} from '../../../actions/game.actions';
+import { addCardToArray } from '../logic/add-card-to-array';
+import { removeCardFromArray } from '../logic/remove-card-from-array';
 
 @Component({
   selector: 'app-place-multiple-cards-lane',
@@ -58,7 +64,7 @@ export class PlaceMultipleCardsLaneComponent {
     })
   );
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   getCardImageFileName(card: CardModel) {
     const { Suit, Kind } = card;
@@ -83,12 +89,60 @@ export class PlaceMultipleCardsLaneComponent {
   }
 
   drop(event: CdkDragDrop<string, CardModel>) {
-    const card = event.item.data;
+    const { currentIndex: targetIndex, item } = event;
+    const card = item.data;
 
-    console.log(card);
+    const placeMultipleCards = this.store.selectSnapshot(
+      GameState.placeMultipleCards
+    );
 
-    // Dispatch new event with latest array of cards. Like if it was just a re-arrangement,
-    // or a new card was added here, do that.
-    // Also dispatch a player hand updated too for this state.
+    if (!placeMultipleCards) {
+      return;
+    }
+
+    cardExistsInArray(card, placeMultipleCards)
+      ? this.rearrangePlaceMultipleCards(placeMultipleCards, card, targetIndex)
+      : this.addPlaceMultipleCardFromHand(
+          placeMultipleCards,
+          card,
+          targetIndex
+        );
+  }
+
+  private rearrangePlaceMultipleCards(
+    placeMultipleCards: CardModel[],
+    card: CardModel,
+    targetIndex: number
+  ) {
+    const originalIndex = getIndexOfCardInArray(card, placeMultipleCards);
+
+    if (originalIndex === null) {
+      return;
+    }
+
+    moveItemInArray(placeMultipleCards, originalIndex, targetIndex);
+    this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
+    return;
+  }
+
+  private addPlaceMultipleCardFromHand(
+    placeMultipleCards: CardModel[],
+    card: CardModel,
+    targetIndex: number
+  ) {
+    addCardToArray(card, placeMultipleCards, targetIndex);
+
+    let placeMultipleCardsHand = this.store.selectSnapshot(
+      GameState.placeMultipleCardsHand
+    );
+
+    if (!placeMultipleCardsHand) {
+      return;
+    }
+
+    placeMultipleCardsHand = removeCardFromArray(card, placeMultipleCardsHand);
+
+    this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
+    this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
   }
 }

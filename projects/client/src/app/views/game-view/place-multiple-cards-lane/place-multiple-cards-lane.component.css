@@ -6,7 +6,8 @@
 
 .place-multiple-cards-list {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  justify-content: flex-end;
   border: dashed 1px #aaa;
   border-radius: 6px;
   min-height: calc(4 * 72px); /* 64px card + some buffer for card badges */
