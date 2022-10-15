@@ -211,6 +211,66 @@ export class GameViewComponent implements OnDestroy {
     this.store.dispatch(new FinishPlacingMultipleCards());
   }
 
+  onConfirmButtonClicked() {
+    const placeMultipleCards = this.store.selectSnapshot(
+      GameState.placeMultipleCards
+    );
+
+    if (!placeMultipleCards) {
+      return;
+    }
+
+    const initialPlaceMultipleCardAttempt = this.store.selectSnapshot(
+      GameState.initialPlaceMultipleCardAttempt
+    );
+
+    if (!initialPlaceMultipleCardAttempt) {
+      return;
+    }
+
+    let { TargetLaneIndex, TargetRowIndex } = initialPlaceMultipleCardAttempt;
+    const { IsHost } = this.store.selectSnapshot(GameState.gameData);
+
+    // Place multiple cards are stored from top to bottom in state. Reverse the array
+    // without mutating the original one.
+    const placeCardAttempts = [...placeMultipleCards]
+      .reverse()
+      .map((Card, index) => {
+        let targetRowIndex: number;
+
+        if (IsHost) {
+          targetRowIndex = TargetRowIndex + index;
+
+          if (targetRowIndex === 3) {
+            targetRowIndex++;
+            TargetRowIndex++;
+          }
+        } else {
+          targetRowIndex = TargetRowIndex - index;
+
+          if (targetRowIndex === 3) {
+            targetRowIndex--;
+            TargetRowIndex--;
+          }
+        }
+
+        const placeCardAttempt: PlaceCardAttemptModel = {
+          Card,
+          TargetLaneIndex,
+          TargetRowIndex: targetRowIndex,
+        };
+
+        return placeCardAttempt;
+      });
+
+    const move: MoveModel = {
+      PlaceCardAttempts: placeCardAttempts,
+    };
+
+    this.store.dispatch(new FinishPlacingMultipleCards());
+    this.signalrService.makeMove(move);
+  }
+
   private dragCardBackToHand(card: CardModel, indexInHand: number) {
     const placeMultipleCards = this.store.selectSnapshot(
       GameState.placeMultipleCards
@@ -285,7 +345,6 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-
     this.signalrService.makeMove(move);
   }
 

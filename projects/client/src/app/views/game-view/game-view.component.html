@@ -182,7 +182,12 @@
 
     <div class="button-toolbar">
       <ng-container *ngIf="isPlacingMultipleCards">
-        <button mat-raised-button class="confirm-button" color="primary">
+        <button
+          mat-raised-button
+          class="confirm-button"
+          color="primary"
+          (click)="onConfirmButtonClicked()"
+        >
           Confirm
         </button>
         <div class="button-divider"></div>
