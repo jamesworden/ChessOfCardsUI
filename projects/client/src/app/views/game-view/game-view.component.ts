@@ -184,18 +184,9 @@ export class GameViewComponent implements OnDestroy {
       PlayedBy,
     };
 
-    const cardExistsInHand = this.latestGameStateSnapshot.Hand.Cards.some(
-      (card) => card.Kind === Kind && card.Suit === Suit
-    );
-
-    if (cardExistsInHand) {
-      this.rearrangeHand(event);
-      return;
-    }
-
-    // this.store.dispatch(new RemoveCardFromMultipleLane(card));
-    this.signalrService.rearrangeHand(this.latestGameStateSnapshot.Hand.Cards);
-    this.latestGameStateSnapshot.Hand.Cards.push(card);
+    this.isPlacingMultipleCards
+      ? this.dragCardBackToHand(card, event.currentIndex)
+      : this.rearrangeHand(event, card);
   }
 
   onPassButtonClicked() {
@@ -216,6 +207,27 @@ export class GameViewComponent implements OnDestroy {
     this.store.dispatch(new FinishPlacingMultipleCards());
   }
 
+  private dragCardBackToHand(card: CardModel, indexInHand: number) {
+    const placeMultipleCardsHand = this.store.selectSnapshot(
+      GameState.placeMultipleCardsHand
+    );
+
+    if (!placeMultipleCardsHand) {
+      return;
+    }
+
+    const isLastPlaceMultipleCard = placeMultipleCardsHand.length === 1;
+
+    if (isLastPlaceMultipleCard) {
+      // Rearrange hand
+      // Cancel place multiple cards
+      return;
+    }
+
+    // Update place multiple cards
+    // Update place multiple cards hand
+  }
+
   private moveCardToLane(placeCardAttempt: PlaceCardAttemptModel) {
     const { TargetLaneIndex, TargetRowIndex, Card } = placeCardAttempt;
     const targetLane = this.latestGameStateSnapshot.Lanes[TargetLaneIndex];
@@ -223,7 +235,7 @@ export class GameViewComponent implements OnDestroy {
     targetRow.push(Card);
   }
 
-  private removeCardFromHand(card: CardModel) {
+  private removeCardFromHandLocally(card: CardModel) {
     for (let i = 0; i < this.latestGameStateSnapshot.Hand.Cards.length; i++) {
       const cardInHand = this.latestGameStateSnapshot.Hand.Cards[i];
       const sameSuit = card.Suit === cardInHand.Suit;
@@ -231,6 +243,7 @@ export class GameViewComponent implements OnDestroy {
 
       if (sameSuit && sameKind) {
         this.latestGameStateSnapshot.Hand.Cards.splice(i, 1);
+        return;
       }
     }
   }
@@ -273,7 +286,7 @@ export class GameViewComponent implements OnDestroy {
   private makeMove(move: MoveModel) {
     for (const placeCardAttempt of move.PlaceCardAttempts) {
       this.moveCardToLane(placeCardAttempt);
-      this.removeCardFromHand(placeCardAttempt.Card);
+      this.removeCardFromHandLocally(placeCardAttempt.Card);
     }
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
@@ -281,7 +294,16 @@ export class GameViewComponent implements OnDestroy {
     this.signalrService.makeMove(move);
   }
 
-  private rearrangeHand({ previousIndex, currentIndex }: CdkDragDrop<string>) {
+  private rearrangeHand(event: CdkDragDrop<string>, card: CardModel) {
+    this.rearrangeHandLocally(event);
+    this.signalrService.rearrangeHand(this.latestGameStateSnapshot.Hand.Cards);
+    this.latestGameStateSnapshot.Hand.Cards.push(card);
+  }
+
+  private rearrangeHandLocally({
+    previousIndex,
+    currentIndex,
+  }: CdkDragDrop<string>) {
     if (previousIndex === currentIndex) {
       return;
     }
