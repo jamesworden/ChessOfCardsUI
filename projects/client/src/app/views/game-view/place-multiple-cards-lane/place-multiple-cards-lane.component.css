@@ -5,19 +5,14 @@
   height: 100%;
 }
 
-.card-container {
-  height: 64px;
-  width: 64px;
-  display: flex;
-  justify-content: space-around;
-}
-
 .place-multiple-cards-list {
   display: flex;
   flex-direction: column-reverse;
-  outline: dotted darkgray 2px;
+  border: dashed 1px #aaa;
   border-radius: 6px;
   min-height: calc(4 * 72px); /* 64px card + some buffer for card badges */
+  overflow: hidden;
+  width: 64px;
 }
 
 .existing-cards {

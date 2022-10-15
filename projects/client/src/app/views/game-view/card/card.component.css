@@ -2,3 +2,8 @@
   -webkit-filter: drop-shadow(5px 5px 5px gray);
   filter: drop-shadow(5px 5px 5px gray);
 }
+
+.card {
+  width: 64px;
+  height: 64px;
+}

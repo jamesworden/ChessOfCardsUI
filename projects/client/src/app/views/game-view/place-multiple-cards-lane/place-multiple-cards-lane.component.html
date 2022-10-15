@@ -13,19 +13,15 @@
   >
     <app-card
       *ngFor="let card of placeMultipleCards$ | async"
-      class="card-container"
       [suit]="card.Suit"
       [kind]="card.Kind"
       [cardImageFileName]="getCardImageFileName(card)"
       [playerCanDrag]="true"
-      cdkDrag
-      [cdkDragData]="card"
     ></app-card>
   </div>
 
   <div class="existing-cards">
     <app-card
-      class="card-container"
       *ngFor="let card of previouslyCapturedCards$ | async"
       [suit]="card.Suit"
       [kind]="card.Kind"
