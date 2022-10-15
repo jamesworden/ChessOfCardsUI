@@ -1,8 +1,4 @@
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -24,9 +20,12 @@ import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SuitModel } from '../../models/suit.model';
-import { KindModel } from '../../models/kind.model';
 import { SubscriptionManager } from '../../util/subscription-manager';
+import { LaneModel } from '../../models/lane.model';
+import { addCardToArray } from './logic/add-card-to-array';
+import { getIndexOfCardInArray } from './logic/get-index-of-card-in-array';
+import { moveCardToLane } from './logic/move-card-to-lane';
+import { removeCardFromArray } from './logic/remove-card-from-array';
 
 @Component({
   selector: 'app-game-view',
@@ -176,7 +175,7 @@ export class GameViewComponent implements OnDestroy {
 
     this.shouldPlaceMultipleCards(placeCardAttempt)
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
-      : this.makeValidatedMove(move);
+      : this.makeValidatedMove(move, this.latestGameStateSnapshot.Lanes);
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
@@ -229,7 +228,7 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    this.removeCardFromArray(card, placeMultipleCards);
+    removeCardFromArray(card, placeMultipleCards);
     this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
 
     const placeMultipleCardsHand = this.store.selectSnapshot(
@@ -240,15 +239,8 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    this.addCardToArray(card, placeMultipleCardsHand, indexInHand);
+    addCardToArray(card, placeMultipleCardsHand, indexInHand);
     this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
-  }
-
-  private moveCardToLane(placeCardAttempt: PlaceCardAttemptModel) {
-    const { TargetLaneIndex, TargetRowIndex, Card } = placeCardAttempt;
-    const targetLane = this.latestGameStateSnapshot.Lanes[TargetLaneIndex];
-    const targetRow = targetLane.Rows[TargetRowIndex];
-    targetRow.push(Card);
   }
 
   private shouldPlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
@@ -273,7 +265,7 @@ export class GameViewComponent implements OnDestroy {
 
   private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
     const cardsFromHand = [...this.latestGameStateSnapshot.Hand.Cards];
-    const remainingCardsFromHand = this.removeCardFromArray(
+    const remainingCardsFromHand = removeCardFromArray(
       placeCardAttempt.Card,
       cardsFromHand
     );
@@ -283,10 +275,10 @@ export class GameViewComponent implements OnDestroy {
     );
   }
 
-  private makeValidatedMove(move: MoveModel) {
+  private makeValidatedMove(move: MoveModel, lanes: LaneModel[]) {
     for (const placeCardAttempt of move.PlaceCardAttempts) {
-      this.moveCardToLane(placeCardAttempt);
-      this.removeCardFromArray(
+      moveCardToLane(placeCardAttempt, lanes);
+      this.latestGameStateSnapshot.Hand.Cards = removeCardFromArray(
         placeCardAttempt.Card,
         this.latestGameStateSnapshot.Hand.Cards
       );
@@ -300,7 +292,7 @@ export class GameViewComponent implements OnDestroy {
   private rearrangeHand(card: CardModel, indexInHand: number) {
     const { Cards } = this.latestGameStateSnapshot.Hand;
 
-    const currentIndex = this.getIndexOfCardInArray(card, Cards);
+    const currentIndex = getIndexOfCardInArray(card, Cards);
 
     if (!currentIndex) {
       return;
@@ -314,41 +306,5 @@ export class GameViewComponent implements OnDestroy {
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
     this.signalrService.rearrangeHand(Cards);
-  }
-
-  private getIndexOfCardInArray(card: CardModel, cards: CardModel[]) {
-    for (let i = 0; i < cards.length; i++) {
-      const cardInArray = cards[i];
-
-      if (this.cardEqualsCard(card, cardInArray)) {
-        return i;
-      }
-    }
-
-    return null;
-  }
-
-  private addCardToArray(
-    card: CardModel,
-    cards: CardModel[],
-    targetIndex: number
-  ) {
-    transferArrayItem([card], cards, 0, targetIndex);
-  }
-
-  private removeCardFromArray(card: CardModel, cards: CardModel[]) {
-    cards = cards.filter(
-      (cardInArray) => !this.cardEqualsCard(card, cardInArray)
-    );
-
-    return cards;
-  }
-
-  private cardEqualsCard(card1: CardModel, card2: CardModel) {
-    const kindMatches = card1.Kind === card2.Kind;
-    const suitMatches = card1.Suit === card2.Suit;
-    const cardEqualsCard = kindMatches && suitMatches;
-
-    return cardEqualsCard;
   }
 }
