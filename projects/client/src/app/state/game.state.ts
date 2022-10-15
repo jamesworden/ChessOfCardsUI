@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   FinishPlacingMultipleCards,
+  SetPlaceMultipleCards,
+  SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
   UpdateGameState,
 } from '../actions/game.actions';
@@ -62,7 +64,7 @@ export class GameState {
     ctx.patchState({
       isPlacingMultipleCards: true,
       placeMultipleCards: [action.placeCardAttempt.Card],
-      placeMultipleCardsHand: action.cardsInPlayerHand,
+      placeMultipleCardsHand: action.remainingCardsInHand,
       initalPlaceMultipleCardAttempt: action.placeCardAttempt,
     });
   }
@@ -80,6 +82,26 @@ export class GameState {
       placeMultipleCards: null,
       placeMultipleCardsHand: null,
       initalPlaceMultipleCardAttempt: null,
+    });
+  }
+
+  @Action(SetPlaceMultipleCards)
+  setPlaceMultipleCards(
+    ctx: StateContext<GameStateModel>,
+    action: SetPlaceMultipleCards
+  ) {
+    ctx.patchState({
+      placeMultipleCards: action.cards,
+    });
+  }
+
+  @Action(SetPlaceMultipleCardsHand)
+  setPlaceMultipleCardsHand(
+    ctx: StateContext<GameStateModel>,
+    action: SetPlaceMultipleCardsHand
+  ) {
+    ctx.patchState({
+      placeMultipleCardsHand: action.cards,
     });
   }
 }

@@ -12,11 +12,21 @@ export class StartPlacingMultipleCards {
   static readonly type = '[GameState] Start Placing Multiple Cards';
   constructor(
     public placeCardAttempt: PlaceCardAttemptModel,
-    public cardsInPlayerHand: CardModel[]
+    public remainingCardsInHand: CardModel[]
   ) {}
 }
 
 export class FinishPlacingMultipleCards {
   static readonly type = '[GameState] Finish Placing Multiple Cards';
   constructor(public move?: MoveModel) {}
+}
+
+export class SetPlaceMultipleCards {
+  static readonly type = '[GameState] Set Place Multiple Cards';
+  constructor(public cards: CardModel[]) {}
+}
+
+export class SetPlaceMultipleCardsHand {
+  static readonly type = '[GameState] Set Place Multiple Cards Hand';
+  constructor(public cards: CardModel[]) {}
 }

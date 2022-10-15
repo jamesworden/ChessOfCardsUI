@@ -1,9 +1,15 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import {
   FinishPlacingMultipleCards,
+  SetPlaceMultipleCards,
+  SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
   UpdateGameState,
 } from 'projects/client/src/app/actions/game.actions';
@@ -170,23 +176,22 @@ export class GameViewComponent implements OnDestroy {
 
     this.shouldPlaceMultipleCards(placeCardAttempt)
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
-      : this.makeMove(move);
+      : this.makeValidatedMove(move);
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
-    const Suit = event.item.data.suit as SuitModel;
-    const Kind = event.item.data.kind as KindModel;
-    const PlayedBy = PlayerOrNoneModel.None;
+    const card = event.item.data;
 
-    const card: CardModel = {
-      Suit,
-      Kind,
-      PlayedBy,
-    };
+    if (this.isPlacingMultipleCards) {
+      this.dragCardBackToHand(card, event.currentIndex);
+      return;
+    }
 
-    this.isPlacingMultipleCards
-      ? this.dragCardBackToHand(card, event.currentIndex)
-      : this.rearrangeHand(event, card);
+    const cardPositionChanged = event.previousIndex !== event.currentIndex;
+
+    if (cardPositionChanged) {
+      this.rearrangeHand(card, event.currentIndex);
+    }
   }
 
   onPassButtonClicked() {
@@ -208,6 +213,25 @@ export class GameViewComponent implements OnDestroy {
   }
 
   private dragCardBackToHand(card: CardModel, indexInHand: number) {
+    const placeMultipleCards = this.store.selectSnapshot(
+      GameState.placeMultipleCards
+    );
+
+    if (!placeMultipleCards) {
+      return;
+    }
+
+    const isLastPlaceMultipleCard = placeMultipleCards.length === 1;
+
+    if (isLastPlaceMultipleCard) {
+      this.rearrangeHand(card, indexInHand);
+      this.store.dispatch(new FinishPlacingMultipleCards());
+      return;
+    }
+
+    this.removeCardFromArray(card, placeMultipleCards);
+    this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
+
     const placeMultipleCardsHand = this.store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
@@ -216,16 +240,8 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    const isLastPlaceMultipleCard = placeMultipleCardsHand.length === 1;
-
-    if (isLastPlaceMultipleCard) {
-      // Rearrange hand
-      // Cancel place multiple cards
-      return;
-    }
-
-    // Update place multiple cards
-    // Update place multiple cards hand
+    this.addCardToArray(card, placeMultipleCardsHand, indexInHand);
+    this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
   }
 
   private moveCardToLane(placeCardAttempt: PlaceCardAttemptModel) {
@@ -233,19 +249,6 @@ export class GameViewComponent implements OnDestroy {
     const targetLane = this.latestGameStateSnapshot.Lanes[TargetLaneIndex];
     const targetRow = targetLane.Rows[TargetRowIndex];
     targetRow.push(Card);
-  }
-
-  private removeCardFromHandLocally(card: CardModel) {
-    for (let i = 0; i < this.latestGameStateSnapshot.Hand.Cards.length; i++) {
-      const cardInHand = this.latestGameStateSnapshot.Hand.Cards[i];
-      const sameSuit = card.Suit === cardInHand.Suit;
-      const sameKind = card.Kind === cardInHand.Kind;
-
-      if (sameSuit && sameKind) {
-        this.latestGameStateSnapshot.Hand.Cards.splice(i, 1);
-        return;
-      }
-    }
   }
 
   private shouldPlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
@@ -269,24 +272,24 @@ export class GameViewComponent implements OnDestroy {
   }
 
   private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
-    const cardsInPlayerHand = this.latestGameStateSnapshot.Hand.Cards.filter(
-      (card) => {
-        const kindMatches = card.Kind === placeCardAttempt.Card.Kind;
-        const suitMatches = card.Suit === placeCardAttempt.Card.Suit;
-        const cardMatches = kindMatches && suitMatches;
-        return !cardMatches;
-      }
+    const cardsFromHand = [...this.latestGameStateSnapshot.Hand.Cards];
+    const remainingCardsFromHand = this.removeCardFromArray(
+      placeCardAttempt.Card,
+      cardsFromHand
     );
 
     this.store.dispatch(
-      new StartPlacingMultipleCards(placeCardAttempt, cardsInPlayerHand)
+      new StartPlacingMultipleCards(placeCardAttempt, remainingCardsFromHand)
     );
   }
 
-  private makeMove(move: MoveModel) {
+  private makeValidatedMove(move: MoveModel) {
     for (const placeCardAttempt of move.PlaceCardAttempts) {
       this.moveCardToLane(placeCardAttempt);
-      this.removeCardFromHandLocally(placeCardAttempt.Card);
+      this.removeCardFromArray(
+        placeCardAttempt.Card,
+        this.latestGameStateSnapshot.Hand.Cards
+      );
     }
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
@@ -294,30 +297,56 @@ export class GameViewComponent implements OnDestroy {
     this.signalrService.makeMove(move);
   }
 
-  private rearrangeHand(event: CdkDragDrop<string>, card: CardModel) {
-    this.rearrangeHandLocally(event);
-    this.signalrService.rearrangeHand(this.latestGameStateSnapshot.Hand.Cards);
-    this.latestGameStateSnapshot.Hand.Cards.push(card);
-  }
+  private rearrangeHand(card: CardModel, indexInHand: number) {
+    const { Cards } = this.latestGameStateSnapshot.Hand;
 
-  private rearrangeHandLocally({
-    previousIndex,
-    currentIndex,
-  }: CdkDragDrop<string>) {
-    if (previousIndex === currentIndex) {
+    const currentIndex = this.getIndexOfCardInArray(card, Cards);
+
+    if (!currentIndex) {
       return;
     }
 
     moveItemInArray(
       this.latestGameStateSnapshot.Hand.Cards,
-      previousIndex,
-      currentIndex
+      currentIndex,
+      indexInHand
     );
 
-    const { Cards } = this.latestGameStateSnapshot.Hand;
-
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-
     this.signalrService.rearrangeHand(Cards);
+  }
+
+  private getIndexOfCardInArray(card: CardModel, cards: CardModel[]) {
+    for (let i = 0; i < cards.length; i++) {
+      const cardInArray = cards[i];
+
+      if (this.cardEqualsCard(card, cardInArray)) {
+        return i;
+      }
+    }
+
+    return null;
+  }
+
+  private addCardToArray(
+    card: CardModel,
+    cards: CardModel[],
+    targetIndex: number
+  ) {
+    transferArrayItem([card], cards, 0, targetIndex);
+  }
+
+  private removeCardFromArray(card: CardModel, cards: CardModel[]) {
+    return cards.filter(
+      (cardInArray) => !this.cardEqualsCard(card, cardInArray)
+    );
+  }
+
+  private cardEqualsCard(card1: CardModel, card2: CardModel) {
+    const kindMatches = card1.Kind === card2.Kind;
+    const suitMatches = card1.Suit === card2.Suit;
+    const cardEqualsCard = kindMatches && suitMatches;
+
+    return cardEqualsCard;
   }
 }

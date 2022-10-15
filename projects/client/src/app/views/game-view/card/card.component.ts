@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { CardModel } from '../../../models/card.model';
 import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
 
 @Component({
@@ -9,8 +10,7 @@ import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
 export class CardComponent implements OnChanges {
   @Input() cardImageFileName?: string | null;
   @Input() playerCanDrag = false;
-  @Input() suit: string;
-  @Input() kind: string;
+  @Input() card: CardModel;
   @Input() isMiddleCard: boolean;
   @Input() isPlayedBy: PlayerOrNoneModel;
   @Input() isHost: boolean;

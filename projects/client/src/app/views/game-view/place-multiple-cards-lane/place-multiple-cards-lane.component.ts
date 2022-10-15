@@ -70,28 +70,20 @@ export class PlaceMultipleCardsLaneComponent {
    * function in itself. We wrap the predicate in this one so we can access the card attempt.
    */
   getEnterPredicate(initialPlaceCardAttempt: PlaceCardAttemptModel | null) {
-    return function (dragData: CdkDrag<{ suit: string; kind: string }>) {
+    return function (dragData: CdkDrag<CardModel>) {
       if (!initialPlaceCardAttempt) {
         return false;
       }
 
-      const kindOfAttemptedCard = dragData.data.kind as KindModel;
+      const kindOfAttemptedCard = dragData.data.Kind as KindModel;
       const { Kind: kindOfInitialCard } = initialPlaceCardAttempt.Card;
 
       return kindOfAttemptedCard == kindOfInitialCard;
     };
   }
 
-  drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
-    const Suit = event.item.data.suit as SuitModel;
-    const Kind = event.item.data.kind as KindModel;
-    const PlayedBy = PlayerOrNoneModel.None;
-
-    const card: CardModel = {
-      Suit,
-      Kind,
-      PlayedBy,
-    };
+  drop(event: CdkDragDrop<string, CardModel>) {
+    const card = event.item.data;
 
     console.log(card);
 

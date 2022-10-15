@@ -2,8 +2,6 @@
   <div class="existing-cards">
     <app-card
       *ngFor="let card of previouslyCapturedCards$ | async"
-      [suit]="card.Suit"
-      [kind]="card.Kind"
       [cardImageFileName]="getCardImageFileName(card)"
       [playerCanDrag]="false"
     ></app-card>
@@ -23,8 +21,7 @@
   >
     <app-card
       *ngFor="let card of placeMultipleCards$ | async"
-      [suit]="card.Suit"
-      [kind]="card.Kind"
+      [card]="card"
       [cardImageFileName]="getCardImageFileName(card)"
       [playerCanDrag]="true"
     ></app-card>

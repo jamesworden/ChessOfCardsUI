@@ -35,8 +35,7 @@
               >
                 <app-card
                   *ngIf="lane.Rows[6 - rowIndex].length > 0"
-                  [suit]="getTopCard(lane.Rows[6 - rowIndex]).Suit"
-                  [kind]="getTopCard(lane.Rows[6 - rowIndex]).Kind"
+                  [card]="getTopCard(lane.Rows[6 - rowIndex])"
                   [cardImageFileName]="
                     getCardImageFileName(getTopCard(lane.Rows[6 - rowIndex]))
                   "
@@ -120,8 +119,7 @@
               >
                 <app-card
                   *ngIf="row.length > 0"
-                  [suit]="getTopCard(row).Suit"
-                  [kind]="getTopCard(row).Kind"
+                  [card]="getTopCard(row)"
                   [cardImageFileName]="getCardImageFileName(getTopCard(row))"
                   [isMiddleCard]="rowIndex === 3"
                   [isPlayedBy]="getTopCard(row).PlayedBy"
@@ -176,9 +174,8 @@
             ? (placeMultipleCardsHand$ | async) ?? []
             : playerGameState.Hand.Cards
         "
-        [suit]="card.Suit"
-        [kind]="card.Kind"
         [cardImageFileName]="getCardImageFileName(card)"
+        [card]="card"
         [playerCanDrag]="true"
       ></app-card>
     </div>

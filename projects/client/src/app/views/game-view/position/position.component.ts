@@ -20,15 +20,7 @@ export class PositionComponent {
   constructor() {}
 
   drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
-    const Suit = event.item.data.suit as SuitModel;
-    const Kind = event.item.data.kind as KindModel;
-    const PlayedBy = PlayerOrNoneModel.None;
-
-    const Card: CardModel = {
-      Suit,
-      Kind,
-      PlayedBy,
-    };
+    const Card = event.item.data;
 
     const placeCardAttempt: PlaceCardAttemptModel = {
       Card,
