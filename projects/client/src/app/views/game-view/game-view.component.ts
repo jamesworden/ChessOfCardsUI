@@ -337,9 +337,11 @@ export class GameViewComponent implements OnDestroy {
   }
 
   private removeCardFromArray(card: CardModel, cards: CardModel[]) {
-    return cards.filter(
+    cards = cards.filter(
       (cardInArray) => !this.cardEqualsCard(card, cardInArray)
     );
+
+    return cards;
   }
 
   private cardEqualsCard(card1: CardModel, card2: CardModel) {
