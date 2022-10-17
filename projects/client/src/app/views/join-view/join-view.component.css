@@ -10,28 +10,30 @@
   justify-content: space-around;
 }
 
-.game-code-char-container {
+.game-code-input-container {
   display: flex;
-  flex-direction: space-between;
+  flex-direction: space-around;
+}
+
+.game-code-input {
+  background: 0;
+  border: 0;
+  outline: none;
+  width: 80vw;
+  max-width: 400px;
+  font-size: 1.5em;
+  transition: padding 0.3s 0.2s ease;
+  border-bottom: 1px solid grey;
   text-align: center;
+  font-size: 28px;
+  letter-spacing: 14px;
+  width: 200px;
+  margin-bottom: 24px;
 }
 
 .message {
   font-size: 16px;
   font-family: "Times New Roman", Times, serif;
-  text-align: center;
-}
-
-.game-code-char {
-  border-bottom: solid 2px #404040;
-  font-size: 28px;
-  font-family: sans-serif;
-  letter-spacing: 8px;
-  height: 28px;
-  width: 26px;
-  margin-right: 8px;
-  margin-left: 8px;
-  text-transform: uppercase;
   text-align: center;
 }
 

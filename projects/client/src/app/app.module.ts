@@ -22,6 +22,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PlaceMultipleCardsLaneComponent } from './views/game-view/place-multiple-cards-lane/place-multiple-cards-lane.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { PlaceMultipleCardsLaneComponent } from './views/game-view/place-multipl
     MatSnackBarModule,
     MatButtonModule,
     MatIconModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

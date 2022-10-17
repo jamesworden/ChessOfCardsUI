@@ -4,11 +4,15 @@
   </div>
   <br />
   <div class="horisontal-align">
-    <div class="game-code-char-container">
-      <span class="game-code-char"></span>
-      <span class="game-code-char"></span>
-      <span class="game-code-char"></span>
-      <span class="game-code-char"></span>
+    <div class="game-code-input-container">
+      <input
+        matInput
+        class="game-code-input"
+        maxlength="4"
+        [(ngModel)]="gameCodeInput"
+        (ngModelChange)="onInputChanged()"
+        name="game-code-input"
+      />
     </div>
   </div>
 
