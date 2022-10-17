@@ -25,8 +25,7 @@ export class SignalrService {
   public opponentPassedMove$ = new Subject();
   public gameOverMessage$ = new Subject<string | null>();
 
-  private readonly prodUrl =
-    'https://ec2-3-90-200-35.compute-1.amazonaws.com:80';
+  private readonly prodUrl = 'http://prod.chessofcards.com:80';
   private readonly localUrl = 'https://localhost:7192';
 
   constructor(private store: Store) {
