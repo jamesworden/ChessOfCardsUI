@@ -25,9 +25,13 @@ export class SignalrService {
   public opponentPassedMove$ = new Subject();
   public gameOverMessage$ = new Subject<string | null>();
 
+  private readonly prodUrl =
+    'http://ec2-3-90-200-35.compute-1.amazonaws.com:80';
+  private readonly localUrl = 'https://localhost:7192';
+
   constructor(private store: Store) {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('https://localhost:7192/' + 'game')
+      .withUrl(`${this.prodUrl}/game`)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
