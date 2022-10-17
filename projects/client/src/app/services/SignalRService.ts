@@ -26,7 +26,7 @@ export class SignalrService {
   public gameOverMessage$ = new Subject<string | null>();
 
   private readonly prodUrl =
-    'http://ec2-3-90-200-35.compute-1.amazonaws.com:80';
+    'https://ec2-3-90-200-35.compute-1.amazonaws.com:80';
   private readonly localUrl = 'https://localhost:7192';
 
   constructor(private store: Store) {
