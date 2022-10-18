@@ -26,6 +26,7 @@ import { addCardToArray } from './logic/add-card-to-array';
 import { getIndexOfCardInArray } from './logic/get-index-of-card-in-array';
 import { moveCardToLane } from './logic/move-card-to-lane';
 import { removeCardFromArray } from './logic/remove-card-from-array';
+import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-cards-to-move';
 
 @Component({
   selector: 'app-game-view',
@@ -228,44 +229,18 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    let { TargetLaneIndex, TargetRowIndex } = initialPlaceMultipleCardAttempt;
+    /**
+     * Place multiple cards are stored from top to bottom in state. Reverse the array
+     * without mutating the original one.
+     */
+    const reversedPlaceMultipleCards = [...placeMultipleCards].reverse();
     const playerGameState = this.store.selectSnapshot(GameState.gameData);
 
-    // Place multiple cards are stored from top to bottom in state. Reverse the array
-    // without mutating the original one.
-    const placeCardAttempts = [...placeMultipleCards]
-      .reverse()
-      .map((Card, index) => {
-        let targetRowIndex: number;
-
-        if (playerGameState.IsHost) {
-          targetRowIndex = TargetRowIndex + index;
-
-          if (targetRowIndex === 3) {
-            targetRowIndex++;
-            TargetRowIndex++;
-          }
-        } else {
-          targetRowIndex = TargetRowIndex - index;
-
-          if (targetRowIndex === 3) {
-            targetRowIndex--;
-            TargetRowIndex--;
-          }
-        }
-
-        const placeCardAttempt: PlaceCardAttemptModel = {
-          Card,
-          TargetLaneIndex,
-          TargetRowIndex: targetRowIndex,
-        };
-
-        return placeCardAttempt;
-      });
-
-    const move: MoveModel = {
-      PlaceCardAttempts: placeCardAttempts,
-    };
+    const move = convertPlaceMultipleCardsToMove(
+      reversedPlaceMultipleCards,
+      initialPlaceMultipleCardAttempt,
+      playerGameState.IsHost
+    );
 
     const invalidMoveMessage = getReasonIfMoveInvalid(playerGameState, move);
 
