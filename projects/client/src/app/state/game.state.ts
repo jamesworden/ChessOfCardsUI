@@ -70,13 +70,7 @@ export class GameState {
   }
 
   @Action(FinishPlacingMultipleCards)
-  stopPlacingMultipleCards(
-    ctx: StateContext<GameStateModel>,
-    _: FinishPlacingMultipleCards
-  ) {
-    // TODO: If a move exists, validate it and signal r service it move again
-    // TODO: mave move with signal r service
-
+  stopPlacingMultipleCards(ctx: StateContext<GameStateModel>) {
     ctx.patchState({
       isPlacingMultipleCards: false,
       placeMultipleCards: null,
