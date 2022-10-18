@@ -16,6 +16,10 @@ import {
 } from '../../../actions/game.actions';
 import { addCardToArray } from '../logic/add-card-to-array';
 import { removeCardFromArray } from '../logic/remove-card-from-array';
+import {
+  getCardImageFileName as getCardImageFileNameFn,
+  getJokerImageFileName as getJokerImageFileNameFn,
+} from '../../../util/get-asset-file-names';
 
 @Component({
   selector: 'app-place-multiple-cards-lane',
@@ -31,6 +35,9 @@ export class PlaceMultipleCardsLaneComponent {
 
   @Select(GameState.placeMultipleCards)
   placeMultipleCards$!: Observable<CardModel[] | null>;
+
+  getCardImageFileName = getCardImageFileNameFn;
+  getJokerImageFileName = getJokerImageFileNameFn;
 
   previouslyCapturedCards$ = combineLatest([
     this.playerGameState$,
@@ -65,11 +72,6 @@ export class PlaceMultipleCardsLaneComponent {
   );
 
   constructor(private store: Store) {}
-
-  getCardImageFileName(card: CardModel) {
-    const { Suit, Kind } = card;
-    return `card_${Suit.toLowerCase()}_${Kind.toLowerCase()}.png`;
-  }
 
   /**
    * Angular is annoying: this.memberVariable returns undefined when passing the predicate

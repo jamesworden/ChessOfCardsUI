@@ -50,7 +50,13 @@
                     lane.WonBy != PlayerOrNone.None &&
                     rowIndex === 3
                   "
-                  [cardImageFileName]="getJokerImageFileName(laneIndex)"
+                  [cardImageFileName]="
+                    getJokerImageFileName(
+                      laneIndex,
+                      playerGameState.RedJokerLaneIndex,
+                      playerGameState.BlackJokerLaneIndex
+                    )
+                  "
                   [isMiddleCard]="rowIndex === 3"
                   [isPlayedBy]="lane.WonBy"
                   [isHost]="false"
@@ -133,7 +139,13 @@
                       PlayerOrNone.None &&
                     rowIndex === 3
                   "
-                  [cardImageFileName]="getJokerImageFileName(4 - laneIndex)"
+                  [cardImageFileName]="
+                    getJokerImageFileName(
+                      4 - laneIndex,
+                      playerGameState.RedJokerLaneIndex,
+                      playerGameState.BlackJokerLaneIndex
+                    )
+                  "
                   [isMiddleCard]="rowIndex === 3"
                   [isPlayedBy]="playerGameState.Lanes[4 - laneIndex].WonBy"
                   [isHost]="false"

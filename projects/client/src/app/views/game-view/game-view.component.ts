@@ -27,6 +27,10 @@ import { getIndexOfCardInArray } from './logic/get-index-of-card-in-array';
 import { moveCardToLane } from './logic/move-card-to-lane';
 import { removeCardFromArray } from './logic/remove-card-from-array';
 import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-cards-to-move';
+import {
+  getCardImageFileName as getCardImageFileNameFn,
+  getJokerImageFileName as getJokerImageFileNameFn,
+} from '../../util/get-asset-file-names';
 
 @Component({
   selector: 'app-game-view',
@@ -54,6 +58,8 @@ export class GameViewComponent implements OnDestroy {
   initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
 
   PlayerOrNone = PlayerOrNoneModel;
+  getCardImageFileName = getCardImageFileNameFn;
+  getJokerImageFileName = getJokerImageFileNameFn;
 
   latestGameStateSnapshot: PlayerGameStateModel;
   isPlayersTurn = false;
@@ -122,28 +128,6 @@ export class GameViewComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.sm.unsubscribe();
-  }
-
-  getJokerImageFileName(laneIndex: number) {
-    const { RedJokerLaneIndex, BlackJokerLaneIndex } =
-      this.latestGameStateSnapshot;
-
-    switch (laneIndex) {
-      case RedJokerLaneIndex: {
-        return 'card_joker_red.png';
-      }
-      case BlackJokerLaneIndex: {
-        return 'card_joker_black.png';
-      }
-      default: {
-        return null; // Both jokers played already.
-      }
-    }
-  }
-
-  getCardImageFileName(card: CardModel) {
-    const { Suit, Kind } = card;
-    return `card_${Suit.toLowerCase()}_${Kind.toLowerCase()}.png`;
   }
 
   getTopCard(row: CardModel[]) {
