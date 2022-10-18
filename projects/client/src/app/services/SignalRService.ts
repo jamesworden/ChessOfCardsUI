@@ -11,6 +11,9 @@ import { UpdateGameState } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { MoveModel } from '../models/move.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
+import { environment } from '../../environments/environment';
+
+const { serverUrl } = environment;
 
 @Injectable({
   providedIn: 'root',
@@ -25,12 +28,9 @@ export class SignalrService {
   public opponentPassedMove$ = new Subject();
   public gameOverMessage$ = new Subject<string | null>();
 
-  private readonly prodUrl = 'http://prod.chessofcards.com:80';
-  private readonly localUrl = 'https://localhost:7192';
-
   constructor(private store: Store) {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(`${this.prodUrl}/game`)
+      .withUrl(`${serverUrl}/game`)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();

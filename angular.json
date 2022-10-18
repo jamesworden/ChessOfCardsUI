@@ -22,10 +22,7 @@
             "main": "projects/client/src/main.ts",
             "polyfills": "projects/client/src/polyfills.ts",
             "tsConfig": "projects/client/tsconfig.client.json",
-            "assets": [
-              "projects/client/src/favicon.ico",
-              "projects/client/src/assets"
-            ],
+            "assets": ["projects/client/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/client/src/styles.css"
@@ -33,7 +30,7 @@
             "scripts": []
           },
           "configurations": {
-            "production": {
+            "prod": {
               "budgets": [
                 {
                   "type": "initial",
@@ -54,28 +51,34 @@
               ],
               "outputHashing": "all"
             },
-            "development": {
+            "local": {
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/client/src/environments/environment.ts",
+                  "with": "projects/client/src/environments/environment.local.ts"
+                }
+              ]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "prod"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "browserTarget": "LanesFrontend:build:production"
+            "prod": {
+              "browserTarget": "LanesFrontend:build:prod"
             },
-            "development": {
-              "browserTarget": "LanesFrontend:build:development"
+            "local": {
+              "browserTarget": "LanesFrontend:build:local"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -90,10 +93,7 @@
             "polyfills": "projects/client/src/polyfills.ts",
             "tsConfig": "projects/client/tsconfig.spec.json",
             "karmaConfig": "projects/client/karma.conf.js",
-            "assets": [
-              "projects/client/src/favicon.ico",
-              "projects/client/src/assets"
-            ],
+            "assets": ["projects/client/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/client/src/styles.css"
