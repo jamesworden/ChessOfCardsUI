@@ -31,6 +31,7 @@ import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
 } from '../../util/get-asset-file-names';
+import { shouldPlaceMultipleCards } from './logic/should-place-multiple-cards';
 
 @Component({
   selector: 'app-game-view',
@@ -158,7 +159,7 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    this.shouldPlaceMultipleCards(placeCardAttempt)
+    shouldPlaceMultipleCards(placeCardAttempt, this.latestGameStateSnapshot)
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
       : this.makeValidatedMove(move, this.latestGameStateSnapshot.Lanes);
   }
@@ -271,26 +272,6 @@ export class GameViewComponent implements OnDestroy {
 
     addCardToArray(card, placeMultipleCardsHand, indexInHand);
     this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
-  }
-
-  private shouldPlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
-    const { IsHost } = this.latestGameStateSnapshot;
-    const defendingAsHost = IsHost && placeCardAttempt.TargetRowIndex < 3;
-    const defendingAsGuest = !IsHost && placeCardAttempt.TargetRowIndex > 3;
-    const isDefensiveMove = defendingAsHost || defendingAsGuest;
-
-    const hasOtherPotentialPairCards =
-      this.latestGameStateSnapshot.Hand.Cards.some((card) => {
-        const suitNotMatch = card.Suit != placeCardAttempt.Card.Suit;
-        const kindMatches = card.Kind === placeCardAttempt.Card.Kind;
-
-        return suitNotMatch && kindMatches;
-      });
-
-    const shouldPlaceMultipleCards =
-      isDefensiveMove && hasOtherPotentialPairCards;
-
-    return shouldPlaceMultipleCards;
   }
 
   private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
