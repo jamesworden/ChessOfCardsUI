@@ -29,6 +29,7 @@
   letter-spacing: 14px;
   width: 200px;
   margin-bottom: 24px;
+  text-transform: uppercase;
 }
 
 .message {

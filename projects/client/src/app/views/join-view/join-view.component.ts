@@ -28,7 +28,11 @@ export class JoinViewComponent implements OnDestroy {
 
   onInputChanged() {
     if (this.gameCodeInput.length === 4) {
-      this.signalrService.joinGame(this.gameCodeInput);
+      const upperCaseGameCode = this.gameCodeInput.toUpperCase();
+      this.signalrService.joinGame(upperCaseGameCode);
+      return;
     }
+
+    this.invalidGameCode = false;
   }
 }
