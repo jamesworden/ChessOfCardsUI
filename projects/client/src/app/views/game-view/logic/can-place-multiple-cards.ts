@@ -5,7 +5,7 @@ import { PlayerGameStateModel } from '../../../models/player-game-state-model';
  * @returns true if the first place card attempt is in a position where multiple
  * cards can be played after it, otherwise false.
  */
-export function shouldPlaceMultipleCards(
+export function canPlaceMultipleCards(
   firstPlaceCardAttempt: PlaceCardAttemptModel,
   latestGameStateSnapshot: PlayerGameStateModel
 ) {

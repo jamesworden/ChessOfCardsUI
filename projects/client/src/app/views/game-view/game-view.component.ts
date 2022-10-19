@@ -31,7 +31,7 @@ import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
 } from '../../util/get-asset-file-names';
-import { shouldPlaceMultipleCards } from './logic/should-place-multiple-cards';
+import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 
 @Component({
   selector: 'app-game-view',
@@ -159,7 +159,7 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    shouldPlaceMultipleCards(placeCardAttempt, this.latestGameStateSnapshot)
+    canPlaceMultipleCards(placeCardAttempt, this.latestGameStateSnapshot)
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
       : this.makeValidatedMove(move, this.latestGameStateSnapshot.Lanes);
   }
