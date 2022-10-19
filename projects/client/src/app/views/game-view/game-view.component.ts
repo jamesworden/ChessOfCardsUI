@@ -259,7 +259,12 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
+    console.log(card, placeMultipleCards);
+
     removeCardFromArray(card, placeMultipleCards);
+
+    console.log(card, placeMultipleCards);
+
     this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
 
     const placeMultipleCardsHand = this.store.selectSnapshot(
@@ -276,20 +281,17 @@ export class GameViewComponent implements OnDestroy {
 
   private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
     const cardsFromHand = [...this.latestGameStateSnapshot.Hand.Cards];
-    const remainingCardsFromHand = removeCardFromArray(
-      placeCardAttempt.Card,
-      cardsFromHand
-    );
+    removeCardFromArray(placeCardAttempt.Card, cardsFromHand);
 
     this.store.dispatch(
-      new StartPlacingMultipleCards(placeCardAttempt, remainingCardsFromHand)
+      new StartPlacingMultipleCards(placeCardAttempt, cardsFromHand)
     );
   }
 
   private makeValidatedMove(move: MoveModel, lanes: LaneModel[]) {
     for (const placeCardAttempt of move.PlaceCardAttempts) {
       moveCardToLane(placeCardAttempt, lanes);
-      this.latestGameStateSnapshot.Hand.Cards = removeCardFromArray(
+      removeCardFromArray(
         placeCardAttempt.Card,
         this.latestGameStateSnapshot.Hand.Cards
       );

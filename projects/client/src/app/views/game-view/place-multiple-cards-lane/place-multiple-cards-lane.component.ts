@@ -142,7 +142,7 @@ export class PlaceMultipleCardsLaneComponent {
       return;
     }
 
-    placeMultipleCardsHand = removeCardFromArray(card, placeMultipleCardsHand);
+    removeCardFromArray(card, placeMultipleCardsHand);
 
     this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
     this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
