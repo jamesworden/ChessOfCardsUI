@@ -1,6 +1,7 @@
 .lane {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  justify-content: flex-end;
   height: 100%;
 }
 
@@ -13,10 +14,20 @@
   min-height: calc(4 * 72px); /* 64px card + some buffer for card badges */
   overflow: hidden;
   width: 64px;
-  margin-bottom: 8px;
 }
 
 .existing-cards {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
+  border-left: solid 1px transparent;
+  border-right: solid 1px transparent;
+  border-bottom: solid 1px transparent;
+  margin-top: 4px;
+}
+
+.existing-card-position {
+  height: 64px;
+  width: 64px;
+  display: flex;
+  justify-content: space-around;
 }

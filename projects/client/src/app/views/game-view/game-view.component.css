@@ -35,6 +35,7 @@
 .lane {
   display: flex;
   flex-direction: column;
+  border: solid 1px transparent;
 }
 
 .gutter {
