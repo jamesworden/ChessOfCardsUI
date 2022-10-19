@@ -259,11 +259,7 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    console.log(card, placeMultipleCards);
-
     removeCardFromArray(card, placeMultipleCards);
-
-    console.log(card, placeMultipleCards);
 
     this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
 
