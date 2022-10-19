@@ -165,18 +165,35 @@ export class GameViewComponent implements OnDestroy {
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
-    const card = event.item.data;
+    const card = event.item.data as CardModel;
+    const oneListToAnother = event.previousContainer != event.container;
 
-    if (this.isPlacingMultipleCards) {
+    if (this.isPlacingMultipleCards && oneListToAnother) {
       this.dragCardBackToHand(card, event.currentIndex);
       return;
     }
 
     const cardPositionChanged = event.previousIndex !== event.currentIndex;
 
-    if (cardPositionChanged) {
-      this.rearrangeHand(card, event.currentIndex);
+    if (!cardPositionChanged) {
+      return;
     }
+
+    const placeMultipleCardsHand = this.store.selectSnapshot(
+      GameState.placeMultipleCardsHand
+    );
+
+    if (!placeMultipleCardsHand) {
+      return;
+    }
+
+    moveItemInArray(
+      placeMultipleCardsHand,
+      event.previousIndex,
+      event.currentIndex
+    );
+
+    this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
   }
 
   onPassButtonClicked() {
@@ -194,6 +211,29 @@ export class GameViewComponent implements OnDestroy {
   }
 
   onCancelButtonClicked() {
+    const placeMultipleCards = this.store.selectSnapshot(
+      GameState.placeMultipleCards
+    );
+
+    if (!placeMultipleCards) {
+      return;
+    }
+
+    const placeMultipleCardsHand = this.store.selectSnapshot(
+      GameState.placeMultipleCardsHand
+    );
+
+    if (!placeMultipleCardsHand) {
+      return;
+    }
+
+    const combinedCards = placeMultipleCardsHand.concat(
+      placeMultipleCards.reverse()
+    );
+
+    this.latestGameStateSnapshot.Hand.Cards = combinedCards;
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+    this.signalrService.rearrangeHand(combinedCards);
     this.store.dispatch(new FinishPlacingMultipleCards());
   }
 
@@ -247,32 +287,50 @@ export class GameViewComponent implements OnDestroy {
       GameState.placeMultipleCards
     );
 
-    if (!placeMultipleCards) {
-      return;
-    }
-
-    const isLastPlaceMultipleCard = placeMultipleCards.length === 1;
-
-    if (isLastPlaceMultipleCard) {
-      this.rearrangeHand(card, indexInHand);
-      this.store.dispatch(new FinishPlacingMultipleCards());
+    if (placeMultipleCards === null) {
       return;
     }
 
     removeCardFromArray(card, placeMultipleCards);
-
     this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
 
     const placeMultipleCardsHand = this.store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
 
-    if (!placeMultipleCardsHand) {
+    if (placeMultipleCardsHand === null) {
       return;
     }
 
     addCardToArray(card, placeMultipleCardsHand, indexInHand);
     this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
+
+    const cardsAfterSwitch = this.store.selectSnapshot(
+      GameState.placeMultipleCards
+    );
+
+    if (cardsAfterSwitch === null) {
+      return;
+    }
+
+    const isLastPlaceMultipleCard = cardsAfterSwitch.length < 1;
+
+    if (!isLastPlaceMultipleCard) {
+      return;
+    }
+
+    const handAfterSwitch = this.store.selectSnapshot(
+      GameState.placeMultipleCardsHand
+    );
+
+    if (handAfterSwitch === null) {
+      return;
+    }
+
+    this.store.dispatch(new FinishPlacingMultipleCards());
+    this.latestGameStateSnapshot.Hand.Cards = handAfterSwitch;
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+    this.signalrService.rearrangeHand(handAfterSwitch);
   }
 
   private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
