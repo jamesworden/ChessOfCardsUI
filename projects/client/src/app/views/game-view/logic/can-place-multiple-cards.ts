@@ -1,7 +1,7 @@
-import { opponentAceOnTopOfAnyRow } from 'archive/opponent-ace-on-top-of-any-row';
 import { KindModel } from '../../../models/kind.model';
 import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../../../models/player-game-state-model';
+import { opponentCapturedAnyRowWithAce } from './is-move-valid/move-checks/opponent-captured-any-row-with-ace';
 
 /**
  * @returns true if the first place card attempt is in a position where multiple
@@ -28,7 +28,7 @@ export function canPlaceMultipleCards(
 
   if (
     firstPlaceCardAttempt.Card.Kind === KindModel.Ace &&
-    opponentAceOnTopOfAnyRow(latestGameStateSnapshot)
+    opponentCapturedAnyRowWithAce(latestGameStateSnapshot)
   ) {
     return false;
   }
