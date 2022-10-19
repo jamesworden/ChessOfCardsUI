@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   FinishPlacingMultipleCards,
+  ResetGameData,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -96,6 +97,13 @@ export class GameState {
   ) {
     ctx.patchState({
       placeMultipleCardsHand: action.cards,
+    });
+  }
+
+  @Action(ResetGameData)
+  resetGameData(ctx: StateContext<GameStateModel>) {
+    ctx.patchState({
+      gameData: undefined,
     });
   }
 }

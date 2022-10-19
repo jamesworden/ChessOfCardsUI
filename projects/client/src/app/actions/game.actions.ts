@@ -1,5 +1,4 @@
 import { CardModel } from '../models/card.model';
-import { MoveModel } from '../models/move.model';
 import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 
@@ -29,4 +28,8 @@ export class SetPlaceMultipleCards {
 export class SetPlaceMultipleCardsHand {
   static readonly type = '[GameState] Set Place Multiple Cards Hand';
   constructor(public cards: CardModel[]) {}
+}
+
+export class ResetGameData {
+  static readonly type = '[GameState] Reset Game Data';
 }

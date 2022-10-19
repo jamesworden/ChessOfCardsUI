@@ -95,6 +95,10 @@ export class GameViewComponent implements OnDestroy {
       this.playerGameState$.subscribe((playerGameState) => {
         this.latestGameStateSnapshot = playerGameState;
 
+        if (!playerGameState) {
+          return;
+        }
+
         const { IsHost, IsHostPlayersTurn } = this.latestGameStateSnapshot;
 
         const hostAndHostTurn = IsHost && IsHostPlayersTurn;
