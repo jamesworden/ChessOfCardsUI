@@ -90,7 +90,7 @@ export class PlaceMultipleCardsLaneComponent {
     };
   }
 
-  drop(event: CdkDragDrop<string, CardModel>) {
+  onCardPlaced(event: CdkDragDrop<string, CardModel>) {
     const { currentIndex: targetIndex, item } = event;
     const card = item.data;
 

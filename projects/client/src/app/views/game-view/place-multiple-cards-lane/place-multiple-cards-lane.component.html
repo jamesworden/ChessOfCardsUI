@@ -14,7 +14,7 @@
     cdkDropListData="place-multiple-cards-list"
     cdkDropListConnectedTo="player-hand"
     cdkDropListOrientation="vertical"
-    (cdkDropListDropped)="drop($event)"
+    (cdkDropListDropped)="onCardPlaced($event)"
     [cdkDropListEnterPredicate]="
       getEnterPredicate(initialPlaceMultipleCardAttempt$ | async)
     "

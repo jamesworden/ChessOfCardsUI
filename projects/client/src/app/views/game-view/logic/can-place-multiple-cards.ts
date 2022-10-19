@@ -1,3 +1,5 @@
+import { opponentAceOnTopOfAnyRow } from 'archive/opponent-ace-on-top-of-any-row';
+import { KindModel } from '../../../models/kind.model';
 import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../../../models/player-game-state-model';
 
@@ -23,6 +25,13 @@ export function canPlaceMultipleCards(
 
   const shouldPlaceMultipleCards =
     isDefensiveMove && hasOtherPotentialPairCards;
+
+  if (
+    firstPlaceCardAttempt.Card.Kind === KindModel.Ace &&
+    opponentAceOnTopOfAnyRow(latestGameStateSnapshot)
+  ) {
+    return false;
+  }
 
   return shouldPlaceMultipleCards;
 }
