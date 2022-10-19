@@ -282,7 +282,6 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    this.store.dispatch(new FinishPlacingMultipleCards());
     this.signalrService.makeMove(move);
   }
 

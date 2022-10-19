@@ -7,7 +7,11 @@ import {
 } from '@microsoft/signalr';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ResetGameData, UpdateGameState } from '../actions/game.actions';
+import {
+  FinishPlacingMultipleCards,
+  ResetGameData,
+  UpdateGameState,
+} from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { MoveModel } from '../models/move.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
@@ -77,6 +81,7 @@ export class SignalrService {
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
+      this.store.dispatch(new FinishPlacingMultipleCards());
       this.parseAndUpdateGameState(stringifiedGameState);
     });
 
