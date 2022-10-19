@@ -9,7 +9,6 @@ import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import {
   FinishPlacingMultipleCards,
-  ResetGameData,
   UpdateGameState,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
@@ -77,7 +76,6 @@ export class SignalrService {
 
     this.hubConnection.on('GameOver', (message) => {
       this.gameOverMessage$.next(message);
-      this.store.dispatch(new ResetGameData());
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {

@@ -4,6 +4,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import {
   FinishPlacingMultipleCards,
+  ResetGameData,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -87,6 +88,7 @@ export class GameViewComponent implements OnDestroy {
         });
 
         modalRef.afterClosed().subscribe(() => {
+          this.store.dispatch(new ResetGameData());
           this.gameEnded.emit();
         });
       })
