@@ -354,23 +354,4 @@ export class GameViewComponent implements OnDestroy {
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
     this.signalrService.makeMove(move);
   }
-
-  private rearrangeHand(card: CardModel, indexInHand: number) {
-    const { Cards } = this.latestGameStateSnapshot.Hand;
-
-    const currentIndex = getIndexOfCardInArray(card, Cards);
-
-    if (currentIndex === null) {
-      return;
-    }
-
-    moveItemInArray(
-      this.latestGameStateSnapshot.Hand.Cards,
-      currentIndex,
-      indexInHand
-    );
-
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-    this.signalrService.rearrangeHand(Cards);
-  }
 }
