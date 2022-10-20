@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { ResponsiveSizeService } from '../responsive-size.service';
 
 @Component({
   selector: 'app-deck',
@@ -12,7 +13,7 @@ export class DeckComponent implements OnChanges {
 
   numCardsToDisplay = 0;
 
-  constructor() {}
+  constructor(public responsiveSizeService: ResponsiveSizeService) {}
 
   ngOnChanges() {
     this.numCardsToDisplay = this.totalNumCards >= 3 ? 3 : this.totalNumCards;

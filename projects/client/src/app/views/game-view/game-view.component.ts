@@ -32,6 +32,7 @@ import {
   getJokerImageFileName as getJokerImageFileNameFn,
 } from '../../util/get-asset-file-names';
 import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
+import { ResponsiveSizeService } from './responsive-size.service';
 
 const LIGHT_BLUE_TINT = 'rgba(0, 0, 255, 0.2)';
 const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';
@@ -73,7 +74,8 @@ export class GameViewComponent implements OnDestroy {
     public modal: MatDialog,
     private signalrService: SignalrService,
     private store: Store,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public responsiveSizeService: ResponsiveSizeService
   ) {
     this.sm.add(
       this.signalrService.gameOverMessage$.subscribe((message) => {
@@ -195,7 +197,7 @@ export class GameViewComponent implements OnDestroy {
       GameState.placeMultipleCards
     );
 
-    if (!placeMultipleCards) {
+    if (placeMultipleCards == null) {
       return;
     }
 
@@ -203,7 +205,7 @@ export class GameViewComponent implements OnDestroy {
       GameState.placeMultipleCardsHand
     );
 
-    if (!placeMultipleCardsHand) {
+    if (placeMultipleCardsHand === null) {
       return;
     }
 
@@ -222,7 +224,7 @@ export class GameViewComponent implements OnDestroy {
       GameState.placeMultipleCards
     );
 
-    if (!placeMultipleCards) {
+    if (placeMultipleCards === null) {
       return;
     }
 
@@ -230,7 +232,7 @@ export class GameViewComponent implements OnDestroy {
       GameState.initialPlaceMultipleCardAttempt
     );
 
-    if (!initialPlaceMultipleCardAttempt) {
+    if (initialPlaceMultipleCardAttempt === null) {
       return;
     }
 
@@ -329,7 +331,7 @@ export class GameViewComponent implements OnDestroy {
       GameState.placeMultipleCardsHand
     );
 
-    if (!placeMultipleCardsHand) {
+    if (placeMultipleCardsHand === null) {
       return;
     }
 

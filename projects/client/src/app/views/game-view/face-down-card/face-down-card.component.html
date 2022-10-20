@@ -2,4 +2,8 @@
   class="face-down-card"
   src="../../../../assets/images/card_back.png"
   alt=""
+  [ngStyle]="{
+    height: (responsiveSizeService.cardSize$ | async) + 'px',
+    width: (responsiveSizeService.cardSize$ | async) + 'px'
+  }"
 />

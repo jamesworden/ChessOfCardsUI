@@ -5,6 +5,7 @@ import { KindModel } from '../../../models/kind.model';
 import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
 import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
 import { SuitModel } from '../../../models/suit.model';
+import { ResponsiveSizeService } from '../responsive-size.service';
 
 @Component({
   selector: 'app-position',
@@ -17,7 +18,7 @@ export class PositionComponent {
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttemptModel> =
     new EventEmitter();
 
-  constructor() {}
+  constructor(public responsiveSizeService: ResponsiveSizeService) {}
 
   drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
     const Card = event.item.data;

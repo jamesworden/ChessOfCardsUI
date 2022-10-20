@@ -9,6 +9,8 @@
   [cdkDragData]="card"
   [ngStyle]="{
     rotate: tiltDegrees + 'deg',
-    'background-color': backgroundColor ?? 'transparent'
+    'background-color': backgroundColor ?? 'transparent',
+    height: (responsiveSizeService.cardSize$ | async) + 'px',
+    width: (responsiveSizeService.cardSize$ | async) + 'px'
   }"
 />

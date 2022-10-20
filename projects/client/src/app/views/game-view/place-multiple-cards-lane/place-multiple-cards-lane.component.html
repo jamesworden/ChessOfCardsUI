@@ -10,6 +10,13 @@
     [cdkDropListEnterPredicate]="
       getEnterPredicate(initialPlaceMultipleCardAttempt$ | async)
     "
+    [ngStyle]="{
+      'min-height':
+        minCardHeightFactor *
+          ((responsiveSizeService.cardSize$ | async) ?? 64) +
+        'px',
+      width: (responsiveSizeService.cardSize$ | async)
+    }"
   >
     <app-card
       *ngFor="let card of placeMultipleCards$ | async"
@@ -22,6 +29,10 @@
   <div class="existing-cards">
     <div
       class="existing-card-position"
+      [ngStyle]="{
+        width: (responsiveSizeService.cardSize$ | async),
+        height: (responsiveSizeService.cardSize$ | async)
+      }"
       *ngFor="let card of previouslyCapturedCards$ | async"
     >
       <app-card

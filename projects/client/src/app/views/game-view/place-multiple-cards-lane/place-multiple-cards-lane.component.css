@@ -11,9 +11,7 @@
   justify-content: flex-end;
   border: dashed 1px #aaa;
   border-radius: 6px;
-  min-height: calc(4 * 72px); /* 64px card + some buffer for card badges */
   overflow: hidden;
-  width: 64px;
 }
 
 .existing-cards {
@@ -26,8 +24,6 @@
 }
 
 .existing-card-position {
-  height: 64px;
-  width: 64px;
   display: flex;
   justify-content: space-around;
 }

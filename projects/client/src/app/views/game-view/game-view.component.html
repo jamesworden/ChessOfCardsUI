@@ -4,7 +4,15 @@
     *ngIf="playerGameState$ | async as playerGameState"
     cdkDropListGroup
   >
-    <div class="opponent-hand">
+    <div
+      class="opponent-hand"
+      [ngStyle]="{
+        height: (responsiveSizeService.cardSize$ | async) + 'px',
+        padding: '0px ' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2,
+        'margin-top':
+          '-' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2
+      }"
+    >
       <app-face-down-card
         *ngFor="
           let _ of [].constructor(playerGameState.NumCardsInOpponentsHand)
@@ -14,8 +22,20 @@
 
     <!-- Host Board View -->
 
-    <div class="board" *ngIf="playerGameState.IsHost">
-      <div class="gutter"></div>
+    <div
+      class="board"
+      *ngIf="playerGameState.IsHost"
+      [ngStyle]="{
+        padding:
+          ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px 0px'
+      }"
+    >
+      <div
+        class="gutter"
+        [ngStyle]="{
+          width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2
+        }"
+      ></div>
 
       <ng-container
         *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
@@ -86,7 +106,12 @@
         ></app-place-multiple-cards-lane>
       </ng-container>
 
-      <div class="gutter">
+      <div
+        class="gutter"
+        [ngStyle]="{
+          width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2
+        }"
+      >
         <app-deck
           [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
           [rightSide]="true"
@@ -101,8 +126,20 @@
 
     <!-- Guest Board View -->
 
-    <div class="board" *ngIf="!playerGameState.IsHost">
-      <div class="gutter">
+    <div
+      class="board"
+      *ngIf="!playerGameState.IsHost"
+      [ngStyle]="{
+        padding:
+          ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px 0px'
+      }"
+    >
+      <div
+        class="gutter"
+        [ngStyle]="{
+          width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2
+        }"
+      >
         <app-deck
           [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
           [rightSide]="false"
@@ -184,7 +221,12 @@
         ></app-place-multiple-cards-lane>
       </ng-container>
 
-      <div class="gutter"></div>
+      <div
+        class="gutter"
+        [ngStyle]="{
+          width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2
+        }"
+      ></div>
     </div>
 
     <!-- End Board Views -->
@@ -200,6 +242,10 @@
       cdkDropListData="player-hand"
       cdkDropListOrientation="horizontal"
       *ngIf="playerGameState.Hand"
+      [ngStyle]="{
+        height: (responsiveSizeService.cardSize$ | async) + 'px',
+        margin: '0px' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2
+      }"
     >
       <app-card
         *ngFor="
@@ -213,7 +259,12 @@
       ></app-card>
     </div>
 
-    <div class="button-toolbar">
+    <div
+      class="button-toolbar"
+      [ngStyle]="{
+        margin: '0px' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2
+      }"
+    >
       <ng-container *ngIf="isPlacingMultipleCards">
         <button
           mat-raised-button

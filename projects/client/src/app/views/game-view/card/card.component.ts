@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { CardModel } from '../../../models/card.model';
 import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
+import { ResponsiveSizeService } from '../responsive-size.service';
 
 @Component({
   selector: 'app-card',
@@ -18,7 +19,7 @@ export class CardComponent implements OnChanges {
 
   tiltDegrees = 0;
 
-  constructor() {}
+  constructor(public responsiveSizeService: ResponsiveSizeService) {}
 
   ngOnChanges() {
     const tiltRight =

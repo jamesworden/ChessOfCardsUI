@@ -5,6 +5,10 @@
   cdkDropListData="position"
   cdkDropListConnectedTo="player-hand"
   (cdkDropListDropped)="drop($event)"
+  [ngStyle]="{
+    height: (responsiveSizeService.cardSize$ | async) + 'px',
+    width: (responsiveSizeService.cardSize$ | async) + 'px'
+  }"
 >
   <ng-content></ng-content>
 </div>

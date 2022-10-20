@@ -20,6 +20,13 @@ import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
 } from '../../../util/get-asset-file-names';
+import { ResponsiveSizeService } from '../responsive-size.service';
+
+/*
+ * 4 times the height of the card as that's the most number of place multiple cards
+ * a user can place; And one additional factor for extra space.
+ */
+const MIN_CARD_HEIGHT_FACTOR = 5;
 
 @Component({
   selector: 'app-place-multiple-cards-lane',
@@ -38,6 +45,7 @@ export class PlaceMultipleCardsLaneComponent {
 
   getCardImageFileName = getCardImageFileNameFn;
   getJokerImageFileName = getJokerImageFileNameFn;
+  minCardHeightFactor = MIN_CARD_HEIGHT_FACTOR;
 
   previouslyCapturedCards$ = combineLatest([
     this.playerGameState$,
@@ -71,7 +79,10 @@ export class PlaceMultipleCardsLaneComponent {
     })
   );
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    public responsiveSizeService: ResponsiveSizeService
+  ) {}
 
   /**
    * Angular is annoying: this.memberVariable returns undefined when passing the predicate
