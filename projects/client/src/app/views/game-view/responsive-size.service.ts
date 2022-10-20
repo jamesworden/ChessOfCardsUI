@@ -20,10 +20,8 @@ export class ResponsiveSizeService {
     );
     this.sm.add(
       this.windowDimensions$.subscribe(([width, height]) => {
-        const excludingBoardHeightBuffer = 200;
-        const effectiveHeight = height - excludingBoardHeightBuffer;
-        const maxCardWidth = width / 6; // 5 cards width + 1 card for gutter buffer
-        const maxCardHeight = effectiveHeight / 7;
+        const maxCardWidth = width / 7;
+        const maxCardHeight = height / 12;
         const cardSize = Math.min(maxCardWidth, maxCardHeight);
 
         this.cardSize$.next(cardSize);
