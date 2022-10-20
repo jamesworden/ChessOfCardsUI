@@ -139,11 +139,6 @@ export class GameViewComponent implements OnDestroy {
     this.sm.unsubscribe();
   }
 
-  getTopCard(row: CardModel[]) {
-    const lastIndex = row.length - 1;
-    return row[lastIndex];
-  }
-
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
     if (this.isPlacingMultipleCards) {
       return;
@@ -275,6 +270,11 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.signalrService.makeMove(move);
+  }
+
+  getTopCard(row: CardModel[]) {
+    const lastIndex = row.length - 1;
+    return row[lastIndex];
   }
 
   getCardBackgroundColor(card: CardModel, laneIndex: number) {
