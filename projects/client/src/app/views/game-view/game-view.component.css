@@ -35,11 +35,11 @@
 .button-toolbar {
   display: flex;
   justify-content: space-between;
+  margin-top: 4px;
 }
 
 .pass-button {
   flex: 1;
-  margin-top: 4px;
 }
 
 .confirm-button {
