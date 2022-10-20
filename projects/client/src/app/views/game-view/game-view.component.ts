@@ -78,7 +78,7 @@ export class GameViewComponent implements OnDestroy {
   ) {
     this.sm.add(
       this.signalrService.gameOverMessage$.subscribe((message) => {
-        console.log(message);
+        console.log(`[Game Over]: ${message}`);
 
         if (!message) {
           return;
