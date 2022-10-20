@@ -14,6 +14,7 @@ export class CardComponent implements OnChanges {
   @Input() isMiddleCard: boolean;
   @Input() isPlayedBy: PlayerOrNoneModel;
   @Input() isHost: boolean;
+  @Input() backgroundColor?: string | null;
 
   tiltDegrees = 0;
 

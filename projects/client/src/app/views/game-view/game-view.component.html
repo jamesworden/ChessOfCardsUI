@@ -39,6 +39,12 @@
                   [cardImageFileName]="
                     getCardImageFileName(getTopCard(lane.Rows[6 - rowIndex]))
                   "
+                  [backgroundColor]="
+                    getCardBackgroundColor(
+                      getTopCard(lane.Rows[6 - rowIndex]),
+                      laneIndex
+                    )
+                  "
                   [isMiddleCard]="rowIndex === 3"
                   [isPlayedBy]="getTopCard(lane.Rows[6 - rowIndex]).PlayedBy"
                   [isHost]="true"
@@ -125,6 +131,9 @@
               >
                 <app-card
                   *ngIf="row.length > 0"
+                  [backgroundColor]="
+                    getCardBackgroundColor(getTopCard(row), 4 - laneIndex)
+                  "
                   [card]="getTopCard(row)"
                   [cardImageFileName]="getCardImageFileName(getTopCard(row))"
                   [isMiddleCard]="rowIndex === 3"

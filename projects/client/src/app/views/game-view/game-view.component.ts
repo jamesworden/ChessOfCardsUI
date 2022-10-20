@@ -287,6 +287,34 @@ export class GameViewComponent implements OnDestroy {
     this.signalrService.makeMove(move);
   }
 
+  getCardBackgroundColor(card: CardModel, laneIndex: number) {
+    const { Lanes, IsHost } = this.latestGameStateSnapshot;
+    const { LastCardPlayed } = Lanes[laneIndex];
+
+    if (!LastCardPlayed) {
+      return null;
+    }
+
+    if (LastCardPlayed.PlayedBy === PlayerOrNoneModel.None) {
+      return null;
+    }
+
+    const isLastCardPlayed =
+      card.Kind === LastCardPlayed.Kind && card.Suit === LastCardPlayed.Suit;
+
+    if (!isLastCardPlayed) {
+      return null;
+    }
+
+    const hostAndHostPlayedCard =
+      IsHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Host;
+    const guestAndGuestPlayedCard =
+      !IsHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Guest;
+    const playerPlayedCard = hostAndHostPlayedCard || guestAndGuestPlayedCard;
+
+    return playerPlayedCard ? 'rgba(0, 0, 255, 0.2)' : 'rgba(255, 0, 0, 0.2)';
+  }
+
   private dragCardBackToHand(card: CardModel, indexInHand: number) {
     const placeMultipleCards = this.store.selectSnapshot(
       GameState.placeMultipleCards
