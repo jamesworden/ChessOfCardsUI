@@ -39,6 +39,7 @@
 
 .pass-button {
   flex: 1;
+  margin-top: 4px;
 }
 
 .confirm-button {
