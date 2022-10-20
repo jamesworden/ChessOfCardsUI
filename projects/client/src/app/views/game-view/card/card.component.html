@@ -9,6 +9,6 @@
   [cdkDragData]="card"
   [ngStyle]="{
     rotate: tiltDegrees + 'deg',
-    'background-color': backgroundColor ? backgroundColor : 'transparent'
+    'background-color': backgroundColor ?? 'transparent'
   }"
 />

@@ -34,6 +34,9 @@ import {
 } from '../../util/get-asset-file-names';
 import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 
+const LIGHT_BLUE_TINT = 'rgba(0, 0, 255, 0.2)';
+const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';
+
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
@@ -312,7 +315,23 @@ export class GameViewComponent implements OnDestroy {
       !IsHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Guest;
     const playerPlayedCard = hostAndHostPlayedCard || guestAndGuestPlayedCard;
 
-    return playerPlayedCard ? 'rgba(0, 0, 255, 0.2)' : 'rgba(255, 0, 0, 0.2)';
+    return playerPlayedCard ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
+  }
+
+  getLaneBackgroundColor(laneIndex: number) {
+    const { Lanes, IsHost } = this.latestGameStateSnapshot;
+    const lane = Lanes[laneIndex];
+
+    if (lane.WonBy === PlayerOrNoneModel.None) {
+      return null;
+    }
+
+    const hostAndHostWonLane = IsHost && lane.WonBy === PlayerOrNoneModel.Host;
+    const guestAndGuestWonLane =
+      !IsHost && lane.WonBy === PlayerOrNoneModel.Guest;
+    const playerWonLane = hostAndHostWonLane || guestAndGuestWonLane;
+
+    return playerWonLane ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
   }
 
   private dragCardBackToHand(card: CardModel, indexInHand: number) {

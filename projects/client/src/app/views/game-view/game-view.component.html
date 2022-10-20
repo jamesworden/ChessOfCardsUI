@@ -26,7 +26,13 @@
             laneIndex
           "
         >
-          <div class="lane">
+          <div
+            class="lane"
+            [ngStyle]="{
+              'background-color':
+                getLaneBackgroundColor(laneIndex) ?? 'transparent '
+            }"
+          >
             <ng-container *ngFor="let row of lane.Rows; let rowIndex = index">
               <app-position
                 [laneIndex]="laneIndex"
@@ -117,7 +123,13 @@
             4 - laneIndex
           "
         >
-          <div class="lane">
+          <div
+            class="lane"
+            [ngStyle]="{
+              'background-color':
+                getLaneBackgroundColor(laneIndex) ?? 'transparent '
+            }"
+          >
             <ng-container
               *ngFor="
                 let row of playerGameState.Lanes[4 - laneIndex].Rows;
