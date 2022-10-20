@@ -173,6 +173,12 @@ export class GameViewComponent implements OnDestroy {
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
+    const cardPositionChanged = event.previousIndex !== event.currentIndex;
+
+    if (!cardPositionChanged) {
+      return;
+    }
+
     const card = event.item.data as CardModel;
     const oneListToAnother = event.previousContainer != event.container;
 
@@ -181,41 +187,9 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    const cardPositionChanged = event.previousIndex !== event.currentIndex;
-
-    if (!cardPositionChanged) {
-      return;
-    }
-
-    if (!this.isPlacingMultipleCards) {
-      moveItemInArray(
-        this.latestGameStateSnapshot.Hand.Cards,
-        event.previousIndex,
-        event.currentIndex
-      );
-      this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-      this.signalrService.rearrangeHand(
-        this.latestGameStateSnapshot.Hand.Cards
-      );
-      return;
-    }
-
-    const placeMultipleCardsHand = this.store.selectSnapshot(
-      GameState.placeMultipleCardsHand
-    );
-
-    if (!placeMultipleCardsHand) {
-      return;
-    }
-
-    moveItemInArray(
-      placeMultipleCardsHand,
-      event.previousIndex,
-      event.currentIndex
-    );
-
-    this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
-    return;
+    this.isPlacingMultipleCards
+      ? this.rearrangePlaceMultipleHand(event.previousIndex, event.currentIndex)
+      : this.rearrangeHand(event.previousIndex, event.currentIndex);
   }
 
   onPassButtonClicked() {
@@ -345,6 +319,34 @@ export class GameViewComponent implements OnDestroy {
     const playerWonLane = hostAndHostWonLane || guestAndGuestWonLane;
 
     return playerWonLane ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
+  }
+
+  private rearrangeHand(previousIndex: number, targetIndex: number) {
+    moveItemInArray(
+      this.latestGameStateSnapshot.Hand.Cards,
+      previousIndex,
+      targetIndex
+    );
+
+    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+    this.signalrService.rearrangeHand(this.latestGameStateSnapshot.Hand.Cards);
+  }
+
+  private rearrangePlaceMultipleHand(
+    previousIndex: number,
+    targetIndex: number
+  ) {
+    const placeMultipleCardsHand = this.store.selectSnapshot(
+      GameState.placeMultipleCardsHand
+    );
+
+    if (!placeMultipleCardsHand) {
+      return;
+    }
+
+    moveItemInArray(placeMultipleCardsHand, previousIndex, targetIndex);
+
+    this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
   }
 
   private dragCardBackToHand(card: CardModel, indexInHand: number) {
