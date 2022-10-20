@@ -240,7 +240,15 @@
 
     <!-- End Board Views -->
 
-    <div class="player-hand-container">
+    <div
+      class="player-hand-container"
+      [ngStyle]="{
+        width:
+          'calc(100% - ' +
+          ((responsiveSizeService.cardSize$ | async) ?? 64) +
+          'px)'
+      }"
+    >
       <div
         class="player-hand"
         id="player-hand"
@@ -253,8 +261,7 @@
         cdkDropListOrientation="horizontal"
         *ngIf="playerGameState.Hand"
         [ngStyle]="{
-          height: (responsiveSizeService.cardSize$ | async) + 'px',
-          margin: 'auto'
+          height: (responsiveSizeService.cardSize$ | async) + 'px'
         }"
       >
         <app-card

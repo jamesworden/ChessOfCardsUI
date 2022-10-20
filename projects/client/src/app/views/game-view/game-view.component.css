@@ -57,7 +57,8 @@
 .player-hand-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: flex-start;
+  margin: auto;
 }
 
 .deck-divider-end {
