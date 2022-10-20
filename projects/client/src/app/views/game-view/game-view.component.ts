@@ -187,6 +187,19 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
+    if (!this.isPlacingMultipleCards) {
+      moveItemInArray(
+        this.latestGameStateSnapshot.Hand.Cards,
+        event.previousIndex,
+        event.currentIndex
+      );
+      this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+      this.signalrService.rearrangeHand(
+        this.latestGameStateSnapshot.Hand.Cards
+      );
+      return;
+    }
+
     const placeMultipleCardsHand = this.store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
@@ -202,6 +215,7 @@ export class GameViewComponent implements OnDestroy {
     );
 
     this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
+    return;
   }
 
   onPassButtonClicked() {
