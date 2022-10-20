@@ -15,7 +15,7 @@
         minCardHeightFactor *
           ((responsiveSizeService.cardSize$ | async) ?? 64) +
         'px',
-      width: (responsiveSizeService.cardSize$ | async)
+      width: (responsiveSizeService.cardSize$ | async) + 'px'
     }"
   >
     <app-card
@@ -30,8 +30,8 @@
     <div
       class="existing-card-position"
       [ngStyle]="{
-        width: (responsiveSizeService.cardSize$ | async),
-        height: (responsiveSizeService.cardSize$ | async)
+        width: (responsiveSizeService.cardSize$ | async) + 'px',
+        height: (responsiveSizeService.cardSize$ | async) + 'px'
       }"
       *ngFor="let card of previouslyCapturedCards$ | async"
     >

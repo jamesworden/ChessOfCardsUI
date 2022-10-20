@@ -159,14 +159,15 @@ export class GameViewComponent implements OnDestroy {
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
-    const cardPositionChanged = event.previousIndex !== event.currentIndex;
+    const oneListToAnother = event.previousContainer !== event.container;
+    const cardPositionChanged =
+      event.previousIndex !== event.currentIndex || oneListToAnother;
 
     if (!cardPositionChanged) {
       return;
     }
 
     const card = event.item.data as CardModel;
-    const oneListToAnother = event.previousContainer != event.container;
 
     if (this.isPlacingMultipleCards && oneListToAnother) {
       this.dragCardBackToHand(card, event.currentIndex);
