@@ -68,7 +68,6 @@ export class GameViewComponent implements OnDestroy {
   latestGameStateSnapshot: PlayerGameStateModel;
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
-  firstPlaceMultipleCardAttempt: CardModel | null = null;
 
   constructor(
     public modal: MatDialog,
@@ -121,16 +120,6 @@ export class GameViewComponent implements OnDestroy {
     this.sm.add(
       this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
         this.isPlacingMultipleCards = isPlacingMultipleCards;
-      })
-    );
-    this.sm.add(
-      this.placeMultipleCards$.subscribe((placeMultipleCards) => {
-        if (placeMultipleCards) {
-          this.firstPlaceMultipleCardAttempt = placeMultipleCards[0];
-          return;
-        }
-
-        this.firstPlaceMultipleCardAttempt = null;
       })
     );
   }
