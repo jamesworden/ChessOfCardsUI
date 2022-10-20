@@ -24,7 +24,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { LaneModel } from '../../models/lane.model';
 import { addCardToArray } from './logic/add-card-to-array';
-import { getIndexOfCardInArray } from './logic/get-index-of-card-in-array';
 import { moveCardToLane } from './logic/move-card-to-lane';
 import { removeCardFromArray } from './logic/remove-card-from-array';
 import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-cards-to-move';
