@@ -9,10 +9,14 @@
     [ngStyle]="{
       position: 'absolute',
       right: rightSide
-        ? 'calc((' + i + ' * -6px) - ' + responsiveSizeService.cardSize$ + 'px)'
+        ? 'calc((' +
+          i +
+          ' * -6px) - ' +
+          (responsiveSizeService.cardSize$ | async) +
+          'px)'
         : 'calc((' + i + ' * 6px))',
       'z-index': i,
-      height: responsiveSizeService.cardSize$ + 'px'
+      height: (responsiveSizeService.cardSize$ | async) + 'px'
     }"
   >
   </app-face-down-card>

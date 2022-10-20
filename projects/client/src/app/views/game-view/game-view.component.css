@@ -29,7 +29,7 @@
 .gutter {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .button-toolbar {
@@ -57,4 +57,12 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+
+.deck-divider-end {
+  flex: 1;
+}
+
+.deck-divider-middle {
+  flex: 7;
 }
