@@ -18,7 +18,7 @@
   justify-content: space-around;
   margin-top: -32px;
   padding: 0px var(--gutter-width);
-  min-height: 68px;
+  height: 68px;
 }
 
 .board {
@@ -29,7 +29,8 @@
 
 .player-hand {
   margin: 0px var(--gutter-width);
-  min-height: 68px;
+  height: 68px;
+  width: calc(100% - (var(--gutter-width) * 2));
 }
 
 .lane {
@@ -45,6 +46,7 @@
   justify-content: space-between;
   width: var(--gutter-width);
 }
+
 .button-toolbar {
   display: flex;
   justify-content: space-between;
