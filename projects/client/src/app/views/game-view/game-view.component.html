@@ -165,7 +165,7 @@
             class="lane"
             [ngStyle]="{
               'background-color':
-                getLaneBackgroundColor(laneIndex) ?? 'transparent '
+                getLaneBackgroundColor(4 - laneIndex) ?? 'transparent'
             }"
           >
             <ng-container
@@ -232,33 +232,34 @@
 
     <!-- End Board Views -->
 
-    <div
-      class="player-hand"
-      id="player-hand"
-      cdkDropList
-      [cdkDropListConnectedTo]="
-        isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
-      "
-      (cdkDropListDropped)="onPlayerHandCardDrop($event)"
-      cdkDropListData="player-hand"
-      cdkDropListOrientation="horizontal"
-      *ngIf="playerGameState.Hand"
-      [ngStyle]="{
-        height: (responsiveSizeService.cardSize$ | async) + 'px',
-        padding:
-          '0px ' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
-      }"
-    >
-      <app-card
-        *ngFor="
-          let card of isPlacingMultipleCards
-            ? (placeMultipleCardsHand$ | async) ?? []
-            : playerGameState.Hand.Cards
+    <div class="player-hand-container">
+      <div
+        class="player-hand"
+        id="player-hand"
+        cdkDropList
+        [cdkDropListConnectedTo]="
+          isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
         "
-        [cardImageFileName]="getCardImageFileName(card)"
-        [card]="card"
-        [playerCanDrag]="true"
-      ></app-card>
+        (cdkDropListDropped)="onPlayerHandCardDrop($event)"
+        cdkDropListData="player-hand"
+        cdkDropListOrientation="horizontal"
+        *ngIf="playerGameState.Hand"
+        [ngStyle]="{
+          height: (responsiveSizeService.cardSize$ | async) + 'px',
+          margin: 'auto'
+        }"
+      >
+        <app-card
+          *ngFor="
+            let card of isPlacingMultipleCards
+              ? (placeMultipleCardsHand$ | async) ?? []
+              : playerGameState.Hand.Cards
+          "
+          [cardImageFileName]="getCardImageFileName(card)"
+          [card]="card"
+          [playerCanDrag]="true"
+        ></app-card>
+      </div>
     </div>
 
     <div
