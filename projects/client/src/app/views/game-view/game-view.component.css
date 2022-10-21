@@ -9,7 +9,6 @@
 
 .opponent-hand {
   display: flex;
-  padding: --outer-padding;
   padding-bottom: 0;
   justify-content: space-around;
 }
@@ -52,13 +51,6 @@
 
 .button-divider {
   flex: 0.15;
-}
-
-.player-hand-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  margin: auto;
 }
 
 .deck-divider-end {

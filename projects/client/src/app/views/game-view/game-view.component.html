@@ -241,40 +241,32 @@
     <!-- End Board Views -->
 
     <div
-      class="player-hand-container"
+      class="player-hand"
+      id="player-hand"
+      cdkDropList
+      [cdkDropListConnectedTo]="
+        isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
+      "
+      (cdkDropListDropped)="onPlayerHandCardDrop($event)"
+      cdkDropListData="player-hand"
+      cdkDropListOrientation="horizontal"
+      *ngIf="playerGameState.Hand"
       [ngStyle]="{
-        width:
-          'calc(100% - ' +
-          ((responsiveSizeService.cardSize$ | async) ?? 64) +
-          'px)'
+        height: (responsiveSizeService.cardSize$ | async) + 'px',
+        padding:
+          '0px ' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
       }"
     >
-      <div
-        class="player-hand"
-        id="player-hand"
-        cdkDropList
-        [cdkDropListConnectedTo]="
-          isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
+      <app-card
+        *ngFor="
+          let card of isPlacingMultipleCards
+            ? (placeMultipleCardsHand$ | async) ?? []
+            : playerGameState.Hand.Cards
         "
-        (cdkDropListDropped)="onPlayerHandCardDrop($event)"
-        cdkDropListData="player-hand"
-        cdkDropListOrientation="horizontal"
-        *ngIf="playerGameState.Hand"
-        [ngStyle]="{
-          height: (responsiveSizeService.cardSize$ | async) + 'px'
-        }"
-      >
-        <app-card
-          *ngFor="
-            let card of isPlacingMultipleCards
-              ? (placeMultipleCardsHand$ | async) ?? []
-              : playerGameState.Hand.Cards
-          "
-          [cardImageFileName]="getCardImageFileName(card)"
-          [card]="card"
-          [playerCanDrag]="true"
-        ></app-card>
-      </div>
+        [cardImageFileName]="getCardImageFileName(card)"
+        [card]="card"
+        [playerCanDrag]="true"
+      ></app-card>
     </div>
 
     <div
