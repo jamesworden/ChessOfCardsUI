@@ -2,7 +2,9 @@
   <div class="horisontal-align">
     <p>Enter your opponents game code here:</p>
   </div>
+
   <br />
+
   <div class="horisontal-align">
     <div class="game-code-input-container">
       <input
@@ -16,7 +18,18 @@
     </div>
   </div>
 
-  <div class="invalid-game-code-message" *ngIf="invalidGameCode">
+  <div class="invalid-game-code-message" *ngIf="gameCodeIsInvalid">
     Invalid game code!
+  </div>
+
+  <div class="horisontal-align" style="margin-top: 100px">
+    <button
+      mat-raised-button
+      class="confirm-button"
+      color="primary"
+      (click)="onBackButtonClicked()"
+    >
+      Back
+    </button>
   </div>
 </div>

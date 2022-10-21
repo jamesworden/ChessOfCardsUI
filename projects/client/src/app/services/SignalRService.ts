@@ -24,9 +24,9 @@ const { serverUrl } = environment;
 export class SignalrService {
   private hubConnection: HubConnection;
 
-  public connectionEstablished$ = new BehaviorSubject<boolean>(false);
+  public isConnectedToServer$ = new BehaviorSubject<boolean>(false);
   public gameCode$ = new BehaviorSubject<string>('');
-  public invalidGameCode$ = new Subject<boolean>();
+  public gameCodeIsInvalid$ = new Subject<boolean>();
   public gameStarted$ = new Subject();
   public opponentPassedMove$ = new Subject();
   public gameOverMessage$ = new Subject<string | null>();
@@ -50,7 +50,7 @@ export class SignalrService {
     this.hubConnection.start().then(
       () => {
         console.log('Hub connection started.');
-        this.connectionEstablished$.next(true);
+        this.isConnectedToServer$.next(true);
       },
       (error) => console.error(error)
     );
@@ -66,7 +66,7 @@ export class SignalrService {
     });
 
     this.hubConnection.on('InvalidGameCode', () => {
-      this.invalidGameCode$.next(true);
+      this.gameCodeIsInvalid$.next(true);
     });
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {

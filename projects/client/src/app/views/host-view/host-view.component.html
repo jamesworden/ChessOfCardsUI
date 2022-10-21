@@ -2,8 +2,21 @@
   <div class="horisontal-align">
     <span class="message">Your game code is:</span>
   </div>
+
   <br />
+
   <div class="horisontal-align">
     <span class="game-code">{{ gameCode }}</span>
+  </div>
+
+  <div class="horisontal-align" style="margin-top: 100px">
+    <button
+      mat-raised-button
+      class="confirm-button"
+      color="primary"
+      (click)="onBackButtonClicked()"
+    >
+      Back
+    </button>
   </div>
 </div>

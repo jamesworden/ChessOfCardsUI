@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SignalrService } from './services/SignalRService';
+import { SubscriptionManager } from './util/subscription-manager';
 import { Views } from './views';
 import { ModalComponent } from './views/game-view/modal/modal.component';
 
@@ -9,39 +10,62 @@ import { ModalComponent } from './views/game-view/modal/modal.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
+  private sm = new SubscriptionManager();
+
   views = Views;
   currentView = Views.Home;
+  gameCode: string;
+  isConnectedToServer = false;
 
   constructor(public signalrService: SignalrService, public modal: MatDialog) {
-    signalrService.gameStarted$.subscribe(() => {
-      this.currentView = Views.Game;
-    });
+    this.sm.add(
+      signalrService.gameStarted$.subscribe(() => {
+        this.currentView = Views.Game;
+      })
+    );
+    this.sm.add(
+      this.signalrService.gameCode$.subscribe((gameCode) => {
+        this.gameCode = gameCode;
+      })
+    );
+    this.sm.add(
+      this.signalrService.isConnectedToServer$.subscribe(
+        (isConnectedToServer) => {
+          this.isConnectedToServer = isConnectedToServer;
+        }
+      )
+    );
   }
 
-  onClickHostGameEvent() {
-    const isConnectedToServer =
-      this.signalrService.connectionEstablished$.getValue();
+  ngOnDestroy() {
+    this.sm.unsubscribe();
+  }
 
-    if (!isConnectedToServer) {
+  onHostGameButtonClicked() {
+    if (!this.isConnectedToServer) {
       this.openCantConnectModal();
       return;
     }
 
-    this.signalrService.createGame();
+    if (!this.gameCode) {
+      this.signalrService.createGame();
+    }
+
     this.currentView = Views.Host;
   }
 
-  onClickJoinGameEvent() {
-    const isConnectedToServer =
-      this.signalrService.connectionEstablished$.getValue();
-
-    if (!isConnectedToServer) {
+  onJoinGameButtonClicked() {
+    if (!this.isConnectedToServer) {
       this.openCantConnectModal();
       return;
     }
 
     this.currentView = Views.Join;
+  }
+
+  onBackButtonClicked() {
+    this.currentView = Views.Home;
   }
 
   onGameEnded() {

@@ -1,4 +1,10 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { SignalrService } from '../../services/SignalRService';
 import { SubscriptionManager } from '../../util/subscription-manager';
 
@@ -10,14 +16,15 @@ import { SubscriptionManager } from '../../util/subscription-manager';
 export class JoinViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Input() invalidGameCode = false;
+  @Output() backButtonClicked = new EventEmitter();
 
+  gameCodeIsInvalid = false;
   gameCodeInput = '';
 
   constructor(public signalrService: SignalrService) {
     this.sm.add(
-      signalrService.invalidGameCode$.subscribe((invalidGameCode) => {
-        this.invalidGameCode = invalidGameCode;
+      signalrService.gameCodeIsInvalid$.subscribe((invalidGameCode) => {
+        this.gameCodeIsInvalid = invalidGameCode;
       })
     );
   }
@@ -33,6 +40,10 @@ export class JoinViewComponent implements OnDestroy {
       return;
     }
 
-    this.invalidGameCode = false;
+    this.gameCodeIsInvalid = false;
+  }
+
+  onBackButtonClicked() {
+    this.backButtonClicked.emit();
   }
 }

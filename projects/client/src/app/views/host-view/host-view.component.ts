@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { SignalrService } from '../../services/SignalRService';
 import { SubscriptionManager } from '../../util/subscription-manager';
 
@@ -9,6 +9,8 @@ import { SubscriptionManager } from '../../util/subscription-manager';
 })
 export class HostViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
+
+  @Output() backButtonClicked = new EventEmitter();
 
   gameCode = '';
 
@@ -22,5 +24,9 @@ export class HostViewComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.sm.unsubscribe();
+  }
+
+  onBackButtonClicked() {
+    this.backButtonClicked.emit();
   }
 }
