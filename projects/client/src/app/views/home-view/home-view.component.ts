@@ -9,6 +9,8 @@ export class HomeViewComponent {
   @Output() clickHostGameEvent = new EventEmitter<string>();
   @Output() clickJoinGameEvent = new EventEmitter<string>();
 
+  currentYear = new Date().getFullYear();
+
   constructor() {}
 
   clickHostGame() {
