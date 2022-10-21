@@ -249,7 +249,8 @@
       *ngIf="playerGameState.Hand"
       [ngStyle]="{
         height: cardSize + 'px',
-        padding: '0px ' + cardSize / 2 + 'px'
+        width: 5 * cardSize + 'px',
+        margin: 'auto'
       }"
     >
       <app-card
@@ -260,7 +261,10 @@
         "
         [cardImageFileName]="getCardImageFileName(card)"
         [card]="card"
-        [playerCanDrag]="true"
+        [playerCanDrag]="isPlayersTurn"
+        [ngStyle]="{
+          opacity: isPlayersTurn ? 1 : 0.75
+        }"
       ></app-card>
     </div>
 

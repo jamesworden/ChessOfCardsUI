@@ -20,7 +20,7 @@ export class ResponsiveSizeService {
     );
     this.sm.add(
       this.windowDimensions$.subscribe(([width, height]) => {
-        const maxCardWidth = width / 7;
+        const maxCardWidth = width / 6;
         const maxCardHeight = height / 11;
         const cardSize = Math.min(maxCardWidth, maxCardHeight);
 
