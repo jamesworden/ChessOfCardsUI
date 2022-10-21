@@ -7,11 +7,9 @@
     <div
       class="opponent-hand"
       [ngStyle]="{
-        height: (responsiveSizeService.cardSize$ | async) + 'px',
-        padding:
-          '0px ' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px',
-        'margin-top':
-          '-' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
+        height: cardSize + 'px',
+        padding: '0px ' + cardSize / 2 + 'px',
+        'margin-top': '-' + cardSize / 2 + 'px'
       }"
     >
       <app-face-down-card
@@ -27,14 +25,13 @@
       class="board"
       *ngIf="playerGameState.IsHost"
       [ngStyle]="{
-        padding:
-          ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px 0px'
+        padding: cardSize / 2 + 'px 0px'
       }"
     >
       <div
         class="gutter"
         [ngStyle]="{
-          width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
+          width: cardSize / 2 + 'px'
         }"
       ></div>
 
@@ -110,7 +107,7 @@
       <div
         class="gutter"
         [ngStyle]="{
-          width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
+          width: cardSize / 2 + 'px'
         }"
       >
         <app-deck
@@ -135,14 +132,13 @@
       class="board"
       *ngIf="!playerGameState.IsHost"
       [ngStyle]="{
-        padding:
-          ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px 0px'
+        padding: cardSize / 2 + 'px 0px'
       }"
     >
       <div
         class="gutter"
         [ngStyle]="{
-          width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
+          width: cardSize / 2 + 'px'
         }"
       >
         <app-deck
@@ -233,7 +229,7 @@
       <div
         class="gutter"
         [ngStyle]="{
-          width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
+          width: cardSize / 2 + 'px'
         }"
       ></div>
     </div>
@@ -252,9 +248,8 @@
       cdkDropListOrientation="horizontal"
       *ngIf="playerGameState.Hand"
       [ngStyle]="{
-        height: (responsiveSizeService.cardSize$ | async) + 'px',
-        padding:
-          '0px ' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
+        height: cardSize + 'px',
+        padding: '0px ' + cardSize / 2 + 'px'
       }"
     >
       <app-card
@@ -272,8 +267,7 @@
     <div
       class="button-toolbar"
       [ngStyle]="{
-        padding:
-          '0px ' + ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
+        padding: '0px ' + cardSize / 2 + 'px'
       }"
     >
       <ng-container *ngIf="isPlacingMultipleCards">

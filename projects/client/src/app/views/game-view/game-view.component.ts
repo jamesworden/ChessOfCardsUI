@@ -2,6 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   FinishPlacingMultipleCards,
   ResetGameData,
@@ -69,13 +70,14 @@ export class GameViewComponent implements OnDestroy {
   latestGameStateSnapshot: PlayerGameStateModel;
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
+  cardSize: number = 64;
 
   constructor(
     public modal: MatDialog,
     private signalrService: SignalrService,
     private store: Store,
     private snackBar: MatSnackBar,
-    public responsiveSizeService: ResponsiveSizeService
+    private responsiveSizeService: ResponsiveSizeService
   ) {
     this.sm.add(
       this.signalrService.gameOverMessage$.subscribe((message) => {
@@ -122,6 +124,11 @@ export class GameViewComponent implements OnDestroy {
     this.sm.add(
       this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
         this.isPlacingMultipleCards = isPlacingMultipleCards;
+      })
+    );
+    this.sm.add(
+      this.responsiveSizeService.cardSize$.subscribe((cardSize) => {
+        this.cardSize = cardSize;
       })
     );
   }
