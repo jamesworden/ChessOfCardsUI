@@ -95,6 +95,7 @@ footer {
   cursor: pointer;
   font-family: "Cardo", serif !important;
   border: none;
+  margin-top: 24px;
 }
 
 /* .footer-link-container {
