@@ -14,6 +14,12 @@
   justify-content: space-around;
 }
 
+.title-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .content {
   display: flex;
   justify-content: space-between;
@@ -21,58 +27,83 @@
   margin: 2rem;
   height: 300px;
   margin-top: 5.5rem;
+  min-height: 450px;
 }
 
 h1 {
-  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+  font-family: "Cardo", serif !important;
+  font-weight: 300;
+  font-size: 90px;
+  text-transform: uppercase;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 2px rgba(0, 0, 0, 0.2),
+    0 4px 4px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.1),
+    0 16px 16px rgba(0, 0, 0, 0.05);
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+h2 {
+  text-align: center;
+  font-family: "Cardo", serif !important;
   font-weight: 500;
-  font-size: 44;
+  font-size: 28px;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 2px rgba(0, 0, 0, 0.2),
+    0 4px 4px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.1),
+    0 16px 16px rgba(0, 0, 0, 0.05);
+  margin-top: 0;
 }
 
 .button-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 115px;
-}
-
-button {
-  border-radius: 8px;
-  height: 45px;
-  width: 250px;
-  font-family: sans-serif;
-  font-weight: 200;
-  font-size: 22;
-  letter-spacing: 10px;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-.host-button {
-  background-color: white;
-  color: #404040;
-  border: 1px solid #404040;
-}
-
-.join-button {
-  background-color: #404040;
-  color: white;
-  border: 1px solid white;
+  min-height: 180px;
 }
 
 footer {
-  height: 20%;
+  background-color: white;
+  padding: 22px;
+  border-radius: 40px 40px 0 0;
+  height: 10%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 2px rgba(0, 0, 0, 0.2),
+    0 4px 4px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.1),
+    0 16px 16px rgba(0, 0, 0, 0.05);
+  min-height: 64px;
+}
+
+.footer-content-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  height: 100%;
   justify-content: space-around;
 }
 
-.footer-link-container {
+.login-button-container {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+}
+
+.login-button {
+  color: var(--red);
+  font-size: 24px;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-family: "Cardo", serif !important;
+  border: none;
+}
+
+/* .footer-link-container {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 
 .footer-link {
-  color: black;
-}
+  color: white;
+  text-decoration: none;
+} */

@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SignalrService } from './services/SignalRService';
 import { SubscriptionManager } from './util/subscription-manager';
 import { Views } from './views';
@@ -18,7 +19,11 @@ export class AppComponent implements OnDestroy {
   gameCode: string;
   isConnectedToServer = false;
 
-  constructor(public signalrService: SignalrService, public modal: MatDialog) {
+  constructor(
+    public signalrService: SignalrService,
+    public modal: MatDialog,
+    public snackBar: MatSnackBar
+  ) {
     this.sm.add(
       signalrService.gameStarted$.subscribe(() => {
         this.currentView = Views.Game;
@@ -42,37 +47,38 @@ export class AppComponent implements OnDestroy {
     this.sm.unsubscribe();
   }
 
-  onHostGameButtonClicked() {
-    if (!this.isConnectedToServer) {
-      this.openCantConnectModal();
-      return;
-    }
-
-    if (!this.gameCode) {
-      this.signalrService.createGame();
-    }
-
-    this.currentView = Views.Host;
+  onHowToPlay() {
+    this.snackBar.open('Under construction.', 'Coming soon!', {
+      duration: 1500,
+      verticalPosition: 'top',
+    });
   }
 
-  onJoinGameButtonClicked() {
-    if (!this.isConnectedToServer) {
-      this.openCantConnectModal();
-      return;
-    }
-
-    this.currentView = Views.Join;
-  }
-
-  onBackButtonClicked() {
-    this.currentView = Views.Home;
+  onLogin() {
+    this.snackBar.open('Under construction.', 'Coming soon!', {
+      duration: 1500,
+      verticalPosition: 'top',
+    });
   }
 
   onGameEnded() {
     this.currentView = Views.Home;
   }
 
-  private openCantConnectModal() {
+  onJoinBackButtonClicked() {
+    this.currentView = Views.HostOrJoin;
+  }
+
+  onHostBackButtonClicked() {
+    this.currentView = Views.HostOrJoin;
+  }
+
+  onPlayAsGuest() {
+    if (this.isConnectedToServer) {
+      this.currentView = Views.HostOrJoin;
+      return;
+    }
+
     const modalRef = this.modal.open(ModalComponent, {
       width: '250px',
       data: {

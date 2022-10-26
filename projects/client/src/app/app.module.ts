@@ -23,6 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PlaceMultipleCardsLaneComponent } from './views/game-view/place-multiple-cards-lane/place-multiple-cards-lane.component';
 import { FormsModule } from '@angular/forms';
+import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-view.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { FormsModule } from '@angular/forms';
     PositionComponent,
     ModalComponent,
     PlaceMultipleCardsLaneComponent,
+    HostOrJoinViewComponent,
   ],
   imports: [
     BrowserModule,

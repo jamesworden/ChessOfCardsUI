@@ -2,7 +2,7 @@
   height: 200px;
   margin: 0 auto;
   width: 50%;
-  margin-top: 7.5rem;
+  padding-top: 7.5rem;
 }
 
 .horisontal-align {
@@ -13,27 +13,44 @@
 .game-code-input-container {
   display: flex;
   flex-direction: space-around;
+  width: calc(28px * 6);
+  margin: auto;
 }
 
 .game-code-input {
   background: 0;
-  border: 0;
   outline: none;
   width: 80vw;
   max-width: 400px;
   font-size: 1.5em;
   transition: padding 0.3s 0.2s ease;
-  border-bottom: 1px solid grey;
-  text-align: center;
+  text-align: left;
   font-size: 28px;
-  letter-spacing: 14px;
-  width: 200px;
+  letter-spacing: 28px;
   margin-bottom: 24px;
   text-transform: uppercase;
+  background: repeating-linear-gradient(
+      90deg,
+      white 0,
+      white 28px,
+      transparent 0,
+      transparent 48px
+    )
+    0 100% / calc(28px * 6) 2px no-repeat;
+  border: none;
+  color: white;
 }
 
 .invalid-game-code-message {
-  color: crimson;
-  font-size: 18px;
+  color: white;
+  font-size: 16px;
   text-align: center;
+  min-height: 16px;
+}
+
+p {
+  text-align: center;
+  font-size: 20px;
+  color: white;
+  font-family: "Cardo", serif !important;
 }

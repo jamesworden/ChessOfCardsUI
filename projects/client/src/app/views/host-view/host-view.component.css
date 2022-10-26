@@ -4,12 +4,11 @@ span {
 
 .message {
   font-size: 18px;
-  font-family: "Times New Roman", Times, serif;
+  font-family: "Cardo", serif !important;
 }
 
 .game-code {
-  font-family: sans-serif;
-  font-family: sans-serif; /* TODO make lato font */
+  font-family: "Cardo", serif !important;
   font-weight: 600;
   font-size: 26px;
   letter-spacing: 8px;

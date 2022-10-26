@@ -6,18 +6,23 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./home-view.component.css'],
 })
 export class HomeViewComponent {
-  @Output() hostGameButtonClicked = new EventEmitter();
-  @Output() joinGameButtonClicked = new EventEmitter();
+  @Output() howToPlayClicked = new EventEmitter();
+  @Output() playAsGuestClicked = new EventEmitter();
+  @Output() loginClicked = new EventEmitter();
 
   currentYear = new Date().getFullYear();
 
   constructor() {}
 
-  onHostGameClicked() {
-    this.hostGameButtonClicked.emit();
+  onHowToPlay() {
+    this.howToPlayClicked.emit();
   }
 
-  onJoinGameClicked() {
-    this.joinGameButtonClicked.emit();
+  onPlayAsGuest() {
+    this.playAsGuestClicked.emit();
+  }
+
+  onLogin() {
+    this.loginClicked.emit();
   }
 }

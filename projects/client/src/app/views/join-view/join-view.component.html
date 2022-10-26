@@ -18,15 +18,16 @@
     </div>
   </div>
 
-  <div class="invalid-game-code-message" *ngIf="gameCodeIsInvalid">
-    Invalid game code!
+  <div class="invalid-game-code-message">
+    <span *ngIf="gameCodeIsInvalid"> Invalid game code!</span>
   </div>
 
   <div class="horisontal-align" style="margin-top: 100px">
     <button
+      class="big-white-button"
       mat-raised-button
-      class="confirm-button"
-      color="primary"
+      class="big-button"
+      color="white"
       (click)="onBackButtonClicked()"
     >
       Back
