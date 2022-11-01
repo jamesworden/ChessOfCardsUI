@@ -31,7 +31,7 @@ export class HostViewComponent implements OnDestroy {
     this.sm.unsubscribe();
   }
 
-  onBackButtonClicked() {
+  onBack() {
     this.store.dispatch(new UpdateView(View.HostOrJoin));
   }
 }

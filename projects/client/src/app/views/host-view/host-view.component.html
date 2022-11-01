@@ -1,6 +1,6 @@
 <div class="container">
   <div class="horisontal-align">
-    <span class="message">Your game code is:</span>
+    <p class="message">Your game code is:</p>
   </div>
 
   <br />
@@ -8,15 +8,10 @@
   <div class="horisontal-align">
     <span class="game-code">{{ gameCode }}</span>
   </div>
+</div>
 
-  <div class="horisontal-align" style="margin-top: 100px">
-    <button
-      mat-raised-button
-      class="confirm-button"
-      color="primary"
-      (click)="onBackButtonClicked()"
-    >
-      Back
-    </button>
-  </div>
+<div class="horisontal-align back-button">
+  <button mat-raised-button class="big-button" color="white" (click)="onBack()">
+    Back
+  </button>
 </div>
