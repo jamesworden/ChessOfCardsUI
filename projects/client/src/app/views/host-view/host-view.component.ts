@@ -1,4 +1,7 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { View } from '..';
+import { UpdateView } from '../../actions/view.actions';
 import { SignalrService } from '../../services/SignalRService';
 import { SubscriptionManager } from '../../util/subscription-manager';
 
@@ -10,14 +13,16 @@ import { SubscriptionManager } from '../../util/subscription-manager';
 export class HostViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Output() backButtonClicked = new EventEmitter();
-
   gameCode = '';
 
-  constructor(public signalrService: SignalrService) {
+  constructor(public signalrService: SignalrService, private store: Store) {
     this.sm.add(
       this.signalrService.gameCode$.subscribe((gameCode) => {
-        this.gameCode = gameCode;
+        if (gameCode) {
+          this.gameCode = gameCode;
+        } else {
+          this.signalrService.createGame();
+        }
       })
     );
   }
@@ -27,6 +32,6 @@ export class HostViewComponent implements OnDestroy {
   }
 
   onBackButtonClicked() {
-    this.backButtonClicked.emit();
+    this.store.dispatch(new UpdateView(View.HostOrJoin));
   }
 }

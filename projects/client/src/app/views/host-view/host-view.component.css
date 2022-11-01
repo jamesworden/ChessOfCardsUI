@@ -1,14 +1,12 @@
 span {
-  color: #404040;
+  color: white;
 }
 
 .message {
   font-size: 18px;
-  font-family: "Cardo", serif !important;
 }
 
 .game-code {
-  font-family: "Cardo", serif !important;
   font-weight: 600;
   font-size: 26px;
   letter-spacing: 8px;

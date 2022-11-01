@@ -1,8 +1,8 @@
-.container {
-  height: 200px;
-  margin: 0 auto;
-  width: 50%;
-  padding-top: 7.5rem;
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .horisontal-align {
@@ -53,4 +53,12 @@ p {
   font-size: 20px;
   color: white;
   font-family: "Cardo", serif !important;
+}
+
+.back-button {
+  margin-bottom: 120px;
+}
+
+.container {
+  margin-top: 150px;
 }
