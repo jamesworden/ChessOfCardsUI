@@ -21,11 +21,19 @@ export class JoinViewComponent implements OnDestroy {
 
   gameCodeIsInvalid = false;
   gameCodeInput = '';
+  gameCode = '';
 
   constructor(public signalrService: SignalrService, private store: Store) {
     this.sm.add(
       signalrService.gameCodeIsInvalid$.subscribe((invalidGameCode) => {
         this.gameCodeIsInvalid = invalidGameCode;
+      })
+    );
+    this.sm.add(
+      signalrService.gameCode$.subscribe((gameCode) => {
+        if (gameCode) {
+          this.gameCode = gameCode;
+        }
       })
     );
   }
@@ -35,13 +43,20 @@ export class JoinViewComponent implements OnDestroy {
   }
 
   onInputChanged() {
-    if (this.gameCodeInput.length === 4) {
-      const upperCaseGameCode = this.gameCodeInput.toUpperCase();
-      this.signalrService.joinGame(upperCaseGameCode);
+    if (this.gameCodeInput.length !== 4) {
+      this.gameCodeIsInvalid = false;
       return;
     }
 
-    this.gameCodeIsInvalid = false;
+    const upperCaseGameCode = this.gameCodeInput.toUpperCase();
+
+    if (upperCaseGameCode === this.gameCode) {
+      this.gameCodeIsInvalid = true;
+      return;
+    }
+
+    this.signalrService.joinGame(upperCaseGameCode);
+    return;
   }
 
   onBack() {
