@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Bungee&family=Cardo&family=Quicksand:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
 
 :root {
   --red: #fc1a3c;
@@ -10,10 +10,7 @@ html {
   margin: 0;
   padding: 0;
   overflow: hidden;
-}
-
-p {
-  font-family: sans-serif;
+  font-family: "Abel", sans-serif;
 }
 
 /* 
@@ -60,8 +57,6 @@ p {
   border: none;
   height: 75px;
   width: 300px;
-  font-family: "Cardo", serif !important;
-  font-weight: 200;
   font-size: 20px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 2px rgba(0, 0, 0, 0.2),
     0 4px 4px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.1),
