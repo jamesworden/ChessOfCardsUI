@@ -1,6 +1,6 @@
-<div class="background"></div>
+<div class="background" *ngIf="(currentView$ | async) !== View.Game"></div>
 
-<div class="particles"></div>
+<div class="particles" *ngIf="(currentView$ | async) !== View.Game"></div>
 
 <div class="container">
   <ng-container [ngSwitch]="currentView$ | async">
