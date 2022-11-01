@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PlaceMultipleCardsLaneComponent } from './views/game-view/place-multiple-cards-lane/place-multiple-cards-lane.component';
 import { FormsModule } from '@angular/forms';
 import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-view.component';
+import { ViewState } from './state/view.state';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState]),
+    NgxsModule.forRoot([GameState, ViewState]),
     BrowserAnimationsModule,
     MatTooltipModule,
     MatDialogModule,

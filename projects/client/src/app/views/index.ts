@@ -1,4 +1,4 @@
-export enum Views {
+export enum View {
   Home = 'home-view',
   Host = 'host-view',
   Join = 'join-view',

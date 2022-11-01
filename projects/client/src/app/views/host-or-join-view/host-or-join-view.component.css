@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.horisontal-align {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 190px;
+  margin-top: 150px;
+}
+
+.back-button {
+  margin-bottom: 120px;
+}

@@ -1,4 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngxs/store';
+import { View } from '..';
+import { UpdateView } from '../../actions/view.actions';
 
 @Component({
   selector: 'app-home-view',
@@ -6,23 +10,25 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./home-view.component.css'],
 })
 export class HomeViewComponent {
-  @Output() howToPlayClicked = new EventEmitter();
-  @Output() playAsGuestClicked = new EventEmitter();
-  @Output() loginClicked = new EventEmitter();
-
   currentYear = new Date().getFullYear();
 
-  constructor() {}
+  constructor(private store: Store, private snackBar: MatSnackBar) {}
 
   onHowToPlay() {
-    this.howToPlayClicked.emit();
+    this.snackBar.open('Under construction.', 'Coming soon!', {
+      duration: 1500,
+      verticalPosition: 'top',
+    });
   }
 
   onPlayAsGuest() {
-    this.playAsGuestClicked.emit();
+    this.store.dispatch(new UpdateView(View.HostOrJoin));
   }
 
   onLogin() {
-    this.loginClicked.emit();
+    this.snackBar.open('Under construction.', 'Coming soon!', {
+      duration: 1500,
+      verticalPosition: 'top',
+    });
   }
 }

@@ -15,6 +15,8 @@ import { CardModel } from '../models/card.model';
 import { MoveModel } from '../models/move.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 import { environment } from '../../environments/environment';
+import { UpdateView } from '../actions/view.actions';
+import { View } from '../views';
 
 const { serverUrl } = environment;
 
@@ -27,7 +29,6 @@ export class SignalrService {
   public isConnectedToServer$ = new BehaviorSubject<boolean>(false);
   public gameCode$ = new BehaviorSubject<string>('');
   public gameCodeIsInvalid$ = new Subject<boolean>();
-  public gameStarted$ = new Subject();
   public opponentPassedMove$ = new Subject();
   public gameOverMessage$ = new Subject<string | null>();
 
@@ -70,8 +71,8 @@ export class SignalrService {
     });
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
-      this.gameStarted$.next();
       this.parseAndUpdateGameState(stringifiedGameState);
+      this.store.dispatch(new UpdateView(View.Game));
     });
 
     this.hubConnection.on('GameOver', (message) => {

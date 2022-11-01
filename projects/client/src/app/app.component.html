@@ -3,28 +3,13 @@
 <div class="particles"></div>
 
 <div class="container">
-  <ng-container [ngSwitch]="currentView">
-    <app-host-view
-      *ngSwitchCase="views.Host"
-      (backButtonClicked)="onHostBackButtonClicked()"
-    ></app-host-view>
-    <app-join-view
-      *ngSwitchCase="views.Join"
-      (backButtonClicked)="onJoinBackButtonClicked()"
-    ></app-join-view>
-    <app-game-view
-      *ngSwitchCase="views.Game"
-      (gameEnded)="onGameEnded()"
-    ></app-game-view>
+  <ng-container [ngSwitch]="currentView$ | async">
+    <app-host-view *ngSwitchCase="View.Host"></app-host-view>
+    <app-join-view *ngSwitchCase="View.Join"></app-join-view>
+    <app-game-view *ngSwitchCase="View.Game"></app-game-view>
     <app-host-or-join-view
-      *ngSwitchCase="views.HostOrJoin"
-      (backButtonClicked)="onHostBackButtonClicked()"
+      *ngSwitchCase="View.HostOrJoin"
     ></app-host-or-join-view>
-    <app-home-view
-      *ngSwitchDefault
-      (howToPlayClicked)="onHowToPlay()"
-      (playAsGuestClicked)="onPlayAsGuest()"
-      (loginClicked)="onLogin()"
-    ></app-home-view>
+    <app-home-view *ngSwitchDefault></app-home-view>
   </ng-container>
 </div>
