@@ -1,3 +1,11 @@
 .deck {
   position: relative;
 }
+
+.right-side {
+  right: 0px;
+}
+
+.left-side {
+  left: 0px;
+}
