@@ -96,13 +96,15 @@ footer {
   margin-top: 24px;
 }
 
-/* .footer-link-container {
+.footer-link-container {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  margin: auto;
+  height: 60px;
 }
 
 .footer-link {
   color: white;
   text-decoration: none;
-} */
+}
