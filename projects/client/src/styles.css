@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
 
 :root {
-  --red: #fc1a3c;
+  --red: whitesmoke;
 }
 
 body,
@@ -11,6 +11,7 @@ html {
   padding: 0;
   overflow: hidden;
   font-family: "Abel", sans-serif;
+  color: black;
 }
 
 /* 
@@ -51,7 +52,6 @@ html {
 }
 
 .big-button {
-  color: var(--red);
   border-radius: 12px;
   text-align: center;
   border: none;

@@ -34,6 +34,8 @@ import {
 } from '../../util/get-asset-file-names';
 import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 import { ResponsiveSizeService } from './responsive-size.service';
+import { UpdateView } from '../../actions/view.actions';
+import { View } from '..';
 
 const LIGHT_BLUE_TINT = 'rgba(0, 0, 255, 0.2)';
 const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';
@@ -45,8 +47,6 @@ const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';
 })
 export class GameViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
-
-  @Output() gameEnded = new EventEmitter();
 
   @Select(GameState.gameData)
   playerGameState$!: Observable<PlayerGameStateModel>;
@@ -94,7 +94,7 @@ export class GameViewComponent implements OnDestroy {
 
         modalRef.afterClosed().subscribe(() => {
           this.store.dispatch(new ResetGameData());
-          this.gameEnded.emit();
+          this.store.dispatch(new UpdateView(View.Home));
         });
       })
     );
