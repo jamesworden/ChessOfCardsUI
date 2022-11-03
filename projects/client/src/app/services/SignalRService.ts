@@ -112,7 +112,6 @@ export class SignalrService {
   }
 
   public joinGame(gameCode: string) {
-    this.gameCode$.next(gameCode);
     this.hubConnection.invoke('JoinGame', gameCode);
   }
 
