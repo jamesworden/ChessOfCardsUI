@@ -1,9 +1,4 @@
-<div
-  class="deck"
-  *ngIf="totalNumCards"
-  [matTooltip]="totalNumCards.toString()"
-  matTooltipPosition="below"
->
+<div class="deck" *ngIf="totalNumCards">
   <app-face-down-card
     *ngFor="let _ of [].constructor(numCardsToDisplay); let i = index"
     [ngStyle]="{
@@ -20,4 +15,15 @@
     }"
   >
   </app-face-down-card>
+  <span
+    [ngStyle]="{
+      position: 'absolute',
+      top:
+        'calc(' + (responsiveSizeService.cardSize$ | async) + 'px + ' + '4px)',
+      left: rightSide
+        ? ((responsiveSizeService.cardSize$ | async) ?? 64) + 'px'
+        : ((responsiveSizeService.cardSize$ | async) ?? 64) * -0.25 + 'px'
+    }"
+    >{{ totalNumCards.toString() }}</span
+  >
 </div>
