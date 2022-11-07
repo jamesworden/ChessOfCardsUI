@@ -17,9 +17,6 @@
 .existing-cards {
   display: flex;
   flex-direction: column-reverse;
-  border-left: solid 1px transparent;
-  border-right: solid 1px transparent;
-  border-bottom: solid 1px transparent;
   margin-top: 4px;
 }
 
