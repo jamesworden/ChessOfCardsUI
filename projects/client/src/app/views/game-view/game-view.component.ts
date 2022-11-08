@@ -95,6 +95,7 @@ export class GameViewComponent implements OnDestroy {
         modalRef.afterClosed().subscribe(() => {
           this.store.dispatch(new ResetGameData());
           this.store.dispatch(new UpdateView(View.Home));
+          this.signalrService.gameCode$.next('');
         });
       })
     );
