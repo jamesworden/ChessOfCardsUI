@@ -18,18 +18,9 @@ export class CardComponent implements OnChanges {
   @Input() isHost: boolean;
   @Input() backgroundColor?: string | null;
 
-  private sm = new SubscriptionManager();
-
   tiltDegrees = 0;
-  cardSize = 64;
 
-  constructor(public responsiveSizeService: ResponsiveSizeService) {
-    this.sm.add(
-      responsiveSizeService.cardSize$.subscribe((cardSize) => {
-        this.cardSize = cardSize;
-      })
-    );
-  }
+  constructor(public responsiveSizeService: ResponsiveSizeService) {}
 
   ngOnChanges() {
     const tiltRight =
@@ -53,15 +44,5 @@ export class CardComponent implements OnChanges {
     } else if (tiltLeft) {
       this.tiltDegrees = -45;
     }
-  }
-
-  getImageHeight() {
-    const pixels = this.cardSize;
-    return pixels + 'px';
-  }
-
-  getImageWidth() {
-    const pixels = this.cardSize;
-    return pixels + 'px';
   }
 }
