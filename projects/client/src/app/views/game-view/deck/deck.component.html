@@ -1,18 +1,10 @@
 <div class="deck" *ngIf="totalNumCards">
   <app-face-down-card
-    *ngFor="let _ of [].constructor(numCardsToDisplay); let i = index"
+    *ngFor="let _ of [].constructor(numCardsToDisplay); let cardIndex = index"
     [ngStyle]="{
       position: 'absolute',
-      right: rightSide
-        ? 'calc((' +
-          i +
-          ' * -6px) - ' +
-          ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 +
-          'px - ' +
-          ((responsiveSizeService.cardSize$ | async) ?? 64) / 6 +
-          'px)'
-        : 'calc((' + i + ' * 6px))',
-      'z-index': i,
+      right: getCardRight(cardIndex),
+      'z-index': cardIndex,
       height: (responsiveSizeService.cardSize$ | async) + 'px'
     }"
   >
@@ -20,9 +12,8 @@
   <span
     [ngStyle]="{
       position: 'absolute',
-      top:
-        'calc(' + (responsiveSizeService.cardSize$ | async) + 'px + ' + '4px)',
-      'font-size': ((responsiveSizeService.cardSize$ | async) ?? 64) / 4 + 'px'
+      top: getCardCountTop(),
+      'font-size': getCardCountFontSize()
     }"
     [ngClass]="{
       'right-side': rightSide,
