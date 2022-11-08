@@ -21,7 +21,8 @@
     [ngStyle]="{
       position: 'absolute',
       top:
-        'calc(' + (responsiveSizeService.cardSize$ | async) + 'px + ' + '4px)'
+        'calc(' + (responsiveSizeService.cardSize$ | async) + 'px + ' + '4px)',
+      'font-size': ((responsiveSizeService.cardSize$ | async) ?? 64) / 4 + 'px'
     }"
     [ngClass]="{
       'right-side': rightSide,
