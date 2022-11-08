@@ -57,4 +57,9 @@ export class DeckComponent implements OnChanges {
 
     return pixels + 'px';
   }
+
+  getCardHeight() {
+    const pixels = this.cardSize;
+    return pixels + 'px';
+  }
 }

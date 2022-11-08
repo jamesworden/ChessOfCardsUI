@@ -5,7 +5,7 @@
       position: 'absolute',
       right: getCardRight(cardIndex),
       'z-index': cardIndex,
-      height: (responsiveSizeService.cardSize$ | async) + 'px'
+      height: getCardHeight()
     }"
   >
   </app-face-down-card>
