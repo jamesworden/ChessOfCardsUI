@@ -14,6 +14,10 @@ html {
   color: black;
 }
 
+mat-dialog-container {
+  font-family: sans-serif !important;
+}
+
 /* 
  * Style pertains to player hand and cards, which live in different components.
  * We only want cards to have the sliding transition if the player hand div
