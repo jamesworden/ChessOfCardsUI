@@ -8,6 +8,8 @@
           i +
           ' * -6px) - ' +
           ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 +
+          'px - ' +
+          ((responsiveSizeService.cardSize$ | async) ?? 64) / 8 +
           'px)'
         : 'calc((' + i + ' * 6px))',
       'z-index': i,
