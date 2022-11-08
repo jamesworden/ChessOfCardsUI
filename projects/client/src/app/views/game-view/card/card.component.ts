@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { CardModel } from '../../../models/card.model';
 import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
+import { SubscriptionManager } from '../../../util/subscription-manager';
 import { ResponsiveSizeService } from '../responsive-size.service';
 
 @Component({
@@ -17,9 +18,18 @@ export class CardComponent implements OnChanges {
   @Input() isHost: boolean;
   @Input() backgroundColor?: string | null;
 
-  tiltDegrees = 0;
+  private sm = new SubscriptionManager();
 
-  constructor(public responsiveSizeService: ResponsiveSizeService) {}
+  tiltDegrees = 0;
+  cardSize = 64;
+
+  constructor(public responsiveSizeService: ResponsiveSizeService) {
+    this.sm.add(
+      responsiveSizeService.cardSize$.subscribe((cardSize) => {
+        this.cardSize = cardSize;
+      })
+    );
+  }
 
   ngOnChanges() {
     const tiltRight =
@@ -43,5 +53,15 @@ export class CardComponent implements OnChanges {
     } else if (tiltLeft) {
       this.tiltDegrees = -45;
     }
+  }
+
+  getImageHeight() {
+    const pixels = this.cardSize;
+    return pixels + 'px';
+  }
+
+  getImageWidth() {
+    const pixels = this.cardSize;
+    return pixels + 'px';
   }
 }
