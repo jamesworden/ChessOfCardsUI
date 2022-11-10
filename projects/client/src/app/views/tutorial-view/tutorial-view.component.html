@@ -1,1 +1,32 @@
-<p>tutorial-view works!</p>
+<div class="container">
+  <h3>How to play</h3>
+
+  <div class="horisontal-align back-button">
+    <div class="tutorial-buttons-container">
+      <app-tutorial-button
+        tutorialName="Capturing positions"
+      ></app-tutorial-button>
+      <app-tutorial-button
+        tutorialName="Capturing the middle"
+      ></app-tutorial-button>
+      <app-tutorial-button
+        tutorialName="Capturing a lane"
+      ></app-tutorial-button>
+      <app-tutorial-button
+        tutorialName="Playing multiple cards"
+      ></app-tutorial-button>
+      <app-tutorial-button
+        tutorialName="Reinforcing cards"
+      ></app-tutorial-button>
+    </div>
+
+    <button
+      mat-raised-button
+      class="big-button"
+      color="basic"
+      (click)="onBack()"
+    >
+      Back
+    </button>
+  </div>
+</div>

@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-view.component';
 import { ViewState } from './state/view.state';
 import { TutorialViewComponent } from './views/tutorial-view/tutorial-view.component';
+import { TutorialButtonComponent } from './views/tutorial-view/tutorial-button/tutorial-button.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { TutorialViewComponent } from './views/tutorial-view/tutorial-view.compo
     PlaceMultipleCardsLaneComponent,
     HostOrJoinViewComponent,
     TutorialViewComponent,
+    TutorialButtonComponent,
   ],
   imports: [
     BrowserModule,
