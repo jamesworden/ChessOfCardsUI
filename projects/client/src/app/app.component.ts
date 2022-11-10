@@ -3,7 +3,13 @@ import { Select } from '@ngxs/store';
 import { ViewState } from './state/view.state';
 import { View } from './views';
 import { Observable } from 'rxjs';
-import { style, animate, transition, trigger } from '@angular/animations';
+import {
+  style,
+  animate,
+  transition,
+  trigger,
+  state,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +17,12 @@ import { style, animate, transition, trigger } from '@angular/animations';
   styleUrls: ['./app.component.css'],
   animations: [
     trigger('fadeInOut', [
+      state('*', style({ position: 'absolute', left: 0, right: 0 })),
       transition(':enter', [
         style({ opacity: 0 }),
-        animate(500, style({ opacity: 1 })),
+        animate(250, style({ opacity: 1 })),
       ]),
-      transition(':leave', [animate(500, style({ opacity: 0 }))]),
+      transition(':leave', [animate(250, style({ opacity: 0 }))]),
     ]),
   ],
 })

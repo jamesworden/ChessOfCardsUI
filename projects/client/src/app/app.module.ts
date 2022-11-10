@@ -25,6 +25,7 @@ import { PlaceMultipleCardsLaneComponent } from './views/game-view/place-multipl
 import { FormsModule } from '@angular/forms';
 import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-view.component';
 import { ViewState } from './state/view.state';
+import { TutorialViewComponent } from './views/tutorial-view/tutorial-view.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ViewState } from './state/view.state';
     ModalComponent,
     PlaceMultipleCardsLaneComponent,
     HostOrJoinViewComponent,
+    TutorialViewComponent,
   ],
   imports: [
     BrowserModule,

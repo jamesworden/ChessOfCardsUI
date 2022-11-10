@@ -9,6 +9,10 @@
       *ngSwitchCase="View.HostOrJoin"
       [@fadeInOut]
     ></app-host-or-join-view>
+    <app-tutorial-view
+      *ngSwitchCase="View.Tutorial"
+      [@fadeInOut]
+    ></app-tutorial-view>
     <app-home-view *ngSwitchDefault [@fadeInOut]></app-home-view>
   </ng-container>
 </div>
