@@ -1,4 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Tutorial } from '..';
+import { StartTutorial } from '../../../actions/tutorial.actions';
 
 @Component({
   selector: 'app-tutorial-button',
@@ -6,11 +9,11 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./tutorial-button.component.css'],
 })
 export class TutorialButtonComponent {
-  @Input() tutorialName = '';
+  @Input() tutorial: Tutorial;
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   onStart() {
-    console.log(`Starting tutorial: ${this.tutorialName}`);
+    this.store.dispatch(new StartTutorial(this.tutorial));
   }
 }

@@ -27,6 +27,7 @@ import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-
 import { ViewState } from './state/view.state';
 import { TutorialViewComponent } from './views/tutorial-view/tutorial-view.component';
 import { TutorialButtonComponent } from './views/tutorial-view/tutorial-button/tutorial-button.component';
+import { TutorialState } from './state/tutorial.state';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { TutorialButtonComponent } from './views/tutorial-view/tutorial-button/t
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState, ViewState]),
+    NgxsModule.forRoot([GameState, ViewState, TutorialState]),
     BrowserAnimationsModule,
     MatTooltipModule,
     MatDialogModule,
