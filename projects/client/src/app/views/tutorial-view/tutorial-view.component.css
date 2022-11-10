@@ -3,7 +3,7 @@
   justify-content: space-around;
 }
 
-.container {
+.select-tutorial-container {
   margin-top: 150px;
   display: flex;
   flex-direction: column;
