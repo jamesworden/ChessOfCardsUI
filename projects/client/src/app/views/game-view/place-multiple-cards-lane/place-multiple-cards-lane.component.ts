@@ -20,7 +20,7 @@ import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
 } from '../../../util/get-asset-file-names';
-import { ResponsiveSizeService } from '../responsive-size.service';
+import { ResponsiveSizeService } from '../services/responsive-size.service';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards
