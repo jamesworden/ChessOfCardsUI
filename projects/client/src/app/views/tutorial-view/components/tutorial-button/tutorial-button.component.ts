@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Tutorial } from '..';
-import { StartTutorial } from '../../../actions/tutorial.actions';
+import { Tutorial } from '../..';
+import { StartTutorial } from '../../../../actions/tutorial.actions';
 
 @Component({
   selector: 'app-tutorial-button',

@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-view.component';
 import { ViewState } from './state/view.state';
 import { TutorialViewComponent } from './views/tutorial-view/tutorial-view.component';
-import { TutorialButtonComponent } from './views/tutorial-view/tutorial-button/tutorial-button.component';
+import { TutorialButtonComponent } from './views/tutorial-view/components/tutorial-button/tutorial-button.component';
 import { TutorialState } from './state/tutorial.state';
 import { CardComponent } from './views/game-view/components/card/card.component';
 import { FaceDownCardComponent } from './views/game-view/components/face-down-card/face-down-card.component';
