@@ -117,7 +117,7 @@
         padding: '0px ' + cardSize / 2 + 'px'
       }"
     >
-      <ng-container *ngIf="isPlacingMultipleCards">
+      <ng-container *ngIf="isPlacingMultipleCards; else passButton">
         <button
           mat-raised-button
           class="confirm-button"
@@ -137,7 +137,7 @@
         </button>
       </ng-container>
 
-      <ng-container *ngIf="!isPlacingMultipleCards">
+      <ng-template #passButton>
         <button
           (click)="onPassButtonClicked()"
           mat-raised-button
@@ -147,7 +147,7 @@
         >
           Pass
         </button>
-      </ng-container>
+      </ng-template>
     </div>
   </div>
 </div>
