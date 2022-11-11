@@ -1,10 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CardModel } from '../../../models/card.model';
-import { KindModel } from '../../../models/kind.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
-import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
-import { SuitModel } from '../../../models/suit.model';
 import { ResponsiveSizeService } from '../responsive-size.service';
 
 @Component({

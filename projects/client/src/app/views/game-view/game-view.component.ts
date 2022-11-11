@@ -102,15 +102,9 @@ export class GameViewComponent implements OnDestroy {
       this.playerGameState$.subscribe((playerGameState) => {
         this.latestGameStateSnapshot = playerGameState;
 
-        if (!playerGameState) {
-          return;
+        if (playerGameState) {
+          this.setIsPlayersTurn(playerGameState);
         }
-
-        const { IsHost, IsHostPlayersTurn } = this.latestGameStateSnapshot;
-
-        const hostAndHostTurn = IsHost && IsHostPlayersTurn;
-        const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
-        this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
       })
     );
     this.sm.add(
@@ -137,10 +131,20 @@ export class GameViewComponent implements OnDestroy {
     this.sm.unsubscribe();
   }
 
+  private setIsPlayersTurn(playerGameState: PlayerGameStateModel) {
+    const { IsHost, IsHostPlayersTurn } = playerGameState;
+
+    const hostAndHostTurn = IsHost && IsHostPlayersTurn;
+    const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
+    this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+  }
+
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
     if (this.isPlacingMultipleCards) {
       return;
     }
+
+    console.log(placeCardAttempt);
 
     const move: MoveModel = {
       PlaceCardAttempts: [placeCardAttempt],

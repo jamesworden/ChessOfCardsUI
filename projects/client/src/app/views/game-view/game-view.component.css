@@ -13,14 +13,9 @@
   justify-content: space-around;
 }
 
-.board {
-  display: flex;
-  justify-content: space-between;
-}
-
 .lane {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   border-radius: 4px;
   border: 1px solid transparent;
 }
