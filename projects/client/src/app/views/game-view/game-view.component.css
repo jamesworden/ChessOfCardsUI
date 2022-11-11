@@ -3,6 +3,11 @@
   justify-content: space-around;
 }
 
+.board {
+  display: flex;
+  justify-content: space-between;
+}
+
 .game {
   max-width: 500px;
 }

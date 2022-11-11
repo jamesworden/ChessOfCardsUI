@@ -20,10 +20,9 @@
     </div>
 
     <div
+      class="board"
       [ngStyle]="{
         padding: cardSize / 2 + 'px 0px',
-        display: 'flex',
-        'justify-content': 'space-between',
         'flex-direction': playerGameState.IsHost ? 'row-reverse' : 'row'
       }"
     >
@@ -132,8 +131,6 @@
         }"
       ></div>
     </div>
-
-    <!-- End Board Views -->
 
     <div
       class="player-hand"
