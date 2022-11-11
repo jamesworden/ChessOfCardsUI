@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CardModel } from '../../../models/card.model';
-import { LaneModel } from '../../../models/lane.model';
-import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
-import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
+import { CardModel } from '../../../../models/card.model';
+import { LaneModel } from '../../../../models/lane.model';
+import { PlaceCardAttemptModel } from '../../../../models/place-card-attempt.model';
+import { PlayerOrNoneModel } from '../../../../models/player-or-none-model';
 import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
-} from '../../../util/get-asset-file-names';
+} from '../../../../util/get-asset-file-names';
 
 const LIGHT_BLUE_TINT = 'rgba(0, 0, 255, 0.2)';
 const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';

@@ -19,7 +19,7 @@ import { SignalrService } from '../../services/SignalRService';
 import { GameState } from '../../state/game.state';
 import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalComponent } from './modal/modal.component';
+import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { LaneModel } from '../../models/lane.model';

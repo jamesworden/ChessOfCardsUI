@@ -1,7 +1,7 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
-import { ResponsiveSizeService } from '../services/responsive-size.service';
+import { PlaceCardAttemptModel } from '../../../../models/place-card-attempt.model';
+import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 @Component({
   selector: 'app-position',

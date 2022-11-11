@@ -1,26 +1,26 @@
 import { Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { GameState } from '../../../state/game.state';
+import { GameState } from '../../../../state/game.state';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PlayerGameStateModel } from '../../../models/player-game-state-model';
-import { CardModel } from '../../../models/card.model';
-import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
+import { PlayerGameStateModel } from '../../../../models/player-game-state-model';
+import { CardModel } from '../../../../models/card.model';
+import { PlaceCardAttemptModel } from '../../../../models/place-card-attempt.model';
 import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { KindModel } from '../../../models/kind.model';
-import { cardExistsInArray } from '../logic/card-exists-in-array';
-import { getIndexOfCardInArray } from '../logic/get-index-of-card-in-array';
+import { KindModel } from '../../../../models/kind.model';
+import { cardExistsInArray } from '../../logic/card-exists-in-array';
+import { getIndexOfCardInArray } from '../../logic/get-index-of-card-in-array';
 import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
-} from '../../../actions/game.actions';
-import { addCardToArray } from '../logic/add-card-to-array';
-import { removeCardFromArray } from '../logic/remove-card-from-array';
+} from '../../../../actions/game.actions';
+import { addCardToArray } from '../../logic/add-card-to-array';
+import { removeCardFromArray } from '../../logic/remove-card-from-array';
 import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
-} from '../../../util/get-asset-file-names';
-import { ResponsiveSizeService } from '../services/responsive-size.service';
+} from '../../../../util/get-asset-file-names';
+import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards

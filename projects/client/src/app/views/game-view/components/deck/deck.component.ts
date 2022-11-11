@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { SubscriptionManager } from '../../../util/subscription-manager';
-import { ResponsiveSizeService } from '../services/responsive-size.service';
+import { SubscriptionManager } from '../../../../util/subscription-manager';
+import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 @Component({
   selector: 'app-deck',

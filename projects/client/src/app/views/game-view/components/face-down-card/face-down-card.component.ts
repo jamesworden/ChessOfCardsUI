@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ResponsiveSizeService } from '../services/responsive-size.service';
+import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 @Component({
   selector: 'app-face-down-card',
