@@ -36,9 +36,6 @@ import { ResponsiveSizeService } from './responsive-size.service';
 import { UpdateView } from '../../actions/view.actions';
 import { View } from '..';
 
-const LIGHT_BLUE_TINT = 'rgba(0, 0, 255, 0.2)';
-const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';
-
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
@@ -64,7 +61,6 @@ export class GameViewComponent implements OnDestroy {
 
   PlayerOrNone = PlayerOrNoneModel;
   getCardImageFileName = getCardImageFileNameFn;
-  getJokerImageFileName = getJokerImageFileNameFn;
 
   latestGameStateSnapshot: PlayerGameStateModel;
   isPlayersTurn = false;
@@ -273,55 +269,6 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.signalrService.makeMove(move);
-  }
-
-  getTopCard(row: CardModel[]) {
-    const lastIndex = row.length - 1;
-    return row[lastIndex];
-  }
-
-  getCardBackgroundColor(card: CardModel, laneIndex: number) {
-    const { Lanes, IsHost } = this.latestGameStateSnapshot;
-    const { LastCardPlayed } = Lanes[laneIndex];
-
-    if (!LastCardPlayed) {
-      return null;
-    }
-
-    if (LastCardPlayed.PlayedBy === PlayerOrNoneModel.None) {
-      return null;
-    }
-
-    const isLastCardPlayed =
-      card.Kind === LastCardPlayed.Kind && card.Suit === LastCardPlayed.Suit;
-
-    if (!isLastCardPlayed) {
-      return null;
-    }
-
-    const hostAndHostPlayedCard =
-      IsHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Host;
-    const guestAndGuestPlayedCard =
-      !IsHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Guest;
-    const playerPlayedCard = hostAndHostPlayedCard || guestAndGuestPlayedCard;
-
-    return playerPlayedCard ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
-  }
-
-  getLaneBackgroundColor(laneIndex: number) {
-    const { Lanes, IsHost } = this.latestGameStateSnapshot;
-    const lane = Lanes[laneIndex];
-
-    if (lane.WonBy === PlayerOrNoneModel.None) {
-      return null;
-    }
-
-    const hostAndHostWonLane = IsHost && lane.WonBy === PlayerOrNoneModel.Host;
-    const guestAndGuestWonLane =
-      !IsHost && lane.WonBy === PlayerOrNoneModel.Guest;
-    const playerWonLane = hostAndHostWonLane || guestAndGuestWonLane;
-
-    return playerWonLane ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
   }
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {

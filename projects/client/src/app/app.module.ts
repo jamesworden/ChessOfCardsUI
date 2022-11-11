@@ -28,6 +28,7 @@ import { ViewState } from './state/view.state';
 import { TutorialViewComponent } from './views/tutorial-view/tutorial-view.component';
 import { TutorialButtonComponent } from './views/tutorial-view/tutorial-button/tutorial-button.component';
 import { TutorialState } from './state/tutorial.state';
+import { LaneComponent } from './views/game-view/lane/lane.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { TutorialState } from './state/tutorial.state';
     HostOrJoinViewComponent,
     TutorialViewComponent,
     TutorialButtonComponent,
+    LaneComponent,
   ],
   imports: [
     BrowserModule,
