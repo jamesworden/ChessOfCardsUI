@@ -36,13 +36,7 @@ export class LaneComponent {
       return 'transparent';
     }
 
-    const hostAndHostWonLane =
-      this.isHost && this.lane.WonBy === PlayerOrNoneModel.Host;
-    const guestAndGuestWonLane =
-      !this.isHost && this.lane.WonBy === PlayerOrNoneModel.Guest;
-    const playerWonLane = hostAndHostWonLane || guestAndGuestWonLane;
-
-    return playerWonLane ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
+    return this.getPlayerWonLane() ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
   }
 
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
@@ -67,17 +61,20 @@ export class LaneComponent {
       return 'transparent';
     }
 
-    const hostAndHostPlayedCard =
-      this.isHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Host;
-    const guestAndGuestPlayedCard =
-      this.isHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Guest;
-    const playerPlayedCard = hostAndHostPlayedCard || guestAndGuestPlayedCard;
-
-    return playerPlayedCard ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
+    return this.getPlayerWonLane() ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
   }
 
   getTopCard(row: CardModel[]) {
     const lastIndex = row.length - 1;
     return row[lastIndex];
+  }
+
+  private getPlayerWonLane() {
+    const hostAndHostWonLane =
+      this.isHost && this.lane.WonBy === PlayerOrNoneModel.Host;
+    const guestAndGuestWonLane =
+      !this.isHost && this.lane.WonBy === PlayerOrNoneModel.Guest;
+
+    return hostAndHostWonLane || guestAndGuestWonLane;
   }
 }
