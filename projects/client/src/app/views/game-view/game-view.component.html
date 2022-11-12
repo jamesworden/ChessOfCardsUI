@@ -23,29 +23,10 @@
       class="board"
       [ngStyle]="{
         padding: cardSize / 2 + 'px 0px',
-        'flex-direction': playerGameState.IsHost ? 'row-reverse' : 'row'
+        'flex-direction': playerGameState.IsHost ? 'row' : 'row-reverse'
       }"
     >
-      <div
-        class="gutter"
-        [ngStyle]="{
-          width: cardSize / 2 + 'px'
-        }"
-      >
-        <app-deck
-          [totalNumCards]="playerGameState.NumCardsInOpponentsDeck"
-          [rightSide]="playerGameState.IsHost"
-        ></app-deck>
-
-        <div class="deck-divider-middle"></div>
-
-        <app-deck
-          [totalNumCards]="playerGameState.NumCardsInPlayersDeck"
-          [rightSide]="playerGameState.IsHost"
-        ></app-deck>
-
-        <div class="deck-divider-end"></div>
-      </div>
+      <app-gutter></app-gutter>
 
       <ng-container
         *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
@@ -71,12 +52,12 @@
         </ng-template>
       </ng-container>
 
-      <div
-        class="gutter"
-        [ngStyle]="{
-          width: cardSize / 2 + 'px'
-        }"
-      ></div>
+      <app-gutter
+        [cardSize]="cardSize"
+        [isHost]="playerGameState.IsHost"
+        [numCardsInPlayersDeck]="playerGameState.NumCardsInPlayersDeck"
+        [numCardsInOpponentsDeck]="playerGameState.NumCardsInOpponentsDeck"
+      ></app-gutter>
     </div>
 
     <div

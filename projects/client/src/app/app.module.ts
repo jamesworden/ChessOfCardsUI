@@ -29,6 +29,7 @@ import { PositionComponent } from './views/game-view/components/position/positio
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
 import { PlaceMultipleCardsLaneComponent } from './views/game-view/components/place-multiple-cards-lane/place-multiple-cards-lane.component';
 import { LaneComponent } from './views/game-view/components/lane/lane.component';
+import { GutterComponent } from './views/game-view/components/gutter/gutter.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { LaneComponent } from './views/game-view/components/lane/lane.component'
     TutorialViewComponent,
     TutorialButtonComponent,
     LaneComponent,
+    GutterComponent,
   ],
   imports: [
     BrowserModule,
