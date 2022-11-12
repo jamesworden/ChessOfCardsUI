@@ -1,8 +1,11 @@
 .gutter {
+  height: 100%;
+}
+
+.content {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  height: 100%;
 }
 
 .deck-divider-end {

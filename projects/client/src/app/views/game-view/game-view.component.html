@@ -16,7 +16,7 @@
         'flex-direction': playerGameState.IsHost ? 'row' : 'row-reverse'
       }"
     >
-      <app-gutter></app-gutter>
+      <app-gutter [cardSize]="cardSize"></app-gutter>
 
       <ng-container
         *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
