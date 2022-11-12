@@ -60,37 +60,13 @@
       ></app-gutter>
     </div>
 
-    <div
-      class="player-hand"
-      id="player-hand"
-      cdkDropList
-      [cdkDropListConnectedTo]="
-        isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
-      "
-      (cdkDropListDropped)="onPlayerHandCardDrop($event)"
-      cdkDropListData="player-hand"
-      cdkDropListOrientation="horizontal"
-      *ngIf="playerGameState.Hand"
-      [ngStyle]="{
-        height: cardSize + 'px',
-        width: 5 * cardSize + 'px',
-        margin: 'auto'
-      }"
-    >
-      <app-card
-        *ngFor="
-          let card of isPlacingMultipleCards
-            ? (placeMultipleCardsHand$ | async) ?? []
-            : playerGameState.Hand.Cards
-        "
-        [cardImageFileName]="getCardImageFileName(card)"
-        [card]="card"
-        [playerCanDrag]="isPlayersTurn"
-        [ngStyle]="{
-          opacity: isPlayersTurn ? 1 : 0.75
-        }"
-      ></app-card>
-    </div>
+    <app-player-hand
+      [isPlacingMultipleCards]="isPlacingMultipleCards"
+      [cards]="playerGameState.Hand.Cards"
+      [cardSize]="cardSize"
+      [disabled]="!isPlayersTurn"
+      (cardDropped)="onPlayerHandCardDrop($event)"
+    ></app-player-hand>
 
     <div
       class="button-toolbar"

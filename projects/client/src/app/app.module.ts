@@ -30,6 +30,7 @@ import { ModalComponent } from './views/game-view/components/modal/modal.compone
 import { PlaceMultipleCardsLaneComponent } from './views/game-view/components/place-multiple-cards-lane/place-multiple-cards-lane.component';
 import { LaneComponent } from './views/game-view/components/lane/lane.component';
 import { GutterComponent } from './views/game-view/components/gutter/gutter.component';
+import { PlayerHandComponent } from './views/game-view/components/player-hand/player-hand.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { GutterComponent } from './views/game-view/components/gutter/gutter.comp
     TutorialButtonComponent,
     LaneComponent,
     GutterComponent,
+    PlayerHandComponent,
   ],
   imports: [
     BrowserModule,
