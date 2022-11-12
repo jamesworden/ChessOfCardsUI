@@ -4,20 +4,10 @@
     *ngIf="playerGameState$ | async as playerGameState"
     cdkDropListGroup
   >
-    <div
-      class="opponent-hand"
-      [ngStyle]="{
-        height: cardSize + 'px',
-        padding: '0px ' + cardSize / 2 + 'px',
-        'margin-top': '-' + cardSize / 2 + 'px'
-      }"
-    >
-      <app-face-down-card
-        *ngFor="
-          let _ of [].constructor(playerGameState.NumCardsInOpponentsHand)
-        "
-      ></app-face-down-card>
-    </div>
+    <app-opponent-hand
+      [cardSize]="cardSize"
+      [numCards]="playerGameState.NumCardsInOpponentsHand"
+    ></app-opponent-hand>
 
     <div
       class="board"

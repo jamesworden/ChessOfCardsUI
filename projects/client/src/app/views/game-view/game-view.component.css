@@ -12,12 +12,6 @@
   max-width: 500px;
 }
 
-.opponent-hand {
-  display: flex;
-  padding-bottom: 0;
-  justify-content: space-around;
-}
-
 .button-toolbar {
   display: flex;
   justify-content: space-between;

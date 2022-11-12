@@ -31,6 +31,7 @@ import { PlaceMultipleCardsLaneComponent } from './views/game-view/components/pl
 import { LaneComponent } from './views/game-view/components/lane/lane.component';
 import { GutterComponent } from './views/game-view/components/gutter/gutter.component';
 import { PlayerHandComponent } from './views/game-view/components/player-hand/player-hand.component';
+import { OpponentHandComponent } from './views/game-view/components/opponent-hand/opponent-hand.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { PlayerHandComponent } from './views/game-view/components/player-hand/pl
     LaneComponent,
     GutterComponent,
     PlayerHandComponent,
+    OpponentHandComponent,
   ],
   imports: [
     BrowserModule,
