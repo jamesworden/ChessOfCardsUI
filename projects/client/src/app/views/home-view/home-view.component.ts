@@ -12,23 +12,13 @@ import { UpdateView } from '../../actions/view.actions';
 export class HomeViewComponent {
   currentYear = new Date().getFullYear();
 
-  constructor(private store: Store, private snackBar: MatSnackBar) {}
+  constructor(private store: Store) {}
 
   onHowToPlay() {
-    this.snackBar.open('Under construction.', 'Coming soon!', {
-      duration: 1500,
-      verticalPosition: 'top',
-    });
+    this.store.dispatch(new UpdateView(View.Tutorial));
   }
 
   onPlayAsGuest() {
     this.store.dispatch(new UpdateView(View.HostOrJoin));
-  }
-
-  onLogin() {
-    this.snackBar.open('Under construction.', 'Coming soon!', {
-      duration: 1500,
-      verticalPosition: 'top',
-    });
   }
 }

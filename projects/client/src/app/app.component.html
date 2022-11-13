@@ -1,15 +1,18 @@
 <div class="background"></div>
 
-<div class="particles" *ngIf="(currentView$ | async) !== View.Game"></div>
-
 <div class="container">
   <ng-container [ngSwitch]="currentView$ | async">
-    <app-host-view *ngSwitchCase="View.Host"></app-host-view>
-    <app-join-view *ngSwitchCase="View.Join"></app-join-view>
-    <app-game-view *ngSwitchCase="View.Game"></app-game-view>
+    <app-host-view *ngSwitchCase="View.Host" [@fadeInOut]></app-host-view>
+    <app-join-view *ngSwitchCase="View.Join" [@fadeInOut]></app-join-view>
+    <app-game-view *ngSwitchCase="View.Game" [@fadeInOut]></app-game-view>
     <app-host-or-join-view
       *ngSwitchCase="View.HostOrJoin"
+      [@fadeInOut]
     ></app-host-or-join-view>
-    <app-home-view *ngSwitchDefault></app-home-view>
+    <app-tutorial-view
+      *ngSwitchCase="View.Tutorial"
+      [@fadeInOut]
+    ></app-tutorial-view>
+    <app-home-view *ngSwitchDefault [@fadeInOut]></app-home-view>
   </ng-container>
 </div>

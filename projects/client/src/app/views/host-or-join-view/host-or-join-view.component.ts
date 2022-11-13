@@ -5,7 +5,7 @@ import { View } from '..';
 import { UpdateView } from '../../actions/view.actions';
 import { SignalrService } from '../../services/SignalRService';
 import { SubscriptionManager } from '../../util/subscription-manager';
-import { ModalComponent } from '../game-view/modal/modal.component';
+import { ModalComponent } from '../game-view/components/modal/modal.component';
 
 @Component({
   selector: 'app-host-or-join-view',

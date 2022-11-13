@@ -1,0 +1,45 @@
+<div class="select-tutorial-container" *ngIf="!(currentTutorial$ | async)">
+  <h3>How to play</h3>
+
+  <div class="horisontal-align back-button">
+    <div class="tutorial-buttons-container">
+      <app-tutorial-button
+        [tutorial]="Tutorial.TheBasics"
+      ></app-tutorial-button>
+      <app-tutorial-button
+        [tutorial]="Tutorial.CapturingTheMiddle"
+      ></app-tutorial-button>
+      <app-tutorial-button
+        [tutorial]="Tutorial.CapturingALane"
+      ></app-tutorial-button>
+      <app-tutorial-button
+        [tutorial]="Tutorial.PlayingMultipleCards"
+      ></app-tutorial-button>
+      <app-tutorial-button
+        [tutorial]="Tutorial.ReinforcingCards"
+      ></app-tutorial-button>
+    </div>
+
+    <button
+      mat-raised-button
+      class="big-button"
+      color="basic"
+      (click)="onBack()"
+    >
+      Back
+    </button>
+  </div>
+</div>
+
+<div
+  class="transition-title-container"
+  *ngIf="(currentTutorial$ | async) && showingTransitionTitle"
+  [@fadeInOut]
+>
+  <h1>{{ currentTutorial$ | async }}</h1>
+</div>
+
+<div
+  class="tutorial-container"
+  *ngIf="(currentTutorial$ | async) && finishedTransitionTitle"
+></div>

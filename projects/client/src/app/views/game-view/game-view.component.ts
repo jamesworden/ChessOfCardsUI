@@ -1,8 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
   FinishPlacingMultipleCards,
   ResetGameData,
@@ -20,7 +19,7 @@ import { SignalrService } from '../../services/SignalRService';
 import { GameState } from '../../state/game.state';
 import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalComponent } from './modal/modal.component';
+import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { LaneModel } from '../../models/lane.model';
@@ -28,17 +27,11 @@ import { addCardToArray } from './logic/add-card-to-array';
 import { moveCardToLane } from './logic/move-card-to-lane';
 import { removeCardFromArray } from './logic/remove-card-from-array';
 import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-cards-to-move';
-import {
-  getCardImageFileName as getCardImageFileNameFn,
-  getJokerImageFileName as getJokerImageFileNameFn,
-} from '../../util/get-asset-file-names';
+import { getCardImageFileName as getCardImageFileNameFn } from '../../util/get-asset-file-names';
 import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
-import { ResponsiveSizeService } from './responsive-size.service';
+import { ResponsiveSizeService } from './services/responsive-size.service';
 import { UpdateView } from '../../actions/view.actions';
 import { View } from '..';
-
-const LIGHT_BLUE_TINT = 'rgba(0, 0, 255, 0.2)';
-const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';
 
 @Component({
   selector: 'app-game-view',
@@ -65,7 +58,6 @@ export class GameViewComponent implements OnDestroy {
 
   PlayerOrNone = PlayerOrNoneModel;
   getCardImageFileName = getCardImageFileNameFn;
-  getJokerImageFileName = getJokerImageFileNameFn;
 
   latestGameStateSnapshot: PlayerGameStateModel;
   isPlayersTurn = false;
@@ -103,15 +95,9 @@ export class GameViewComponent implements OnDestroy {
       this.playerGameState$.subscribe((playerGameState) => {
         this.latestGameStateSnapshot = playerGameState;
 
-        if (!playerGameState) {
-          return;
+        if (playerGameState) {
+          this.setIsPlayersTurn(playerGameState);
         }
-
-        const { IsHost, IsHostPlayersTurn } = this.latestGameStateSnapshot;
-
-        const hostAndHostTurn = IsHost && IsHostPlayersTurn;
-        const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
-        this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
       })
     );
     this.sm.add(
@@ -138,10 +124,20 @@ export class GameViewComponent implements OnDestroy {
     this.sm.unsubscribe();
   }
 
+  private setIsPlayersTurn(playerGameState: PlayerGameStateModel) {
+    const { IsHost, IsHostPlayersTurn } = playerGameState;
+
+    const hostAndHostTurn = IsHost && IsHostPlayersTurn;
+    const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
+    this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+  }
+
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
     if (this.isPlacingMultipleCards) {
       return;
     }
+
+    console.log(placeCardAttempt);
 
     const move: MoveModel = {
       PlaceCardAttempts: [placeCardAttempt],
@@ -270,55 +266,6 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.signalrService.makeMove(move);
-  }
-
-  getTopCard(row: CardModel[]) {
-    const lastIndex = row.length - 1;
-    return row[lastIndex];
-  }
-
-  getCardBackgroundColor(card: CardModel, laneIndex: number) {
-    const { Lanes, IsHost } = this.latestGameStateSnapshot;
-    const { LastCardPlayed } = Lanes[laneIndex];
-
-    if (!LastCardPlayed) {
-      return null;
-    }
-
-    if (LastCardPlayed.PlayedBy === PlayerOrNoneModel.None) {
-      return null;
-    }
-
-    const isLastCardPlayed =
-      card.Kind === LastCardPlayed.Kind && card.Suit === LastCardPlayed.Suit;
-
-    if (!isLastCardPlayed) {
-      return null;
-    }
-
-    const hostAndHostPlayedCard =
-      IsHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Host;
-    const guestAndGuestPlayedCard =
-      !IsHost && LastCardPlayed.PlayedBy === PlayerOrNoneModel.Guest;
-    const playerPlayedCard = hostAndHostPlayedCard || guestAndGuestPlayedCard;
-
-    return playerPlayedCard ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
-  }
-
-  getLaneBackgroundColor(laneIndex: number) {
-    const { Lanes, IsHost } = this.latestGameStateSnapshot;
-    const lane = Lanes[laneIndex];
-
-    if (lane.WonBy === PlayerOrNoneModel.None) {
-      return null;
-    }
-
-    const hostAndHostWonLane = IsHost && lane.WonBy === PlayerOrNoneModel.Host;
-    const guestAndGuestWonLane =
-      !IsHost && lane.WonBy === PlayerOrNoneModel.Guest;
-    const playerWonLane = hostAndHostWonLane || guestAndGuestWonLane;
-
-    return playerWonLane ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
   }
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {

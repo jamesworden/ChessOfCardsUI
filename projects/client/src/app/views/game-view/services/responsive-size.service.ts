@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SubscriptionManager } from '../../util/subscription-manager';
+import { SubscriptionManager } from '../../../util/subscription-manager';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 
 @Injectable({

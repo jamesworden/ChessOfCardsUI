@@ -4,4 +4,5 @@ export enum View {
   Join = 'join-view',
   Game = 'game-view',
   HostOrJoin = 'host-or-join-view',
+  Tutorial = 'tutorial-view',
 }

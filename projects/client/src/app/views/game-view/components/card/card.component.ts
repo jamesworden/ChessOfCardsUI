@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { CardModel } from '../../../models/card.model';
-import { PlayerOrNoneModel } from '../../../models/player-or-none-model';
-import { SubscriptionManager } from '../../../util/subscription-manager';
-import { ResponsiveSizeService } from '../responsive-size.service';
+import { CardModel } from '../../../../models/card.model';
+import { PlayerOrNoneModel } from '../../../../models/player-or-none-model';
+import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 @Component({
   selector: 'app-card',

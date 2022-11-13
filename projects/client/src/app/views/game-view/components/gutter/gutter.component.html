@@ -1,0 +1,25 @@
+<div
+  class="gutter"
+  [ngStyle]="{
+    width: cardSize / 2 + 'px'
+  }"
+>
+  <div
+    class="content"
+    *ngIf="cardSize && numCardsInOpponentsDeck && numCardsInPlayersDeck"
+  >
+    <app-deck
+      [totalNumCards]="numCardsInOpponentsDeck"
+      [rightSide]="isHost"
+    ></app-deck>
+
+    <div class="deck-divider-middle"></div>
+
+    <app-deck
+      [totalNumCards]="numCardsInPlayersDeck"
+      [rightSide]="isHost"
+    ></app-deck>
+
+    <div class="deck-divider-end"></div>
+  </div>
+</div>

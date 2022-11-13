@@ -3,31 +3,13 @@
   justify-content: space-around;
 }
 
-.game {
-  max-width: 500px;
-}
-
-.opponent-hand {
-  display: flex;
-  padding-bottom: 0;
-  justify-content: space-around;
-}
-
 .board {
   display: flex;
   justify-content: space-between;
 }
 
-.lane {
-  display: flex;
-  flex-direction: column;
-  border-radius: 4px;
-}
-
-.gutter {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+.game {
+  max-width: 500px;
 }
 
 .button-toolbar {
@@ -50,12 +32,4 @@
 
 .button-divider {
   flex: 0.15;
-}
-
-.deck-divider-end {
-  flex: 1;
-}
-
-.deck-divider-middle {
-  flex: 7;
 }
