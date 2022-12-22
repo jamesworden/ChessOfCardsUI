@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output,
-} from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { View } from '..';
 import { UpdateView } from '../../actions/view.actions';
