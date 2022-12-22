@@ -1,11 +1,6 @@
-.game-container {
+:host {
   display: flex;
   justify-content: space-around;
-}
-
-.board {
-  display: flex;
-  justify-content: space-between;
 }
 
 .game {

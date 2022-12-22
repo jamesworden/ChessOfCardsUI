@@ -1,0 +1,39 @@
+<div
+  class="board"
+  [ngStyle]="{
+    padding: cardSize / 2 + 'px 0px',
+    'flex-direction': playerGameState.IsHost ? 'row' : 'row-reverse'
+  }"
+>
+  <app-gutter [cardSize]="cardSize"></app-gutter>
+
+  <ng-container
+    *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
+  >
+    <ng-container
+      *ngIf="
+        initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex;
+        else regularLane
+      "
+      ><app-place-multiple-cards-lane></app-place-multiple-cards-lane
+    ></ng-container>
+
+    <ng-template #regularLane>
+      <app-lane
+        [lane]="lane"
+        [laneIndex]="laneIndex"
+        [isHost]="playerGameState.IsHost"
+        [redJokerLaneIndex]="playerGameState.RedJokerLaneIndex"
+        [blackJokerLaneIndex]="playerGameState.BlackJokerLaneIndex"
+        (placeCardAttempted)="onPlaceCardAttempted($event)"
+      ></app-lane>
+    </ng-template>
+  </ng-container>
+
+  <app-gutter
+    [cardSize]="cardSize"
+    [isHost]="playerGameState.IsHost"
+    [numCardsInPlayersDeck]="playerGameState.NumCardsInPlayersDeck"
+    [numCardsInOpponentsDeck]="playerGameState.NumCardsInOpponentsDeck"
+  ></app-gutter>
+</div>
