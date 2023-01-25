@@ -8,8 +8,8 @@ import {
   getJokerImageFileName as getJokerImageFileNameFn,
 } from '../../../../util/get-asset-file-names';
 
-const LIGHT_BLUE_TINT = 'rgba(0, 0, 255, 0.2)';
-const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';
+const LIGHT_BLUE_TINT = 'var(--red)';
+const LIGHT_RED_TINT = 'var(--blue)';
 
 @Component({
   selector: 'app-lane',
@@ -43,27 +43,6 @@ export class LaneComponent {
     this.placeCardAttempted.emit(placeCardAttempt);
   }
 
-  getCardBackgroundColor(card: CardModel) {
-    const { LastCardPlayed } = this.lane;
-
-    if (!LastCardPlayed) {
-      return null;
-    }
-
-    if (LastCardPlayed.PlayedBy === PlayerOrNoneModel.None) {
-      return null;
-    }
-
-    const isLastCardPlayed =
-      card.Kind === LastCardPlayed.Kind && card.Suit === LastCardPlayed.Suit;
-
-    if (!isLastCardPlayed) {
-      return 'transparent';
-    }
-
-    return this.getPlayerWonLane() ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
-  }
-
   getTopCard(row: CardModel[]) {
     const lastIndex = row.length - 1;
     return row[lastIndex];
@@ -76,5 +55,47 @@ export class LaneComponent {
       !this.isHost && this.lane.WonBy === PlayerOrNoneModel.Guest;
 
     return hostAndHostWonLane || guestAndGuestWonLane;
+  }
+
+  getPositionBackgroundColor(
+    laneIndex: number,
+    rowIndex: number,
+    topCard?: CardModel
+  ) {
+    if (!topCard) {
+      const rowAndLaneIndexSum = laneIndex + rowIndex;
+      const defaultBackgroundColor =
+        rowAndLaneIndexSum % 2 === 0
+          ? 'var(--dark-green)'
+          : 'var(--light-green)';
+
+      return defaultBackgroundColor;
+    }
+
+    const { LastCardPlayed } = this.lane;
+
+    if (!LastCardPlayed) {
+      return 'transparent';
+    }
+
+    if (LastCardPlayed.PlayedBy === PlayerOrNoneModel.None) {
+      return 'transparent';
+    }
+
+    const isLastCardPlayed =
+      topCard.Kind === LastCardPlayed.Kind &&
+      topCard.Suit === LastCardPlayed.Suit;
+
+    if (!isLastCardPlayed) {
+      return 'transparent';
+    }
+
+    const hostAndPlayedByHost =
+      topCard.PlayedBy === PlayerOrNoneModel.Host && this.isHost;
+    const guestAndPlayedByGuest =
+      topCard.PlayedBy === PlayerOrNoneModel.Guest && !this.isHost;
+    const playerPlayedCard = hostAndPlayedByHost || guestAndPlayedByGuest;
+
+    return playerPlayedCard ? 'var(--blue)' : 'var(--red)';
   }
 }

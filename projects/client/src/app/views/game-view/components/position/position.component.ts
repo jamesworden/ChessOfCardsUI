@@ -11,6 +11,7 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 export class PositionComponent {
   @Input() laneIndex: number;
   @Input() rowIndex: number;
+  @Input() backgroundColor: string;
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttemptModel> =
     new EventEmitter();
 

@@ -1,7 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
 
 :root {
-  --red: whitesmoke;
+  --white: whitesmoke;
+  --black: #262421;
+  --red: #965656;
+  --blue: #566296;
+  --dark-green: #769656;
+  --light-green: #eeeed2;
 }
 
 body,
@@ -11,7 +16,7 @@ html {
   padding: 0;
   overflow: hidden;
   font-family: "Abel", sans-serif;
-  color: black;
+  color: var(--black);
 }
 
 mat-dialog-container {
@@ -61,7 +66,10 @@ mat-dialog-container {
   border: none;
   height: 75px;
   width: 300px;
+  font-family: "Abel", sans-serif;
   font-size: 20px;
+  font-weight: 800;
+  color: var(--black);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 2px rgba(0, 0, 0, 0.2),
     0 4px 4px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.1),
     0 16px 16px rgba(0, 0, 0, 0.05);

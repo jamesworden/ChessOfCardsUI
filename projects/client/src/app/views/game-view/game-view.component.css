@@ -1,6 +1,9 @@
 :host {
   display: flex;
   justify-content: space-around;
+  background-color: var(--black);
+  height: 100%;
+  width: 100%;
 }
 
 .game {
