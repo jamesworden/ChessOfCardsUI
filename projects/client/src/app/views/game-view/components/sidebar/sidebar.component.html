@@ -1,0 +1,33 @@
+<nav
+  class="sidebar"
+  [ngStyle]="{
+    width: (responsiveSizeService.cardSize$ | async) + 'px'
+  }"
+>
+  <ul class="sidebar-items">
+    <li
+      class="sidebar-item"
+      [ngStyle]="{
+        height: (responsiveSizeService.cardSize$ | async) + 'px'
+      }"
+    >
+      1
+    </li>
+    <li
+      class="sidebar-item"
+      [ngStyle]="{
+        height: (responsiveSizeService.cardSize$ | async) + 'px'
+      }"
+    >
+      2
+    </li>
+    <li
+      class="sidebar-item"
+      [ngStyle]="{
+        height: (responsiveSizeService.cardSize$ | async) + 'px'
+      }"
+    >
+      3
+    </li>
+  </ul>
+</nav>

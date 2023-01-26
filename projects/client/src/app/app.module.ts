@@ -33,6 +33,7 @@ import { GutterComponent } from './views/game-view/components/gutter/gutter.comp
 import { PlayerHandComponent } from './views/game-view/components/player-hand/player-hand.component';
 import { OpponentHandComponent } from './views/game-view/components/opponent-hand/opponent-hand.component';
 import { BoardComponent } from './views/game-view/components/board/board.component';
+import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { BoardComponent } from './views/game-view/components/board/board.compone
     PlayerHandComponent,
     OpponentHandComponent,
     BoardComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,

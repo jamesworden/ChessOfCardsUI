@@ -20,6 +20,8 @@ export class ResponsiveSizeService {
     );
     this.sm.add(
       this.windowDimensions$.subscribe(([width, height]) => {
+        width -= 48; // Width of sidebar
+        // 6 Width to 11 Height ratio.
         const maxCardWidth = width / 6;
         const maxCardHeight = height / 11;
         const cardSize = Math.min(maxCardWidth, maxCardHeight);

@@ -62,40 +62,35 @@ export class LaneComponent {
     rowIndex: number,
     topCard?: CardModel
   ) {
-    if (!topCard) {
-      const rowAndLaneIndexSum = laneIndex + rowIndex;
-      const defaultBackgroundColor =
-        rowAndLaneIndexSum % 2 === 0
-          ? 'var(--dark-green)'
-          : 'var(--light-green)';
-
-      return defaultBackgroundColor;
-    }
-
     const { LastCardPlayed } = this.lane;
 
-    if (!LastCardPlayed) {
-      return 'transparent';
-    }
-
-    if (LastCardPlayed.PlayedBy === PlayerOrNoneModel.None) {
-      return 'transparent';
-    }
-
     const isLastCardPlayed =
+      topCard &&
+      LastCardPlayed &&
+      LastCardPlayed.PlayedBy !== PlayerOrNoneModel.None &&
       topCard.Kind === LastCardPlayed.Kind &&
       topCard.Suit === LastCardPlayed.Suit;
 
-    if (!isLastCardPlayed) {
-      return 'transparent';
-    }
+    return isLastCardPlayed
+      ? this.getLastCardPlayedBackgroundColor(topCard!)
+      : this.getDefaultCardBackgroundColor(laneIndex, rowIndex);
+  }
 
+  getLastCardPlayedBackgroundColor(lastCardPlayed: CardModel) {
     const hostAndPlayedByHost =
-      topCard.PlayedBy === PlayerOrNoneModel.Host && this.isHost;
+      lastCardPlayed.PlayedBy === PlayerOrNoneModel.Host && this.isHost;
     const guestAndPlayedByGuest =
-      topCard.PlayedBy === PlayerOrNoneModel.Guest && !this.isHost;
+      lastCardPlayed.PlayedBy === PlayerOrNoneModel.Guest && !this.isHost;
     const playerPlayedCard = hostAndPlayedByHost || guestAndPlayedByGuest;
 
     return playerPlayedCard ? 'var(--blue)' : 'var(--red)';
+  }
+
+  getDefaultCardBackgroundColor(laneIndex: number, rowIndex: number) {
+    const rowAndLaneIndexSum = laneIndex + rowIndex;
+    const defaultBackgroundColor =
+      rowAndLaneIndexSum % 2 === 0 ? 'var(--dark-green)' : 'var(--light-green)';
+
+    return defaultBackgroundColor;
   }
 }

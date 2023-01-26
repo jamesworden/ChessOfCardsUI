@@ -22,26 +22,22 @@ export class CardComponent implements OnChanges {
   constructor(public responsiveSizeService: ResponsiveSizeService) {}
 
   ngOnChanges() {
-    const tiltRight =
-      (this.isHost &&
-        this.isMiddleCard &&
-        this.isPlayedBy === PlayerOrNoneModel.Host) ||
-      (!this.isHost &&
-        this.isMiddleCard &&
-        this.isPlayedBy === PlayerOrNoneModel.Host);
+    this.tiltCardIfMiddle();
+  }
 
-    const tiltLeft =
-      (this.isHost &&
-        this.isMiddleCard &&
-        this.isPlayedBy === PlayerOrNoneModel.Guest) ||
-      (!this.isHost &&
-        this.isMiddleCard &&
-        this.isPlayedBy === PlayerOrNoneModel.Guest);
+  tiltCardIfMiddle() {
+    const nobodyPlayedCard = this.isPlayedBy === PlayerOrNoneModel.None;
 
-    if (tiltRight) {
-      this.tiltDegrees = 45;
-    } else if (tiltLeft) {
-      this.tiltDegrees = -45;
+    if (nobodyPlayedCard || !this.isMiddleCard) {
+      return;
     }
+
+    const hostCardAndIsHost =
+      this.isHost && this.isPlayedBy === PlayerOrNoneModel.Host;
+    const guestCardAndIsGuest =
+      !this.isHost && this.isPlayedBy === PlayerOrNoneModel.Guest;
+    const playerPlayedCard = hostCardAndIsHost || guestCardAndIsGuest;
+
+    this.tiltDegrees = playerPlayedCard ? 45 : -45;
   }
 }

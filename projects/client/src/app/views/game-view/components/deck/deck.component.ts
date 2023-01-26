@@ -40,22 +40,12 @@ export class DeckComponent implements OnChanges {
   }
 
   getCardRight(cardIndex: number) {
-    let pixels = 0;
+    const slightCardShift = cardIndex * 6;
+    const halfCardShift = this.cardSize / 2;
+    const boardAndDeckPadding = this.cardSize / 6;
+    const totalShift = slightCardShift + halfCardShift + boardAndDeckPadding;
 
-    if (this.rightSide) {
-      const slightCardShift = cardIndex * 6;
-      const halfCardShift = this.cardSize / 2;
-      const boardAndDeckPadding = this.cardSize / 6;
-      const totalShift = slightCardShift + halfCardShift + boardAndDeckPadding;
-
-      pixels = -totalShift;
-    } else {
-      const cardShift = cardIndex * 6;
-
-      pixels = cardShift;
-    }
-
-    return pixels + 'px';
+    return -totalShift + 'px';
   }
 
   getCardHeight() {
