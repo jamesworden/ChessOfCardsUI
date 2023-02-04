@@ -63,6 +63,12 @@ export class LaneComponent {
     rowIndex: number,
     topCard?: CardModel
   ) {
+    const laneBackgroundColor = this.getLaneBackgroundColor();
+
+    if (laneBackgroundColor !== 'transparent') {
+      return laneBackgroundColor;
+    }
+
     const { LastCardPlayed } = this.lane;
 
     const isLastCardPlayed =
