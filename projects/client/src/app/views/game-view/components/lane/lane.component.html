@@ -24,7 +24,7 @@
         [cardImageFileName]="getCardImageFileName(getTopCard(row))"
         [isMiddleCard]="rowIndex === 3"
         [isPlayedBy]="getTopCard(row).PlayedBy"
-        [isHost]="false"
+        [isHost]="isHost"
       ></app-card>
 
       <app-card
@@ -42,7 +42,7 @@
         "
         [isMiddleCard]="rowIndex === 3"
         [isPlayedBy]="lane.WonBy"
-        [isHost]="false"
+        [isHost]="isHost"
       ></app-card>
     </app-position>
   </ng-container>
