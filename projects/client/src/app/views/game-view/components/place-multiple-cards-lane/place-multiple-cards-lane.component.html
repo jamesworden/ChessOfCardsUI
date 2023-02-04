@@ -1,4 +1,25 @@
 <div class="lane" *ngIf="playerGameState$ | async as playerGameState">
+  <!-- Lane background color layer beneath place cards -->
+  <div
+    [ngStyle]="{
+      position: 'absolute',
+      width: '64px',
+      'z-index': 2
+    }"
+  >
+    <div
+      *ngFor="let _ of [].constructor(7); let rowIndex = index"
+      [ngStyle]="{
+        height: ((responsiveSizeService.cardSize$ | async) ?? 64) + 'px',
+        width: ((responsiveSizeService.cardSize$ | async) ?? 64) + 'px',
+        'background-color': getDefaultCardBackgroundColor(
+          (initialPlaceMultipleCardAttempt$ | async)?.TargetLaneIndex ?? 0,
+          rowIndex
+        )
+      }"
+    ></div>
+  </div>
+
   <div
     id="place-multiple-cards-list"
     class="place-multiple-cards-list"
@@ -11,6 +32,7 @@
       getEnterPredicate(initialPlaceMultipleCardAttempt$ | async)
     "
     [ngStyle]="{
+      'z-index': 3,
       'min-height':
         minCardHeightFactor *
           ((responsiveSizeService.cardSize$ | async) ?? 64) +
@@ -26,7 +48,12 @@
     ></app-card>
   </div>
 
-  <div class="existing-cards">
+  <div
+    class="existing-cards"
+    [ngStyle]="{
+      'z-index': 3
+    }"
+  >
     <div
       class="existing-card-position"
       [ngStyle]="{

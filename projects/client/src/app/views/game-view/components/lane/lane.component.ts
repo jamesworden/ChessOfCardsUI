@@ -7,6 +7,7 @@ import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
 } from '../../../../util/get-asset-file-names';
+import { getDefaultCardBackgroundColor } from '../../logic/get-default-card-background-color';
 
 const LIGHT_BLUE_TINT = 'var(--red)';
 const LIGHT_RED_TINT = 'var(--blue)';
@@ -73,7 +74,7 @@ export class LaneComponent {
 
     return isLastCardPlayed
       ? this.getLastCardPlayedBackgroundColor(topCard!)
-      : this.getDefaultCardBackgroundColor(laneIndex, rowIndex);
+      : getDefaultCardBackgroundColor(laneIndex, rowIndex);
   }
 
   getLastCardPlayedBackgroundColor(lastCardPlayed: CardModel) {
@@ -84,13 +85,5 @@ export class LaneComponent {
     const playerPlayedCard = hostAndPlayedByHost || guestAndPlayedByGuest;
 
     return playerPlayedCard ? 'var(--blue)' : 'var(--red)';
-  }
-
-  getDefaultCardBackgroundColor(laneIndex: number, rowIndex: number) {
-    const rowAndLaneIndexSum = laneIndex + rowIndex;
-    const defaultBackgroundColor =
-      rowAndLaneIndexSum % 2 === 0 ? 'var(--dark-green)' : 'var(--light-green)';
-
-    return defaultBackgroundColor;
   }
 }
