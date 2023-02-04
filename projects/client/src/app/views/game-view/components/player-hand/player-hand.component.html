@@ -21,8 +21,11 @@
         ? (placeMultipleCardsHand$ | async) ?? []
         : cards
     "
+    [isHost]="isHost"
+    [isPlayedBy]="card.PlayedBy"
     [cardImageFileName]="getCardImageFileName(card)"
     [card]="card"
+    [isMiddleCard]="false"
     [playerCanDrag]="!disabled"
     [ngStyle]="{
       opacity: disabled ? 0.75 : 1

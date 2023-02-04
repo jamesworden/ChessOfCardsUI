@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  justify-content: space-around;
+}
+
+.board {
+  display: flex;
+}
+
+.lanes {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+}

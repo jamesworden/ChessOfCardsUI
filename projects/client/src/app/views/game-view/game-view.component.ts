@@ -124,14 +124,6 @@ export class GameViewComponent implements OnDestroy {
     this.sm.unsubscribe();
   }
 
-  private setIsPlayersTurn(playerGameState: PlayerGameStateModel) {
-    const { IsHost, IsHostPlayersTurn } = playerGameState;
-
-    const hostAndHostTurn = IsHost && IsHostPlayersTurn;
-    const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
-    this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
-  }
-
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
     if (this.isPlacingMultipleCards) {
       return;
@@ -266,6 +258,14 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.signalrService.makeMove(move);
+  }
+
+  private setIsPlayersTurn(playerGameState: PlayerGameStateModel) {
+    const { IsHost, IsHostPlayersTurn } = playerGameState;
+
+    const hostAndHostTurn = IsHost && IsHostPlayersTurn;
+    const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
+    this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
   }
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {

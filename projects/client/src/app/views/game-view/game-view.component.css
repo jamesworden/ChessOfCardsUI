@@ -1,11 +1,15 @@
-.game-container {
-  display: flex;
-  justify-content: space-around;
-}
-
-.board {
+:host {
   display: flex;
   justify-content: space-between;
+  background-color: var(--black);
+  height: 100%;
+  width: 100%;
+}
+
+.center-horisontally {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }
 
 .game {

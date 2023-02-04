@@ -32,14 +32,15 @@
 </div>
 
 <div
-  class="transition-title-container"
-  *ngIf="(currentTutorial$ | async) && showingTransitionTitle"
-  [@fadeInOut]
->
-  <h1>{{ currentTutorial$ | async }}</h1>
-</div>
-
-<div
+  *ngIf="(currentTutorial$ | async) === Tutorial.TheBasics"
   class="tutorial-container"
-  *ngIf="(currentTutorial$ | async) && finishedTransitionTitle"
-></div>
+>
+  <div>
+    <h1>{{ currentTutorial$ | async }}</h1>
+    <p>
+      The goal of Lanes is to capture 2 of the 5 lanes on the board. The board's
+      columns are the lanes.
+    </p>
+    <app-board></app-board>
+  </div>
+</div>

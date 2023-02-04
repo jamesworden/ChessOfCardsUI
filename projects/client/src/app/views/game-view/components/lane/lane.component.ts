@@ -7,9 +7,10 @@ import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
 } from '../../../../util/get-asset-file-names';
+import { getDefaultCardBackgroundColor } from '../../logic/get-default-card-background-color';
 
-const LIGHT_BLUE_TINT = 'rgba(0, 0, 255, 0.2)';
-const LIGHT_RED_TINT = 'rgba(255, 0, 0, 0.2)';
+const LIGHT_BLUE_TINT = 'var(--red)';
+const LIGHT_RED_TINT = 'var(--blue)';
 
 @Component({
   selector: 'app-lane',
@@ -43,27 +44,6 @@ export class LaneComponent {
     this.placeCardAttempted.emit(placeCardAttempt);
   }
 
-  getCardBackgroundColor(card: CardModel) {
-    const { LastCardPlayed } = this.lane;
-
-    if (!LastCardPlayed) {
-      return null;
-    }
-
-    if (LastCardPlayed.PlayedBy === PlayerOrNoneModel.None) {
-      return null;
-    }
-
-    const isLastCardPlayed =
-      card.Kind === LastCardPlayed.Kind && card.Suit === LastCardPlayed.Suit;
-
-    if (!isLastCardPlayed) {
-      return 'transparent';
-    }
-
-    return this.getPlayerWonLane() ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
-  }
-
   getTopCard(row: CardModel[]) {
     const lastIndex = row.length - 1;
     return row[lastIndex];
@@ -76,5 +56,40 @@ export class LaneComponent {
       !this.isHost && this.lane.WonBy === PlayerOrNoneModel.Guest;
 
     return hostAndHostWonLane || guestAndGuestWonLane;
+  }
+
+  getPositionBackgroundColor(
+    laneIndex: number,
+    rowIndex: number,
+    topCard?: CardModel
+  ) {
+    const laneBackgroundColor = this.getLaneBackgroundColor();
+
+    if (laneBackgroundColor !== 'transparent') {
+      return laneBackgroundColor;
+    }
+
+    const { LastCardPlayed } = this.lane;
+
+    const isLastCardPlayed =
+      topCard &&
+      LastCardPlayed &&
+      LastCardPlayed.PlayedBy !== PlayerOrNoneModel.None &&
+      topCard.Kind === LastCardPlayed.Kind &&
+      topCard.Suit === LastCardPlayed.Suit;
+
+    return isLastCardPlayed
+      ? this.getLastCardPlayedBackgroundColor(topCard!)
+      : getDefaultCardBackgroundColor(laneIndex, rowIndex);
+  }
+
+  getLastCardPlayedBackgroundColor(lastCardPlayed: CardModel) {
+    const hostAndPlayedByHost =
+      lastCardPlayed.PlayedBy === PlayerOrNoneModel.Host && this.isHost;
+    const guestAndPlayedByGuest =
+      lastCardPlayed.PlayedBy === PlayerOrNoneModel.Guest && !this.isHost;
+    const playerPlayedCard = hostAndPlayedByHost || guestAndPlayedByGuest;
+
+    return playerPlayedCard ? 'var(--blue)' : 'var(--red)';
   }
 }

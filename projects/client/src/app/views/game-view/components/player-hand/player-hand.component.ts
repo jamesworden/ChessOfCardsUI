@@ -13,6 +13,7 @@ import { Select } from '@ngxs/store';
 })
 export class PlayerHandComponent {
   @Input() isPlacingMultipleCards = false;
+  @Input() isHost: boolean;
   @Input() cards: CardModel[];
   @Input() cardSize: number;
   @Input() disabled: boolean;

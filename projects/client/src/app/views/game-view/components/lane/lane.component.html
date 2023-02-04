@@ -13,16 +13,18 @@
     <app-position
       [laneIndex]="laneIndex"
       [rowIndex]="isHost ? rowIndex : 6 - rowIndex"
+      [backgroundColor]="
+        getPositionBackgroundColor(laneIndex, rowIndex, getTopCard(row))
+      "
       (placeCardAttempted)="onPlaceCardAttempted($event)"
     >
       <app-card
         *ngIf="row.length > 0"
-        [backgroundColor]="getCardBackgroundColor(getTopCard(row))"
         [card]="getTopCard(row)"
         [cardImageFileName]="getCardImageFileName(getTopCard(row))"
         [isMiddleCard]="rowIndex === 3"
         [isPlayedBy]="getTopCard(row).PlayedBy"
-        [isHost]="false"
+        [isHost]="isHost"
       ></app-card>
 
       <app-card
@@ -40,7 +42,7 @@
         "
         [isMiddleCard]="rowIndex === 3"
         [isPlayedBy]="lane.WonBy"
-        [isHost]="false"
+        [isHost]="isHost"
       ></app-card>
     </app-position>
   </ng-container>
