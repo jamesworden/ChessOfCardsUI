@@ -7,6 +7,7 @@ import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { getReasonIfMoveInvalid } from '../../logic/is-move-valid';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { Z_INDEXES } from '../../z-indexes';
 
 @Component({
   selector: 'app-board',
@@ -22,6 +23,7 @@ export class BoardComponent {
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttemptModel> =
     new EventEmitter();
 
+  Z_INDEXES = Z_INDEXES;
   cardSize: number = 64;
 
   constructor(private responsiveSizeService: ResponsiveSizeService) {

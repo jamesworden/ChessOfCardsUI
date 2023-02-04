@@ -4,7 +4,7 @@
     [ngStyle]="{
       position: 'absolute',
       width: '64px',
-      'z-index': 2
+      'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
     }"
   >
     <div
@@ -32,9 +32,9 @@
       getEnterPredicate(initialPlaceMultipleCardAttempt$ | async)
     "
     [ngStyle]="{
-      'z-index': 3,
+      'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS,
       'min-height':
-        minCardHeightFactor *
+        MIN_CARD_HEIGHT_FACTOR *
           ((responsiveSizeService.cardSize$ | async) ?? 64) +
         'px',
       width: (responsiveSizeService.cardSize$ | async) + 'px'
@@ -51,7 +51,7 @@
   <div
     class="existing-cards"
     [ngStyle]="{
-      'z-index': 3
+      'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS
     }"
   >
     <div

@@ -22,6 +22,7 @@ import {
 } from '../../../../util/get-asset-file-names';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getDefaultCardBackgroundColor } from '../../logic/get-default-card-background-color';
+import { Z_INDEXES } from '../../z-indexes';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards
@@ -47,7 +48,8 @@ export class PlaceMultipleCardsLaneComponent {
   getCardImageFileName = getCardImageFileNameFn;
   getJokerImageFileName = getJokerImageFileNameFn;
   getDefaultCardBackgroundColor = getDefaultCardBackgroundColor;
-  minCardHeightFactor = MIN_CARD_HEIGHT_FACTOR;
+  MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
+  Z_INDEXES = Z_INDEXES;
 
   previouslyCapturedCards$ = combineLatest([
     this.playerGameState$,
