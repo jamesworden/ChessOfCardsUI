@@ -1,5 +1,5 @@
 .background {
-  background-color: var(--white);
+  background-color: var(--black);
   z-index: 0;
   position: absolute;
   width: 100%;
