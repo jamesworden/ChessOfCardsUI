@@ -11,23 +11,23 @@
         height: (responsiveSizeService.cardSize$ | async) + 'px'
       }"
     >
-      1
-    </li>
-    <li
-      class="sidebar-item"
-      [ngStyle]="{
-        height: (responsiveSizeService.cardSize$ | async) + 'px'
-      }"
-    >
-      2
-    </li>
-    <li
-      class="sidebar-item"
-      [ngStyle]="{
-        height: (responsiveSizeService.cardSize$ | async) + 'px'
-      }"
-    >
-      3
+      <button class="sidebar-button" mat-button [matMenuTriggerFor]="menu">
+        <mat-icon
+          class="sidebar-icon"
+          [ngStyle]="{
+            'font-size':
+              ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px',
+            height:
+              ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px',
+            width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
+          }"
+          >menu</mat-icon
+        >
+      </button>
     </li>
   </ul>
 </nav>
+
+<mat-menu #menu xPosition="after" yPosition="below">
+  <button mat-menu-item (click)="onResign()">Resign</button>
+</mat-menu>

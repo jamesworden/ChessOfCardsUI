@@ -13,4 +13,19 @@
 
 .sidebar-item {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.sidebar-button {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.sidebar-icon {
+  color: white;
+  text-align: center;
 }
