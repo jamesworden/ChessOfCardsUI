@@ -58,3 +58,8 @@ export class SetGameCode {
 export class ResetGameCode {
   static readonly type = '[GameState] Reset Game Code';
 }
+
+export class GameOver {
+  static readonly type = '[GameState] Game Over';
+  constructor(public message?: string) {}
+}

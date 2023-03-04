@@ -5,6 +5,7 @@ import {
   DenyDrawOffer,
   DrawOffered,
   FinishPlacingMultipleCards,
+  GameOver,
   OfferDraw,
   ResetGameCode,
   ResetGameData,
@@ -15,12 +16,13 @@ import {
   UpdateGameState,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
+import { GameOverData } from '../models/game-over-data.model';
 import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 import { SignalrService } from '../services/SignalRService';
 
 type GameStateModel = {
-  gameData: PlayerGameStateModel;
+  gameData: PlayerGameStateModel | null;
   isPlacingMultipleCards: boolean;
   initalPlaceMultipleCardAttempt: PlaceCardAttemptModel | null;
   placeMultipleCardsHand: CardModel[] | null;
@@ -28,10 +30,24 @@ type GameStateModel = {
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
   gameCode: string | null;
+  gameOverData: GameOverData;
 };
 
 @State<GameStateModel>({
   name: 'gameState',
+  defaults: {
+    gameData: null,
+    isPlacingMultipleCards: false,
+    initalPlaceMultipleCardAttempt: null,
+    placeMultipleCardsHand: null,
+    placeMultipleCards: null,
+    drawOfferSent: false,
+    hasPendingDrawOffer: false,
+    gameCode: null,
+    gameOverData: {
+      isOver: false,
+    },
+  },
 })
 @Injectable()
 export class GameState {
@@ -73,6 +89,11 @@ export class GameState {
   @Selector()
   static gameCode(state: GameStateModel) {
     return state.gameCode;
+  }
+
+  @Selector()
+  static gameOverData(state: GameStateModel) {
+    return state.gameOverData;
   }
 
   constructor(private signalrService: SignalrService) {}
@@ -133,6 +154,13 @@ export class GameState {
   resetGameData(ctx: StateContext<GameStateModel>) {
     ctx.patchState({
       gameData: undefined,
+      gameCode: null,
+      drawOfferSent: false,
+      hasPendingDrawOffer: false,
+      gameOverData: {
+        isOver: false,
+        message: undefined,
+      },
     });
   }
 
@@ -181,6 +209,16 @@ export class GameState {
   resetGameCode(ctx: StateContext<GameStateModel>) {
     ctx.patchState({
       gameCode: null,
+    });
+  }
+
+  @Action(GameOver)
+  gameOver(ctx: StateContext<GameStateModel>, action: GameOver) {
+    ctx.patchState({
+      gameOverData: {
+        isOver: true,
+        message: action.message,
+      },
     });
   }
 }

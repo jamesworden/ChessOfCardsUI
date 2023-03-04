@@ -10,6 +10,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import {
   DrawOffered,
   FinishPlacingMultipleCards,
+  GameOver,
   ResetGameCode,
   SetGameCode,
   UpdateGameState,
@@ -32,7 +33,6 @@ export class SignalrService {
   public isConnectedToServer$ = new BehaviorSubject<boolean>(false);
   public gameCodeIsInvalid$ = new Subject<boolean>();
   public opponentPassedMove$ = new Subject();
-  public gameOverMessage$ = new Subject<string | null>();
 
   constructor(private store: Store) {
     this.hubConnection = new HubConnectionBuilder()
@@ -77,8 +77,8 @@ export class SignalrService {
       this.store.dispatch(new UpdateView(View.Game));
     });
 
-    this.hubConnection.on('GameOver', (message) => {
-      this.gameOverMessage$.next(message);
+    this.hubConnection.on('GameOver', (message?: string) => {
+      this.store.dispatch(new GameOver(message));
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {

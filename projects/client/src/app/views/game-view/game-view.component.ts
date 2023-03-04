@@ -33,6 +33,7 @@ import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 import { ResponsiveSizeService } from './services/responsive-size.service';
 import { UpdateView } from '../../actions/view.actions';
 import { View } from '..';
+import { GameOverData } from '../../models/game-over-data.model';
 
 @Component({
   selector: 'app-game-view',
@@ -57,6 +58,9 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.initialPlaceMultipleCardAttempt)
   initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
 
+  @Select(GameState.gameOverData)
+  gameOverData$!: Observable<GameOverData>;
+
   PlayerOrNone = PlayerOrNoneModel;
   getCardImageFileName = getCardImageFileNameFn;
 
@@ -73,16 +77,14 @@ export class GameViewComponent implements OnDestroy {
     private responsiveSizeService: ResponsiveSizeService
   ) {
     this.sm.add(
-      this.signalrService.gameOverMessage$.subscribe((message) => {
-        console.log(`[Game Over]: ${message}`);
-
-        if (!message) {
+      this.gameOverData$.subscribe((gameOverData) => {
+        if (!gameOverData.isOver) {
           return;
         }
 
         const modalRef = this.modal.open(ModalComponent, {
           width: '250px',
-          data: { message },
+          data: { message: gameOverData.message },
         });
 
         modalRef.afterClosed().subscribe(() => {
@@ -240,6 +242,10 @@ export class GameViewComponent implements OnDestroy {
      */
     const reversedPlaceMultipleCards = [...placeMultipleCards].reverse();
     const playerGameState = this.store.selectSnapshot(GameState.gameData);
+
+    if (!playerGameState) {
+      return;
+    }
 
     const move = convertPlaceMultipleCardsToMove(
       reversedPlaceMultipleCards,
