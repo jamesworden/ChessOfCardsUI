@@ -1,9 +1,11 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Component, OnDestroy } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
 import { View } from '..';
 import { UpdateView } from '../../actions/view.actions';
 import { SignalrService } from '../../services/SignalRService';
+import { GameState } from '../../state/game.state';
 import { SubscriptionManager } from '../../util/subscription-manager';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-host-view',
@@ -13,14 +15,13 @@ import { SubscriptionManager } from '../../util/subscription-manager';
 export class HostViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  gameCode = '';
+  @Select(GameState.gameCode)
+  gameCode$: Observable<string | null>;
 
   constructor(public signalrService: SignalrService, private store: Store) {
     this.sm.add(
-      this.signalrService.gameCode$.subscribe((gameCode) => {
-        if (gameCode) {
-          this.gameCode = gameCode;
-        } else {
+      this.gameCode$.subscribe((gameCode) => {
+        if (!gameCode) {
           this.signalrService.createGame();
         }
       })

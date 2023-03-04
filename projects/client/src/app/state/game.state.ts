@@ -6,7 +6,9 @@ import {
   DrawOffered,
   FinishPlacingMultipleCards,
   OfferDraw,
+  ResetGameCode,
   ResetGameData,
+  SetGameCode,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -25,6 +27,7 @@ type GameStateModel = {
   placeMultipleCards: CardModel[] | null;
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
+  gameCode: string | null;
 };
 
 @State<GameStateModel>({
@@ -65,6 +68,11 @@ export class GameState {
   @Selector()
   static hasPendingDrawOffer(state: GameStateModel) {
     return state.hasPendingDrawOffer;
+  }
+
+  @Selector()
+  static gameCode(state: GameStateModel) {
+    return state.gameCode;
   }
 
   constructor(private signalrService: SignalrService) {}
@@ -159,6 +167,20 @@ export class GameState {
 
     ctx.patchState({
       hasPendingDrawOffer: false,
+    });
+  }
+
+  @Action(SetGameCode)
+  setGameCode(ctx: StateContext<GameStateModel>, action: SetGameCode) {
+    ctx.patchState({
+      gameCode: action.gameCode,
+    });
+  }
+
+  @Action(ResetGameCode)
+  resetGameCode(ctx: StateContext<GameStateModel>) {
+    ctx.patchState({
+      gameCode: null,
     });
   }
 }

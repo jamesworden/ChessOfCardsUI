@@ -49,3 +49,12 @@ export class DenyDrawOffer {
 export class AcceptDrawOffer {
   static readonly type = '[GameState] Accept Draw Offer';
 }
+
+export class SetGameCode {
+  static readonly type = '[GameState] Set Game Code';
+  constructor(public gameCode: string) {}
+}
+
+export class ResetGameCode {
+  static readonly type = '[GameState] Reset Game Code';
+}

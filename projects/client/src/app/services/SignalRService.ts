@@ -10,6 +10,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import {
   DrawOffered,
   FinishPlacingMultipleCards,
+  ResetGameCode,
+  SetGameCode,
   UpdateGameState,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
@@ -28,7 +30,6 @@ export class SignalrService {
   private hubConnection: HubConnection;
 
   public isConnectedToServer$ = new BehaviorSubject<boolean>(false);
-  public gameCode$ = new BehaviorSubject<string>('');
   public gameCodeIsInvalid$ = new Subject<boolean>();
   public opponentPassedMove$ = new Subject();
   public gameOverMessage$ = new Subject<string | null>();
@@ -60,11 +61,11 @@ export class SignalrService {
 
   private registerOnServerEvents(): void {
     this.hubConnection.on('CreatedPendingGame', (gameCode: string) => {
-      this.gameCode$.next(gameCode);
+      this.store.dispatch(new SetGameCode(gameCode));
     });
 
     this.hubConnection.on('OpponentDisconnected', () => {
-      this.gameCode$.next('');
+      this.store.dispatch(new ResetGameCode());
     });
 
     this.hubConnection.on('InvalidGameCode', () => {
