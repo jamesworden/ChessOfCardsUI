@@ -1,33 +1,51 @@
 <nav
   class="sidebar"
   [ngStyle]="{
-    width: (responsiveSizeService.cardSize$ | async) + 'px'
+    width: cardSize + 'px'
   }"
 >
   <ul class="sidebar-items">
-    <li
-      class="sidebar-item"
+    <div
+      class="lanes-text"
       [ngStyle]="{
-        height: (responsiveSizeService.cardSize$ | async) + 'px'
+        height: cardSize + 'px'
       }"
     >
-      <button class="sidebar-button" mat-button [matMenuTriggerFor]="menu">
-        <mat-icon
-          class="sidebar-icon"
-          [ngStyle]="{
-            'font-size':
-              ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px',
-            height:
-              ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px',
-            width: ((responsiveSizeService.cardSize$ | async) ?? 64) / 2 + 'px'
-          }"
-          >menu</mat-icon
-        >
-      </button>
-    </li>
+      <span>Lanes</span>
+    </div>
+
+    <app-sidebar-item
+      *ngIf="!showDrawOptions"
+      [itemHeight]="cardSize"
+      [iconSize]="cardSize / 2"
+      materialSymbol="handshake"
+      (click)="openOfferDrawModal()"
+    ></app-sidebar-item>
+
+    <div class="draw-options" *ngIf="showDrawOptions">
+      <div
+        class="draw-message"
+        [ngStyle]="{
+          height: cardSize + 'px'
+        }"
+      >
+        <span>Accept draw?</span>
+      </div>
+
+      <app-sidebar-item
+        [itemHeight]="cardSize"
+        [iconSize]="cardSize / 2"
+        iconColor="#33312e"
+        materialSymbol="done"
+        (click)="openAcceptDrawModal()"
+      ></app-sidebar-item>
+      <app-sidebar-item
+        [itemHeight]="cardSize"
+        [iconSize]="cardSize / 2"
+        iconColor="#33312e"
+        materialSymbol="close"
+        (click)="denyDraw()"
+      ></app-sidebar-item>
+    </div>
   </ul>
 </nav>
-
-<mat-menu #menu xPosition="after" yPosition="below">
-  <button mat-menu-item (click)="onResign()">Resign</button>
-</mat-menu>

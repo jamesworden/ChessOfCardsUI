@@ -31,6 +31,7 @@ export class SignalrService {
   public gameCodeIsInvalid$ = new Subject<boolean>();
   public opponentPassedMove$ = new Subject();
   public gameOverMessage$ = new Subject<string | null>();
+  public drawOffered$ = new Subject<null>();
 
   constructor(private store: Store) {
     this.hubConnection = new HubConnectionBuilder()
@@ -96,6 +97,10 @@ export class SignalrService {
         this.opponentPassedMove$.next();
       }
     });
+
+    this.hubConnection.on('DrawOffered', () => {
+      this.drawOffered$.next();
+    });
   }
 
   private parseAndUpdateGameState(stringifiedGameState: string) {
@@ -127,5 +132,9 @@ export class SignalrService {
 
   public passMove() {
     this.hubConnection.invoke('PassMove');
+  }
+
+  public offerDraw() {
+    this.hubConnection.invoke('OfferDraw');
   }
 }

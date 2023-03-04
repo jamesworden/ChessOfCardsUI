@@ -63,6 +63,7 @@ export class GameViewComponent implements OnDestroy {
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   cardSize: number = 64;
+  showDrawOptions = false;
 
   constructor(
     public modal: MatDialog,
@@ -94,6 +95,7 @@ export class GameViewComponent implements OnDestroy {
     this.sm.add(
       this.playerGameState$.subscribe((playerGameState) => {
         this.latestGameStateSnapshot = playerGameState;
+        this.showDrawOptions = false;
 
         if (playerGameState) {
           this.setIsPlayersTurn(playerGameState);
@@ -116,6 +118,11 @@ export class GameViewComponent implements OnDestroy {
     this.sm.add(
       this.responsiveSizeService.cardSize$.subscribe((cardSize) => {
         this.cardSize = cardSize;
+      })
+    );
+    this.sm.add(
+      this.signalrService.drawOffered$.subscribe(() => {
+        this.showDrawOptions = true;
       })
     );
   }

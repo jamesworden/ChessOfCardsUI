@@ -1,0 +1,26 @@
+<li
+  class="sidebar-item"
+  [ngStyle]="{
+    height: itemHeight + 'px'
+  }"
+>
+  <button
+    class="sidebar-button"
+    mat-button
+    matTooltip="Offer draw"
+    matTooltipPosition="right"
+    [ngStyle]="{
+      height: itemHeight + 'px'
+    }"
+  >
+    <span
+      class="material-symbols-outlined sidebar-icon"
+      [ngStyle]="{
+        'font-size': iconSize + 'px',
+        height: iconSize + 'px',
+        color: iconColor
+      }"
+      >{{ materialSymbol }}</span
+    >
+  </button>
+</li>

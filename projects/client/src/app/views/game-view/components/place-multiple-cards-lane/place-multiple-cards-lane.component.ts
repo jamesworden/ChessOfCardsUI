@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { GameState } from '../../../../state/game.state';
 import { Observable, combineLatest } from 'rxjs';
@@ -23,6 +23,7 @@ import {
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getDefaultCardBackgroundColor } from '../../logic/get-default-card-background-color';
 import { Z_INDEXES } from '../../z-indexes';
+import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards
@@ -35,7 +36,9 @@ const MIN_CARD_HEIGHT_FACTOR = 5;
   templateUrl: './place-multiple-cards-lane.component.html',
   styleUrls: ['./place-multiple-cards-lane.component.css'],
 })
-export class PlaceMultipleCardsLaneComponent {
+export class PlaceMultipleCardsLaneComponent implements OnDestroy {
+  private sm = new SubscriptionManager();
+
   @Select(GameState.gameData)
   playerGameState$!: Observable<PlayerGameStateModel>;
 
@@ -50,6 +53,7 @@ export class PlaceMultipleCardsLaneComponent {
   getDefaultCardBackgroundColor = getDefaultCardBackgroundColor;
   MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
   Z_INDEXES = Z_INDEXES;
+  cardSize: number;
 
   previouslyCapturedCards$ = combineLatest([
     this.playerGameState$,
@@ -86,7 +90,17 @@ export class PlaceMultipleCardsLaneComponent {
   constructor(
     private store: Store,
     public responsiveSizeService: ResponsiveSizeService
-  ) {}
+  ) {
+    this.sm.add(
+      responsiveSizeService.cardSize$.subscribe((cardSize) => {
+        this.cardSize = cardSize;
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.sm.unsubscribe();
+  }
 
   /**
    * Angular is annoying: this.memberVariable returns undefined when passing the predicate

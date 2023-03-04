@@ -34,7 +34,7 @@ import { PlayerHandComponent } from './views/game-view/components/player-hand/pl
 import { OpponentHandComponent } from './views/game-view/components/opponent-hand/opponent-hand.component';
 import { BoardComponent } from './views/game-view/components/board/board.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
-import { MatMenuModule } from '@angular/material/menu';
+import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +58,7 @@ import { MatMenuModule } from '@angular/material/menu';
     OpponentHandComponent,
     BoardComponent,
     SidebarComponent,
+    SidebarItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,7 +72,6 @@ import { MatMenuModule } from '@angular/material/menu';
     MatButtonModule,
     MatIconModule,
     FormsModule,
-    MatMenuModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
