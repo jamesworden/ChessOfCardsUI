@@ -93,3 +93,8 @@ export class RearrangeHand {
 export class CreateGame {
   static readonly type = '[GameState] Create Game';
 }
+
+export class JoinGame {
+  static readonly type = '[GameState] Join Game';
+  constructor(public gameCode: string) {}
+}

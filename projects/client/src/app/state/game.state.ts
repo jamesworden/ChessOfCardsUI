@@ -20,6 +20,7 @@ import {
   MakeMove,
   RearrangeHand,
   CreateGame,
+  JoinGame,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
@@ -280,5 +281,10 @@ export class GameState {
   @Action(CreateGame)
   createGame() {
     this.signalrService.createGame();
+  }
+
+  @Action(JoinGame)
+  joinGame(_: StateContext<GameStateModel>, action: JoinGame) {
+    this.signalrService.joinGame(action.gameCode);
   }
 }

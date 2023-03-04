@@ -2,11 +2,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { View } from '..';
 import { UpdateView } from '../../actions/view.actions';
-import { SignalrService } from '../../services/SignalRService';
 import { GameState } from '../../state/game.state';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { Observable } from 'rxjs';
-import { SetGameCodeIsInvalid } from '../../actions/game.actions';
+import { JoinGame, SetGameCodeIsInvalid } from '../../actions/game.actions';
 
 @Component({
   selector: 'app-join-view',
@@ -26,7 +25,7 @@ export class JoinViewComponent implements OnDestroy {
   gameCodeInput = '';
   gameCode: string | null = null;
 
-  constructor(public signalrService: SignalrService, private store: Store) {
+  constructor(private store: Store) {
     this.sm.add(
       this.gameCodeIsInvalid$.subscribe((invalidGameCode) => {
         this.gameCodeIsInvalid = invalidGameCode;
@@ -61,7 +60,7 @@ export class JoinViewComponent implements OnDestroy {
       return;
     }
 
-    this.signalrService.joinGame(upperCaseGameCode);
+    this.store.dispatch(new JoinGame(upperCaseGameCode));
     return;
   }
 
