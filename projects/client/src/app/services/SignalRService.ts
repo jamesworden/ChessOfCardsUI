@@ -14,6 +14,7 @@ import {
   ResetGameCode,
   SetGameCode,
   UpdateGameState,
+  SetOpponentPassedMove,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { MoveModel } from '../models/move.model';
@@ -32,7 +33,6 @@ export class SignalrService {
   private hubConnection: HubConnection;
 
   public gameCodeIsInvalid$ = new Subject<boolean>();
-  public opponentPassedMove$ = new Subject();
 
   constructor(private store: Store) {
     this.hubConnection = new HubConnectionBuilder()
@@ -114,7 +114,7 @@ export class SignalrService {
       const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
 
       if (isPlayersTurn) {
-        this.opponentPassedMove$.next();
+        this.store.dispatch(new SetOpponentPassedMove(true));
       }
     });
 

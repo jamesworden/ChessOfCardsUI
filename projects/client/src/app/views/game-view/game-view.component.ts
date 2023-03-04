@@ -61,6 +61,9 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.gameOverData)
   gameOverData$!: Observable<GameOverData>;
 
+  @Select(GameState.opponentPassedMove)
+  opponentPassedMove$!: Observable<boolean>;
+
   PlayerOrNone = PlayerOrNoneModel;
   getCardImageFileName = getCardImageFileNameFn;
 
@@ -104,11 +107,13 @@ export class GameViewComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      this.signalrService.opponentPassedMove$.subscribe(() => {
-        this.snackBar.open('Opponent passed their move.', 'Your turn!', {
-          duration: 2000,
-          verticalPosition: 'top',
-        });
+      this.opponentPassedMove$.subscribe((opponentPassedMove) => {
+        if (opponentPassedMove) {
+          this.snackBar.open('Opponent passed their move.', 'Your turn!', {
+            duration: 2000,
+            verticalPosition: 'top',
+          });
+        }
       })
     );
     this.sm.add(

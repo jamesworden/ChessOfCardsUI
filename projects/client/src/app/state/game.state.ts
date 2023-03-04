@@ -14,6 +14,7 @@ import {
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
   UpdateGameState,
+  SetOpponentPassedMove,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
@@ -31,6 +32,7 @@ type GameStateModel = {
   hasPendingDrawOffer: boolean;
   gameCode: string | null;
   gameOverData: GameOverData;
+  opponentPassedMove: boolean;
 };
 
 const initialGameState: GameStateModel = {
@@ -45,6 +47,7 @@ const initialGameState: GameStateModel = {
   gameOverData: {
     isOver: false,
   },
+  opponentPassedMove: false,
 };
 
 @State<GameStateModel>({
@@ -98,6 +101,11 @@ export class GameState {
     return state.gameOverData;
   }
 
+  @Selector()
+  static opponentPassedMove(state: GameStateModel) {
+    return state.opponentPassedMove;
+  }
+
   constructor(private signalrService: SignalrService) {}
 
   @Action(UpdateGameState)
@@ -106,6 +114,7 @@ export class GameState {
       gameData: action.playerGameState,
       drawOfferSent: false,
       hasPendingDrawOffer: false,
+      opponentPassedMove: false,
     });
   }
 
@@ -218,6 +227,16 @@ export class GameState {
   gameOver(ctx: StateContext<GameStateModel>, action: SetGameOverData) {
     ctx.patchState({
       gameOverData: action.gameOverData,
+    });
+  }
+
+  @Action(SetOpponentPassedMove)
+  setOpponentPassedMove(
+    ctx: StateContext<GameStateModel>,
+    action: SetOpponentPassedMove
+  ) {
+    ctx.patchState({
+      opponentPassedMove: action.opponentPassedMove,
     });
   }
 }

@@ -64,3 +64,8 @@ export class SetGameOverData {
   static readonly type = '[GameState] Game Over';
   constructor(public gameOverData: GameOverData) {}
 }
+
+export class SetOpponentPassedMove {
+  static readonly type = '[GameState] Set Opponent Passed Move';
+  constructor(public opponentPassedMove: boolean) {}
+}
