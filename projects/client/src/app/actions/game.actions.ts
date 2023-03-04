@@ -33,3 +33,19 @@ export class SetPlaceMultipleCardsHand {
 export class ResetGameData {
   static readonly type = '[GameState] Reset Game Data';
 }
+
+export class OfferDraw {
+  static readonly type = '[GameState] Offer Draw';
+}
+
+export class DrawOffered {
+  static readonly type = '[GameState] Draw Offered';
+}
+
+export class DenyDrawOffer {
+  static readonly type = '[GameState] Deny Draw Offer';
+}
+
+export class AcceptDrawOffer {
+  static readonly type = '[GameState] Accept Draw Offer';
+}

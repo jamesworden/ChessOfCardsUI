@@ -8,6 +8,7 @@ import {
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import {
+  DrawOffered,
   FinishPlacingMultipleCards,
   UpdateGameState,
 } from '../actions/game.actions';
@@ -31,7 +32,6 @@ export class SignalrService {
   public gameCodeIsInvalid$ = new Subject<boolean>();
   public opponentPassedMove$ = new Subject();
   public gameOverMessage$ = new Subject<string | null>();
-  public drawOffered$ = new Subject<null>();
 
   constructor(private store: Store) {
     this.hubConnection = new HubConnectionBuilder()
@@ -99,7 +99,7 @@ export class SignalrService {
     });
 
     this.hubConnection.on('DrawOffered', () => {
-      this.drawOffered$.next();
+      this.store.dispatch(new DrawOffered());
     });
   }
 
@@ -136,5 +136,15 @@ export class SignalrService {
 
   public offerDraw() {
     this.hubConnection.invoke('OfferDraw');
+  }
+
+  public denyDrawOffer() {
+    console.log('Deny Draw Offer');
+    // this.hubConnection.invoke('DenyDrawOffer');
+  }
+
+  public acceptDrawOffer() {
+    console.log('Accept Draw Offer');
+    // this.hubConnection.invoke('DenyDrawOffer');
   }
 }

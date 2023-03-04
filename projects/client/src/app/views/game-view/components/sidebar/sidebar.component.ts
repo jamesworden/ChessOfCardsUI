@@ -1,16 +1,20 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
-import { ResetGameData } from 'projects/client/src/app/actions/game.actions';
+import {
+  AcceptDrawOffer,
+  DenyDrawOffer,
+  OfferDraw,
+  ResetGameData,
+} from 'projects/client/src/app/actions/game.actions';
 import { UpdateView } from 'projects/client/src/app/actions/view.actions';
 import { SignalrService } from 'projects/client/src/app/services/SignalRService';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
-import { View } from '../../..';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
 
-enum ResignModalButtons {
+enum YesNoButtons {
   Yes = 'Yes',
   No = 'No',
 }
@@ -30,8 +34,7 @@ export class SidebarComponent implements OnDestroy {
   constructor(
     public responsiveSizeService: ResponsiveSizeService,
     public modal: MatDialog,
-    private store: Store,
-    private signalrService: SignalrService
+    private store: Store
   ) {
     this.sm.add(
       responsiveSizeService.cardSize$.subscribe((cardSize) => {
@@ -47,7 +50,7 @@ export class SidebarComponent implements OnDestroy {
   openOfferDrawModal() {
     const modalData: ModalData = {
       message: 'Are you sure you want to offer a draw?',
-      buttons: [ResignModalButtons.Yes, ResignModalButtons.No],
+      buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
     const modalRef = this.modal.open(ModalComponent, {
@@ -56,20 +59,35 @@ export class SidebarComponent implements OnDestroy {
     });
 
     modalRef.componentInstance.buttonClicked.subscribe((selectedOption) => {
-      if (selectedOption === ResignModalButtons.No) {
-        modalRef.close();
-      } else {
-        this.signalrService.offerDraw();
-        modalRef.close();
+      if (selectedOption === YesNoButtons.Yes) {
+        this.store.dispatch(new OfferDraw());
       }
+
+      modalRef.close();
     });
   }
 
   openAcceptDrawModal() {
-    console.log('Accept draw.');
+    const modalData: ModalData = {
+      message: 'Are you sure you want to draw?',
+      buttons: [YesNoButtons.Yes, YesNoButtons.No],
+    };
+
+    const modalRef = this.modal.open(ModalComponent, {
+      width: '250px',
+      data: modalData,
+    });
+
+    modalRef.componentInstance.buttonClicked.subscribe((selectedOption) => {
+      if (selectedOption === YesNoButtons.Yes) {
+        this.store.dispatch(new AcceptDrawOffer());
+      }
+
+      modalRef.close();
+    });
   }
 
   denyDraw() {
-    console.log('Deny draw.');
+    this.store.dispatch(new DenyDrawOffer());
   }
 }

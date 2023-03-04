@@ -1,7 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import {
   FinishPlacingMultipleCards,
   ResetGameData,
@@ -55,6 +55,9 @@ export class GameViewComponent implements OnDestroy {
 
   @Select(GameState.initialPlaceMultipleCardAttempt)
   initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
+
+  @Select(GameState.drawOfferRecieved)
+  drawOfferRecieved$!: Observable<boolean>;
 
   PlayerOrNone = PlayerOrNoneModel;
   getCardImageFileName = getCardImageFileNameFn;
@@ -121,8 +124,8 @@ export class GameViewComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      this.signalrService.drawOffered$.subscribe(() => {
-        this.showDrawOptions = true;
+      this.drawOfferRecieved$.subscribe((drawOfferRecieved) => {
+        this.showDrawOptions = drawOfferRecieved;
       })
     );
   }
