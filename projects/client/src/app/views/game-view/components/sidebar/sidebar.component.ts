@@ -1,18 +1,18 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
   OfferDraw,
-  ResetGameData,
 } from 'projects/client/src/app/actions/game.actions';
-import { UpdateView } from 'projects/client/src/app/actions/view.actions';
-import { SignalrService } from 'projects/client/src/app/services/SignalRService';
+import { GameState } from 'projects/client/src/app/state/game.state';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
+import { Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -27,24 +27,46 @@ enum YesNoButtons {
 export class SidebarComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Input() hasPendingDrawOffer = false;
+  @Select(GameState.hasPendingDrawOffer)
+  hasPendingDrawOffer$!: Observable<boolean>;
+
+  @Select(GameState.drawOfferSent)
+  drawOfferSent$!: Observable<boolean>;
 
   cardSize: number;
+  drawOfferSent: boolean;
 
   constructor(
     public responsiveSizeService: ResponsiveSizeService,
     public modal: MatDialog,
-    private store: Store
+    private store: Store,
+    private snackBar: MatSnackBar
   ) {
     this.sm.add(
       responsiveSizeService.cardSize$.subscribe((cardSize) => {
         this.cardSize = cardSize;
       })
     );
+    this.sm.add(
+      this.drawOfferSent$.subscribe((drawOfferSent) => {
+        this.drawOfferSent = drawOfferSent;
+      })
+    );
   }
 
   ngOnDestroy() {
     this.sm.unsubscribe();
+  }
+
+  attemptToOpenOfferDrawModel() {
+    if (this.drawOfferSent) {
+      this.snackBar.open('You already offered a draw.', undefined, {
+        duration: 2000,
+        verticalPosition: 'top',
+      });
+    } else {
+      this.openOfferDrawModal();
+    }
   }
 
   openOfferDrawModal() {
