@@ -1,5 +1,6 @@
 import { CardModel } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
+import { MoveModel } from '../models/move.model';
 import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 
@@ -73,4 +74,18 @@ export class SetOpponentPassedMove {
 export class SetGameCodeIsInvalid {
   static readonly type = '[GameState] Set Game Code Is Invalid';
   constructor(public gameCodeIsInvalid: boolean) {}
+}
+
+export class PassMove {
+  static readonly type = '[GameState] Pass Move';
+}
+
+export class MakeMove {
+  static readonly type = '[GameState] Make Move';
+  constructor(public move: MoveModel) {}
+}
+
+export class RearrangeHand {
+  static readonly type = '[GameState] Rearrange Hand';
+  constructor(public cards: CardModel[]) {}
 }

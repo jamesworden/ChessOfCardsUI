@@ -16,6 +16,9 @@ import {
   UpdateGameState,
   SetOpponentPassedMove,
   SetGameCodeIsInvalid,
+  PassMove,
+  MakeMove,
+  RearrangeHand,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
@@ -256,5 +259,20 @@ export class GameState {
     ctx.patchState({
       gameCodeIsInvalid: action.gameCodeIsInvalid,
     });
+  }
+
+  @Action(PassMove)
+  passMove() {
+    this.signalrService.passMove();
+  }
+
+  @Action(MakeMove)
+  makeMove(_: StateContext<GameStateModel>, action: MakeMove) {
+    this.signalrService.makeMove(action.move);
+  }
+
+  @Action(RearrangeHand)
+  rearrangeHand(_: StateContext<GameStateModel>, action: RearrangeHand) {
+    this.signalrService.rearrangeHand(action.cards);
   }
 }
