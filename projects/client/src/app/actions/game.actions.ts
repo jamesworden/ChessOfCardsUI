@@ -69,3 +69,8 @@ export class SetOpponentPassedMove {
   static readonly type = '[GameState] Set Opponent Passed Move';
   constructor(public opponentPassedMove: boolean) {}
 }
+
+export class SetGameCodeIsInvalid {
+  static readonly type = '[GameState] Set Game Code Is Invalid';
+  constructor(public gameCodeIsInvalid: boolean) {}
+}

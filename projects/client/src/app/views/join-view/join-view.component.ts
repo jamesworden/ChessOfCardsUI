@@ -6,6 +6,7 @@ import { SignalrService } from '../../services/SignalRService';
 import { GameState } from '../../state/game.state';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { Observable } from 'rxjs';
+import { SetGameCodeIsInvalid } from '../../actions/game.actions';
 
 @Component({
   selector: 'app-join-view',
@@ -18,19 +19,27 @@ export class JoinViewComponent implements OnDestroy {
   @Select(GameState.gameCode)
   gameCode$: Observable<string | null>;
 
+  @Select(GameState.gameCodeIsInvalid)
+  gameCodeIsInvalid$!: Observable<boolean>;
+
   gameCodeIsInvalid = false;
   gameCodeInput = '';
   gameCode: string | null = null;
 
   constructor(public signalrService: SignalrService, private store: Store) {
     this.sm.add(
-      signalrService.gameCodeIsInvalid$.subscribe((invalidGameCode) => {
+      this.gameCodeIsInvalid$.subscribe((invalidGameCode) => {
         this.gameCodeIsInvalid = invalidGameCode;
       })
     );
     this.sm.add(
       this.gameCode$.subscribe((gameCode) => {
         this.gameCode = gameCode;
+      })
+    );
+    this.sm.add(
+      this.gameCodeIsInvalid$.subscribe((gameCodeIsInvalid) => {
+        this.gameCodeIsInvalid = gameCodeIsInvalid;
       })
     );
   }
@@ -41,7 +50,7 @@ export class JoinViewComponent implements OnDestroy {
 
   onInputChanged() {
     if (this.gameCodeInput.length !== 4) {
-      this.gameCodeIsInvalid = false;
+      this.store.dispatch(new SetGameCodeIsInvalid(false));
       return;
     }
 

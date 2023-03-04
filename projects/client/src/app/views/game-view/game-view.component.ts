@@ -1,7 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   FinishPlacingMultipleCards,
   ResetGameCode,
@@ -70,7 +70,7 @@ export class GameViewComponent implements OnDestroy {
   latestGameStateSnapshot: PlayerGameStateModel;
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
-  cardSize: number = 64;
+  cardSize = 64;
 
   constructor(
     public modal: MatDialog,

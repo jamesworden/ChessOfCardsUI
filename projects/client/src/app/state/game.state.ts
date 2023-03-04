@@ -15,6 +15,7 @@ import {
   StartPlacingMultipleCards,
   UpdateGameState,
   SetOpponentPassedMove,
+  SetGameCodeIsInvalid,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
@@ -33,6 +34,7 @@ type GameStateModel = {
   gameCode: string | null;
   gameOverData: GameOverData;
   opponentPassedMove: boolean;
+  gameCodeIsInvalid: boolean;
 };
 
 const initialGameState: GameStateModel = {
@@ -48,6 +50,7 @@ const initialGameState: GameStateModel = {
     isOver: false,
   },
   opponentPassedMove: false,
+  gameCodeIsInvalid: false,
 };
 
 @State<GameStateModel>({
@@ -104,6 +107,11 @@ export class GameState {
   @Selector()
   static opponentPassedMove(state: GameStateModel) {
     return state.opponentPassedMove;
+  }
+
+  @Selector()
+  static gameCodeIsInvalid(state: GameStateModel) {
+    return state.gameCodeIsInvalid;
   }
 
   constructor(private signalrService: SignalrService) {}
@@ -237,6 +245,16 @@ export class GameState {
   ) {
     ctx.patchState({
       opponentPassedMove: action.opponentPassedMove,
+    });
+  }
+
+  @Action(SetGameCodeIsInvalid)
+  setGameCodeIsInvalid(
+    ctx: StateContext<GameStateModel>,
+    action: SetGameCodeIsInvalid
+  ) {
+    ctx.patchState({
+      gameCodeIsInvalid: action.gameCodeIsInvalid,
     });
   }
 }

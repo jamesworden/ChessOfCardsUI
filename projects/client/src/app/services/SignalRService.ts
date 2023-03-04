@@ -15,6 +15,7 @@ import {
   SetGameCode,
   UpdateGameState,
   SetOpponentPassedMove,
+  SetGameCodeIsInvalid,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { MoveModel } from '../models/move.model';
@@ -32,21 +33,22 @@ const { serverUrl } = environment;
 export class SignalrService {
   private hubConnection: HubConnection;
 
-  public gameCodeIsInvalid$ = new Subject<boolean>();
-
   constructor(private store: Store) {
+    this.initConnection();
+    this.connectToServer();
+    this.registerConnectionEvents();
+    this.registerServerEvents();
+  }
+
+  private initConnection() {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${serverUrl}/game`)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
-
-    this.startConnection();
-    this.registerConnectionEvents();
-    this.registerServerEvents();
   }
 
-  public startConnection() {
+  public connectToServer() {
     if (this.hubConnection.state === HubConnectionState.Connected) {
       return;
     }
@@ -83,7 +85,7 @@ export class SignalrService {
     });
 
     this.hubConnection.on('InvalidGameCode', () => {
-      this.gameCodeIsInvalid$.next(true);
+      this.store.dispatch(new SetGameCodeIsInvalid(true));
     });
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {

@@ -63,7 +63,7 @@ export class HostOrJoinViewComponent {
     });
 
     modalRef.afterClosed().subscribe(() => {
-      this.signalrService.startConnection();
+      this.signalrService.connectToServer();
     });
   }
 }
