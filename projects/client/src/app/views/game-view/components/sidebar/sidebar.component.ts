@@ -89,24 +89,8 @@ export class SidebarComponent implements OnDestroy {
     });
   }
 
-  openAcceptDrawModal() {
-    const modalData: ModalData = {
-      message: 'Are you sure you want to draw?',
-      buttons: [YesNoButtons.Yes, YesNoButtons.No],
-    };
-
-    const modalRef = this.modal.open(ModalComponent, {
-      width: '250px',
-      data: modalData,
-    });
-
-    modalRef.componentInstance.buttonClicked.subscribe((selectedOption) => {
-      if (selectedOption === YesNoButtons.Yes) {
-        this.store.dispatch(new AcceptDrawOffer());
-      }
-
-      modalRef.close();
-    });
+  acceptDraw() {
+    this.store.dispatch(new AcceptDrawOffer());
   }
 
   denyDraw() {
