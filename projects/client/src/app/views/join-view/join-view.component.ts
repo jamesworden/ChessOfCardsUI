@@ -57,7 +57,7 @@ export class JoinViewComponent implements OnDestroy {
     const upperCaseGameCode = this.gameCodeInput.toUpperCase();
 
     if (upperCaseGameCode === this.gameCode) {
-      this.gameCodeIsInvalid = true;
+      this.store.dispatch(new SetGameCodeIsInvalid(true));
       return;
     }
 
