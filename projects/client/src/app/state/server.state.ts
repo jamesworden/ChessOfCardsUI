@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { SetIsConnectedToServer } from '../actions/server.actions';
+import {
+  ConnectToServer,
+  SetIsConnectedToServer,
+} from '../actions/server.actions';
+import { SignalrService } from '../services/SignalRService';
 
 type ServerStateModel = {
   isConnectedToServer: boolean;
@@ -21,7 +25,7 @@ export class ServerState {
     return state.isConnectedToServer;
   }
 
-  constructor(private store: Store) {}
+  constructor(private signalrService: SignalrService) {}
 
   @Action(SetIsConnectedToServer)
   setIsConnectedToServer(
@@ -31,5 +35,10 @@ export class ServerState {
     ctx.patchState({
       isConnectedToServer: action.isConnectedToServer,
     });
+  }
+
+  @Action(ConnectToServer)
+  connectToServer() {
+    this.signalrService.connectToServer();
   }
 }

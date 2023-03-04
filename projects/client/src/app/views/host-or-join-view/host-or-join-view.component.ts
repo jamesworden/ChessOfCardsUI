@@ -3,11 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import { View } from '..';
 import { UpdateView } from '../../actions/view.actions';
-import { SignalrService } from '../../services/SignalRService';
 import { ServerState } from '../../state/server.state';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { ModalComponent } from '../game-view/components/modal/modal.component';
 import { Observable } from 'rxjs';
+import { ConnectToServer } from '../../actions/server.actions';
 
 @Component({
   selector: 'app-host-or-join-view',
@@ -22,11 +22,7 @@ export class HostOrJoinViewComponent {
 
   isConnectedToServer = false;
 
-  constructor(
-    private store: Store,
-    private signalrService: SignalrService,
-    private modal: MatDialog
-  ) {
+  constructor(private store: Store, private modal: MatDialog) {
     this.sm.add(
       this.isConnectedToServer$.subscribe((isConnectedToServer) => {
         this.isConnectedToServer = isConnectedToServer;
@@ -63,7 +59,7 @@ export class HostOrJoinViewComponent {
     });
 
     modalRef.afterClosed().subscribe(() => {
-      this.signalrService.connectToServer();
+      this.store.dispatch(new ConnectToServer());
     });
   }
 }
