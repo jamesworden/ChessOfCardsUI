@@ -56,7 +56,7 @@ export class SignalrService {
         console.log('Connected to server.');
         this.store.dispatch(new SetIsConnectedToServer(true));
       },
-      (error) => {
+      () => {
         console.error('Unable to connect to server.');
         this.store.dispatch(new SetIsConnectedToServer(false));
       }
