@@ -19,6 +19,7 @@ import {
   PassMove,
   MakeMove,
   RearrangeHand,
+  CreateGame,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
@@ -274,5 +275,10 @@ export class GameState {
   @Action(RearrangeHand)
   rearrangeHand(_: StateContext<GameStateModel>, action: RearrangeHand) {
     this.signalrService.rearrangeHand(action.cards);
+  }
+
+  @Action(CreateGame)
+  createGame() {
+    this.signalrService.createGame();
   }
 }

@@ -89,3 +89,7 @@ export class RearrangeHand {
   static readonly type = '[GameState] Rearrange Hand';
   constructor(public cards: CardModel[]) {}
 }
+
+export class CreateGame {
+  static readonly type = '[GameState] Create Game';
+}
