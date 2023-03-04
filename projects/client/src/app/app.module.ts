@@ -35,6 +35,7 @@ import { OpponentHandComponent } from './views/game-view/components/opponent-han
 import { BoardComponent } from './views/game-view/components/board/board.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
 import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
+import { ServerState } from './state/server.state';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,7 @@ import { SidebarItemComponent } from './views/game-view/components/sidebar/sideb
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState, ViewState, TutorialState]),
+    NgxsModule.forRoot([GameState, ViewState, TutorialState, ServerState]),
     BrowserAnimationsModule,
     MatTooltipModule,
     MatDialogModule,

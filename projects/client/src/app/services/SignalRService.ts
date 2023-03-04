@@ -21,6 +21,7 @@ import { PlayerGameStateModel } from '../models/player-game-state-model';
 import { environment } from '../../environments/environment';
 import { UpdateView } from '../actions/view.actions';
 import { View } from '../views';
+import { SetIsConnectedToServer } from '../actions/server.actions';
 
 const { serverUrl } = environment;
 
@@ -30,7 +31,6 @@ const { serverUrl } = environment;
 export class SignalrService {
   private hubConnection: HubConnection;
 
-  public isConnectedToServer$ = new BehaviorSubject<boolean>(false);
   public gameCodeIsInvalid$ = new Subject<boolean>();
   public opponentPassedMove$ = new Subject();
 
@@ -42,7 +42,8 @@ export class SignalrService {
       .build();
 
     this.startConnection();
-    this.registerOnServerEvents();
+    this.registerConnectionEvents();
+    this.registerServerEvents();
   }
 
   public startConnection() {
@@ -52,14 +53,27 @@ export class SignalrService {
 
     this.hubConnection.start().then(
       () => {
-        console.log('Hub connection started.');
-        this.isConnectedToServer$.next(true);
+        console.log('Connected to server.');
+        this.store.dispatch(new SetIsConnectedToServer(true));
       },
-      (error) => console.error(error)
+      (error) => {
+        console.error('Unable to connect to server.');
+        this.store.dispatch(new SetIsConnectedToServer(false));
+      }
     );
   }
 
-  private registerOnServerEvents(): void {
+  private registerConnectionEvents() {
+    this.hubConnection.onreconnecting(() => {
+      this.store.dispatch(new SetIsConnectedToServer(false));
+    });
+
+    this.hubConnection.onreconnected(() => {
+      this.store.dispatch(new SetIsConnectedToServer(true));
+    });
+  }
+
+  private registerServerEvents(): void {
     this.hubConnection.on('CreatedPendingGame', (gameCode: string) => {
       this.store.dispatch(new SetGameCode(gameCode));
     });

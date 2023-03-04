@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { View } from '..';
 import { UpdateView } from '../../actions/view.actions';
 import { SignalrService } from '../../services/SignalRService';
+import { ServerState } from '../../state/server.state';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { ModalComponent } from '../game-view/components/modal/modal.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-host-or-join-view',
@@ -15,7 +17,10 @@ import { ModalComponent } from '../game-view/components/modal/modal.component';
 export class HostOrJoinViewComponent {
   private sm = new SubscriptionManager();
 
-  private isConnectedToServer = false;
+  @Select(ServerState.isConnectedToServer)
+  isConnectedToServer$: Observable<boolean>;
+
+  isConnectedToServer = false;
 
   constructor(
     private store: Store,
@@ -23,11 +28,9 @@ export class HostOrJoinViewComponent {
     private modal: MatDialog
   ) {
     this.sm.add(
-      this.signalrService.isConnectedToServer$.subscribe(
-        (isConnectedToServer) => {
-          this.isConnectedToServer = isConnectedToServer;
-        }
-      )
+      this.isConnectedToServer$.subscribe((isConnectedToServer) => {
+        this.isConnectedToServer = isConnectedToServer;
+      })
     );
   }
 
