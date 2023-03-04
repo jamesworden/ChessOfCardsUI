@@ -206,8 +206,6 @@ export class GameState {
 
   @Action(DenyDrawOffer)
   denyDrawOffer(ctx: StateContext<GameStateModel>) {
-    this.signalrService.denyDrawOffer();
-
     ctx.patchState({
       hasPendingDrawOffer: false,
     });
