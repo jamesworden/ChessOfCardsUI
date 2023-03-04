@@ -164,7 +164,6 @@ export class SignalrService {
   }
 
   public acceptDrawOffer() {
-    console.log('Accept Draw Offer');
-    // this.hubConnection.invoke('DenyDrawOffer');
+    this.hubConnection.invoke('AcceptDrawOffer');
   }
 }
