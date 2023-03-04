@@ -6,7 +6,6 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, Subject } from 'rxjs';
 import {
   DrawOffered,
   FinishPlacingMultipleCards,
@@ -109,11 +108,7 @@ export class SignalrService {
 
     this.hubConnection.on('PassedMove', (stringifiedGameState) => {
       const gameState = this.parseAndUpdateGameState(stringifiedGameState);
-
-      const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
-      const guestAndGuestTurn =
-        !gameState.IsHostPlayersTurn && !gameState.IsHost;
-      const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+      const isPlayersTurn = this.isPlayersTurn(gameState);
 
       if (isPlayersTurn) {
         this.store.dispatch(new SetOpponentPassedMove(true));
@@ -123,6 +118,14 @@ export class SignalrService {
     this.hubConnection.on('DrawOffered', () => {
       this.store.dispatch(new DrawOffered());
     });
+  }
+
+  private isPlayersTurn(gameState: PlayerGameStateModel) {
+    const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
+    const guestAndGuestTurn = !gameState.IsHostPlayersTurn && !gameState.IsHost;
+    const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+
+    return isPlayersTurn;
   }
 
   private parseAndUpdateGameState(stringifiedGameState: string) {
