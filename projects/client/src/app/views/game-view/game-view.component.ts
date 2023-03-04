@@ -56,8 +56,8 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.initialPlaceMultipleCardAttempt)
   initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
 
-  @Select(GameState.drawOfferRecieved)
-  drawOfferRecieved$!: Observable<boolean>;
+  @Select(GameState.hasPendingDrawOffer)
+  hasPendingDrawOffer$!: Observable<boolean>;
 
   PlayerOrNone = PlayerOrNoneModel;
   getCardImageFileName = getCardImageFileNameFn;
@@ -66,7 +66,7 @@ export class GameViewComponent implements OnDestroy {
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   cardSize: number = 64;
-  showDrawOptions = false;
+  hasPendingDrawOffer = false;
 
   constructor(
     public modal: MatDialog,
@@ -98,7 +98,7 @@ export class GameViewComponent implements OnDestroy {
     this.sm.add(
       this.playerGameState$.subscribe((playerGameState) => {
         this.latestGameStateSnapshot = playerGameState;
-        this.showDrawOptions = false;
+        this.hasPendingDrawOffer = false;
 
         if (playerGameState) {
           this.setIsPlayersTurn(playerGameState);
@@ -124,8 +124,8 @@ export class GameViewComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      this.drawOfferRecieved$.subscribe((drawOfferRecieved) => {
-        this.showDrawOptions = drawOfferRecieved;
+      this.hasPendingDrawOffer$.subscribe((hasPendingDrawOffer) => {
+        this.hasPendingDrawOffer = hasPendingDrawOffer;
       })
     );
   }

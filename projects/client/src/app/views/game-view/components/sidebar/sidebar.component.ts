@@ -27,7 +27,7 @@ enum YesNoButtons {
 export class SidebarComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Input() showDrawOptions = false;
+  @Input() hasPendingDrawOffer = false;
 
   cardSize: number;
 

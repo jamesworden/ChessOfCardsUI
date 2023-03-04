@@ -24,7 +24,7 @@ type GameStateModel = {
   placeMultipleCardsHand: CardModel[] | null;
   placeMultipleCards: CardModel[] | null;
   drawOfferSent: boolean;
-  drawOfferRecieved: boolean;
+  hasPendingDrawOffer: boolean;
 };
 
 @State<GameStateModel>({
@@ -63,8 +63,8 @@ export class GameState {
   }
 
   @Selector()
-  static drawOfferRecieved(state: GameStateModel) {
-    return state.drawOfferRecieved;
+  static hasPendingDrawOffer(state: GameStateModel) {
+    return state.hasPendingDrawOffer;
   }
 
   constructor(private signalrService: SignalrService) {}
@@ -74,7 +74,7 @@ export class GameState {
     ctx.patchState({
       gameData: action.playerGameState,
       drawOfferSent: false,
-      drawOfferRecieved: false,
+      hasPendingDrawOffer: false,
     });
   }
 
@@ -140,7 +140,7 @@ export class GameState {
   @Action(DrawOffered)
   drawOffered(ctx: StateContext<GameStateModel>) {
     ctx.patchState({
-      drawOfferRecieved: true,
+      hasPendingDrawOffer: true,
     });
   }
 
@@ -149,7 +149,7 @@ export class GameState {
     this.signalrService.denyDrawOffer();
 
     ctx.patchState({
-      drawOfferRecieved: false,
+      hasPendingDrawOffer: false,
     });
   }
 
@@ -158,7 +158,7 @@ export class GameState {
     this.signalrService.acceptDrawOffer();
 
     ctx.patchState({
-      drawOfferRecieved: false,
+      hasPendingDrawOffer: false,
     });
   }
 }

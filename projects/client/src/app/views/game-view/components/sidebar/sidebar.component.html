@@ -15,14 +15,14 @@
     </div>
 
     <app-sidebar-item
-      *ngIf="!showDrawOptions"
+      *ngIf="!hasPendingDrawOffer"
       [itemHeight]="cardSize"
       [iconSize]="cardSize / 2"
       materialSymbol="handshake"
       (click)="openOfferDrawModal()"
     ></app-sidebar-item>
 
-    <div class="draw-options" *ngIf="showDrawOptions">
+    <div class="draw-options" *ngIf="hasPendingDrawOffer">
       <div
         class="draw-message"
         [ngStyle]="{
