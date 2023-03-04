@@ -33,21 +33,23 @@ type GameStateModel = {
   gameOverData: GameOverData;
 };
 
+const initialGameState: GameStateModel = {
+  gameData: null,
+  isPlacingMultipleCards: false,
+  initalPlaceMultipleCardAttempt: null,
+  placeMultipleCardsHand: null,
+  placeMultipleCards: null,
+  drawOfferSent: false,
+  hasPendingDrawOffer: false,
+  gameCode: null,
+  gameOverData: {
+    isOver: false,
+  },
+};
+
 @State<GameStateModel>({
   name: 'gameState',
-  defaults: {
-    gameData: null,
-    isPlacingMultipleCards: false,
-    initalPlaceMultipleCardAttempt: null,
-    placeMultipleCardsHand: null,
-    placeMultipleCards: null,
-    drawOfferSent: false,
-    hasPendingDrawOffer: false,
-    gameCode: null,
-    gameOverData: {
-      isOver: false,
-    },
-  },
+  defaults: initialGameState,
 })
 @Injectable()
 export class GameState {
