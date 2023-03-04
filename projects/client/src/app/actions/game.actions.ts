@@ -1,4 +1,5 @@
 import { CardModel } from '../models/card.model';
+import { GameOverData } from '../models/game-over-data.model';
 import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
 import { PlayerGameStateModel } from '../models/player-game-state-model';
 
@@ -59,7 +60,7 @@ export class ResetGameCode {
   static readonly type = '[GameState] Reset Game Code';
 }
 
-export class GameOver {
+export class SetGameOverData {
   static readonly type = '[GameState] Game Over';
-  constructor(public message?: string) {}
+  constructor(public gameOverData: GameOverData) {}
 }

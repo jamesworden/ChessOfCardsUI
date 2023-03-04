@@ -10,7 +10,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import {
   DrawOffered,
   FinishPlacingMultipleCards,
-  GameOver,
+  SetGameOverData,
   ResetGameCode,
   SetGameCode,
   UpdateGameState,
@@ -78,7 +78,12 @@ export class SignalrService {
     });
 
     this.hubConnection.on('GameOver', (message?: string) => {
-      this.store.dispatch(new GameOver(message));
+      this.store.dispatch(
+        new SetGameOverData({
+          isOver: true,
+          message,
+        })
+      );
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {

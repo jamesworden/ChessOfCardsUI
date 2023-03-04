@@ -5,7 +5,7 @@ import {
   DenyDrawOffer,
   DrawOffered,
   FinishPlacingMultipleCards,
-  GameOver,
+  SetGameOverData,
   OfferDraw,
   ResetGameCode,
   ResetGameData,
@@ -214,13 +214,10 @@ export class GameState {
     });
   }
 
-  @Action(GameOver)
-  gameOver(ctx: StateContext<GameStateModel>, action: GameOver) {
+  @Action(SetGameOverData)
+  gameOver(ctx: StateContext<GameStateModel>, action: SetGameOverData) {
     ctx.patchState({
-      gameOverData: {
-        isOver: true,
-        message: action.message,
-      },
+      gameOverData: action.gameOverData,
     });
   }
 }
