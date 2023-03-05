@@ -39,6 +39,7 @@ export class SidebarComponent implements OnDestroy {
 
   cardSize: number;
   drawOfferSent: boolean;
+  hasPendingDrawOffer: boolean;
   numCardsInPlayerDeck: number | null = null;
   numCardsInOpponentDeck: number | null = null;
 
@@ -59,6 +60,11 @@ export class SidebarComponent implements OnDestroy {
       })
     );
     this.sm.add(
+      this.hasPendingDrawOffer$.subscribe((hasPendingDrawOffer) => {
+        this.hasPendingDrawOffer = hasPendingDrawOffer;
+      })
+    );
+    this.sm.add(
       this.gameData$.subscribe((gameData) => {
         this.numCardsInPlayerDeck = gameData.NumCardsInPlayersDeck;
         this.numCardsInOpponentDeck = gameData.NumCardsInOpponentsDeck;
@@ -76,6 +82,15 @@ export class SidebarComponent implements OnDestroy {
         duration: 2000,
         verticalPosition: 'top',
       });
+    } else if (this.hasPendingDrawOffer) {
+      this.snackBar.open(
+        'Your opponent already offered you a draw.',
+        undefined,
+        {
+          duration: 2000,
+          verticalPosition: 'top',
+        }
+      );
     } else {
       this.openOfferDrawModal();
     }
