@@ -4,16 +4,15 @@
     width: cardSize + 'px'
   }"
 >
-  <ul class="sidebar-items">
+  <div class="branding-and-items">
     <div
-      class="lanes-text"
+      class="branding"
       [ngStyle]="{
         height: cardSize + 'px'
       }"
     >
       <span>Lanes</span>
     </div>
-
     <app-sidebar-item
       *ngIf="!(hasPendingDrawOffer$ | async)"
       [itemHeight]="cardSize"
@@ -21,31 +20,43 @@
       materialSymbol="handshake"
       (click)="attemptToOpenOfferDrawModel()"
     ></app-sidebar-item>
+  </div>
 
-    <div class="draw-options" *ngIf="hasPendingDrawOffer$ | async">
-      <div
-        class="draw-message"
-        [ngStyle]="{
-          height: cardSize + 'px'
-        }"
-      >
-        <span>Accept draw?</span>
-      </div>
-
-      <app-sidebar-item
-        [itemHeight]="cardSize"
-        [iconSize]="cardSize / 2"
-        iconColor="#33312e"
-        materialSymbol="done"
-        (click)="acceptDraw()"
-      ></app-sidebar-item>
-      <app-sidebar-item
-        [itemHeight]="cardSize"
-        [iconSize]="cardSize / 2"
-        iconColor="#33312e"
-        materialSymbol="close"
-        (click)="denyDraw()"
-      ></app-sidebar-item>
+  <div class="draw-options" *ngIf="hasPendingDrawOffer$ | async">
+    <div
+      class="draw-message"
+      [ngStyle]="{
+        height: cardSize + 'px'
+      }"
+    >
+      <span>Accept draw?</span>
     </div>
-  </ul>
+
+    <app-sidebar-item
+      [itemHeight]="cardSize"
+      [iconSize]="cardSize / 2"
+      iconColor="#33312e"
+      materialSymbol="done"
+      (click)="acceptDraw()"
+    ></app-sidebar-item>
+    <app-sidebar-item
+      [itemHeight]="cardSize"
+      [iconSize]="cardSize / 2"
+      iconColor="#33312e"
+      materialSymbol="close"
+      (click)="denyDraw()"
+    ></app-sidebar-item>
+  </div>
+
+  <div
+    class="deck-counts"
+    [ngStyle]="{
+      'margin-bottom': cardSize + 'px'
+    }"
+  >
+    <div class="deck-count">{{ numCardsInOpponentDeck }}</div>
+    <app-face-down-card></app-face-down-card>
+    <app-face-down-card></app-face-down-card>
+    <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
+  </div>
 </nav>

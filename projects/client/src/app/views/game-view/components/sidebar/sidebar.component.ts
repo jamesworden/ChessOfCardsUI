@@ -13,6 +13,7 @@ import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -33,8 +34,13 @@ export class SidebarComponent implements OnDestroy {
   @Select(GameState.drawOfferSent)
   drawOfferSent$!: Observable<boolean>;
 
+  @Select(GameState.gameData)
+  gameData$!: Observable<PlayerGameStateModel>;
+
   cardSize: number;
   drawOfferSent: boolean;
+  numCardsInPlayerDeck: number | null = null;
+  numCardsInOpponentDeck: number | null = null;
 
   constructor(
     public responsiveSizeService: ResponsiveSizeService,
@@ -50,6 +56,12 @@ export class SidebarComponent implements OnDestroy {
     this.sm.add(
       this.drawOfferSent$.subscribe((drawOfferSent) => {
         this.drawOfferSent = drawOfferSent;
+      })
+    );
+    this.sm.add(
+      this.gameData$.subscribe((gameData) => {
+        this.numCardsInPlayerDeck = gameData.NumCardsInPlayersDeck;
+        this.numCardsInOpponentDeck = gameData.NumCardsInOpponentsDeck;
       })
     );
   }
