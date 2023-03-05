@@ -73,16 +73,5 @@
         </div>
       </div>
     </div>
-
-    <app-gutter
-      [cardSize]="cardSize"
-      [isHost]="(playerGameState$ | async)?.IsHost ?? false"
-      [numCardsInPlayersDeck]="
-        (playerGameState$ | async)?.NumCardsInPlayersDeck ?? 0
-      "
-      [numCardsInOpponentsDeck]="
-        (playerGameState$ | async)?.NumCardsInOpponentsDeck ?? 0
-      "
-    ></app-gutter>
   </div>
 </div>
