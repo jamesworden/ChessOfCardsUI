@@ -4,37 +4,34 @@
     width: cardSize + 'px'
   }"
 >
-  <div class="branding-and-items">
-    <div
-      class="branding"
-      [ngStyle]="{
-        height: cardSize + 'px'
-      }"
-    >
-      <span>Lanes</span>
-    </div>
-    <app-sidebar-item
-      [itemHeight]="cardSize"
-      [iconSize]="cardSize / 2"
-      matTooltip="Offer draw"
-      matTooltipPosition="right"
-      materialSymbol="handshake"
-      (click)="attemptToOpenOfferDrawModel()"
-    ></app-sidebar-item>
-    <app-sidebar-item
-      [itemHeight]="cardSize"
-      [iconSize]="cardSize / 2"
-      matTooltip="Pass move"
-      matTooltipPosition="right"
-      materialSymbol="waving_hand"
-      (click)="attemptToOpenPassMoveModal()"
-    ></app-sidebar-item>
-  </div>
-
   <div
-    class="deck-counts"
+    class="branding"
     [ngStyle]="{
-      'margin-bottom': cardSize + 'px'
+      height: cardSize + 'px'
+    }"
+  >
+    <span>Lanes</span>
+  </div>
+  <app-sidebar-item
+    [itemHeight]="cardSize"
+    [iconSize]="cardSize / 2"
+    matTooltip="Offer draw"
+    matTooltipPosition="right"
+    materialSymbol="handshake"
+    (click)="attemptToOpenOfferDrawModel()"
+  ></app-sidebar-item>
+  <app-sidebar-item
+    [itemHeight]="cardSize"
+    [iconSize]="cardSize / 2"
+    matTooltip="Pass move"
+    matTooltipPosition="right"
+    materialSymbol="waving_hand"
+    (click)="attemptToOpenPassMoveModal()"
+  ></app-sidebar-item>
+  <div
+    *ngIf="numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null"
+    [ngStyle]="{
+      padding: cardSize / 3.5 + 'px 0px'
     }"
   >
     <div class="deck-count">{{ numCardsInOpponentDeck }}</div>

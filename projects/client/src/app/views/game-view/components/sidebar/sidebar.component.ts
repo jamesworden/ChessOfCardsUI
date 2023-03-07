@@ -2,8 +2,6 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import {
-  AcceptDrawOffer,
-  DenyDrawOffer,
   OfferDraw,
   PassMove,
 } from 'projects/client/src/app/actions/game.actions';

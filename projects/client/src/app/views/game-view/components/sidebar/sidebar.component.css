@@ -3,13 +3,6 @@
   background-color: #33312e;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
-
-.branding-and-items {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
 }
 
 .sidebar-item {
