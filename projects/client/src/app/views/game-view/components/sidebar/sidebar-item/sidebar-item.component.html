@@ -1,7 +1,8 @@
 <li
   class="sidebar-item"
   [ngStyle]="{
-    height: itemHeight + 'px'
+    height: itemHeight + 'px',
+    width: itemWidth ? itemWidth + 'px' : '100%'
   }"
 >
   <button

@@ -12,6 +12,7 @@ export class SidebarItemComponent implements AfterViewInit {
   @Input() iconSize: number;
   @Input() materialSymbol: string;
   @Input() iconColor = 'white';
+  @Input() itemWidth: number;
 
   constructor(private focusMonitor: FocusMonitor) {}
 

@@ -128,14 +128,6 @@ export class SidebarComponent implements OnDestroy {
     });
   }
 
-  acceptDraw() {
-    this.store.dispatch(new AcceptDrawOffer());
-  }
-
-  denyDraw() {
-    this.store.dispatch(new DenyDrawOffer());
-  }
-
   attemptToOpenPassMoveModal() {
     if (this.isPlayersTurn) {
       this.openPassMoveModal();

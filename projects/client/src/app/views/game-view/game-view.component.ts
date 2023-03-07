@@ -3,6 +3,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import {
+  AcceptDrawOffer,
+  DenyDrawOffer,
   FinishPlacingMultipleCards,
   MakeMove,
   PassMove,
@@ -65,6 +67,9 @@ export class GameViewComponent implements OnDestroy {
 
   @Select(GameState.opponentPassedMove)
   opponentPassedMove$!: Observable<boolean>;
+
+  @Select(GameState.hasPendingDrawOffer)
+  hasPendingDrawOffer$!: Observable<boolean>;
 
   PlayerOrNone = PlayerOrNoneModel;
   getCardImageFileName = getCardImageFileNameFn;
@@ -184,20 +189,6 @@ export class GameViewComponent implements OnDestroy {
       : this.rearrangeHand(event.previousIndex, event.currentIndex);
   }
 
-  onPassButtonClicked() {
-    let snackBarMessage = "It's not your turn!";
-
-    if (this.isPlayersTurn) {
-      snackBarMessage = 'Move passed.';
-      this.store.dispatch(new PassMove());
-    }
-
-    this.snackBar.open(snackBarMessage, undefined, {
-      duration: 1500,
-      verticalPosition: 'top',
-    });
-  }
-
   onCancelButtonClicked() {
     const placeMultipleCards = this.store.selectSnapshot(
       GameState.placeMultipleCards
@@ -271,6 +262,14 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.store.dispatch(new MakeMove(move));
+  }
+
+  acceptDraw() {
+    this.store.dispatch(new AcceptDrawOffer());
+  }
+
+  denyDraw() {
+    this.store.dispatch(new DenyDrawOffer());
   }
 
   private setIsPlayersTurn(playerGameState: PlayerGameStateModel) {

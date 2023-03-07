@@ -7,10 +7,7 @@
       *ngIf="playerGameState$ | async as playerGameState"
       cdkDropListGroup
     >
-      <app-opponent-hand
-        [cardSize]="cardSize"
-        [numCards]="playerGameState.NumCardsInOpponentsHand"
-      ></app-opponent-hand>
+      <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
       <app-board
         [playerGameState]="latestGameStateSnapshot"
@@ -33,43 +30,75 @@
   </div>
 </div>
 
-<!-- <div
-class="button-toolbar"
-[ngStyle]="{
-  padding: '0px ' + cardSize / 2 + 'px'
-}"
->
-<ng-container *ngIf="isPlacingMultipleCards; else passButton">
-  <button
-    mat-raised-button
-    class="confirm-button"
-    color="primary"
-    (click)="onConfirmButtonClicked()"
+<ng-template #opponentHandToolbar>
+  <ng-container
+    *ngIf="
+      !(isPlacingMultipleCards$ | async) && !(hasPendingDrawOffer$ | async)
+    "
   >
-    Confirm
-  </button>
+    <app-opponent-hand
+      [cardSize]="cardSize"
+      [numCards]="(playerGameState$ | async)!.NumCardsInOpponentsHand"
+    ></app-opponent-hand>
+  </ng-container>
 
-  <div class="button-divider"></div>
+  <ng-container *ngIf="isPlacingMultipleCards$ | async">
+    <div class="confirm-deny-buttons">
+      <app-sidebar-item
+        [itemHeight]="cardSize"
+        [iconSize]="cardSize / 2"
+        iconColor="#33312e"
+        matTooltip="Confirm"
+        matTooltipPosition="below"
+        materialSymbol="check"
+        (click)="onConfirmButtonClicked()"
+      ></app-sidebar-item>
+      <app-sidebar-item
+        [itemHeight]="cardSize"
+        [iconSize]="cardSize / 2"
+        iconColor="#33312e"
+        matTooltip="Cancel"
+        matTooltipPosition="below"
+        materialSymbol="close"
+        (click)="onCancelButtonClicked()"
+      ></app-sidebar-item>
+    </div>
+  </ng-container>
 
-  <button
-    mat-raised-button
-    class="cancel-button"
-    color="warn"
-    (click)="onCancelButtonClicked()"
+  <ng-container
+    *ngIf="!(isPlacingMultipleCards$ | async) && (hasPendingDrawOffer$ | async)"
   >
-    Cancel
-  </button>
-</ng-container>
+    <div class="draw-offer-buttons">
+      <div
+        class="accept-draw-text"
+        [ngStyle]="{
+          'min-width': cardSize + 'px'
+        }"
+      >
+        <span>Accept<br />Draw?</span>
+      </div>
 
-<ng-template #passButton>
-  <button
-    (click)="onPassButtonClicked()"
-    mat-raised-button
-    color="white"
-    class="pass-button"
-    [disabled]="!isPlayersTurn"
-  >
-    Pass
-  </button>
+      <div style="display: flex">
+        <app-sidebar-item
+          [itemWidth]="cardSize"
+          [itemHeight]="cardSize"
+          [iconSize]="cardSize / 2"
+          iconColor="#33312e"
+          matTooltip="Accept draw"
+          matTooltipPosition="below"
+          materialSymbol="check"
+          (click)="acceptDraw()"
+        ></app-sidebar-item>
+        <app-sidebar-item
+          [itemHeight]="cardSize"
+          [iconSize]="cardSize / 2"
+          iconColor="#33312e"
+          matTooltip="Deny draw"
+          matTooltipPosition="below"
+          materialSymbol="close"
+          (click)="denyDraw()"
+        ></app-sidebar-item>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
-</div> -->

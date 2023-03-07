@@ -31,32 +31,6 @@
     ></app-sidebar-item>
   </div>
 
-  <div class="draw-options" *ngIf="hasPendingDrawOffer$ | async">
-    <div
-      class="draw-message"
-      [ngStyle]="{
-        height: cardSize + 'px'
-      }"
-    >
-      <span>Accept draw?</span>
-    </div>
-
-    <app-sidebar-item
-      [itemHeight]="cardSize"
-      [iconSize]="cardSize / 2"
-      iconColor="#33312e"
-      materialSymbol="done"
-      (click)="acceptDraw()"
-    ></app-sidebar-item>
-    <app-sidebar-item
-      [itemHeight]="cardSize"
-      [iconSize]="cardSize / 2"
-      iconColor="#33312e"
-      materialSymbol="close"
-      (click)="denyDraw()"
-    ></app-sidebar-item>
-  </div>
-
   <div
     class="deck-counts"
     [ngStyle]="{

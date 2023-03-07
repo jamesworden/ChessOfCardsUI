@@ -1,5 +1,8 @@
+:host {
+  width: 100%;
+}
+
 .sidebar-item {
-  width: "100%";
   display: flex;
   justify-content: space-around;
 }
