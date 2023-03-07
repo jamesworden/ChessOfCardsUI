@@ -5,6 +5,7 @@ import {
   AcceptDrawOffer,
   DenyDrawOffer,
   OfferDraw,
+  PassMove,
 } from 'projects/client/src/app/actions/game.actions';
 import { GameState } from 'projects/client/src/app/state/game.state';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
@@ -27,6 +28,8 @@ enum YesNoButtons {
 })
 export class SidebarComponent implements OnDestroy {
   private sm = new SubscriptionManager();
+
+  @Input() isPlayersTurn = false;
 
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;
@@ -109,10 +112,19 @@ export class SidebarComponent implements OnDestroy {
 
     modalRef.componentInstance.buttonClicked.subscribe((selectedOption) => {
       if (selectedOption === YesNoButtons.Yes) {
-        this.store.dispatch(new OfferDraw());
+        this.offerDraw();
       }
 
       modalRef.close();
+    });
+  }
+
+  offerDraw() {
+    this.store.dispatch(new OfferDraw());
+
+    this.snackBar.open('Offered draw.', undefined, {
+      duration: 1500,
+      verticalPosition: 'top',
     });
   }
 
@@ -122,5 +134,45 @@ export class SidebarComponent implements OnDestroy {
 
   denyDraw() {
     this.store.dispatch(new DenyDrawOffer());
+  }
+
+  attemptToOpenPassMoveModal() {
+    if (this.isPlayersTurn) {
+      this.openPassMoveModal();
+    } else {
+      this.snackBar.open("It's not your turn!", undefined, {
+        duration: 1500,
+        verticalPosition: 'top',
+      });
+    }
+  }
+
+  openPassMoveModal() {
+    const modalData: ModalData = {
+      message: 'Are you sure you want to pass?',
+      buttons: [YesNoButtons.Yes, YesNoButtons.No],
+    };
+
+    const modalRef = this.modal.open(ModalComponent, {
+      width: '250px',
+      data: modalData,
+    });
+
+    modalRef.componentInstance.buttonClicked.subscribe((selectedOption) => {
+      if (selectedOption === YesNoButtons.Yes) {
+        this.passMove();
+      }
+
+      modalRef.close();
+    });
+  }
+
+  passMove() {
+    this.store.dispatch(new PassMove());
+
+    this.snackBar.open('Move passed.', undefined, {
+      duration: 1500,
+      verticalPosition: 'top',
+    });
   }
 }
