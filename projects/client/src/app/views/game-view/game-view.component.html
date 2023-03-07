@@ -43,34 +43,45 @@
   </ng-container>
 
   <ng-container *ngIf="isPlacingMultipleCards$ | async">
-    <div class="confirm-deny-buttons">
-      <app-sidebar-item
-        [itemHeight]="cardSize"
-        [iconSize]="cardSize / 2"
-        iconColor="#33312e"
-        matTooltip="Confirm"
-        matTooltipPosition="below"
-        materialSymbol="check"
-        (click)="onConfirmButtonClicked()"
-      ></app-sidebar-item>
-      <app-sidebar-item
-        [itemHeight]="cardSize"
-        [iconSize]="cardSize / 2"
-        iconColor="#33312e"
-        matTooltip="Cancel"
-        matTooltipPosition="below"
-        materialSymbol="close"
-        (click)="onCancelButtonClicked()"
-      ></app-sidebar-item>
+    <div class="buttons-container">
+      <div
+        class="button-question"
+        [ngStyle]="{
+          'min-width': cardSize + 'px'
+        }"
+      >
+        <span>Place<br />Cards?</span>
+      </div>
+
+      <div style="display: flex">
+        <app-sidebar-item
+          [itemHeight]="cardSize"
+          [iconSize]="cardSize / 2"
+          iconColor="#33312e"
+          matTooltip="Confirm"
+          matTooltipPosition="below"
+          materialSymbol="check"
+          (click)="onConfirmButtonClicked()"
+        ></app-sidebar-item>
+        <app-sidebar-item
+          [itemHeight]="cardSize"
+          [iconSize]="cardSize / 2"
+          iconColor="#33312e"
+          matTooltip="Cancel"
+          matTooltipPosition="below"
+          materialSymbol="close"
+          (click)="onCancelButtonClicked()"
+        ></app-sidebar-item>
+      </div>
     </div>
   </ng-container>
 
   <ng-container
     *ngIf="!(isPlacingMultipleCards$ | async) && (hasPendingDrawOffer$ | async)"
   >
-    <div class="draw-offer-buttons">
+    <div class="buttons-container">
       <div
-        class="accept-draw-text"
+        class="button-question"
         [ngStyle]="{
           'min-width': cardSize + 'px'
         }"
