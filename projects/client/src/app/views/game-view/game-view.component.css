@@ -12,6 +12,12 @@
   justify-content: space-around;
 }
 
+.game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
 .game {
   max-width: 500px;
 }
@@ -20,20 +26,4 @@
   display: flex;
   justify-content: space-between;
   margin-top: 4px;
-}
-
-.pass-button {
-  flex: 1;
-}
-
-.confirm-button {
-  flex: 3;
-}
-
-.cancel-button {
-  flex: 2;
-}
-
-.button-divider {
-  flex: 0.15;
 }

@@ -1,77 +1,75 @@
 <app-sidebar [isPlayersTurn]="isPlayersTurn"></app-sidebar>
 
 <div class="center-horisontally">
-  <div style="display: flex">
-    <div class="center-horisontally">
-      <div
-        class="game"
-        *ngIf="playerGameState$ | async as playerGameState"
-        cdkDropListGroup
-      >
-        <app-opponent-hand
-          [cardSize]="cardSize"
-          [numCards]="playerGameState.NumCardsInOpponentsHand"
-        ></app-opponent-hand>
+  <div class="game-container">
+    <div
+      class="game"
+      *ngIf="playerGameState$ | async as playerGameState"
+      cdkDropListGroup
+    >
+      <app-opponent-hand
+        [cardSize]="cardSize"
+        [numCards]="playerGameState.NumCardsInOpponentsHand"
+      ></app-opponent-hand>
 
-        <app-board
-          [playerGameState]="latestGameStateSnapshot"
-          [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
-          [initialPlaceMultipleCardAttempt]="
-            initialPlaceMultipleCardAttempt$ | async
-          "
-          (placeCardAttempted)="onPlaceCardAttempted($event)"
-        ></app-board>
+      <app-board
+        [playerGameState]="latestGameStateSnapshot"
+        [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
+        [initialPlaceMultipleCardAttempt]="
+          initialPlaceMultipleCardAttempt$ | async
+        "
+        (placeCardAttempted)="onPlaceCardAttempted($event)"
+      ></app-board>
 
-        <app-player-hand
-          [isPlacingMultipleCards]="isPlacingMultipleCards"
-          [isHost]="playerGameState.IsHost"
-          [cards]="playerGameState.Hand.Cards"
-          [cardSize]="cardSize"
-          [disabled]="!isPlayersTurn"
-          (cardDropped)="onPlayerHandCardDrop($event)"
-        ></app-player-hand>
-
-        <div
-          class="button-toolbar"
-          [ngStyle]="{
-            padding: '0px ' + cardSize / 2 + 'px'
-          }"
-        >
-          <ng-container *ngIf="isPlacingMultipleCards; else passButton">
-            <button
-              mat-raised-button
-              class="confirm-button"
-              color="primary"
-              (click)="onConfirmButtonClicked()"
-            >
-              Confirm
-            </button>
-
-            <div class="button-divider"></div>
-
-            <button
-              mat-raised-button
-              class="cancel-button"
-              color="warn"
-              (click)="onCancelButtonClicked()"
-            >
-              Cancel
-            </button>
-          </ng-container>
-
-          <ng-template #passButton>
-            <button
-              (click)="onPassButtonClicked()"
-              mat-raised-button
-              color="white"
-              class="pass-button"
-              [disabled]="!isPlayersTurn"
-            >
-              Pass
-            </button>
-          </ng-template>
-        </div>
-      </div>
+      <app-player-hand
+        [isPlacingMultipleCards]="isPlacingMultipleCards"
+        [isHost]="playerGameState.IsHost"
+        [cards]="playerGameState.Hand.Cards"
+        [cardSize]="cardSize"
+        [disabled]="!isPlayersTurn"
+        (cardDropped)="onPlayerHandCardDrop($event)"
+      ></app-player-hand>
     </div>
   </div>
 </div>
+
+<!-- <div
+class="button-toolbar"
+[ngStyle]="{
+  padding: '0px ' + cardSize / 2 + 'px'
+}"
+>
+<ng-container *ngIf="isPlacingMultipleCards; else passButton">
+  <button
+    mat-raised-button
+    class="confirm-button"
+    color="primary"
+    (click)="onConfirmButtonClicked()"
+  >
+    Confirm
+  </button>
+
+  <div class="button-divider"></div>
+
+  <button
+    mat-raised-button
+    class="cancel-button"
+    color="warn"
+    (click)="onCancelButtonClicked()"
+  >
+    Cancel
+  </button>
+</ng-container>
+
+<ng-template #passButton>
+  <button
+    (click)="onPassButtonClicked()"
+    mat-raised-button
+    color="white"
+    class="pass-button"
+    [disabled]="!isPlayersTurn"
+  >
+    Pass
+  </button>
+</ng-template>
+</div> -->
