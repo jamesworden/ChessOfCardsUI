@@ -21,6 +21,7 @@ import {
   RearrangeHand,
   CreateGame,
   JoinGame,
+  ResignGame,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
@@ -284,5 +285,10 @@ export class GameState {
   @Action(JoinGame)
   joinGame(_: StateContext<GameStateModel>, action: JoinGame) {
     this.signalrService.joinGame(action.gameCode);
+  }
+
+  @Action(ResignGame)
+  resignGame() {
+    this.signalrService.resignGame();
   }
 }

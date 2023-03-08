@@ -15,6 +15,14 @@
   <app-sidebar-item
     [itemHeight]="cardSize"
     [iconSize]="cardSize / 2"
+    matTooltip="Pass move"
+    matTooltipPosition="right"
+    materialSymbol="waving_hand"
+    (click)="attemptToOpenPassMoveModal()"
+  ></app-sidebar-item>
+  <app-sidebar-item
+    [itemHeight]="cardSize"
+    [iconSize]="cardSize / 2"
     matTooltip="Offer draw"
     matTooltipPosition="right"
     materialSymbol="handshake"
@@ -23,10 +31,10 @@
   <app-sidebar-item
     [itemHeight]="cardSize"
     [iconSize]="cardSize / 2"
-    matTooltip="Pass move"
+    matTooltip="Resign"
     matTooltipPosition="right"
-    materialSymbol="waving_hand"
-    (click)="attemptToOpenPassMoveModal()"
+    materialSymbol="cancel"
+    (click)="openResignModal()"
   ></app-sidebar-item>
   <div
     *ngIf="numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null"

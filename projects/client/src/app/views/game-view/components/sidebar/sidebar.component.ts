@@ -4,6 +4,7 @@ import { Select, Store } from '@ngxs/store';
 import {
   OfferDraw,
   PassMove,
+  ResignGame,
 } from 'projects/client/src/app/actions/game.actions';
 import { GameState } from 'projects/client/src/app/state/game.state';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
@@ -164,5 +165,29 @@ export class SidebarComponent implements OnDestroy {
       duration: 1500,
       verticalPosition: 'top',
     });
+  }
+
+  openResignModal() {
+    const modalData: ModalData = {
+      message: 'Are you sure you want to resign?',
+      buttons: [YesNoButtons.Yes, YesNoButtons.No],
+    };
+
+    const modalRef = this.modal.open(ModalComponent, {
+      width: '250px',
+      data: modalData,
+    });
+
+    modalRef.componentInstance.buttonClicked.subscribe((selectedOption) => {
+      if (selectedOption === YesNoButtons.Yes) {
+        this.resign();
+      }
+
+      modalRef.close();
+    });
+  }
+
+  resign() {
+    this.store.dispatch(new ResignGame());
   }
 }

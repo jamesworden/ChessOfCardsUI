@@ -98,3 +98,7 @@ export class JoinGame {
   static readonly type = '[GameState] Join Game';
   constructor(public gameCode: string) {}
 }
+
+export class ResignGame {
+  static readonly type = '[GameState] Resign Game';
+}

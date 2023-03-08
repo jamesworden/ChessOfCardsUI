@@ -166,4 +166,8 @@ export class SignalrService {
   public acceptDrawOffer() {
     this.hubConnection.invoke('AcceptDrawOffer');
   }
+
+  public resignGame() {
+    this.hubConnection.invoke('ResignGame');
+  }
 }
