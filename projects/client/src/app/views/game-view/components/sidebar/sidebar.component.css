@@ -42,8 +42,7 @@
 }
 
 .remaining-time {
-  margin: 12px;
-  padding: 3px 0px;
+  margin: 6px 8px;
   background-color: white;
   color: #33312e;
   border-radius: 3px;
@@ -54,9 +53,13 @@
 .divider {
   background-color: rgba(255, 255, 255, 0.2);
   height: 2px;
-  border-radius: 3px;
+  border-radius: 8px;
 }
 
 .game-stats {
-  margin: 12px 0px;
+  margin: 6px 0px; /* May wish to revert to 12px when implementing remaining times. */
+}
+
+.deck-counts {
+  margin: 10px 0px;
 }
