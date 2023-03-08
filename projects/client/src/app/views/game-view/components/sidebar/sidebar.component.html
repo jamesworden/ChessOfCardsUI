@@ -36,15 +36,24 @@
     materialSymbol="cancel"
     (click)="openResignModal()"
   ></app-sidebar-item>
+
   <div
     *ngIf="numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null"
+    class="divider"
     [ngStyle]="{
-      padding: cardSize / 3.5 + 'px 0px'
+      margin: cardSize / 3.5 + 'px 8px'
     }"
+  ></div>
+
+  <div
+    *ngIf="numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null"
+    class="game-stats"
   >
+    <div class="remaining-time">2:43</div>
     <div class="deck-count">{{ numCardsInOpponentDeck }}</div>
     <app-face-down-card></app-face-down-card>
     <app-face-down-card></app-face-down-card>
     <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
+    <div class="remaining-time">2:17</div>
   </div>
 </nav>

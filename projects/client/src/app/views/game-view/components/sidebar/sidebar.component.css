@@ -40,3 +40,23 @@
   color: white;
   font-weight: 600;
 }
+
+.remaining-time {
+  margin: 12px;
+  padding: 3px 0px;
+  background-color: white;
+  color: #33312e;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.divider {
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 2px;
+  border-radius: 3px;
+}
+
+.game-stats {
+  margin: 12px 0px;
+}
