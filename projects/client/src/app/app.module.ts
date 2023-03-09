@@ -24,16 +24,16 @@ import { TutorialButtonComponent } from './views/tutorial-view/components/tutori
 import { TutorialState } from './state/tutorial.state';
 import { CardComponent } from './views/game-view/components/card/card.component';
 import { FaceDownCardComponent } from './views/game-view/components/face-down-card/face-down-card.component';
-import { DeckComponent } from './views/game-view/components/deck/deck.component';
 import { PositionComponent } from './views/game-view/components/position/position.component';
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
 import { PlaceMultipleCardsLaneComponent } from './views/game-view/components/place-multiple-cards-lane/place-multiple-cards-lane.component';
 import { LaneComponent } from './views/game-view/components/lane/lane.component';
-import { GutterComponent } from './views/game-view/components/gutter/gutter.component';
 import { PlayerHandComponent } from './views/game-view/components/player-hand/player-hand.component';
 import { OpponentHandComponent } from './views/game-view/components/opponent-hand/opponent-hand.component';
 import { BoardComponent } from './views/game-view/components/board/board.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
+import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
+import { ServerState } from './state/server.state';
 
 @NgModule({
   declarations: [
@@ -44,7 +44,6 @@ import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.c
     JoinViewComponent,
     FaceDownCardComponent,
     CardComponent,
-    DeckComponent,
     PositionComponent,
     ModalComponent,
     PlaceMultipleCardsLaneComponent,
@@ -52,17 +51,17 @@ import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.c
     TutorialViewComponent,
     TutorialButtonComponent,
     LaneComponent,
-    GutterComponent,
     PlayerHandComponent,
     OpponentHandComponent,
     BoardComponent,
     SidebarComponent,
+    SidebarItemComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState, ViewState, TutorialState]),
+    NgxsModule.forRoot([GameState, ViewState, TutorialState, ServerState]),
     BrowserAnimationsModule,
     MatTooltipModule,
     MatDialogModule,

@@ -1,5 +1,12 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
+import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { PlaceCardAttemptModel } from '../../../../models/place-card-attempt.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
@@ -8,14 +15,28 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.css'],
 })
-export class PositionComponent {
+export class PositionComponent implements OnDestroy {
+  private sm = new SubscriptionManager();
+
   @Input() laneIndex: number;
   @Input() rowIndex: number;
   @Input() backgroundColor: string;
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttemptModel> =
     new EventEmitter();
 
-  constructor(public responsiveSizeService: ResponsiveSizeService) {}
+  cardSize: number;
+
+  constructor(public responsiveSizeService: ResponsiveSizeService) {
+    this.sm.add(
+      responsiveSizeService.cardSize$.subscribe((cardSize) => {
+        this.cardSize = cardSize;
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.sm.unsubscribe();
+  }
 
   drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
     const Card = event.item.data;

@@ -1,16 +1,65 @@
 .sidebar {
   height: 100%;
   background-color: #33312e;
-}
-
-.sidebar-items {
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  justify-content: start;
 }
 
 .sidebar-item {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.sidebar-button {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.sidebar-icon {
+  color: white;
+  text-align: center;
+}
+
+.branding {
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.deck-count {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+}
+
+.remaining-time {
+  margin: 6px 8px;
+  background-color: white;
+  color: #33312e;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.divider {
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 2px;
+  border-radius: 8px;
+}
+
+.game-stats {
+  margin: 6px 0px; /* May wish to revert to 12px when implementing remaining times. */
+}
+
+.deck-counts {
+  margin: 10px 0px;
 }

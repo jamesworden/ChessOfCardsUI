@@ -6,10 +6,15 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, Subject } from 'rxjs';
 import {
+  DrawOffered,
   FinishPlacingMultipleCards,
+  SetGameOverData,
+  ResetGameCode,
+  SetGameCode,
   UpdateGameState,
+  SetOpponentPassedMove,
+  SetGameCodeIsInvalid,
 } from '../actions/game.actions';
 import { CardModel } from '../models/card.model';
 import { MoveModel } from '../models/move.model';
@@ -17,6 +22,7 @@ import { PlayerGameStateModel } from '../models/player-game-state-model';
 import { environment } from '../../environments/environment';
 import { UpdateView } from '../actions/view.actions';
 import { View } from '../views';
+import { SetIsConnectedToServer } from '../actions/server.actions';
 
 const { serverUrl } = environment;
 
@@ -26,48 +32,59 @@ const { serverUrl } = environment;
 export class SignalrService {
   private hubConnection: HubConnection;
 
-  public isConnectedToServer$ = new BehaviorSubject<boolean>(false);
-  public gameCode$ = new BehaviorSubject<string>('');
-  public gameCodeIsInvalid$ = new Subject<boolean>();
-  public opponentPassedMove$ = new Subject();
-  public gameOverMessage$ = new Subject<string | null>();
-
   constructor(private store: Store) {
+    this.initConnection();
+    this.connectToServer();
+    this.registerConnectionEvents();
+    this.registerServerEvents();
+  }
+
+  private initConnection() {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${serverUrl}/game`)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
-
-    this.startConnection();
-    this.registerOnServerEvents();
   }
 
-  public startConnection() {
+  public connectToServer() {
     if (this.hubConnection.state === HubConnectionState.Connected) {
       return;
     }
 
     this.hubConnection.start().then(
       () => {
-        console.log('Hub connection started.');
-        this.isConnectedToServer$.next(true);
+        console.log('Connected to server.');
+        this.store.dispatch(new SetIsConnectedToServer(true));
       },
-      (error) => console.error(error)
+      () => {
+        console.error('Unable to connect to server.');
+        this.store.dispatch(new SetIsConnectedToServer(false));
+      }
     );
   }
 
-  private registerOnServerEvents(): void {
+  private registerConnectionEvents() {
+    this.hubConnection.onreconnecting(() => {
+      this.store.dispatch(new SetIsConnectedToServer(false));
+    });
+
+    this.hubConnection.onreconnected(() => {
+      this.store.dispatch(new SetIsConnectedToServer(true));
+    });
+  }
+
+  private registerServerEvents(): void {
     this.hubConnection.on('CreatedPendingGame', (gameCode: string) => {
-      this.gameCode$.next(gameCode);
+      this.store.dispatch(new SetGameCode(gameCode));
     });
 
     this.hubConnection.on('OpponentDisconnected', () => {
-      this.gameCode$.next('');
+      this.store.dispatch(new ResetGameCode());
     });
 
     this.hubConnection.on('InvalidGameCode', () => {
-      this.gameCodeIsInvalid$.next(true);
+      this.store.dispatch(new SetGameCodeIsInvalid(true));
     });
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
@@ -75,8 +92,13 @@ export class SignalrService {
       this.store.dispatch(new UpdateView(View.Game));
     });
 
-    this.hubConnection.on('GameOver', (message) => {
-      this.gameOverMessage$.next(message);
+    this.hubConnection.on('GameOver', (message?: string) => {
+      this.store.dispatch(
+        new SetGameOverData({
+          isOver: true,
+          message,
+        })
+      );
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
@@ -86,16 +108,24 @@ export class SignalrService {
 
     this.hubConnection.on('PassedMove', (stringifiedGameState) => {
       const gameState = this.parseAndUpdateGameState(stringifiedGameState);
-
-      const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
-      const guestAndGuestTurn =
-        !gameState.IsHostPlayersTurn && !gameState.IsHost;
-      const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+      const isPlayersTurn = this.isPlayersTurn(gameState);
 
       if (isPlayersTurn) {
-        this.opponentPassedMove$.next();
+        this.store.dispatch(new SetOpponentPassedMove(true));
       }
     });
+
+    this.hubConnection.on('DrawOffered', () => {
+      this.store.dispatch(new DrawOffered());
+    });
+  }
+
+  private isPlayersTurn(gameState: PlayerGameStateModel) {
+    const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
+    const guestAndGuestTurn = !gameState.IsHostPlayersTurn && !gameState.IsHost;
+    const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
+
+    return isPlayersTurn;
   }
 
   private parseAndUpdateGameState(stringifiedGameState: string) {
@@ -127,5 +157,17 @@ export class SignalrService {
 
   public passMove() {
     this.hubConnection.invoke('PassMove');
+  }
+
+  public offerDraw() {
+    this.hubConnection.invoke('OfferDraw');
+  }
+
+  public acceptDrawOffer() {
+    this.hubConnection.invoke('AcceptDrawOffer');
+  }
+
+  public resignGame() {
+    this.hubConnection.invoke('ResignGame');
   }
 }

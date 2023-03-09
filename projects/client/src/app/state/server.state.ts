@@ -1,0 +1,44 @@
+import { Injectable } from '@angular/core';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import {
+  ConnectToServer,
+  SetIsConnectedToServer,
+} from '../actions/server.actions';
+import { SignalrService } from '../services/SignalRService';
+
+type ServerStateModel = {
+  isConnectedToServer: boolean;
+};
+
+const initialServerState: ServerStateModel = {
+  isConnectedToServer: false,
+};
+
+@State<ServerStateModel>({
+  name: 'serverState',
+  defaults: initialServerState,
+})
+@Injectable()
+export class ServerState {
+  @Selector()
+  static isConnectedToServer(state: ServerStateModel) {
+    return state.isConnectedToServer;
+  }
+
+  constructor(private signalrService: SignalrService) {}
+
+  @Action(SetIsConnectedToServer)
+  setIsConnectedToServer(
+    ctx: StateContext<ServerStateModel>,
+    action: SetIsConnectedToServer
+  ) {
+    ctx.patchState({
+      isConnectedToServer: action.isConnectedToServer,
+    });
+  }
+
+  @Action(ConnectToServer)
+  connectToServer() {
+    this.signalrService.connectToServer();
+  }
+}

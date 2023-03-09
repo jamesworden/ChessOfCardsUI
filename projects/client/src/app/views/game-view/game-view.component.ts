@@ -3,7 +3,13 @@ import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import {
+  AcceptDrawOffer,
+  DenyDrawOffer,
   FinishPlacingMultipleCards,
+  MakeMove,
+  PassMove,
+  RearrangeHand,
+  ResetGameCode,
   ResetGameData,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
@@ -15,7 +21,6 @@ import { MoveModel } from 'projects/client/src/app/models/move.model';
 import { PlaceCardAttemptModel } from 'projects/client/src/app/models/place-card-attempt.model';
 import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
 import { PlayerGameStateModel } from '../../models/player-game-state-model';
-import { SignalrService } from '../../services/SignalRService';
 import { GameState } from '../../state/game.state';
 import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,6 +37,7 @@ import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 import { ResponsiveSizeService } from './services/responsive-size.service';
 import { UpdateView } from '../../actions/view.actions';
 import { View } from '..';
+import { GameOverData } from '../../models/game-over-data.model';
 
 @Component({
   selector: 'app-game-view',
@@ -56,38 +62,44 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.initialPlaceMultipleCardAttempt)
   initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
 
+  @Select(GameState.gameOverData)
+  gameOverData$!: Observable<GameOverData>;
+
+  @Select(GameState.opponentPassedMove)
+  opponentPassedMove$!: Observable<boolean>;
+
+  @Select(GameState.hasPendingDrawOffer)
+  hasPendingDrawOffer$!: Observable<boolean>;
+
   PlayerOrNone = PlayerOrNoneModel;
   getCardImageFileName = getCardImageFileNameFn;
 
   latestGameStateSnapshot: PlayerGameStateModel;
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
-  cardSize: number = 64;
+  cardSize = 64;
 
   constructor(
     public modal: MatDialog,
-    private signalrService: SignalrService,
     private store: Store,
     private snackBar: MatSnackBar,
     private responsiveSizeService: ResponsiveSizeService
   ) {
     this.sm.add(
-      this.signalrService.gameOverMessage$.subscribe((message) => {
-        console.log(`[Game Over]: ${message}`);
-
-        if (!message) {
+      this.gameOverData$.subscribe((gameOverData) => {
+        if (!gameOverData.isOver) {
           return;
         }
 
         const modalRef = this.modal.open(ModalComponent, {
           width: '250px',
-          data: { message },
+          data: { message: gameOverData.message },
         });
 
         modalRef.afterClosed().subscribe(() => {
           this.store.dispatch(new ResetGameData());
+          this.store.dispatch(new ResetGameCode());
           this.store.dispatch(new UpdateView(View.Home));
-          this.signalrService.gameCode$.next('');
         });
       })
     );
@@ -101,11 +113,13 @@ export class GameViewComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      this.signalrService.opponentPassedMove$.subscribe(() => {
-        this.snackBar.open('Opponent passed their move.', 'Your turn!', {
-          duration: 2000,
-          verticalPosition: 'top',
-        });
+      this.opponentPassedMove$.subscribe((opponentPassedMove) => {
+        if (opponentPassedMove) {
+          this.snackBar.open('Opponent passed their move.', 'Your turn!', {
+            duration: 2000,
+            verticalPosition: 'top',
+          });
+        }
       })
     );
     this.sm.add(
@@ -175,20 +189,6 @@ export class GameViewComponent implements OnDestroy {
       : this.rearrangeHand(event.previousIndex, event.currentIndex);
   }
 
-  onPassButtonClicked() {
-    let snackBarMessage = "It's not your turn!";
-
-    if (this.isPlayersTurn) {
-      snackBarMessage = 'Move passed.';
-      this.signalrService.passMove();
-    }
-
-    this.snackBar.open(snackBarMessage, undefined, {
-      duration: 1500,
-      verticalPosition: 'top',
-    });
-  }
-
   onCancelButtonClicked() {
     const placeMultipleCards = this.store.selectSnapshot(
       GameState.placeMultipleCards
@@ -212,7 +212,7 @@ export class GameViewComponent implements OnDestroy {
 
     this.latestGameStateSnapshot.Hand.Cards = combinedCards;
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-    this.signalrService.rearrangeHand(combinedCards);
+    this.store.dispatch(new RearrangeHand(combinedCards));
     this.store.dispatch(new FinishPlacingMultipleCards());
   }
 
@@ -240,6 +240,10 @@ export class GameViewComponent implements OnDestroy {
     const reversedPlaceMultipleCards = [...placeMultipleCards].reverse();
     const playerGameState = this.store.selectSnapshot(GameState.gameData);
 
+    if (!playerGameState) {
+      return;
+    }
+
     const move = convertPlaceMultipleCardsToMove(
       reversedPlaceMultipleCards,
       initialPlaceMultipleCardAttempt,
@@ -257,7 +261,15 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    this.signalrService.makeMove(move);
+    this.store.dispatch(new MakeMove(move));
+  }
+
+  acceptDraw() {
+    this.store.dispatch(new AcceptDrawOffer());
+  }
+
+  denyDraw() {
+    this.store.dispatch(new DenyDrawOffer());
   }
 
   private setIsPlayersTurn(playerGameState: PlayerGameStateModel) {
@@ -276,7 +288,9 @@ export class GameViewComponent implements OnDestroy {
     );
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-    this.signalrService.rearrangeHand(this.latestGameStateSnapshot.Hand.Cards);
+    this.store.dispatch(
+      new RearrangeHand(this.latestGameStateSnapshot.Hand.Cards)
+    );
   }
 
   private rearrangePlaceMultipleHand(
@@ -344,7 +358,7 @@ export class GameViewComponent implements OnDestroy {
     this.store.dispatch(new FinishPlacingMultipleCards());
     this.latestGameStateSnapshot.Hand.Cards = handAfterSwitch;
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-    this.signalrService.rearrangeHand(handAfterSwitch);
+    new RearrangeHand(handAfterSwitch);
   }
 
   private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
@@ -366,6 +380,6 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
-    this.signalrService.makeMove(move);
+    this.store.dispatch(new MakeMove(move));
   }
 }

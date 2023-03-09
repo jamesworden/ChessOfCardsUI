@@ -1,1 +1,11 @@
-<p>{{ data.message }}</p>
+<p class="message" *ngIf="data.message">{{ data.message }}</p>
+
+<div class="button-container" *ngIf="data.buttons && data.buttons.length > 0">
+  <button
+    mat-raised-button
+    *ngFor="let button of data.buttons"
+    (click)="onButtonClicked(button)"
+  >
+    {{ button }}
+  </button>
+</div>

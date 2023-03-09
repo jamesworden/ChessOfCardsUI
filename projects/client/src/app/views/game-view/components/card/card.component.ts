@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { CardModel } from '../../../../models/card.model';
 import { PlayerOrNoneModel } from '../../../../models/player-or-none-model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
@@ -8,7 +9,9 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
 })
-export class CardComponent implements OnChanges {
+export class CardComponent implements OnChanges, OnDestroy {
+  private sm = new SubscriptionManager();
+
   @Input() cardImageFileName?: string | null;
   @Input() playerCanDrag = false;
   @Input() card: CardModel;
@@ -18,11 +21,22 @@ export class CardComponent implements OnChanges {
   @Input() backgroundColor?: string | null;
 
   tiltDegrees = 0;
+  cardSize: number;
 
-  constructor(public responsiveSizeService: ResponsiveSizeService) {}
+  constructor(public responsiveSizeService: ResponsiveSizeService) {
+    this.sm.add(
+      responsiveSizeService.cardSize$.subscribe((cardSize) => {
+        this.cardSize = cardSize;
+      })
+    );
+  }
 
   ngOnChanges() {
     this.tiltCardIfMiddle();
+  }
+
+  ngOnDestroy() {
+    this.sm.unsubscribe();
   }
 
   tiltCardIfMiddle() {

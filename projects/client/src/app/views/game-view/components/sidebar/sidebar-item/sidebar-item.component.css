@@ -1,0 +1,16 @@
+:host {
+  width: 100%;
+}
+
+.sidebar-item {
+  display: flex;
+  justify-content: space-around;
+}
+
+.sidebar-icon {
+  width: 100%;
+}
+
+.sidebar-button {
+  width: 100%;
+}

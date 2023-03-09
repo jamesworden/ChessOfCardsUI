@@ -1,23 +1,13 @@
 <div
   class="board"
   [ngStyle]="{
-    padding: cardSize / 2 + 'px 0px'
+    padding: cardSize / 3 + 'px 0px'
   }"
 >
-  <!-- Place multiple cards overlay -->
-  <div
+  <ng-container
+    [ngTemplateOutlet]="placeMultipleCardsOverlay"
     *ngIf="initialPlaceMultipleCardAttempt"
-    [ngStyle]="{
-      position: 'absolute',
-      'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_OVERLAY,
-      'background-color': 'black',
-      opacity: 0.8,
-      height: cardSize * 7 + 'px',
-      width: cardSize * 5 + 'px',
-      'border-radius': '4px',
-      overflow: 'hidden'
-    }"
-  ></div>
+  ></ng-container>
 
   <div class="lanes">
     <ng-container
@@ -44,3 +34,18 @@
     </ng-container>
   </div>
 </div>
+
+<ng-template #placeMultipleCardsOverlay>
+  <div
+    [ngStyle]="{
+      position: 'absolute',
+      'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_OVERLAY,
+      'background-color': 'black',
+      opacity: 0.8,
+      height: cardSize * 7 + 'px',
+      width: cardSize * 5 + 'px',
+      'border-radius': '4px',
+      overflow: 'hidden'
+    }"
+  ></div>
+</ng-template>

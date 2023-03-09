@@ -1,0 +1,25 @@
+<li
+  class="sidebar-item"
+  [ngStyle]="{
+    height: itemHeight + 'px',
+    width: itemWidth ? itemWidth + 'px' : '100%'
+  }"
+>
+  <button
+    class="sidebar-button"
+    mat-button
+    [ngStyle]="{
+      height: itemHeight + 'px'
+    }"
+  >
+    <span
+      class="material-symbols-outlined sidebar-icon"
+      [ngStyle]="{
+        'font-size': iconSize + 'px',
+        height: iconSize + 'px',
+        color: iconColor
+      }"
+      >{{ materialSymbol }}</span
+    >
+  </button>
+</li>
