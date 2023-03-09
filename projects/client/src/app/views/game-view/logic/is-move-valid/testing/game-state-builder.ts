@@ -42,6 +42,7 @@ export class GameStateBuilder {
           WonBy: PlayerOrNoneModel.None,
         },
       ],
+      GameCreatedTimestampUTC: new Date(),
     };
   }
 

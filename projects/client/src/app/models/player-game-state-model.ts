@@ -11,4 +11,5 @@ export type PlayerGameStateModel = {
   IsHostPlayersTurn: boolean;
   RedJokerLaneIndex?: number;
   BlackJokerLaneIndex?: number;
+  GameCreatedTimestampUTC: Date;
 };
