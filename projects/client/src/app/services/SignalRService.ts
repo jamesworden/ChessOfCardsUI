@@ -129,7 +129,7 @@ export class SignalrService {
   }
 
   private parseAndUpdateGameState(stringifiedGameState: string) {
-    const playerGameState: PlayerGameStateModel =
+    let playerGameState: PlayerGameStateModel =
       JSON.parse(stringifiedGameState);
     console.log(playerGameState);
     this.store.dispatch(new UpdateGameState(playerGameState));

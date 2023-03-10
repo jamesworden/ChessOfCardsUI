@@ -1,5 +1,6 @@
 import { HandModel } from './hand.model';
 import { LaneModel } from './lane.model';
+import { MoveMadeModel } from './move-made.model';
 
 export type PlayerGameStateModel = {
   Hand: HandModel;
@@ -11,5 +12,6 @@ export type PlayerGameStateModel = {
   IsHostPlayersTurn: boolean;
   RedJokerLaneIndex?: number;
   BlackJokerLaneIndex?: number;
-  GameCreatedTimestampUTC: Date;
+  GameCreatedTimestampUTC: string;
+  MovesMade: MoveMadeModel[];
 };
