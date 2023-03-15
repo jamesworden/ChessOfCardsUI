@@ -1,6 +1,6 @@
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 
-export function notPlayersTurn(gameState: PlayerGameStateModel) {
+export function notPlayersTurn(gameState: PlayerGameView) {
   const hostAndHostTurn = gameState.IsHost && gameState.IsHostPlayersTurn;
   const guestAndGuestTurn = !gameState.IsHost && !gameState.IsHostPlayersTurn;
 

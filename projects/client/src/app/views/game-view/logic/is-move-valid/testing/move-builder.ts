@@ -1,8 +1,8 @@
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlaceCardAttemptModel } from 'projects/client/src/app/models/place-card-attempt.model';
+import { Move } from 'projects/client/src/app/models/move.model';
+import { PlaceCardAttempt } from 'projects/client/src/app/models/place-card-attempt.model';
 
 export class MoveBuilder {
-  private move: MoveModel;
+  private move: Move;
 
   constructor() {
     this.move = {
@@ -10,7 +10,7 @@ export class MoveBuilder {
     };
   }
 
-  addPlaceCardAttempt(placeCardAttempt: PlaceCardAttemptModel) {
+  addPlaceCardAttempt(placeCardAttempt: PlaceCardAttempt) {
     this.move.PlaceCardAttempts.push(placeCardAttempt);
     return this;
   }

@@ -1,5 +1,5 @@
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
+import { Move } from 'projects/client/src/app/models/move.model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { anyPlaceCardAttemptInMiddle } from './move-checks/any-place-card-attempt-in-middle';
 import { laneHasNoAdvantage } from './move-checks/lane-has-no-advantage';
 import { moreThanFourPlaceCardAttempts } from './move-checks/more-than-four-place-card-attempts';
@@ -22,8 +22,8 @@ import { opponentHasAdvantage } from './move-checks/opponent-has-advantage';
 import { playerHasAdvantage } from './move-checks/player-has-advantage';
 
 export function getReasonIfMoveInvalid(
-  gameState: PlayerGameStateModel,
-  move: MoveModel
+  gameState: PlayerGameView,
+  move: Move
 ): string | null {
   if (notPlayersTurn(gameState)) {
     return "It's not your turn!";

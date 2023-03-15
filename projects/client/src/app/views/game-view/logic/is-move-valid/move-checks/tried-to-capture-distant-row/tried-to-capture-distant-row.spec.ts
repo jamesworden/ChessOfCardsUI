@@ -1,7 +1,7 @@
-import { CardModel } from 'projects/client/src/app/models/card.model';
-import { KindModel } from 'projects/client/src/app/models/kind.model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
-import { SuitModel } from 'projects/client/src/app/models/suit.model';
+import { Card } from 'projects/client/src/app/models/card.model';
+import { Kind } from 'projects/client/src/app/models/kind.model';
+import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
+import { Suit } from 'projects/client/src/app/models/suit.model';
 import { triedToCaptureDistantRow } from '.';
 import { GameStateBuilder } from '../../testing/game-state-builder';
 import { MoveBuilder } from '../../testing/move-builder';
@@ -108,10 +108,10 @@ describe('[Move Check]: tried to capture distant row', () => {
       .addPlaceCardAttempt(placeCardAttempt)
       .build();
 
-    const guestCard: CardModel = {
-      Kind: KindModel.Ace,
-      Suit: SuitModel.Diamonds,
-      PlayedBy: PlayerOrNoneModel.Guest,
+    const guestCard: Card = {
+      Kind: Kind.Ace,
+      Suit: Suit.Diamonds,
+      PlayedBy: PlayerOrNone.Guest,
     };
 
     const gameState = new GameStateBuilder()
@@ -132,10 +132,10 @@ describe('[Move Check]: tried to capture distant row', () => {
       .addPlaceCardAttempt(placeCardAttempt)
       .build();
 
-    const guestCard: CardModel = {
-      Kind: KindModel.Ace,
-      Suit: SuitModel.Diamonds,
-      PlayedBy: PlayerOrNoneModel.Host,
+    const guestCard: Card = {
+      Kind: Kind.Ace,
+      Suit: Suit.Diamonds,
+      PlayedBy: PlayerOrNone.Host,
     };
 
     const gameState = new GameStateBuilder()

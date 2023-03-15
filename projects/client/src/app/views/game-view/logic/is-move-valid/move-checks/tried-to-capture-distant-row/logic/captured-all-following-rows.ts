@@ -1,10 +1,10 @@
-import { PlaceCardAttemptModel } from 'projects/client/src/app/models/place-card-attempt.model';
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
+import { PlaceCardAttempt } from 'projects/client/src/app/models/place-card-attempt.model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
+import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
 
 export function capturedAllFollowingRows(
-  gameState: PlayerGameStateModel,
-  firstPlaceCardAttempt: PlaceCardAttemptModel,
+  gameState: PlayerGameView,
+  firstPlaceCardAttempt: PlaceCardAttempt,
   endIndex = 6
 ) {
   const { TargetLaneIndex, TargetRowIndex } = firstPlaceCardAttempt;
@@ -20,8 +20,8 @@ export function capturedAllFollowingRows(
 
     const topCard = followingRow[followingRow.length - 1];
     const topCardPlayedByPlayer = gameState.IsHost
-      ? topCard.PlayedBy == PlayerOrNoneModel.Host
-      : topCard.PlayedBy == PlayerOrNoneModel.Guest;
+      ? topCard.PlayedBy == PlayerOrNone.Host
+      : topCard.PlayedBy == PlayerOrNone.Guest;
 
     if (!topCardPlayedByPlayer) {
       return false;

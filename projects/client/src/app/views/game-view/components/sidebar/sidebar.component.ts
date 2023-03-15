@@ -13,7 +13,7 @@ import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -36,8 +36,8 @@ export class SidebarComponent implements OnDestroy {
   @Select(GameState.drawOfferSent)
   drawOfferSent$!: Observable<boolean>;
 
-  @Select(GameState.gameData)
-  gameData$!: Observable<PlayerGameStateModel>;
+  @Select(GameState.playerGameView)
+  gameData$!: Observable<PlayerGameView>;
 
   cardSize: number;
   drawOfferSent: boolean;

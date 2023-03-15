@@ -7,7 +7,6 @@ import {
   DenyDrawOffer,
   FinishPlacingMultipleCards,
   MakeMove,
-  PassMove,
   RearrangeHand,
   ResetGameCode,
   ResetGameData,
@@ -16,18 +15,18 @@ import {
   StartPlacingMultipleCards,
   UpdateGameState,
 } from 'projects/client/src/app/actions/game.actions';
-import { CardModel } from 'projects/client/src/app/models/card.model';
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlaceCardAttemptModel } from 'projects/client/src/app/models/place-card-attempt.model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
-import { PlayerGameStateModel } from '../../models/player-game-state-model';
+import { Card } from 'projects/client/src/app/models/card.model';
+import { Move } from 'projects/client/src/app/models/move.model';
+import { PlaceCardAttempt } from 'projects/client/src/app/models/place-card-attempt.model';
+import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
+import { PlayerGameView } from '../../models/player-game-view.model';
 import { GameState } from '../../state/game.state';
 import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubscriptionManager } from '../../util/subscription-manager';
-import { LaneModel } from '../../models/lane.model';
+import { Lane } from '../../models/lane.model';
 import { addCardToArray } from './logic/add-card-to-array';
 import { moveCardToLane } from './logic/move-card-to-lane';
 import { removeCardFromArray } from './logic/remove-card-from-array';
@@ -47,20 +46,20 @@ import { GameOverData } from '../../models/game-over-data.model';
 export class GameViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Select(GameState.gameData)
-  playerGameState$!: Observable<PlayerGameStateModel>;
+  @Select(GameState.playerGameView)
+  playerGameView$!: Observable<PlayerGameView>;
 
   @Select(GameState.isPlacingMultipleCards)
   isPlacingMultipleCards$!: Observable<boolean>;
 
   @Select(GameState.placeMultipleCardsHand)
-  placeMultipleCardsHand$!: Observable<CardModel[] | null>;
+  placeMultipleCardsHand$!: Observable<Card[] | null>;
 
   @Select(GameState.placeMultipleCards)
-  placeMultipleCards$!: Observable<CardModel[] | null>;
+  placeMultipleCards$!: Observable<Card[] | null>;
 
   @Select(GameState.initialPlaceMultipleCardAttempt)
-  initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
+  initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttempt | null>;
 
   @Select(GameState.gameOverData)
   gameOverData$!: Observable<GameOverData>;
@@ -71,10 +70,10 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;
 
-  PlayerOrNone = PlayerOrNoneModel;
+  PlayerOrNone = PlayerOrNone;
   getCardImageFileName = getCardImageFileNameFn;
 
-  latestGameStateSnapshot: PlayerGameStateModel;
+  latestGameViewSnapshot: PlayerGameView;
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   cardSize = 64;
@@ -104,8 +103,8 @@ export class GameViewComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      this.playerGameState$.subscribe((playerGameState) => {
-        this.latestGameStateSnapshot = playerGameState;
+      this.playerGameView$.subscribe((playerGameState) => {
+        this.latestGameViewSnapshot = playerGameState;
 
         if (playerGameState) {
           this.setIsPlayersTurn(playerGameState);
@@ -138,19 +137,19 @@ export class GameViewComponent implements OnDestroy {
     this.sm.unsubscribe();
   }
 
-  onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
+  onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
     if (this.isPlacingMultipleCards) {
       return;
     }
 
     console.log(placeCardAttempt);
 
-    const move: MoveModel = {
+    const move: Move = {
       PlaceCardAttempts: [placeCardAttempt],
     };
 
     const invalidMoveMessage = getReasonIfMoveInvalid(
-      this.latestGameStateSnapshot,
+      this.latestGameViewSnapshot,
       move
     );
 
@@ -163,9 +162,9 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    canPlaceMultipleCards(placeCardAttempt, this.latestGameStateSnapshot)
+    canPlaceMultipleCards(placeCardAttempt, this.latestGameViewSnapshot)
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
-      : this.makeValidatedMove(move, this.latestGameStateSnapshot.Lanes);
+      : this.makeValidatedMove(move, this.latestGameViewSnapshot.Lanes);
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
@@ -177,7 +176,7 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    const card = event.item.data as CardModel;
+    const card = event.item.data as Card;
 
     if (this.isPlacingMultipleCards && oneListToAnother) {
       this.dragCardBackToHand(card, event.currentIndex);
@@ -210,8 +209,8 @@ export class GameViewComponent implements OnDestroy {
       placeMultipleCards.reverse()
     );
 
-    this.latestGameStateSnapshot.Hand.Cards = combinedCards;
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+    this.latestGameViewSnapshot.Hand.Cards = combinedCards;
+    this.store.dispatch(new UpdateGameState(this.latestGameViewSnapshot));
     this.store.dispatch(new RearrangeHand(combinedCards));
     this.store.dispatch(new FinishPlacingMultipleCards());
   }
@@ -238,7 +237,7 @@ export class GameViewComponent implements OnDestroy {
      * without mutating the original one.
      */
     const reversedPlaceMultipleCards = [...placeMultipleCards].reverse();
-    const playerGameState = this.store.selectSnapshot(GameState.gameData);
+    const playerGameState = this.store.selectSnapshot(GameState.playerGameView);
 
     if (!playerGameState) {
       return;
@@ -272,7 +271,7 @@ export class GameViewComponent implements OnDestroy {
     this.store.dispatch(new DenyDrawOffer());
   }
 
-  private setIsPlayersTurn(playerGameState: PlayerGameStateModel) {
+  private setIsPlayersTurn(playerGameState: PlayerGameView) {
     const { IsHost, IsHostPlayersTurn } = playerGameState;
 
     const hostAndHostTurn = IsHost && IsHostPlayersTurn;
@@ -282,14 +281,14 @@ export class GameViewComponent implements OnDestroy {
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {
     moveItemInArray(
-      this.latestGameStateSnapshot.Hand.Cards,
+      this.latestGameViewSnapshot.Hand.Cards,
       previousIndex,
       targetIndex
     );
 
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+    this.store.dispatch(new UpdateGameState(this.latestGameViewSnapshot));
     this.store.dispatch(
-      new RearrangeHand(this.latestGameStateSnapshot.Hand.Cards)
+      new RearrangeHand(this.latestGameViewSnapshot.Hand.Cards)
     );
   }
 
@@ -310,7 +309,7 @@ export class GameViewComponent implements OnDestroy {
     this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
   }
 
-  private dragCardBackToHand(card: CardModel, indexInHand: number) {
+  private dragCardBackToHand(card: Card, indexInHand: number) {
     const placeMultipleCards = this.store.selectSnapshot(
       GameState.placeMultipleCards
     );
@@ -356,13 +355,13 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.store.dispatch(new FinishPlacingMultipleCards());
-    this.latestGameStateSnapshot.Hand.Cards = handAfterSwitch;
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+    this.latestGameViewSnapshot.Hand.Cards = handAfterSwitch;
+    this.store.dispatch(new UpdateGameState(this.latestGameViewSnapshot));
     new RearrangeHand(handAfterSwitch);
   }
 
-  private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttemptModel) {
-    const cardsFromHand = [...this.latestGameStateSnapshot.Hand.Cards];
+  private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttempt) {
+    const cardsFromHand = [...this.latestGameViewSnapshot.Hand.Cards];
     removeCardFromArray(placeCardAttempt.Card, cardsFromHand);
 
     this.store.dispatch(
@@ -370,16 +369,16 @@ export class GameViewComponent implements OnDestroy {
     );
   }
 
-  private makeValidatedMove(move: MoveModel, lanes: LaneModel[]) {
+  private makeValidatedMove(move: Move, lanes: Lane[]) {
     for (const placeCardAttempt of move.PlaceCardAttempts) {
       moveCardToLane(placeCardAttempt, lanes);
       removeCardFromArray(
         placeCardAttempt.Card,
-        this.latestGameStateSnapshot.Hand.Cards
+        this.latestGameViewSnapshot.Hand.Cards
       );
     }
 
-    this.store.dispatch(new UpdateGameState(this.latestGameStateSnapshot));
+    this.store.dispatch(new UpdateGameState(this.latestGameViewSnapshot));
     this.store.dispatch(new MakeMove(move));
   }
 }

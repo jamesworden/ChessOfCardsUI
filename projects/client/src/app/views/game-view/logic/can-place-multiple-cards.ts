@@ -1,6 +1,6 @@
-import { KindModel } from '../../../models/kind.model';
-import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
-import { PlayerGameStateModel } from '../../../models/player-game-state-model';
+import { Kind } from '../../../models/kind.model';
+import { PlaceCardAttempt } from '../../../models/place-card-attempt.model';
+import { PlayerGameView } from '../../../models/player-game-view.model';
 import { opponentCapturedAnyRowWithAce } from './is-move-valid/move-checks/opponent-captured-any-row-with-ace';
 
 /**
@@ -8,8 +8,8 @@ import { opponentCapturedAnyRowWithAce } from './is-move-valid/move-checks/oppon
  * cards can be played after it, otherwise false.
  */
 export function canPlaceMultipleCards(
-  firstPlaceCardAttempt: PlaceCardAttemptModel,
-  latestGameStateSnapshot: PlayerGameStateModel
+  firstPlaceCardAttempt: PlaceCardAttempt,
+  latestGameStateSnapshot: PlayerGameView
 ) {
   const { IsHost, Hand } = latestGameStateSnapshot;
   const defendingAsHost = IsHost && firstPlaceCardAttempt.TargetRowIndex < 3;
@@ -27,7 +27,7 @@ export function canPlaceMultipleCards(
     isDefensiveMove && hasOtherPotentialPairCards;
 
   if (
-    firstPlaceCardAttempt.Card.Kind === KindModel.Ace &&
+    firstPlaceCardAttempt.Card.Kind === Kind.Ace &&
     opponentCapturedAnyRowWithAce(latestGameStateSnapshot)
   ) {
     return false;

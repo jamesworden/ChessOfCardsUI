@@ -1,7 +1,7 @@
-import { CardModel } from 'projects/client/src/app/models/card.model';
-import { KindModel } from 'projects/client/src/app/models/kind.model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
-import { SuitModel } from 'projects/client/src/app/models/suit.model';
+import { Card } from 'projects/client/src/app/models/card.model';
+import { Kind } from 'projects/client/src/app/models/kind.model';
+import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
+import { Suit } from 'projects/client/src/app/models/suit.model';
 import { GameStateBuilder } from '../../../testing/game-state-builder';
 import { PlaceCardAttemptBuilder } from '../../../testing/place-card-attempt-builder';
 import { capturedAllPreviousRows } from './captured-all-previous-rows';
@@ -26,10 +26,10 @@ describe('[Move Check Shared Logic]: captured all previous rows', () => {
       .setTargetRowIndex(1)
       .build();
 
-    const card: CardModel = {
-      Kind: KindModel.Ace,
-      Suit: SuitModel.Spades,
-      PlayedBy: PlayerOrNoneModel.Host,
+    const card: Card = {
+      Kind: Kind.Ace,
+      Suit: Suit.Spades,
+      PlayedBy: PlayerOrNone.Host,
     };
 
     const gameState = new GameStateBuilder()
@@ -48,10 +48,10 @@ describe('[Move Check Shared Logic]: captured all previous rows', () => {
       .setTargetRowIndex(1)
       .build();
 
-    const card: CardModel = {
-      Kind: KindModel.Ace,
-      Suit: SuitModel.Spades,
-      PlayedBy: PlayerOrNoneModel.Guest,
+    const card: Card = {
+      Kind: Kind.Ace,
+      Suit: Suit.Spades,
+      PlayedBy: PlayerOrNone.Guest,
     };
 
     const gameState = new GameStateBuilder()

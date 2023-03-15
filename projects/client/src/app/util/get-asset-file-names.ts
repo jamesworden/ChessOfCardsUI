@@ -1,6 +1,6 @@
-import { CardModel } from '../models/card.model';
+import { Card } from '../models/card.model';
 
-export function getCardImageFileName(card: CardModel) {
+export function getCardImageFileName(card: Card) {
   const { Suit, Kind } = card;
 
   const suit = Suit.toLowerCase();

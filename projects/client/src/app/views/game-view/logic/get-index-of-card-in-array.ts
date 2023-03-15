@@ -1,7 +1,7 @@
-import { CardModel } from '../../../models/card.model';
+import { Card } from '../../../models/card.model';
 import { cardEqualsCard } from './card-equals-card';
 
-export function getIndexOfCardInArray(card: CardModel, cards: CardModel[]) {
+export function getIndexOfCardInArray(card: Card, cards: Card[]) {
   for (let i = 0; i < cards.length; i++) {
     const cardInArray = cards[i];
 

@@ -1,5 +1,5 @@
-import { CardModel } from './card.model';
+import { Card } from './card.model';
 
-export type HandModel = {
-  Cards: CardModel[];
+export type Hand = {
+  Cards: Card[];
 };

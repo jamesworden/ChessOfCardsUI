@@ -1,10 +1,10 @@
-import { HandModel } from './hand.model';
-import { LaneModel } from './lane.model';
-import { MoveMadeModel } from './move-made.model';
+import { Hand } from './hand.model';
+import { Lane } from './lane.model';
+import { MoveMade } from './move-made.model';
 
-export type PlayerGameStateModel = {
-  Hand: HandModel;
-  Lanes: LaneModel[];
+export type PlayerGameView = {
+  Hand: Hand;
+  Lanes: Lane[];
   NumCardsInOpponentsDeck: number;
   NumCardsInOpponentsHand: number;
   NumCardsInPlayersDeck: number;
@@ -13,5 +13,5 @@ export type PlayerGameStateModel = {
   RedJokerLaneIndex?: number;
   BlackJokerLaneIndex?: number;
   GameCreatedTimestampUTC: string;
-  MovesMade: MoveMadeModel[];
+  MovesMade: MoveMade[];
 };

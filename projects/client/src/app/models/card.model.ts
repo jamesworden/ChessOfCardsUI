@@ -1,9 +1,9 @@
-import { KindModel } from './kind.model';
-import { PlayerOrNoneModel } from './player-or-none-model';
-import { SuitModel } from './suit.model';
+import { Kind } from './kind.model';
+import { PlayerOrNone } from './player-or-none.model';
+import { Suit } from './suit.model';
 
-export type CardModel = {
-  Kind: KindModel;
-  Suit: SuitModel;
-  PlayedBy: PlayerOrNoneModel;
+export type Card = {
+  Kind: Kind;
+  Suit: Suit;
+  PlayedBy: PlayerOrNone;
 };

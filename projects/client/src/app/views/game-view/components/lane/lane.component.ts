@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CardModel } from '../../../../models/card.model';
-import { LaneModel } from '../../../../models/lane.model';
-import { PlaceCardAttemptModel } from '../../../../models/place-card-attempt.model';
-import { PlayerOrNoneModel } from '../../../../models/player-or-none-model';
+import { Card } from '../../../../models/card.model';
+import { Lane } from '../../../../models/lane.model';
+import { PlaceCardAttempt } from '../../../../models/place-card-attempt.model';
+import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import {
   getCardImageFileName as getCardImageFileNameFn,
   getJokerImageFileName as getJokerImageFileNameFn,
@@ -18,42 +18,42 @@ const LIGHT_RED_TINT = 'var(--blue)';
   styleUrls: ['./lane.component.css'],
 })
 export class LaneComponent {
-  @Input() lane: LaneModel;
+  @Input() lane: Lane;
   @Input() laneIndex: number;
   @Input() isHost: boolean;
   @Input() redJokerLaneIndex?: number;
   @Input() blackJokerLaneIndex?: number;
-  @Output() placeCardAttempted: EventEmitter<PlaceCardAttemptModel> =
+  @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
 
-  PlayerOrNone = PlayerOrNoneModel;
+  PlayerOrNone = PlayerOrNone;
   getJokerImageFileName = getJokerImageFileNameFn;
   getCardImageFileName = getCardImageFileNameFn;
 
   constructor() {}
 
   getLaneBackgroundColor() {
-    if (this.lane.WonBy === PlayerOrNoneModel.None) {
+    if (this.lane.WonBy === PlayerOrNone.None) {
       return 'transparent';
     }
 
     return this.getPlayerWonLane() ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
   }
 
-  onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
+  onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
     this.placeCardAttempted.emit(placeCardAttempt);
   }
 
-  getTopCard(row: CardModel[]) {
+  getTopCard(row: Card[]) {
     const lastIndex = row.length - 1;
     return row[lastIndex];
   }
 
   private getPlayerWonLane() {
     const hostAndHostWonLane =
-      this.isHost && this.lane.WonBy === PlayerOrNoneModel.Host;
+      this.isHost && this.lane.WonBy === PlayerOrNone.Host;
     const guestAndGuestWonLane =
-      !this.isHost && this.lane.WonBy === PlayerOrNoneModel.Guest;
+      !this.isHost && this.lane.WonBy === PlayerOrNone.Guest;
 
     return hostAndHostWonLane || guestAndGuestWonLane;
   }
@@ -61,7 +61,7 @@ export class LaneComponent {
   getPositionBackgroundColor(
     laneIndex: number,
     rowIndex: number,
-    topCard?: CardModel
+    topCard?: Card
   ) {
     const laneBackgroundColor = this.getLaneBackgroundColor();
 
@@ -74,7 +74,7 @@ export class LaneComponent {
     const isLastCardPlayed =
       topCard &&
       LastCardPlayed &&
-      LastCardPlayed.PlayedBy !== PlayerOrNoneModel.None &&
+      LastCardPlayed.PlayedBy !== PlayerOrNone.None &&
       topCard.Kind === LastCardPlayed.Kind &&
       topCard.Suit === LastCardPlayed.Suit;
 
@@ -83,11 +83,11 @@ export class LaneComponent {
       : getDefaultCardBackgroundColor(laneIndex, rowIndex);
   }
 
-  getLastCardPlayedBackgroundColor(lastCardPlayed: CardModel) {
+  getLastCardPlayedBackgroundColor(lastCardPlayed: Card) {
     const hostAndPlayedByHost =
-      lastCardPlayed.PlayedBy === PlayerOrNoneModel.Host && this.isHost;
+      lastCardPlayed.PlayedBy === PlayerOrNone.Host && this.isHost;
     const guestAndPlayedByGuest =
-      lastCardPlayed.PlayedBy === PlayerOrNoneModel.Guest && !this.isHost;
+      lastCardPlayed.PlayedBy === PlayerOrNone.Guest && !this.isHost;
     const playerPlayedCard = hostAndPlayedByHost || guestAndPlayedByGuest;
 
     return playerPlayedCard ? 'var(--blue)' : 'var(--red)';

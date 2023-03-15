@@ -5,7 +5,8 @@ import { UpdateView } from '../../actions/view.actions';
 import { GameState } from '../../state/game.state';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { Observable } from 'rxjs';
-import { CreateGame } from '../../actions/game.actions';
+import { CreateGame, SelectDurationOption } from '../../actions/game.actions';
+import { DurationOption } from '../../models/duration-option.model';
 
 @Component({
   selector: 'app-host-view',
@@ -17,6 +18,8 @@ export class HostViewComponent implements OnDestroy {
 
   @Select(GameState.gameCode)
   gameCode$: Observable<string | null>;
+
+  DurationOption = DurationOption;
 
   constructor(private store: Store) {
     this.sm.add(
@@ -34,5 +37,9 @@ export class HostViewComponent implements OnDestroy {
 
   onBack() {
     this.store.dispatch(new UpdateView(View.HostOrJoin));
+  }
+
+  selectDurationOption(durationOption: DurationOption) {
+    this.store.dispatch(new SelectDurationOption(durationOption));
   }
 }

@@ -34,3 +34,16 @@ p {
   text-align: center;
   font-size: 20px;
 }
+
+.game-options-container {
+  margin: auto;
+  background-color: rgb(56, 56, 56);
+  color: var(--white);
+  border-radius: 4px;
+  padding: 16px;
+  margin-top: 48px;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: var(--white);
+}

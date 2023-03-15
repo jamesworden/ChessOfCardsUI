@@ -1,9 +1,9 @@
-import { LaneModel } from '../../../models/lane.model';
-import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
+import { Lane } from '../../../models/lane.model';
+import { PlaceCardAttempt } from '../../../models/place-card-attempt.model';
 
 export function moveCardToLane(
-  placeCardAttempt: PlaceCardAttemptModel,
-  lanes: LaneModel[]
+  placeCardAttempt: PlaceCardAttempt,
+  lanes: Lane[]
 ) {
   const { TargetLaneIndex, TargetRowIndex, Card } = placeCardAttempt;
   const targetLane = lanes[TargetLaneIndex];

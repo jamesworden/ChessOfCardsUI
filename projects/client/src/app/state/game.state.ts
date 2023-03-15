@@ -22,19 +22,20 @@ import {
   CreateGame,
   JoinGame,
   ResignGame,
+  SelectDurationOption,
 } from '../actions/game.actions';
-import { CardModel } from '../models/card.model';
+import { Card } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
-import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
-import { PlayerGameStateModel } from '../models/player-game-state-model';
+import { PlaceCardAttempt } from '../models/place-card-attempt.model';
+import { PlayerGameView } from '../models/player-game-view.model';
 import { SignalrService } from '../services/SignalRService';
 
 type GameStateModel = {
-  gameData: PlayerGameStateModel | null;
+  playerGameView: PlayerGameView | null;
   isPlacingMultipleCards: boolean;
-  initalPlaceMultipleCardAttempt: PlaceCardAttemptModel | null;
-  placeMultipleCardsHand: CardModel[] | null;
-  placeMultipleCards: CardModel[] | null;
+  initalPlaceMultipleCardAttempt: PlaceCardAttempt | null;
+  placeMultipleCardsHand: Card[] | null;
+  placeMultipleCards: Card[] | null;
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
   gameCode: string | null;
@@ -44,7 +45,7 @@ type GameStateModel = {
 };
 
 const initialGameState: GameStateModel = {
-  gameData: null,
+  playerGameView: null,
   isPlacingMultipleCards: false,
   initalPlaceMultipleCardAttempt: null,
   placeMultipleCardsHand: null,
@@ -66,8 +67,8 @@ const initialGameState: GameStateModel = {
 @Injectable()
 export class GameState {
   @Selector()
-  static gameData(state: GameStateModel) {
-    return state.gameData;
+  static playerGameView(state: GameStateModel) {
+    return state.playerGameView;
   }
 
   @Selector()
@@ -125,7 +126,7 @@ export class GameState {
   @Action(UpdateGameState)
   updateGameState(ctx: StateContext<GameStateModel>, action: UpdateGameState) {
     ctx.patchState({
-      gameData: action.playerGameState,
+      playerGameView: action.playerGameView,
       drawOfferSent: false,
       hasPendingDrawOffer: false,
       opponentPassedMove: false,
@@ -178,7 +179,7 @@ export class GameState {
   @Action(ResetGameData)
   resetGameData(ctx: StateContext<GameStateModel>) {
     ctx.patchState({
-      gameData: undefined,
+      playerGameView: undefined,
       gameCode: null,
       drawOfferSent: false,
       hasPendingDrawOffer: false,
@@ -290,5 +291,13 @@ export class GameState {
   @Action(ResignGame)
   resignGame() {
     this.signalrService.resignGame();
+  }
+
+  @Action(SelectDurationOption)
+  selectDurationOption(
+    _: StateContext<GameStateModel>,
+    action: SelectDurationOption
+  ) {
+    this.signalrService.selectDurationOption(action.durationOption);
   }
 }

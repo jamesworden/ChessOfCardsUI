@@ -1,19 +1,20 @@
-import { CardModel } from '../models/card.model';
+import { Card } from '../models/card.model';
+import { DurationOption } from '../models/duration-option.model';
 import { GameOverData } from '../models/game-over-data.model';
-import { MoveModel } from '../models/move.model';
-import { PlaceCardAttemptModel } from '../models/place-card-attempt.model';
-import { PlayerGameStateModel } from '../models/player-game-state-model';
+import { Move } from '../models/move.model';
+import { PlaceCardAttempt } from '../models/place-card-attempt.model';
+import { PlayerGameView } from '../models/player-game-view.model';
 
 export class UpdateGameState {
   static readonly type = '[GameState] Update Game State';
-  constructor(public playerGameState: PlayerGameStateModel) {}
+  constructor(public playerGameView: PlayerGameView) {}
 }
 
 export class StartPlacingMultipleCards {
   static readonly type = '[GameState] Start Placing Multiple Cards';
   constructor(
-    public placeCardAttempt: PlaceCardAttemptModel,
-    public remainingCardsInHand: CardModel[]
+    public placeCardAttempt: PlaceCardAttempt,
+    public remainingCardsInHand: Card[]
   ) {}
 }
 
@@ -24,12 +25,12 @@ export class FinishPlacingMultipleCards {
 
 export class SetPlaceMultipleCards {
   static readonly type = '[GameState] Set Place Multiple Cards';
-  constructor(public cards: CardModel[]) {}
+  constructor(public cards: Card[]) {}
 }
 
 export class SetPlaceMultipleCardsHand {
   static readonly type = '[GameState] Set Place Multiple Cards Hand';
-  constructor(public cards: CardModel[]) {}
+  constructor(public cards: Card[]) {}
 }
 
 export class ResetGameData {
@@ -82,12 +83,12 @@ export class PassMove {
 
 export class MakeMove {
   static readonly type = '[GameState] Make Move';
-  constructor(public move: MoveModel) {}
+  constructor(public move: Move) {}
 }
 
 export class RearrangeHand {
   static readonly type = '[GameState] Rearrange Hand';
-  constructor(public cards: CardModel[]) {}
+  constructor(public cards: Card[]) {}
 }
 
 export class CreateGame {
@@ -101,4 +102,9 @@ export class JoinGame {
 
 export class ResignGame {
   static readonly type = '[GameState] Resign Game';
+}
+
+export class SelectDurationOption {
+  static readonly type = '[GameState] Select Duration Option';
+  constructor(public durationOption: DurationOption) {}
 }

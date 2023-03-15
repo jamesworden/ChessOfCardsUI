@@ -1,5 +1,5 @@
-import { PlaceCardAttemptModel } from './place-card-attempt.model';
+import { PlaceCardAttempt } from './place-card-attempt.model';
 
-export type MoveModel = {
-  PlaceCardAttempts: PlaceCardAttemptModel[];
+export type Move = {
+  PlaceCardAttempts: PlaceCardAttempt[];
 };

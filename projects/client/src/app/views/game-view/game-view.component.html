@@ -4,13 +4,13 @@
   <div class="game-container">
     <div
       class="game"
-      *ngIf="playerGameState$ | async as playerGameState"
+      *ngIf="playerGameView$ | async as playerGameView"
       cdkDropListGroup
     >
       <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
       <app-board
-        [playerGameState]="latestGameStateSnapshot"
+        [playerGameView]="latestGameViewSnapshot"
         [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
         [initialPlaceMultipleCardAttempt]="
           initialPlaceMultipleCardAttempt$ | async
@@ -20,8 +20,8 @@
 
       <app-player-hand
         [isPlacingMultipleCards]="isPlacingMultipleCards"
-        [isHost]="playerGameState.IsHost"
-        [cards]="playerGameState.Hand.Cards"
+        [isHost]="playerGameView.IsHost"
+        [cards]="playerGameView.Hand.Cards"
         [cardSize]="cardSize"
         [disabled]="!isPlayersTurn"
         (cardDropped)="onPlayerHandCardDrop($event)"
@@ -38,7 +38,7 @@
   >
     <app-opponent-hand
       [cardSize]="cardSize"
-      [numCards]="(playerGameState$ | async)!.NumCardsInOpponentsHand"
+      [numCards]="(playerGameView$ | async)!.NumCardsInOpponentsHand"
     ></app-opponent-hand>
   </ng-container>
 

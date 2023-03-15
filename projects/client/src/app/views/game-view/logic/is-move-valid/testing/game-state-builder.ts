@@ -1,9 +1,9 @@
-import { CardModel } from 'projects/client/src/app/models/card.model';
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
+import { Card } from 'projects/client/src/app/models/card.model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
+import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
 
 export class GameStateBuilder {
-  private gameState: PlayerGameStateModel;
+  private gameState: PlayerGameView;
 
   constructor() {
     this.gameState = {
@@ -17,29 +17,29 @@ export class GameStateBuilder {
       },
       Lanes: [
         {
-          LaneAdvantage: PlayerOrNoneModel.None,
+          LaneAdvantage: PlayerOrNone.None,
           Rows: [[], [], [], [], [], [], []],
-          WonBy: PlayerOrNoneModel.None,
+          WonBy: PlayerOrNone.None,
         },
         {
-          LaneAdvantage: PlayerOrNoneModel.None,
+          LaneAdvantage: PlayerOrNone.None,
           Rows: [[], [], [], [], [], [], []],
-          WonBy: PlayerOrNoneModel.None,
+          WonBy: PlayerOrNone.None,
         },
         {
-          LaneAdvantage: PlayerOrNoneModel.None,
+          LaneAdvantage: PlayerOrNone.None,
           Rows: [[], [], [], [], [], [], []],
-          WonBy: PlayerOrNoneModel.None,
+          WonBy: PlayerOrNone.None,
         },
         {
-          LaneAdvantage: PlayerOrNoneModel.None,
+          LaneAdvantage: PlayerOrNone.None,
           Rows: [[], [], [], [], [], [], []],
-          WonBy: PlayerOrNoneModel.None,
+          WonBy: PlayerOrNone.None,
         },
         {
-          LaneAdvantage: PlayerOrNoneModel.None,
+          LaneAdvantage: PlayerOrNone.None,
           Rows: [[], [], [], [], [], [], []],
-          WonBy: PlayerOrNoneModel.None,
+          WonBy: PlayerOrNone.None,
         },
       ],
       GameCreatedTimestampUTC: new Date(),
@@ -57,41 +57,41 @@ export class GameStateBuilder {
   }
 
   setNoLaneAdvantage(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNoneModel.None;
+    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.None;
     return this;
   }
 
   setGuestLaneAdvantage(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNoneModel.Guest;
+    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.Guest;
     return this;
   }
 
   setHostLaneAdvantage(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNoneModel.Host;
+    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.Host;
     return this;
   }
 
-  addCardToLaneOnRow(card: CardModel, laneIndex: number, rowIndex: number) {
+  addCardToLaneOnRow(card: Card, laneIndex: number, rowIndex: number) {
     this.gameState.Lanes[laneIndex].Rows[rowIndex].push(card);
     return this;
   }
 
   setHostWonBy(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNoneModel.Host;
+    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNone.Host;
     return this;
   }
 
   setGuestWonBy(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNoneModel.Guest;
+    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNone.Guest;
     return this;
   }
 
   setNoneWonBy(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNoneModel.None;
+    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNone.None;
     return this;
   }
 
-  setLastCardPlayedOnLane(card: CardModel, laneIndex: number) {
+  setLastCardPlayedOnLane(card: Card, laneIndex: number) {
     this.gameState.Lanes[laneIndex].LastCardPlayed = card;
     return this;
   }

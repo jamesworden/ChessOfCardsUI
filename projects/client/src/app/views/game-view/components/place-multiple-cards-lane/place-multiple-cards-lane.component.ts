@@ -3,11 +3,11 @@ import { Select, Store } from '@ngxs/store';
 import { GameState } from '../../../../state/game.state';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PlayerGameStateModel } from '../../../../models/player-game-state-model';
-import { CardModel } from '../../../../models/card.model';
-import { PlaceCardAttemptModel } from '../../../../models/place-card-attempt.model';
+import { PlayerGameView } from '../../../../models/player-game-view.model';
+import { Card } from '../../../../models/card.model';
+import { PlaceCardAttempt } from '../../../../models/place-card-attempt.model';
 import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { KindModel } from '../../../../models/kind.model';
+import { Kind } from '../../../../models/kind.model';
 import { cardExistsInArray } from '../../logic/card-exists-in-array';
 import { getIndexOfCardInArray } from '../../logic/get-index-of-card-in-array';
 import {
@@ -39,14 +39,14 @@ const MIN_CARD_HEIGHT_FACTOR = 5;
 export class PlaceMultipleCardsLaneComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Select(GameState.gameData)
-  playerGameState$!: Observable<PlayerGameStateModel>;
+  @Select(GameState.playerGameView)
+  playerGameState$!: Observable<PlayerGameView>;
 
   @Select(GameState.initialPlaceMultipleCardAttempt)
-  initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttemptModel | null>;
+  initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttempt | null>;
 
   @Select(GameState.placeMultipleCards)
-  placeMultipleCards$!: Observable<CardModel[] | null>;
+  placeMultipleCards$!: Observable<Card[] | null>;
 
   getCardImageFileName = getCardImageFileNameFn;
   getJokerImageFileName = getJokerImageFileNameFn;
@@ -67,7 +67,7 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
       const { TargetLaneIndex, TargetRowIndex } =
         initialMultiplePlaceCardAttempt;
       const lane = playerGameState.Lanes[TargetLaneIndex];
-      const cards: CardModel[] = [];
+      const cards: Card[] = [];
 
       if (playerGameState.IsHost) {
         for (let i = 0; i < TargetRowIndex; i++) {
@@ -106,20 +106,20 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
    * Angular is annoying: this.memberVariable returns undefined when passing the predicate
    * function in itself. We wrap the predicate in this one so we can access the card attempt.
    */
-  getEnterPredicate(initialPlaceCardAttempt: PlaceCardAttemptModel | null) {
-    return function (dragData: CdkDrag<CardModel>) {
+  getEnterPredicate(initialPlaceCardAttempt: PlaceCardAttempt | null) {
+    return function (dragData: CdkDrag<Card>) {
       if (!initialPlaceCardAttempt) {
         return false;
       }
 
-      const kindOfAttemptedCard = dragData.data.Kind as KindModel;
+      const kindOfAttemptedCard = dragData.data.Kind as Kind;
       const { Kind: kindOfInitialCard } = initialPlaceCardAttempt.Card;
 
       return kindOfAttemptedCard == kindOfInitialCard;
     };
   }
 
-  onCardPlaced(event: CdkDragDrop<string, CardModel>) {
+  onCardPlaced(event: CdkDragDrop<string, Card>) {
     const { currentIndex: targetIndex, item } = event;
     const card = item.data;
 
@@ -141,8 +141,8 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
   }
 
   private rearrangePlaceMultipleCards(
-    placeMultipleCards: CardModel[],
-    card: CardModel,
+    placeMultipleCards: Card[],
+    card: Card,
     targetIndex: number
   ) {
     const originalIndex = getIndexOfCardInArray(card, placeMultipleCards);
@@ -157,8 +157,8 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
   }
 
   private addPlaceMultipleCardFromHand(
-    placeMultipleCards: CardModel[],
-    card: CardModel,
+    placeMultipleCards: Card[],
+    card: Card,
     targetIndex: number
   ) {
     addCardToArray(card, placeMultipleCards, targetIndex);

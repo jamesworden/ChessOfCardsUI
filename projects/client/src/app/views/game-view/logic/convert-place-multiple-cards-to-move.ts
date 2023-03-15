@@ -1,10 +1,10 @@
-import { CardModel } from '../../../models/card.model';
-import { MoveModel } from '../../../models/move.model';
-import { PlaceCardAttemptModel } from '../../../models/place-card-attempt.model';
+import { Card } from '../../../models/card.model';
+import { Move } from '../../../models/move.model';
+import { PlaceCardAttempt } from '../../../models/place-card-attempt.model';
 
 export function convertPlaceMultipleCardsToMove(
-  placeMultipleCards: CardModel[],
-  initialPlaceMultipleCardAttempt: PlaceCardAttemptModel,
+  placeMultipleCards: Card[],
+  initialPlaceMultipleCardAttempt: PlaceCardAttempt,
   isHost: boolean
 ) {
   let { TargetLaneIndex, TargetRowIndex } = initialPlaceMultipleCardAttempt;
@@ -28,7 +28,7 @@ export function convertPlaceMultipleCardsToMove(
       }
     }
 
-    const placeCardAttempt: PlaceCardAttemptModel = {
+    const placeCardAttempt: PlaceCardAttempt = {
       Card,
       TargetLaneIndex,
       TargetRowIndex: targetRowIndex,
@@ -37,7 +37,7 @@ export function convertPlaceMultipleCardsToMove(
     return placeCardAttempt;
   });
 
-  const move: MoveModel = {
+  const move: Move = {
     PlaceCardAttempts,
   };
 

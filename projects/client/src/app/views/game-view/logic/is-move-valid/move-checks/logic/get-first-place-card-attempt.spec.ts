@@ -1,5 +1,5 @@
-import { KindModel } from 'projects/client/src/app/models/kind.model';
-import { SuitModel } from 'projects/client/src/app/models/suit.model';
+import { Kind } from 'projects/client/src/app/models/kind.model';
+import { Suit } from 'projects/client/src/app/models/suit.model';
 import { GameStateBuilder } from '../../testing/game-state-builder';
 import { MoveBuilder } from '../../testing/move-builder';
 import { PlaceCardAttemptBuilder } from '../../testing/place-card-attempt-builder';
@@ -8,20 +8,20 @@ import { getFirstPlaceCardAttempt } from './get-first-place-card-attempt';
 describe('[Move Check Logic]: get first place card attempt', () => {
   it('should return first place card attempt when host', () => {
     const one = new PlaceCardAttemptBuilder()
-      .setCardKind(KindModel.Ace)
-      .setCardSuit(SuitModel.Spades)
+      .setCardKind(Kind.Ace)
+      .setCardSuit(Suit.Spades)
       .setTargetRowIndex(0)
       .build();
 
     const two = new PlaceCardAttemptBuilder()
-      .setCardKind(KindModel.Ace)
-      .setCardSuit(SuitModel.Spades)
+      .setCardKind(Kind.Ace)
+      .setCardSuit(Suit.Spades)
       .setTargetRowIndex(0)
       .build();
 
     const three = new PlaceCardAttemptBuilder()
-      .setCardKind(KindModel.Ace)
-      .setCardSuit(SuitModel.Spades)
+      .setCardKind(Kind.Ace)
+      .setCardSuit(Suit.Spades)
       .setTargetRowIndex(0)
       .build();
 
@@ -38,20 +38,20 @@ describe('[Move Check Logic]: get first place card attempt', () => {
 
   it('should return first place card attempt when guest', () => {
     const one = new PlaceCardAttemptBuilder()
-      .setCardKind(KindModel.Ace)
-      .setCardSuit(SuitModel.Spades)
+      .setCardKind(Kind.Ace)
+      .setCardSuit(Suit.Spades)
       .setTargetRowIndex(6)
       .build();
 
     const two = new PlaceCardAttemptBuilder()
-      .setCardKind(KindModel.Ace)
-      .setCardSuit(SuitModel.Spades)
+      .setCardKind(Kind.Ace)
+      .setCardSuit(Suit.Spades)
       .setTargetRowIndex(5)
       .build();
 
     const three = new PlaceCardAttemptBuilder()
-      .setCardKind(KindModel.Ace)
-      .setCardSuit(SuitModel.Spades)
+      .setCardKind(Kind.Ace)
+      .setCardSuit(Suit.Spades)
       .setTargetRowIndex(4)
       .build();
 

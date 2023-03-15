@@ -1,7 +1,7 @@
-import { CardModel } from './card.model';
+import { Card } from './card.model';
 
-export type PlaceCardAttemptModel = {
-  Card: CardModel;
+export type PlaceCardAttempt = {
+  Card: Card;
   TargetLaneIndex: number;
   TargetRowIndex: number;
 };

@@ -16,13 +16,15 @@ import {
   SetOpponentPassedMove,
   SetGameCodeIsInvalid,
 } from '../actions/game.actions';
-import { CardModel } from '../models/card.model';
-import { MoveModel } from '../models/move.model';
-import { PlayerGameStateModel } from '../models/player-game-state-model';
+import { Card } from '../models/card.model';
+import { Move } from '../models/move.model';
+import { PlayerGameView } from '../models/player-game-view.model';
 import { environment } from '../../environments/environment';
 import { UpdateView } from '../actions/view.actions';
 import { View } from '../views';
 import { SetIsConnectedToServer } from '../actions/server.actions';
+import { DurationOption } from '../models/duration-option.model';
+import { PendingGameView } from '../models/pending-game-view.model';
 
 const { serverUrl } = environment;
 
@@ -75,9 +77,15 @@ export class SignalrService {
   }
 
   private registerServerEvents(): void {
-    this.hubConnection.on('CreatedPendingGame', (gameCode: string) => {
-      this.store.dispatch(new SetGameCode(gameCode));
-    });
+    this.hubConnection.on(
+      'CreatedPendingGame',
+      (stringifiedPendingGameView: string) => {
+        const pendingGameView: PendingGameView = JSON.parse(
+          stringifiedPendingGameView
+        );
+        this.store.dispatch(new SetGameCode(pendingGameView.GameCode));
+      }
+    );
 
     this.hubConnection.on('OpponentDisconnected', () => {
       this.store.dispatch(new ResetGameCode());
@@ -88,7 +96,7 @@ export class SignalrService {
     });
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
-      this.parseAndUpdateGameState(stringifiedGameState);
+      this.parseAndUpdateGameView(stringifiedGameState);
       this.store.dispatch(new UpdateView(View.Game));
     });
 
@@ -103,11 +111,11 @@ export class SignalrService {
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
       this.store.dispatch(new FinishPlacingMultipleCards());
-      this.parseAndUpdateGameState(stringifiedGameState);
+      this.parseAndUpdateGameView(stringifiedGameState);
     });
 
     this.hubConnection.on('PassedMove', (stringifiedGameState) => {
-      const gameState = this.parseAndUpdateGameState(stringifiedGameState);
+      const gameState = this.parseAndUpdateGameView(stringifiedGameState);
       const isPlayersTurn = this.isPlayersTurn(gameState);
 
       if (isPlayersTurn) {
@@ -120,7 +128,7 @@ export class SignalrService {
     });
   }
 
-  private isPlayersTurn(gameState: PlayerGameStateModel) {
+  private isPlayersTurn(gameState: PlayerGameView) {
     const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
     const guestAndGuestTurn = !gameState.IsHostPlayersTurn && !gameState.IsHost;
     const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
@@ -128,13 +136,12 @@ export class SignalrService {
     return isPlayersTurn;
   }
 
-  private parseAndUpdateGameState(stringifiedGameState: string) {
-    let playerGameState: PlayerGameStateModel =
-      JSON.parse(stringifiedGameState);
-    console.log(playerGameState);
-    this.store.dispatch(new UpdateGameState(playerGameState));
+  private parseAndUpdateGameView(stringifiedGameState: string) {
+    let playerGameView: PlayerGameView = JSON.parse(stringifiedGameState);
+    console.log(playerGameView);
+    this.store.dispatch(new UpdateGameState(playerGameView));
 
-    return playerGameState;
+    return playerGameView;
   }
 
   public createGame() {
@@ -145,12 +152,12 @@ export class SignalrService {
     this.hubConnection.invoke('JoinGame', gameCode);
   }
 
-  public rearrangeHand(cards: CardModel[]) {
+  public rearrangeHand(cards: Card[]) {
     const stringifiedCards = JSON.stringify(cards);
     this.hubConnection.invoke('RearrangeHand', stringifiedCards);
   }
 
-  public makeMove(move: MoveModel) {
+  public makeMove(move: Move) {
     const stringifiedMove = JSON.stringify(move);
     this.hubConnection.invoke('MakeMove', stringifiedMove);
   }
@@ -169,5 +176,9 @@ export class SignalrService {
 
   public resignGame() {
     this.hubConnection.invoke('ResignGame');
+  }
+
+  public selectDurationOption(durationOption: DurationOption) {
+    this.hubConnection.invoke('SelectDurationOption', durationOption);
   }
 }

@@ -1,10 +1,7 @@
-import { CardModel } from 'projects/client/src/app/models/card.model';
-import { KindModel } from 'projects/client/src/app/models/kind.model';
+import { Card } from 'projects/client/src/app/models/card.model';
+import { Kind } from 'projects/client/src/app/models/kind.model';
 
-export function cardTrumpsCard(
-  attackingCard: CardModel,
-  defendingCard: CardModel
-) {
+export function cardTrumpsCard(attackingCard: Card, defendingCard: Card) {
   const hasSameSuit = attackingCard.Suit === defendingCard.Suit;
   const hasSameKind = attackingCard.Kind === defendingCard.Kind;
 
@@ -15,8 +12,8 @@ export function cardTrumpsCard(
   return getKindValue(attackingCard.Kind) > getKindValue(defendingCard.Kind);
 }
 
-function getKindValue(kind: KindModel) {
-  const kinds = Object.keys(KindModel);
+function getKindValue(kind: Kind) {
+  const kinds = Object.keys(Kind);
 
   for (let i = 0; i < kinds.length; i++) {
     if (kind === kinds[i]) {

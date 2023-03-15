@@ -1,9 +1,9 @@
-import { CardModel } from './card.model';
-import { PlayerOrNoneModel } from './player-or-none-model';
+import { Card } from './card.model';
+import { PlayerOrNone } from './player-or-none.model';
 
-export type LaneModel = {
-  Rows: CardModel[][];
-  LaneAdvantage: PlayerOrNoneModel;
-  LastCardPlayed?: CardModel;
-  WonBy: PlayerOrNoneModel;
+export type Lane = {
+  Rows: Card[][];
+  LaneAdvantage: PlayerOrNone;
+  LastCardPlayed?: Card;
+  WonBy: PlayerOrNone;
 };

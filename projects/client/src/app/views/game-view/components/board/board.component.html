@@ -11,7 +11,7 @@
 
   <div class="lanes">
     <ng-container
-      *ngFor="let lane of playerGameState.Lanes; let laneIndex = index"
+      *ngFor="let lane of playerGameView.Lanes; let laneIndex = index"
     >
       <ng-container
         *ngIf="
@@ -25,9 +25,9 @@
         <app-lane
           [lane]="lane"
           [laneIndex]="laneIndex"
-          [isHost]="playerGameState.IsHost"
-          [redJokerLaneIndex]="playerGameState.RedJokerLaneIndex"
-          [blackJokerLaneIndex]="playerGameState.BlackJokerLaneIndex"
+          [isHost]="playerGameView.IsHost"
+          [redJokerLaneIndex]="playerGameView.RedJokerLaneIndex"
+          [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
           (placeCardAttempted)="onPlaceCardAttempted($event)"
         ></app-lane>
       </ng-template>

@@ -1,11 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { LaneModel } from 'projects/client/src/app/models/lane.model';
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlaceCardAttemptModel } from 'projects/client/src/app/models/place-card-attempt.model';
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
+import { PlaceCardAttempt } from 'projects/client/src/app/models/place-card-attempt.model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
-import { getReasonIfMoveInvalid } from '../../logic/is-move-valid';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { Z_INDEXES } from '../../z-indexes';
 
@@ -17,10 +13,10 @@ import { Z_INDEXES } from '../../z-indexes';
 export class BoardComponent {
   private sm = new SubscriptionManager();
 
-  @Input() playerGameState: PlayerGameStateModel;
-  @Input() initialPlaceMultipleCardAttempt: PlaceCardAttemptModel | null;
+  @Input() playerGameView: PlayerGameView;
+  @Input() initialPlaceMultipleCardAttempt: PlaceCardAttempt | null;
   @Input() isPlacingMultipleCards: boolean | null;
-  @Output() placeCardAttempted: EventEmitter<PlaceCardAttemptModel> =
+  @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
 
   Z_INDEXES = Z_INDEXES;
@@ -34,7 +30,7 @@ export class BoardComponent {
     );
   }
 
-  onPlaceCardAttempted(placeCardAttempt: PlaceCardAttemptModel) {
+  onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
     this.placeCardAttempted.emit(placeCardAttempt);
   }
 }

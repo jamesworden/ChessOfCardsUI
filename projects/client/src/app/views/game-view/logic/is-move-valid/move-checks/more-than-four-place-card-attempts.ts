@@ -1,5 +1,5 @@
-import { MoveModel } from 'projects/client/src/app/models/move.model';
+import { Move } from 'projects/client/src/app/models/move.model';
 
-export function moreThanFourPlaceCardAttempts(move: MoveModel) {
+export function moreThanFourPlaceCardAttempts(move: Move) {
   return move.PlaceCardAttempts.length > 4;
 }

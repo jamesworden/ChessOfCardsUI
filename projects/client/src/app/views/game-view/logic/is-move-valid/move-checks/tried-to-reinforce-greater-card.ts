@@ -1,12 +1,12 @@
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
+import { Move } from 'projects/client/src/app/models/move.model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
+import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
 import { cardTrumpsCard } from './logic/card-trumps-card';
 import { getFirstPlaceCardAttempt } from './logic/get-first-place-card-attempt';
 
 export function triedToReinforceGreaterCard(
-  gameState: PlayerGameStateModel,
-  move: MoveModel
+  gameState: PlayerGameView,
+  move: Move
 ) {
   const firstPlaceCardAttempt = getFirstPlaceCardAttempt(gameState, move);
   const { Card, TargetLaneIndex, TargetRowIndex } = firstPlaceCardAttempt;
@@ -19,8 +19,8 @@ export function triedToReinforceGreaterCard(
   const targetCard = targetRow[targetRow.length - 1];
 
   const playerPlayedTargetCard = gameState.IsHost
-    ? targetCard.PlayedBy == PlayerOrNoneModel.Host
-    : targetCard.PlayedBy == PlayerOrNoneModel.Guest;
+    ? targetCard.PlayedBy == PlayerOrNone.Host
+    : targetCard.PlayedBy == PlayerOrNone.Guest;
 
   return playerPlayedTargetCard && !cardTrumpsCard(Card, targetCard);
 }

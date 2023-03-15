@@ -1,4 +1,4 @@
-export enum SuitModel {
+export enum Suit {
   Diamonds = 'Diamonds',
   Clubs = 'Clubs',
   Hearts = 'Hearts',

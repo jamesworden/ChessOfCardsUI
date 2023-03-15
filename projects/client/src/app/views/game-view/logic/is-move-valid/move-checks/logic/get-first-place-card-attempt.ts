@@ -1,9 +1,9 @@
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
+import { Move } from 'projects/client/src/app/models/move.model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 
 export function getFirstPlaceCardAttempt(
-  gameState: PlayerGameStateModel,
-  move: MoveModel
+  gameState: PlayerGameView,
+  move: Move
 ) {
   const targetRowIndexes = move.PlaceCardAttempts.map((p) => p.TargetRowIndex);
 

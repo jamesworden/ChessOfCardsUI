@@ -1,7 +1,7 @@
-import { CardModel } from 'projects/client/src/app/models/card.model';
-import { KindModel } from 'projects/client/src/app/models/kind.model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
-import { SuitModel } from 'projects/client/src/app/models/suit.model';
+import { Card } from 'projects/client/src/app/models/card.model';
+import { Kind } from 'projects/client/src/app/models/kind.model';
+import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
+import { Suit } from 'projects/client/src/app/models/suit.model';
 import { GameStateBuilder } from '../testing/game-state-builder';
 import { MoveBuilder } from '../testing/move-builder';
 import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
@@ -10,9 +10,9 @@ import { triedToCaptureGreaterCard } from './tried-to-capture-greater-card';
 describe('[Move Check]: tried to capture greater card', () => {
   it('should return true when host tried to capture greater guest card', () => {
     const hostPlaceCardAttempt = new PlaceCardAttemptBuilder()
-      .setCardKind(KindModel.Seven)
-      .setCardSuit(SuitModel.Clubs)
-      .setCardPlayedBy(PlayerOrNoneModel.None)
+      .setCardKind(Kind.Seven)
+      .setCardSuit(Suit.Clubs)
+      .setCardPlayedBy(PlayerOrNone.None)
       .setTargetLaneIndex(0)
       .setTargetRowIndex(0)
       .build();
@@ -21,10 +21,10 @@ describe('[Move Check]: tried to capture greater card', () => {
       .addPlaceCardAttempt(hostPlaceCardAttempt)
       .build();
 
-    const greaterGuestCard: CardModel = {
-      Kind: KindModel.Ace,
-      Suit: SuitModel.Clubs,
-      PlayedBy: PlayerOrNoneModel.Guest,
+    const greaterGuestCard: Card = {
+      Kind: Kind.Ace,
+      Suit: Suit.Clubs,
+      PlayedBy: PlayerOrNone.Guest,
     };
 
     const gameState = new GameStateBuilder()
@@ -37,9 +37,9 @@ describe('[Move Check]: tried to capture greater card', () => {
 
   it('should return false when guest tried to capture lesser host card', () => {
     const guestPlaceCardAttempt = new PlaceCardAttemptBuilder()
-      .setCardKind(KindModel.Jack)
-      .setCardSuit(SuitModel.Diamonds)
-      .setCardPlayedBy(PlayerOrNoneModel.None)
+      .setCardKind(Kind.Jack)
+      .setCardSuit(Suit.Diamonds)
+      .setCardPlayedBy(PlayerOrNone.None)
       .setTargetLaneIndex(0)
       .setTargetRowIndex(0)
       .build();
@@ -48,10 +48,10 @@ describe('[Move Check]: tried to capture greater card', () => {
       .addPlaceCardAttempt(guestPlaceCardAttempt)
       .build();
 
-    const lesserHostCard: CardModel = {
-      Kind: KindModel.Three,
-      Suit: SuitModel.Diamonds,
-      PlayedBy: PlayerOrNoneModel.Host,
+    const lesserHostCard: Card = {
+      Kind: Kind.Three,
+      Suit: Suit.Diamonds,
+      PlayedBy: PlayerOrNone.Host,
     };
 
     const gameState = new GameStateBuilder()

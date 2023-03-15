@@ -8,6 +8,32 @@
   <div class="horisontal-align">
     <span class="game-code">{{ gameCode$ | async }}</span>
   </div>
+
+  <br />
+
+  <div class="game-options-container">
+    <div class="game-option">
+      <h3 class="game-option-title">Duration</h3>
+      <div
+        class="duration-option"
+        (click)="selectDurationOption(DurationOption.FiveMinutes)"
+      >
+        5 min
+      </div>
+      <div
+        class="duration-option"
+        (click)="selectDurationOption(DurationOption.ThreeMinutes)"
+      >
+        3 min
+      </div>
+      <div
+        class="duration-option"
+        (click)="selectDurationOption(DurationOption.OneMinute)"
+      >
+        1 min
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="horisontal-align back-button">

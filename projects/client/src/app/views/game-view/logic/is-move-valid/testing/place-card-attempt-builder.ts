@@ -1,34 +1,34 @@
-import { KindModel } from 'projects/client/src/app/models/kind.model';
-import { PlaceCardAttemptModel } from 'projects/client/src/app/models/place-card-attempt.model';
-import { PlayerOrNoneModel } from 'projects/client/src/app/models/player-or-none-model';
-import { SuitModel } from 'projects/client/src/app/models/suit.model';
+import { Kind } from 'projects/client/src/app/models/kind.model';
+import { PlaceCardAttempt } from 'projects/client/src/app/models/place-card-attempt.model';
+import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
+import { Suit } from 'projects/client/src/app/models/suit.model';
 
 export class PlaceCardAttemptBuilder {
-  private placeCardAttempt: PlaceCardAttemptModel;
+  private placeCardAttempt: PlaceCardAttempt;
 
   constructor() {
     this.placeCardAttempt = {
       Card: {
-        Kind: KindModel.Ace,
-        Suit: SuitModel.Spades,
-        PlayedBy: PlayerOrNoneModel.None,
+        Kind: Kind.Ace,
+        Suit: Suit.Spades,
+        PlayedBy: PlayerOrNone.None,
       },
       TargetLaneIndex: 0,
       TargetRowIndex: 0,
     };
   }
 
-  setCardSuit(suit: SuitModel) {
+  setCardSuit(suit: Suit) {
     this.placeCardAttempt.Card.Suit = suit;
     return this;
   }
 
-  setCardKind(kind: KindModel) {
+  setCardKind(kind: Kind) {
     this.placeCardAttempt.Card.Kind = kind;
     return this;
   }
 
-  setCardPlayedBy(playedBy: PlayerOrNoneModel) {
+  setCardPlayedBy(playedBy: PlayerOrNone) {
     this.placeCardAttempt.Card.PlayedBy = playedBy;
     return this;
   }

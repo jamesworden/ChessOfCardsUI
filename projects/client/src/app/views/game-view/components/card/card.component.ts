@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
-import { CardModel } from '../../../../models/card.model';
-import { PlayerOrNoneModel } from '../../../../models/player-or-none-model';
+import { Card } from '../../../../models/card.model';
+import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 @Component({
@@ -14,9 +14,9 @@ export class CardComponent implements OnChanges, OnDestroy {
 
   @Input() cardImageFileName?: string | null;
   @Input() playerCanDrag = false;
-  @Input() card: CardModel;
+  @Input() card: Card;
   @Input() isMiddleCard: boolean;
-  @Input() isPlayedBy: PlayerOrNoneModel;
+  @Input() isPlayedBy: PlayerOrNone;
   @Input() isHost: boolean;
   @Input() backgroundColor?: string | null;
 
@@ -40,16 +40,16 @@ export class CardComponent implements OnChanges, OnDestroy {
   }
 
   tiltCardIfMiddle() {
-    const nobodyPlayedCard = this.isPlayedBy === PlayerOrNoneModel.None;
+    const nobodyPlayedCard = this.isPlayedBy === PlayerOrNone.None;
 
     if (nobodyPlayedCard || !this.isMiddleCard) {
       return;
     }
 
     const hostCardAndIsHost =
-      this.isHost && this.isPlayedBy === PlayerOrNoneModel.Host;
+      this.isHost && this.isPlayedBy === PlayerOrNone.Host;
     const guestCardAndIsGuest =
-      !this.isHost && this.isPlayedBy === PlayerOrNoneModel.Guest;
+      !this.isHost && this.isPlayedBy === PlayerOrNone.Guest;
     const playerPlayedCard = hostCardAndIsHost || guestCardAndIsGuest;
 
     this.tiltDegrees = playerPlayedCard ? 45 : -45;

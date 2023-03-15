@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
-import { PlaceCardAttemptModel } from '../../../../models/place-card-attempt.model';
+import { PlaceCardAttempt } from '../../../../models/place-card-attempt.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class PositionComponent implements OnDestroy {
   @Input() laneIndex: number;
   @Input() rowIndex: number;
   @Input() backgroundColor: string;
-  @Output() placeCardAttempted: EventEmitter<PlaceCardAttemptModel> =
+  @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
 
   cardSize: number;
@@ -41,7 +41,7 @@ export class PositionComponent implements OnDestroy {
   drop(event: CdkDragDrop<string, { suit: string; kind: string }>) {
     const Card = event.item.data;
 
-    const placeCardAttempt: PlaceCardAttemptModel = {
+    const placeCardAttempt: PlaceCardAttempt = {
       Card,
       TargetLaneIndex: this.laneIndex,
       TargetRowIndex: this.rowIndex,

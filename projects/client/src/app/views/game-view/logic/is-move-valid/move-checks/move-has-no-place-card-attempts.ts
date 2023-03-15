@@ -1,5 +1,5 @@
-import { MoveModel } from 'projects/client/src/app/models/move.model';
+import { Move } from 'projects/client/src/app/models/move.model';
 
-export function moveHasNoPlaceCardAttempts(move: MoveModel) {
+export function moveHasNoPlaceCardAttempts(move: Move) {
   return move.PlaceCardAttempts.length <= 0;
 }

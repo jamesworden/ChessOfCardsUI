@@ -2,7 +2,7 @@
  * - Important that these are kept in order for seeing if cards can trump one another.
  * - Important that these don't change because they map to images.
  */
-export enum KindModel {
+export enum Kind {
   Two = 'Two',
   Three = 'Three',
   Four = 'Four',

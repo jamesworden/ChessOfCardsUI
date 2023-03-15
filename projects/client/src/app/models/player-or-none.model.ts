@@ -1,4 +1,4 @@
-export enum PlayerOrNoneModel {
+export enum PlayerOrNone {
   Host = 'Host',
   Guest = 'Guest',
   None = 'None',

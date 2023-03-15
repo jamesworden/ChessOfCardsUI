@@ -1,4 +1,4 @@
-import { MoveModel } from 'projects/client/src/app/models/move.model';
+import { Move } from 'projects/client/src/app/models/move.model';
 
 /**
  *
@@ -10,7 +10,7 @@ import { MoveModel } from 'projects/client/src/app/models/move.model';
  * as they are in order and ignoring the index 3. (4, 2, and 1 would also work as the
  * function should sort the place card attempts by row.)
  */
-export function nonConsecutivePlaceCardAttempts(move: MoveModel) {
+export function nonConsecutivePlaceCardAttempts(move: Move) {
   const targetRowIndexes = move.PlaceCardAttempts.map((p) => p.TargetRowIndex);
 
   if (targetRowIndexes.length < 2) {

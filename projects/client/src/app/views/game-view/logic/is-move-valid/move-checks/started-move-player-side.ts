@@ -1,10 +1,7 @@
-import { MoveModel } from 'projects/client/src/app/models/move.model';
-import { PlayerGameStateModel } from 'projects/client/src/app/models/player-game-state-model';
+import { Move } from 'projects/client/src/app/models/move.model';
+import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 
-export function startedMovePlayerSide(
-  gameState: PlayerGameStateModel,
-  move: MoveModel
-) {
+export function startedMovePlayerSide(gameState: PlayerGameView, move: Move) {
   const firstPlaceCardAttempt = move.PlaceCardAttempts[0];
   const startedMoveOnOpponentSide = gameState.IsHost
     ? firstPlaceCardAttempt.TargetRowIndex < 3
