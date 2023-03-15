@@ -7,9 +7,7 @@ import {
   FinishPlacingMultipleCards,
   SetGameOverData,
   OfferDraw,
-  ResetGameCode,
   ResetGameData,
-  SetGameCode,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -23,9 +21,12 @@ import {
   JoinGame,
   ResignGame,
   SelectDurationOption,
+  SetPendingGameView,
+  ResetPendingGameView,
 } from '../actions/game.actions';
 import { Card } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
+import { PendingGameView } from '../models/pending-game-view.model';
 import { PlaceCardAttempt } from '../models/place-card-attempt.model';
 import { PlayerGameView } from '../models/player-game-view.model';
 import { WebsocketService } from '../services/websocket.service';
@@ -38,7 +39,7 @@ type GameStateModel = {
   placeMultipleCards: Card[] | null;
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
-  gameCode: string | null;
+  pendingGameView: PendingGameView | null;
   gameOverData: GameOverData;
   opponentPassedMove: boolean;
   gameCodeIsInvalid: boolean;
@@ -52,7 +53,7 @@ const initialGameState: GameStateModel = {
   placeMultipleCards: null,
   drawOfferSent: false,
   hasPendingDrawOffer: false,
-  gameCode: null,
+  pendingGameView: null,
   gameOverData: {
     isOver: false,
   },
@@ -102,8 +103,8 @@ export class GameState {
   }
 
   @Selector()
-  static gameCode(state: GameStateModel) {
-    return state.gameCode;
+  static pendingGameView(state: GameStateModel) {
+    return state.pendingGameView;
   }
 
   @Selector()
@@ -183,7 +184,7 @@ export class GameState {
   resetGameData(ctx: StateContext<GameStateModel>) {
     ctx.patchState({
       playerGameView: undefined,
-      gameCode: null,
+      pendingGameView: null,
       drawOfferSent: false,
       hasPendingDrawOffer: false,
       gameOverData: {
@@ -225,17 +226,20 @@ export class GameState {
     });
   }
 
-  @Action(SetGameCode)
-  setGameCode(ctx: StateContext<GameStateModel>, action: SetGameCode) {
+  @Action(SetPendingGameView)
+  setPendingGameView(
+    ctx: StateContext<GameStateModel>,
+    action: SetPendingGameView
+  ) {
     ctx.patchState({
-      gameCode: action.gameCode,
+      pendingGameView: action.pendingGameView,
     });
   }
 
-  @Action(ResetGameCode)
-  resetGameCode(ctx: StateContext<GameStateModel>) {
+  @Action(ResetPendingGameView)
+  resetPendingGameView(ctx: StateContext<GameStateModel>) {
     ctx.patchState({
-      gameCode: null,
+      pendingGameView: null,
     });
   }
 

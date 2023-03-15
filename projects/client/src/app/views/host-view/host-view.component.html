@@ -6,7 +6,9 @@
   <br />
 
   <div class="horisontal-align">
-    <span class="game-code">{{ gameCode$ | async }}</span>
+    <span class="game-code">{{
+      (pendingGameView$ | async)?.GameCode ?? ""
+    }}</span>
   </div>
 
   <br />

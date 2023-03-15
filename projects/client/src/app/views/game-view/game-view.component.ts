@@ -8,8 +8,8 @@ import {
   FinishPlacingMultipleCards,
   MakeMove,
   RearrangeHand,
-  ResetGameCode,
   ResetGameData,
+  ResetPendingGameView,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -97,7 +97,7 @@ export class GameViewComponent implements OnDestroy {
 
         modalRef.afterClosed().subscribe(() => {
           this.store.dispatch(new ResetGameData());
-          this.store.dispatch(new ResetGameCode());
+          this.store.dispatch(new ResetPendingGameView());
           this.store.dispatch(new UpdateView(View.Home));
         });
       })

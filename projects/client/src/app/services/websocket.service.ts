@@ -10,11 +10,11 @@ import {
   DrawOffered,
   FinishPlacingMultipleCards,
   SetGameOverData,
-  ResetGameCode,
-  SetGameCode,
   UpdatePlayerGameView,
   SetOpponentPassedMove,
   SetGameCodeIsInvalid,
+  SetPendingGameView,
+  ResetPendingGameView,
 } from '../actions/game.actions';
 import { Card } from '../models/card.model';
 import { Move } from '../models/move.model';
@@ -83,12 +83,12 @@ export class WebsocketService {
         const pendingGameView: PendingGameView = JSON.parse(
           stringifiedPendingGameView
         );
-        this.store.dispatch(new SetGameCode(pendingGameView.GameCode));
+        this.store.dispatch(new SetPendingGameView(pendingGameView));
       }
     );
 
     this.hubConnection.on('OpponentDisconnected', () => {
-      this.store.dispatch(new ResetGameCode());
+      this.store.dispatch(new ResetPendingGameView());
     });
 
     this.hubConnection.on('InvalidGameCode', () => {

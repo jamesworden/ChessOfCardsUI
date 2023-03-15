@@ -2,6 +2,7 @@ import { Card } from '../models/card.model';
 import { DurationOption } from '../models/duration-option.model';
 import { GameOverData } from '../models/game-over-data.model';
 import { Move } from '../models/move.model';
+import { PendingGameView } from '../models/pending-game-view.model';
 import { PlaceCardAttempt } from '../models/place-card-attempt.model';
 import { PlayerGameView } from '../models/player-game-view.model';
 
@@ -53,15 +54,6 @@ export class AcceptDrawOffer {
   static readonly type = '[GameState] Accept Draw Offer';
 }
 
-export class SetGameCode {
-  static readonly type = '[GameState] Set Game Code';
-  constructor(public gameCode: string) {}
-}
-
-export class ResetGameCode {
-  static readonly type = '[GameState] Reset Game Code';
-}
-
 export class SetGameOverData {
   static readonly type = '[GameState] Game Over';
   constructor(public gameOverData: GameOverData) {}
@@ -107,4 +99,13 @@ export class ResignGame {
 export class SelectDurationOption {
   static readonly type = '[GameState] Select Duration Option';
   constructor(public durationOption: DurationOption) {}
+}
+
+export class SetPendingGameView {
+  static readonly type = '[GameState] Set Pending Game View';
+  constructor(public pendingGameView: PendingGameView) {}
+}
+
+export class ResetPendingGameView {
+  static readonly type = '[GameState] Reset Pending Game View';
 }

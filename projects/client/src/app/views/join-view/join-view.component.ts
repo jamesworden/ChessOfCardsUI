@@ -6,6 +6,7 @@ import { GameState } from '../../state/game.state';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { Observable } from 'rxjs';
 import { JoinGame, SetGameCodeIsInvalid } from '../../actions/game.actions';
+import { PendingGameView } from '../../models/pending-game-view.model';
 
 @Component({
   selector: 'app-join-view',
@@ -15,8 +16,8 @@ import { JoinGame, SetGameCodeIsInvalid } from '../../actions/game.actions';
 export class JoinViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Select(GameState.gameCode)
-  gameCode$: Observable<string | null>;
+  @Select(GameState.pendingGameView)
+  pendingGameView$: Observable<PendingGameView | null>;
 
   @Select(GameState.gameCodeIsInvalid)
   gameCodeIsInvalid$!: Observable<boolean>;
@@ -32,8 +33,8 @@ export class JoinViewComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      this.gameCode$.subscribe((gameCode) => {
-        this.gameCode = gameCode;
+      this.pendingGameView$.subscribe((pendingGameView) => {
+        this.gameCode = pendingGameView?.GameCode ?? null;
       })
     );
     this.sm.add(

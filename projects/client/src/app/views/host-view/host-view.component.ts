@@ -7,6 +7,7 @@ import { SubscriptionManager } from '../../util/subscription-manager';
 import { Observable } from 'rxjs';
 import { CreateGame, SelectDurationOption } from '../../actions/game.actions';
 import { DurationOption } from '../../models/duration-option.model';
+import { PendingGameView } from '../../models/pending-game-view.model';
 
 @Component({
   selector: 'app-host-view',
@@ -16,15 +17,15 @@ import { DurationOption } from '../../models/duration-option.model';
 export class HostViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Select(GameState.gameCode)
-  gameCode$: Observable<string | null>;
+  @Select(GameState.pendingGameView)
+  pendingGameView$: Observable<PendingGameView | null>;
 
   DurationOption = DurationOption;
 
   constructor(private store: Store) {
     this.sm.add(
-      this.gameCode$.subscribe((gameCode) => {
-        if (!gameCode) {
+      this.pendingGameView$.subscribe((pendingGameView) => {
+        if (!pendingGameView) {
           this.store.dispatch(new CreateGame());
         }
       })
