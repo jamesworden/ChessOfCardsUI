@@ -1,7 +1,7 @@
 :host {
   display: flex;
   justify-content: space-between;
-  background-color: var(--black);
+  background-color: var(--dark-gray);
   height: 100%;
   width: 100%;
 }
@@ -34,7 +34,7 @@
 }
 
 .button-question {
-  color: var(--black);
+  color: var(--dark-gray);
   padding: 0px 8px;
   font-weight: bold;
   text-align: center;

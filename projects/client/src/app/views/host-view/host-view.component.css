@@ -38,7 +38,7 @@ p {
 
 .game-options-container {
   margin: auto;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--extra-dark-gray);
   color: var(--white);
   border-radius: 4px;
   padding: 32px;

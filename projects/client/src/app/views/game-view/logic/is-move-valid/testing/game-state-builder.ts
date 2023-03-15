@@ -1,12 +1,13 @@
 import { Card } from 'projects/client/src/app/models/card.model';
+import { DurationOption } from 'projects/client/src/app/models/duration-option.model';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
 
 export class GameStateBuilder {
-  private gameState: PlayerGameView;
+  private playerGameView: PlayerGameView;
 
   constructor() {
-    this.gameState = {
+    this.playerGameView = {
       IsHost: true,
       IsHostPlayersTurn: true,
       NumCardsInOpponentsDeck: 21,
@@ -42,61 +43,63 @@ export class GameStateBuilder {
           WonBy: PlayerOrNone.None,
         },
       ],
-      GameCreatedTimestampUTC: new Date(),
+      GameCreatedTimestampUTC: '',
+      DurationOption: DurationOption.FiveMinutes,
+      MovesMade: [],
     };
   }
 
   setIsHost(isHost: boolean) {
-    this.gameState.IsHost = isHost;
+    this.playerGameView.IsHost = isHost;
     return this;
   }
 
   setIsHostPlayersTurn(isHostPlayersTurn: boolean) {
-    this.gameState.IsHostPlayersTurn = isHostPlayersTurn;
+    this.playerGameView.IsHostPlayersTurn = isHostPlayersTurn;
     return this;
   }
 
   setNoLaneAdvantage(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.None;
+    this.playerGameView.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.None;
     return this;
   }
 
   setGuestLaneAdvantage(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.Guest;
+    this.playerGameView.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.Guest;
     return this;
   }
 
   setHostLaneAdvantage(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.Host;
+    this.playerGameView.Lanes[laneIndex].LaneAdvantage = PlayerOrNone.Host;
     return this;
   }
 
   addCardToLaneOnRow(card: Card, laneIndex: number, rowIndex: number) {
-    this.gameState.Lanes[laneIndex].Rows[rowIndex].push(card);
+    this.playerGameView.Lanes[laneIndex].Rows[rowIndex].push(card);
     return this;
   }
 
   setHostWonBy(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNone.Host;
+    this.playerGameView.Lanes[laneIndex].WonBy = PlayerOrNone.Host;
     return this;
   }
 
   setGuestWonBy(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNone.Guest;
+    this.playerGameView.Lanes[laneIndex].WonBy = PlayerOrNone.Guest;
     return this;
   }
 
   setNoneWonBy(laneIndex: number) {
-    this.gameState.Lanes[laneIndex].WonBy = PlayerOrNone.None;
+    this.playerGameView.Lanes[laneIndex].WonBy = PlayerOrNone.None;
     return this;
   }
 
   setLastCardPlayedOnLane(card: Card, laneIndex: number) {
-    this.gameState.Lanes[laneIndex].LastCardPlayed = card;
+    this.playerGameView.Lanes[laneIndex].LastCardPlayed = card;
     return this;
   }
 
   build() {
-    return this.gameState;
+    return this.playerGameView;
   }
 }

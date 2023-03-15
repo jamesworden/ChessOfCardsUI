@@ -2,7 +2,8 @@
 
 :root {
   --white: whitesmoke;
-  --black: #312e2b;
+  --dark-gray: #312e2b;
+  --extra-dark-gray: #272522;
   --red: #965656;
   --blue: #566296;
   --dark-green: #769656;
@@ -16,7 +17,7 @@ html {
   padding: 0;
   overflow: hidden;
   font-family: "Abel", sans-serif;
-  color: var(--black);
+  color: var(--dark-black);
 }
 
 mat-dialog-container {
@@ -69,7 +70,7 @@ mat-dialog-container {
   font-family: "Abel", sans-serif;
   font-size: 20px;
   font-weight: 800;
-  color: var(--black);
+  color: var(--dark-gray);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 2px rgba(0, 0, 0, 0.2),
     0 4px 4px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.1),
     0 16px 16px rgba(0, 0, 0, 0.05);
