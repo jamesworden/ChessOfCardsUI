@@ -6,9 +6,7 @@
   <br />
 
   <div class="horisontal-align">
-    <span class="game-code">{{
-      (pendingGameView$ | async)?.GameCode ?? ""
-    }}</span>
+    <span class="game-code">{{ gameCode }}</span>
   </div>
 
   <br />
@@ -16,23 +14,34 @@
   <div class="game-options-container">
     <div class="game-option">
       <h3 class="game-option-title">Duration</h3>
-      <div
-        class="duration-option"
-        (click)="selectDurationOption(DurationOption.FiveMinutes)"
-      >
-        5 min
-      </div>
-      <div
-        class="duration-option"
-        (click)="selectDurationOption(DurationOption.ThreeMinutes)"
-      >
-        3 min
-      </div>
-      <div
-        class="duration-option"
-        (click)="selectDurationOption(DurationOption.OneMinute)"
-      >
-        1 min
+      <div class="duration-options">
+        <div
+          [ngClass]="{
+            selected: selectedDurationOption === DurationOption.FiveMinutes
+          }"
+          class="duration-option"
+          (click)="selectDurationOption(DurationOption.FiveMinutes)"
+        >
+          <span>5 min</span>
+        </div>
+        <div
+          [ngClass]="{
+            selected: selectedDurationOption === DurationOption.ThreeMinutes
+          }"
+          class="duration-option"
+          (click)="selectDurationOption(DurationOption.ThreeMinutes)"
+        >
+          <span>3 min</span>
+        </div>
+        <div
+          [ngClass]="{
+            selected: selectedDurationOption === DurationOption.OneMinute
+          }"
+          class="duration-option"
+          (click)="selectDurationOption(DurationOption.OneMinute)"
+        >
+          <span>1 min</span>
+        </div>
       </div>
     </div>
   </div>

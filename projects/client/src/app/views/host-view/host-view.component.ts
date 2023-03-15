@@ -22,10 +22,16 @@ export class HostViewComponent implements OnDestroy {
 
   DurationOption = DurationOption;
 
+  gameCode: string | null = null;
+  selectedDurationOption: DurationOption | null = null;
+
   constructor(private store: Store) {
     this.sm.add(
       this.pendingGameView$.subscribe((pendingGameView) => {
-        if (!pendingGameView) {
+        if (pendingGameView) {
+          this.gameCode = pendingGameView.GameCode;
+          this.selectedDurationOption = pendingGameView.DurationOption;
+        } else {
           this.store.dispatch(new CreateGame());
         }
       })

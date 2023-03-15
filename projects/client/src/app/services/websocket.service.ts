@@ -87,6 +87,16 @@ export class WebsocketService {
       }
     );
 
+    this.hubConnection.on(
+      'PendingGameUpdated',
+      (stringifiedPendingGameView: string) => {
+        const pendingGameView: PendingGameView = JSON.parse(
+          stringifiedPendingGameView
+        );
+        this.store.dispatch(new SetPendingGameView(pendingGameView));
+      }
+    );
+
     this.hubConnection.on('OpponentDisconnected', () => {
       this.store.dispatch(new ResetPendingGameView());
     });
