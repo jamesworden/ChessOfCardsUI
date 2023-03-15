@@ -1,3 +1,4 @@
+import { DurationOption } from './duration-option.model';
 import { Hand } from './hand.model';
 import { Lane } from './lane.model';
 import { MoveMade } from './move-made.model';
@@ -14,4 +15,5 @@ export type PlayerGameView = {
   BlackJokerLaneIndex?: number;
   GameCreatedTimestampUTC: string;
   MovesMade: MoveMade[];
+  DurationOption: DurationOption;
 };
