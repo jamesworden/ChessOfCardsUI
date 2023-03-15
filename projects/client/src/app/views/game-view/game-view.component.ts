@@ -13,7 +13,7 @@ import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
-  UpdateGameState,
+  UpdatePlayerGameView,
 } from 'projects/client/src/app/actions/game.actions';
 import { Card } from 'projects/client/src/app/models/card.model';
 import { Move } from 'projects/client/src/app/models/move.model';
@@ -210,7 +210,7 @@ export class GameViewComponent implements OnDestroy {
     );
 
     this.latestGameViewSnapshot.Hand.Cards = combinedCards;
-    this.store.dispatch(new UpdateGameState(this.latestGameViewSnapshot));
+    this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     this.store.dispatch(new RearrangeHand(combinedCards));
     this.store.dispatch(new FinishPlacingMultipleCards());
   }
@@ -286,7 +286,7 @@ export class GameViewComponent implements OnDestroy {
       targetIndex
     );
 
-    this.store.dispatch(new UpdateGameState(this.latestGameViewSnapshot));
+    this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     this.store.dispatch(
       new RearrangeHand(this.latestGameViewSnapshot.Hand.Cards)
     );
@@ -356,7 +356,7 @@ export class GameViewComponent implements OnDestroy {
 
     this.store.dispatch(new FinishPlacingMultipleCards());
     this.latestGameViewSnapshot.Hand.Cards = handAfterSwitch;
-    this.store.dispatch(new UpdateGameState(this.latestGameViewSnapshot));
+    this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     new RearrangeHand(handAfterSwitch);
   }
 
@@ -378,7 +378,7 @@ export class GameViewComponent implements OnDestroy {
       );
     }
 
-    this.store.dispatch(new UpdateGameState(this.latestGameViewSnapshot));
+    this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     this.store.dispatch(new MakeMove(move));
   }
 }

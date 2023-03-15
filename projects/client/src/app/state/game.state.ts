@@ -13,7 +13,7 @@ import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
-  UpdateGameState,
+  UpdatePlayerGameView,
   SetOpponentPassedMove,
   SetGameCodeIsInvalid,
   PassMove,
@@ -123,8 +123,11 @@ export class GameState {
 
   constructor(private websocketService: WebsocketService) {}
 
-  @Action(UpdateGameState)
-  updateGameState(ctx: StateContext<GameStateModel>, action: UpdateGameState) {
+  @Action(UpdatePlayerGameView)
+  updateGameState(
+    ctx: StateContext<GameStateModel>,
+    action: UpdatePlayerGameView
+  ) {
     ctx.patchState({
       playerGameView: action.playerGameView,
       drawOfferSent: false,

@@ -5,7 +5,7 @@ import { Move } from '../models/move.model';
 import { PlaceCardAttempt } from '../models/place-card-attempt.model';
 import { PlayerGameView } from '../models/player-game-view.model';
 
-export class UpdateGameState {
+export class UpdatePlayerGameView {
   static readonly type = '[GameState] Update Game State';
   constructor(public playerGameView: PlayerGameView) {}
 }

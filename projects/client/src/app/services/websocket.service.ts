@@ -12,7 +12,7 @@ import {
   SetGameOverData,
   ResetGameCode,
   SetGameCode,
-  UpdateGameState,
+  UpdatePlayerGameView,
   SetOpponentPassedMove,
   SetGameCodeIsInvalid,
 } from '../actions/game.actions';
@@ -139,7 +139,7 @@ export class WebsocketService {
   private parseAndUpdateGameView(stringifiedGameState: string) {
     let playerGameView: PlayerGameView = JSON.parse(stringifiedGameState);
     console.log(playerGameView);
-    this.store.dispatch(new UpdateGameState(playerGameView));
+    this.store.dispatch(new UpdatePlayerGameView(playerGameView));
 
     return playerGameView;
   }
