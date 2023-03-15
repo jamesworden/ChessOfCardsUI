@@ -28,7 +28,7 @@ import { Card } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
 import { PlaceCardAttempt } from '../models/place-card-attempt.model';
 import { PlayerGameView } from '../models/player-game-view.model';
-import { SignalrService } from '../services/SignalRService';
+import { WebsocketService } from '../services/websocket.service';
 
 type GameStateModel = {
   playerGameView: PlayerGameView | null;
@@ -121,7 +121,7 @@ export class GameState {
     return state.gameCodeIsInvalid;
   }
 
-  constructor(private signalrService: SignalrService) {}
+  constructor(private websocketService: WebsocketService) {}
 
   @Action(UpdateGameState)
   updateGameState(ctx: StateContext<GameStateModel>, action: UpdateGameState) {
@@ -192,7 +192,7 @@ export class GameState {
 
   @Action(OfferDraw)
   offerDraw(ctx: StateContext<GameStateModel>) {
-    this.signalrService.offerDraw();
+    this.websocketService.offerDraw();
 
     ctx.patchState({
       drawOfferSent: true,
@@ -215,7 +215,7 @@ export class GameState {
 
   @Action(AcceptDrawOffer)
   acceptDrawOffer(ctx: StateContext<GameStateModel>) {
-    this.signalrService.acceptDrawOffer();
+    this.websocketService.acceptDrawOffer();
 
     ctx.patchState({
       hasPendingDrawOffer: false,
@@ -265,32 +265,32 @@ export class GameState {
 
   @Action(PassMove)
   passMove() {
-    this.signalrService.passMove();
+    this.websocketService.passMove();
   }
 
   @Action(MakeMove)
   makeMove(_: StateContext<GameStateModel>, action: MakeMove) {
-    this.signalrService.makeMove(action.move);
+    this.websocketService.makeMove(action.move);
   }
 
   @Action(RearrangeHand)
   rearrangeHand(_: StateContext<GameStateModel>, action: RearrangeHand) {
-    this.signalrService.rearrangeHand(action.cards);
+    this.websocketService.rearrangeHand(action.cards);
   }
 
   @Action(CreateGame)
   createGame() {
-    this.signalrService.createGame();
+    this.websocketService.createGame();
   }
 
   @Action(JoinGame)
   joinGame(_: StateContext<GameStateModel>, action: JoinGame) {
-    this.signalrService.joinGame(action.gameCode);
+    this.websocketService.joinGame(action.gameCode);
   }
 
   @Action(ResignGame)
   resignGame() {
-    this.signalrService.resignGame();
+    this.websocketService.resignGame();
   }
 
   @Action(SelectDurationOption)
@@ -298,6 +298,6 @@ export class GameState {
     _: StateContext<GameStateModel>,
     action: SelectDurationOption
   ) {
-    this.signalrService.selectDurationOption(action.durationOption);
+    this.websocketService.selectDurationOption(action.durationOption);
   }
 }

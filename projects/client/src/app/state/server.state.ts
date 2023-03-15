@@ -4,7 +4,7 @@ import {
   ConnectToServer,
   SetIsConnectedToServer,
 } from '../actions/server.actions';
-import { SignalrService } from '../services/SignalRService';
+import { WebsocketService } from '../services/websocket.service';
 
 type ServerStateModel = {
   isConnectedToServer: boolean;
@@ -25,7 +25,7 @@ export class ServerState {
     return state.isConnectedToServer;
   }
 
-  constructor(private signalrService: SignalrService) {}
+  constructor(private signalrService: WebsocketService) {}
 
   @Action(SetIsConnectedToServer)
   setIsConnectedToServer(

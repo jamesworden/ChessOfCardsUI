@@ -31,7 +31,7 @@ const { serverUrl } = environment;
 @Injectable({
   providedIn: 'root',
 })
-export class SignalrService {
+export class WebsocketService {
   private hubConnection: HubConnection;
 
   constructor(private store: Store) {
