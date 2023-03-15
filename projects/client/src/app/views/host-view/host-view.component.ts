@@ -24,6 +24,7 @@ export class HostViewComponent implements OnDestroy {
 
   gameCode: string | null = null;
   selectedDurationOption: DurationOption | null = null;
+  selectingOption = false;
 
   constructor(private store: Store) {
     this.sm.add(
@@ -31,6 +32,7 @@ export class HostViewComponent implements OnDestroy {
         if (pendingGameView) {
           this.gameCode = pendingGameView.GameCode;
           this.selectedDurationOption = pendingGameView.DurationOption;
+          this.selectingOption = false;
         } else {
           this.store.dispatch(new CreateGame());
         }
@@ -47,6 +49,9 @@ export class HostViewComponent implements OnDestroy {
   }
 
   selectDurationOption(durationOption: DurationOption) {
-    this.store.dispatch(new SelectDurationOption(durationOption));
+    if (!this.selectingOption) {
+      this.store.dispatch(new SelectDurationOption(durationOption));
+      this.selectingOption = true;
+    }
   }
 }
