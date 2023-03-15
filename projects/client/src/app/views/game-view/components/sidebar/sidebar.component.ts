@@ -68,8 +68,10 @@ export class SidebarComponent implements OnDestroy {
     );
     this.sm.add(
       this.gameData$.subscribe((gameData) => {
-        this.numCardsInPlayerDeck = gameData.NumCardsInPlayersDeck;
-        this.numCardsInOpponentDeck = gameData.NumCardsInOpponentsDeck;
+        if (gameData) {
+          this.numCardsInPlayerDeck = gameData.NumCardsInPlayersDeck;
+          this.numCardsInOpponentDeck = gameData.NumCardsInOpponentsDeck;
+        }
       })
     );
   }
