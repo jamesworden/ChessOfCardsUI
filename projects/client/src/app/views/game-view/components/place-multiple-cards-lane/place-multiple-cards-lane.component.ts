@@ -40,7 +40,7 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
   @Select(GameState.playerGameView)
-  playerGameState$!: Observable<PlayerGameView>;
+  playerGameView$!: Observable<PlayerGameView>;
 
   @Select(GameState.initialPlaceMultipleCardAttempt)
   initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttempt | null>;
@@ -56,20 +56,20 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
   cardSize: number;
 
   previouslyCapturedCards$ = combineLatest([
-    this.playerGameState$,
+    this.playerGameView$,
     this.initialPlaceMultipleCardAttempt$,
   ]).pipe(
-    map(([playerGameState, initialMultiplePlaceCardAttempt]) => {
+    map(([playerGameView, initialMultiplePlaceCardAttempt]) => {
       if (!initialMultiplePlaceCardAttempt) {
         return [];
       }
 
       const { TargetLaneIndex, TargetRowIndex } =
         initialMultiplePlaceCardAttempt;
-      const lane = playerGameState.Lanes[TargetLaneIndex];
+      const lane = playerGameView.Lanes[TargetLaneIndex];
       const cards: Card[] = [];
 
-      if (playerGameState.IsHost) {
+      if (playerGameView.IsHost) {
         for (let i = 0; i < TargetRowIndex; i++) {
           const row = lane.Rows[i];
           const topCard = row[row.length - 1];

@@ -103,11 +103,11 @@ export class GameViewComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      this.playerGameView$.subscribe((playerGameState) => {
-        this.latestGameViewSnapshot = playerGameState;
+      this.playerGameView$.subscribe((playerGameView) => {
+        this.latestGameViewSnapshot = playerGameView;
 
-        if (playerGameState) {
-          this.setIsPlayersTurn(playerGameState);
+        if (playerGameView) {
+          this.setIsPlayersTurn(playerGameView);
         }
       })
     );
@@ -237,19 +237,19 @@ export class GameViewComponent implements OnDestroy {
      * without mutating the original one.
      */
     const reversedPlaceMultipleCards = [...placeMultipleCards].reverse();
-    const playerGameState = this.store.selectSnapshot(GameState.playerGameView);
+    const playerGameView = this.store.selectSnapshot(GameState.playerGameView);
 
-    if (!playerGameState) {
+    if (!playerGameView) {
       return;
     }
 
     const move = convertPlaceMultipleCardsToMove(
       reversedPlaceMultipleCards,
       initialPlaceMultipleCardAttempt,
-      playerGameState.IsHost
+      playerGameView.IsHost
     );
 
-    const invalidMoveMessage = getReasonIfMoveInvalid(playerGameState, move);
+    const invalidMoveMessage = getReasonIfMoveInvalid(playerGameView, move);
 
     if (invalidMoveMessage) {
       this.snackBar.open(invalidMoveMessage, 'Out of order!', {
@@ -271,8 +271,8 @@ export class GameViewComponent implements OnDestroy {
     this.store.dispatch(new DenyDrawOffer());
   }
 
-  private setIsPlayersTurn(playerGameState: PlayerGameView) {
-    const { IsHost, IsHostPlayersTurn } = playerGameState;
+  private setIsPlayersTurn(playerGameView: PlayerGameView) {
+    const { IsHost, IsHostPlayersTurn } = playerGameView;
 
     const hostAndHostTurn = IsHost && IsHostPlayersTurn;
     const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;

@@ -1,4 +1,4 @@
-<div class="lane" *ngIf="playerGameState$ | async as playerGameState">
+<div class="lane" *ngIf="playerGameView$ | async">
   <!-- Lane background color layer beneath place cards -->
   <div
     [ngStyle]="{
