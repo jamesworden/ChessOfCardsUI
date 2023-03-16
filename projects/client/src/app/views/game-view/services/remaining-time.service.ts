@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { SubscriptionManager } from '../../../util/subscription-manager';
-import { timer, BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { timer, BehaviorSubject, Observable } from 'rxjs';
+import { withLatestFrom } from 'rxjs/operators';
 import { SecondsRemaining } from '../../../models/seconds-remaining.model';
 import { GameState } from '../../../state/game.state';
 import { Select } from '@ngxs/store';
@@ -102,8 +102,8 @@ export class RemainingTimeService implements OnDestroy {
     };
 
     const secondsRemainingFromLastMove = {
-      host: Math.round(msRemainingFromLastMove.host / 1000),
-      guest: Math.round(msRemainingFromLastMove.guest / 1000),
+      host: Math.floor(msRemainingFromLastMove.host / 1000),
+      guest: Math.floor(msRemainingFromLastMove.guest / 1000),
     };
 
     this.secondsRemainingFromLastMove$.next(secondsRemainingFromLastMove);
