@@ -11,9 +11,10 @@ import { SubscriptionManager } from 'projects/client/src/app/util/subscription-m
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
+import { SecondsRemaining } from 'projects/client/src/app/models/seconds-remaining.model';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -30,6 +31,12 @@ export class SidebarComponent implements OnDestroy {
 
   @Input() isPlayersTurn = false;
 
+  @Input() set secondsRemainingFromLastMove(
+    secondsRemaining: SecondsRemaining | null
+  ) {
+    this.secondsRemainingFromLastMove$.next(secondsRemaining);
+  }
+
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;
 
@@ -37,13 +44,19 @@ export class SidebarComponent implements OnDestroy {
   drawOfferSent$!: Observable<boolean>;
 
   @Select(GameState.playerGameView)
-  gameData$!: Observable<PlayerGameView>;
+  playerGameView$!: Observable<PlayerGameView>;
 
   cardSize: number;
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
   numCardsInPlayerDeck: number | null = null;
   numCardsInOpponentDeck: number | null = null;
+
+  secondsRemainingFromLastMove$ = new BehaviorSubject<SecondsRemaining | null>(
+    null
+  );
+  playersRemainingSecondsString = '';
+  opponentsRemainingSecondsString = '';
 
   constructor(
     public responsiveSizeService: ResponsiveSizeService,
@@ -67,10 +80,32 @@ export class SidebarComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      this.gameData$.subscribe((gameData) => {
-        if (gameData) {
-          this.numCardsInPlayerDeck = gameData.NumCardsInPlayersDeck;
-          this.numCardsInOpponentDeck = gameData.NumCardsInOpponentsDeck;
+      this.playerGameView$.subscribe((playerGameView) => {
+        if (playerGameView) {
+          this.numCardsInPlayerDeck = playerGameView.NumCardsInPlayersDeck;
+          this.numCardsInOpponentDeck = playerGameView.NumCardsInOpponentsDeck;
+        }
+      })
+    );
+    this.sm.add(
+      combineLatest([
+        this.secondsRemainingFromLastMove$,
+        this.playerGameView$,
+      ]).subscribe(([secondsRemaining, playerGameView]) => {
+        if (secondsRemaining) {
+          const { IsHost } = playerGameView;
+
+          const playersRemainingSeconds = IsHost
+            ? secondsRemaining.host
+            : secondsRemaining.guest;
+          const opponentsRemainingSeconds = IsHost
+            ? secondsRemaining.guest
+            : secondsRemaining.host;
+
+          this.playersRemainingSecondsString =
+            this.secondsToRemainingTimeString(playersRemainingSeconds);
+          this.opponentsRemainingSecondsString =
+            this.secondsToRemainingTimeString(opponentsRemainingSeconds);
         }
       })
     );
@@ -191,5 +226,13 @@ export class SidebarComponent implements OnDestroy {
 
   resign() {
     this.store.dispatch(new ResignGame());
+  }
+
+  private secondsToRemainingTimeString(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return (
+      minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds
+    );
   }
 }

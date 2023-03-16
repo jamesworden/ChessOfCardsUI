@@ -1,4 +1,7 @@
-<app-sidebar [isPlayersTurn]="isPlayersTurn"></app-sidebar>
+<app-sidebar
+  [isPlayersTurn]="isPlayersTurn"
+  [secondsRemainingFromLastMove]="secondsRemainingFromLastMove$ | async"
+></app-sidebar>
 
 <div class="center-horisontally">
   <div class="game-container">

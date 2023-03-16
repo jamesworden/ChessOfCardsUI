@@ -48,6 +48,8 @@
   border-radius: 3px;
   text-align: center;
   font-size: 18px;
+  font-weight: bold;
+  padding: 3px;
 }
 
 .divider {
@@ -57,7 +59,7 @@
 }
 
 .game-stats {
-  margin: 6px 0px; /* May wish to revert to 12px when implementing remaining times. */
+  margin: 12px 0px;
 }
 
 .deck-counts {
