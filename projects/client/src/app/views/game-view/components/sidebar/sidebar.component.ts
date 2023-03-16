@@ -15,6 +15,7 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { SecondsRemaining } from 'projects/client/src/app/models/seconds-remaining.model';
+import { RemainingTimeService } from '../../services/remaining-time.service';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -31,12 +32,6 @@ export class SidebarComponent implements OnDestroy {
 
   @Input() isPlayersTurn = false;
 
-  @Input() set secondsRemainingFromLastMove(
-    secondsRemaining: SecondsRemaining | null
-  ) {
-    this.secondsRemainingFromLastMove$.next(secondsRemaining);
-  }
-
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;
 
@@ -52,9 +47,6 @@ export class SidebarComponent implements OnDestroy {
   numCardsInPlayerDeck: number | null = null;
   numCardsInOpponentDeck: number | null = null;
 
-  secondsRemainingFromLastMove$ = new BehaviorSubject<SecondsRemaining | null>(
-    null
-  );
   playersRemainingSecondsString = '';
   opponentsRemainingSecondsString = '';
 
@@ -62,7 +54,8 @@ export class SidebarComponent implements OnDestroy {
     public responsiveSizeService: ResponsiveSizeService,
     public modal: MatDialog,
     private store: Store,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private remainingTimeService: RemainingTimeService
   ) {
     this.sm.add(
       responsiveSizeService.cardSize$.subscribe((cardSize) => {
@@ -89,7 +82,7 @@ export class SidebarComponent implements OnDestroy {
     );
     this.sm.add(
       combineLatest([
-        this.secondsRemainingFromLastMove$,
+        this.remainingTimeService.secondsRemainingFromLastMove$,
         this.playerGameView$,
       ]).subscribe(([secondsRemaining, playerGameView]) => {
         if (secondsRemaining) {

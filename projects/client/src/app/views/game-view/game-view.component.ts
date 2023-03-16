@@ -1,8 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Observable, timer, combineLatest, BehaviorSubject } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
@@ -38,8 +37,6 @@ import { ResponsiveSizeService } from './services/responsive-size.service';
 import { UpdateView } from '../../actions/view.actions';
 import { View } from '..';
 import { GameOverData } from '../../models/game-over-data.model';
-import { durationOptionsMetadata } from '../../metadata/duration-options-metadata';
-import { SecondsRemaining } from '../../models/seconds-remaining.model';
 
 @Component({
   selector: 'app-game-view',
@@ -81,12 +78,6 @@ export class GameViewComponent implements OnDestroy {
   isPlacingMultipleCards = false;
   cardSize = 64;
 
-  currentDateEverySecond$ = timer(0, 1000).pipe(map(() => new Date()));
-  secondsRemainingFromLastMove$ = new BehaviorSubject<SecondsRemaining | null>(
-    null
-  );
-  secondsRemaining$ = new BehaviorSubject<SecondsRemaining | null>(null);
-
   constructor(
     public modal: MatDialog,
     private store: Store,
@@ -117,7 +108,6 @@ export class GameViewComponent implements OnDestroy {
 
         if (playerGameView) {
           this.setIsPlayersTurn(playerGameView);
-          this.setSecondsRemainingFromLastMove(playerGameView);
         }
       })
     );
@@ -140,28 +130,6 @@ export class GameViewComponent implements OnDestroy {
       this.responsiveSizeService.cardSize$.subscribe((cardSize) => {
         this.cardSize = cardSize;
       })
-    );
-    this.sm.add(
-      combineLatest([this.currentDateEverySecond$, this.playerGameView$])
-        .pipe(withLatestFrom(this.secondsRemainingFromLastMove$))
-        .subscribe(
-          ([[_, { IsHostPlayersTurn }], secondsRemainingFromLastMove]) => {
-            if (secondsRemainingFromLastMove) {
-              if (IsHostPlayersTurn) {
-                secondsRemainingFromLastMove.host--;
-              } else {
-                secondsRemainingFromLastMove.guest--;
-              }
-
-              this.secondsRemainingFromLastMove$.next({
-                host: secondsRemainingFromLastMove.host,
-                guest: secondsRemainingFromLastMove.guest,
-              });
-
-              console.log(secondsRemainingFromLastMove);
-            }
-          }
-        )
     );
   }
 
@@ -412,52 +380,5 @@ export class GameViewComponent implements OnDestroy {
 
     this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     this.store.dispatch(new MakeMove(move));
-  }
-
-  private setSecondsRemainingFromLastMove(playerGameView: PlayerGameView) {
-    const { MovesMade, GameCreatedTimestampUTC, DurationOption } =
-      playerGameView;
-
-    const durationMetadata = durationOptionsMetadata.find(
-      (metadata) => metadata.durationOption === DurationOption
-    );
-
-    if (!durationMetadata) {
-      return;
-    }
-
-    const totalElapsedMs = {
-      host: 0,
-      guest: 0,
-    };
-
-    let lastTimestamp = new Date(GameCreatedTimestampUTC);
-
-    for (const moveMade of MovesMade) {
-      const currentTimestamp = new Date(moveMade.TimestampUTC);
-      const msElapsed = currentTimestamp.getTime() - lastTimestamp.getTime();
-
-      if (moveMade.PlayedBy === PlayerOrNone.Host) {
-        totalElapsedMs.host += msElapsed;
-      } else if (moveMade.PlayedBy === PlayerOrNone.Guest) {
-        totalElapsedMs.guest += msElapsed;
-      }
-
-      lastTimestamp = currentTimestamp;
-    }
-
-    const totalMs = durationMetadata.minutes * 60 * 1000;
-
-    const msRemainingFromLastMove = {
-      host: totalMs - totalElapsedMs.host,
-      guest: totalMs - totalElapsedMs.guest,
-    };
-
-    const secondsRemainingFromLastMove = {
-      host: Math.round(msRemainingFromLastMove.host / 1000),
-      guest: Math.round(msRemainingFromLastMove.guest / 1000),
-    };
-
-    this.secondsRemainingFromLastMove$.next(secondsRemainingFromLastMove);
   }
 }
