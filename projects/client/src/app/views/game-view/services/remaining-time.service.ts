@@ -28,8 +28,10 @@ export class RemainingTimeService implements OnDestroy {
   constructor() {
     this.sm.add(
       this.playerGameView$.subscribe((playerGameView) => {
-        this.playerGameView = playerGameView;
-        this.setSecondsRemainingFromLastMove(playerGameView);
+        if (playerGameView) {
+          this.playerGameView = playerGameView;
+          this.setSecondsRemainingFromLastMove(playerGameView);
+        }
       })
     );
     this.sm.add(
