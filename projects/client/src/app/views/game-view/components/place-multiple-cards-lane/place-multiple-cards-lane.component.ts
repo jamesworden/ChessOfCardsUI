@@ -40,7 +40,7 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
   @Select(GameState.playerGameView)
-  playerGameView$!: Observable<PlayerGameView>;
+  playerGameView$!: Observable<PlayerGameView | null>;
 
   @Select(GameState.initialPlaceMultipleCardAttempt)
   initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttempt | null>;
@@ -60,7 +60,7 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
     this.initialPlaceMultipleCardAttempt$,
   ]).pipe(
     map(([playerGameView, initialMultiplePlaceCardAttempt]) => {
-      if (!initialMultiplePlaceCardAttempt) {
+      if (!initialMultiplePlaceCardAttempt || !playerGameView) {
         return [];
       }
 

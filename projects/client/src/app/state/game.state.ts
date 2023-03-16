@@ -23,6 +23,8 @@ import {
   SelectDurationOption,
   SetPendingGameView,
   ResetPendingGameView,
+  CheckHostForEmptyTimer,
+  CheckGuestForEmptyTimer,
 } from '../actions/game.actions';
 import { Card } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
@@ -306,5 +308,15 @@ export class GameState {
     action: SelectDurationOption
   ) {
     this.websocketService.selectDurationOption(action.durationOption);
+  }
+
+  @Action(CheckHostForEmptyTimer)
+  checkHostForEmptyTimer() {
+    this.websocketService.checkHostForEmptyTimer();
+  }
+
+  @Action(CheckGuestForEmptyTimer)
+  checkGuestForEmptyTimer() {
+    this.websocketService.checkGuestForEmptyTimer();
   }
 }

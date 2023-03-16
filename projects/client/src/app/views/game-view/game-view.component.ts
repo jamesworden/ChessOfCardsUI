@@ -47,7 +47,7 @@ export class GameViewComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
   @Select(GameState.playerGameView)
-  playerGameView$!: Observable<PlayerGameView>;
+  playerGameView$!: Observable<PlayerGameView | null>;
 
   @Select(GameState.isPlacingMultipleCards)
   isPlacingMultipleCards$!: Observable<boolean>;
@@ -104,9 +104,8 @@ export class GameViewComponent implements OnDestroy {
     );
     this.sm.add(
       this.playerGameView$.subscribe((playerGameView) => {
-        this.latestGameViewSnapshot = playerGameView;
-
         if (playerGameView) {
+          this.latestGameViewSnapshot = playerGameView;
           this.setIsPlayersTurn(playerGameView);
         }
       })

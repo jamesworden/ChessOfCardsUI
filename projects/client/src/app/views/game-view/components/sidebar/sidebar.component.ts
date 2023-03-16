@@ -39,7 +39,7 @@ export class SidebarComponent implements OnDestroy {
   drawOfferSent$!: Observable<boolean>;
 
   @Select(GameState.playerGameView)
-  playerGameView$!: Observable<PlayerGameView>;
+  playerGameView$!: Observable<PlayerGameView | null>;
 
   cardSize: number;
   drawOfferSent: boolean;
@@ -85,7 +85,7 @@ export class SidebarComponent implements OnDestroy {
         this.remainingTimeService.secondsRemainingFromLastMove$,
         this.playerGameView$,
       ]).subscribe(([secondsRemaining, playerGameView]) => {
-        if (secondsRemaining) {
+        if (secondsRemaining && playerGameView) {
           const { IsHost } = playerGameView;
 
           const playersRemainingSeconds = IsHost
@@ -222,6 +222,10 @@ export class SidebarComponent implements OnDestroy {
   }
 
   private secondsToRemainingTimeString(seconds: number) {
+    if (seconds <= 0) {
+      return '0:00';
+    }
+
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return (

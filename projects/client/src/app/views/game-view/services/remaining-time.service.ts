@@ -4,10 +4,14 @@ import { timer, BehaviorSubject, Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { SecondsRemaining } from '../../../models/seconds-remaining.model';
 import { GameState } from '../../../state/game.state';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { PlayerGameView } from '../../../models/player-game-view.model';
 import { durationOptionsMetadata } from '../../../metadata/duration-options-metadata';
 import { PlayerOrNone } from '../../../models/player-or-none.model';
+import {
+  CheckGuestForEmptyTimer,
+  CheckHostForEmptyTimer,
+} from '../../../actions/game.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +20,7 @@ export class RemainingTimeService implements OnDestroy {
   private sm = new SubscriptionManager();
 
   @Select(GameState.playerGameView)
-  playerGameView$!: Observable<PlayerGameView>;
+  playerGameView$!: Observable<PlayerGameView | null>;
 
   playerGameView: PlayerGameView;
   everySecond$ = timer(0, 1000);
@@ -25,7 +29,7 @@ export class RemainingTimeService implements OnDestroy {
     null
   );
 
-  constructor() {
+  constructor(private store: Store) {
     this.sm.add(
       this.playerGameView$.subscribe((playerGameView) => {
         if (playerGameView) {
@@ -53,10 +57,19 @@ export class RemainingTimeService implements OnDestroy {
             };
 
             this.secondsRemainingFromLastMove$.next(updatedSecondsRemaining);
-
-            console.log(updatedSecondsRemaining);
           }
         })
+    );
+    this.sm.add(
+      this.secondsRemainingFromLastMove$.subscribe((secondsRemaining) => {
+        if (secondsRemaining) {
+          if (secondsRemaining.host <= 0) {
+            this.store.dispatch(new CheckHostForEmptyTimer());
+          } else if (secondsRemaining.guest <= 0) {
+            this.store.dispatch(new CheckGuestForEmptyTimer());
+          }
+        }
+      })
     );
   }
 

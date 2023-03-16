@@ -191,4 +191,12 @@ export class WebsocketService {
   public selectDurationOption(durationOption: DurationOption) {
     this.hubConnection.invoke('SelectDurationOption', durationOption);
   }
+
+  public checkHostForEmptyTimer() {
+    this.hubConnection.invoke('CheckHostForEmptyTimer');
+  }
+
+  public checkGuestForEmptyTimer() {
+    this.hubConnection.invoke('CheckGuestForEmptyTimer');
+  }
 }

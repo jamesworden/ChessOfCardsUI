@@ -109,3 +109,11 @@ export class SetPendingGameView {
 export class ResetPendingGameView {
   static readonly type = '[GameState] Reset Pending Game View';
 }
+
+export class CheckHostForEmptyTimer {
+  static readonly type = '[GameState] Check Host For Empty Timer';
+}
+
+export class CheckGuestForEmptyTimer {
+  static readonly type = '[GameState] Check Guest For Empty Timer';
+}
