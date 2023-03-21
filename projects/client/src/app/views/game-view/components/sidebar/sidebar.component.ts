@@ -11,10 +11,10 @@ import { SubscriptionManager } from 'projects/client/src/app/util/subscription-m
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable } from 'rxjs';
+import { withLatestFrom } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
-import { SecondsRemaining } from 'projects/client/src/app/models/seconds-remaining.model';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 
 enum YesNoButtons {
@@ -40,6 +40,9 @@ export class SidebarComponent implements OnDestroy {
 
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
+
+  @Select(GameState.waitingForServer)
+  waitingForServer$!: Observable<boolean>;
 
   cardSize: number;
   drawOfferSent: boolean;
@@ -81,26 +84,25 @@ export class SidebarComponent implements OnDestroy {
       })
     );
     this.sm.add(
-      combineLatest([
-        this.remainingTimeService.secondsRemainingFromLastMove$,
-        this.playerGameView$,
-      ]).subscribe(([secondsRemaining, playerGameView]) => {
-        if (secondsRemaining && playerGameView) {
-          const { IsHost } = playerGameView;
+      this.remainingTimeService.secondsRemainingFromLastMove$
+        .pipe(withLatestFrom(this.playerGameView$))
+        .subscribe(([secondsRemaining, playerGameView]) => {
+          if (secondsRemaining && playerGameView) {
+            const { IsHost } = playerGameView;
 
-          const playersRemainingSeconds = IsHost
-            ? secondsRemaining.host
-            : secondsRemaining.guest;
-          const opponentsRemainingSeconds = IsHost
-            ? secondsRemaining.guest
-            : secondsRemaining.host;
+            const playersRemainingSeconds = IsHost
+              ? secondsRemaining.host
+              : secondsRemaining.guest;
+            const opponentsRemainingSeconds = IsHost
+              ? secondsRemaining.guest
+              : secondsRemaining.host;
 
-          this.playersRemainingSecondsString =
-            this.secondsToRemainingTimeString(playersRemainingSeconds);
-          this.opponentsRemainingSecondsString =
-            this.secondsToRemainingTimeString(opponentsRemainingSeconds);
-        }
-      })
+            this.playersRemainingSecondsString =
+              this.secondsToRemainingTimeString(playersRemainingSeconds);
+            this.opponentsRemainingSecondsString =
+              this.secondsToRemainingTimeString(opponentsRemainingSeconds);
+          }
+        })
     );
   }
 

@@ -13,28 +13,31 @@
     <span>Lanes</span>
   </div>
   <app-sidebar-item
+    [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
     [iconSize]="cardSize / 2"
     matTooltip="Pass move"
     matTooltipPosition="right"
     materialSymbol="waving_hand"
-    (click)="attemptToOpenPassMoveModal()"
+    (selected)="attemptToOpenPassMoveModal()"
   ></app-sidebar-item>
   <app-sidebar-item
+    [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
     [iconSize]="cardSize / 2"
     matTooltip="Offer draw"
     matTooltipPosition="right"
     materialSymbol="handshake"
-    (click)="attemptToOpenOfferDrawModel()"
+    (selected)="attemptToOpenOfferDrawModel()"
   ></app-sidebar-item>
   <app-sidebar-item
+    [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
     [iconSize]="cardSize / 2"
     matTooltip="Resign"
     matTooltipPosition="right"
     materialSymbol="cancel"
-    (click)="openResignModal()"
+    (selected)="openResignModal()"
   ></app-sidebar-item>
 
   <div

@@ -61,7 +61,7 @@
           matTooltip="Confirm"
           matTooltipPosition="below"
           materialSymbol="check"
-          (click)="onConfirmButtonClicked()"
+          (selected)="onConfirmButtonClicked()"
         ></app-sidebar-item>
         <app-sidebar-item
           [itemHeight]="cardSize"
@@ -70,7 +70,7 @@
           matTooltip="Cancel"
           matTooltipPosition="below"
           materialSymbol="close"
-          (click)="onCancelButtonClicked()"
+          (selected)="onCancelButtonClicked()"
         ></app-sidebar-item>
       </div>
     </div>
@@ -98,7 +98,7 @@
           matTooltip="Accept draw"
           matTooltipPosition="below"
           materialSymbol="check"
-          (click)="acceptDraw()"
+          (selected)="acceptDraw()"
         ></app-sidebar-item>
         <app-sidebar-item
           [itemHeight]="cardSize"
@@ -107,7 +107,7 @@
           matTooltip="Deny draw"
           matTooltipPosition="below"
           materialSymbol="close"
-          (click)="denyDraw()"
+          (selected)="denyDraw()"
         ></app-sidebar-item>
       </div>
     </div>

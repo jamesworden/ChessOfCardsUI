@@ -1,5 +1,13 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-sidebar-item',
@@ -13,11 +21,28 @@ export class SidebarItemComponent implements AfterViewInit {
   @Input() materialSymbol: string;
   @Input() iconColor = 'white';
   @Input() itemWidth: number;
+  @Input() disabled = false;
 
-  constructor(private focusMonitor: FocusMonitor) {}
+  @Output() selected = new EventEmitter<void>();
+
+  constructor(
+    private focusMonitor: FocusMonitor,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngAfterViewInit() {
     this.removeButtonHighlightBug();
+  }
+
+  onClick() {
+    if (this.disabled) {
+      this.snackBar.open('Waiting for response from server...', undefined, {
+        duration: 1500,
+        verticalPosition: 'top',
+      });
+    } else {
+      this.selected.emit();
+    }
   }
 
   /**

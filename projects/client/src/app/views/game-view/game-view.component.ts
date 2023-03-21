@@ -263,6 +263,7 @@ export class GameViewComponent implements OnDestroy {
     }
 
     this.store.dispatch(new MakeMove(move));
+    this.store.dispatch(new FinishPlacingMultipleCards());
   }
 
   acceptDraw() {

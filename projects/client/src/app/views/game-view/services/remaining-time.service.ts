@@ -22,6 +22,9 @@ export class RemainingTimeService implements OnDestroy {
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
 
+  @Select(GameState.waitingForServer)
+  waitingForServer$!: Observable<boolean>;
+
   playerGameView: PlayerGameView;
   everySecond$ = timer(0, 1000);
   secondsRemaining$ = new BehaviorSubject<SecondsRemaining | null>(null);
@@ -40,9 +43,20 @@ export class RemainingTimeService implements OnDestroy {
     );
     this.sm.add(
       this.everySecond$
-        .pipe(withLatestFrom(this.secondsRemainingFromLastMove$))
-        .subscribe(([_, secondsRemainingFromLastMove]) => {
-          if (secondsRemainingFromLastMove && this.playerGameView) {
+        .pipe(
+          withLatestFrom(
+            this.secondsRemainingFromLastMove$,
+            this.waitingForServer$
+          )
+        )
+        .subscribe(([_, secondsRemainingFromLastMove, waitingFromServer]) => {
+          if (
+            secondsRemainingFromLastMove &&
+            this.playerGameView &&
+            !waitingFromServer
+          ) {
+            console.log('SUBTRACTING TIME');
+
             const { IsHostPlayersTurn } = this.playerGameView;
 
             if (IsHostPlayersTurn) {

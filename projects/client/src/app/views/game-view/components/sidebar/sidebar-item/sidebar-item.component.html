@@ -1,5 +1,6 @@
 <li
   class="sidebar-item"
+  (click)="onClick()"
   [ngStyle]="{
     height: itemHeight + 'px',
     width: itemWidth ? itemWidth + 'px' : '100%'
@@ -17,7 +18,8 @@
       [ngStyle]="{
         'font-size': iconSize + 'px',
         height: iconSize + 'px',
-        color: iconColor
+        color: iconColor,
+        opacity: disabled ? 0.5 : 1
       }"
       >{{ materialSymbol }}</span
     >
