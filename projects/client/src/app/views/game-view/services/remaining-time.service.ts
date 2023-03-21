@@ -55,8 +55,6 @@ export class RemainingTimeService implements OnDestroy {
             this.playerGameView &&
             !waitingFromServer
           ) {
-            console.log('SUBTRACTING TIME');
-
             const { IsHostPlayersTurn } = this.playerGameView;
 
             if (IsHostPlayersTurn) {

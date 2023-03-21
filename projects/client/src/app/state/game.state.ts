@@ -292,8 +292,6 @@ export class GameState {
 
   @Action(MakeMove)
   makeMove(ctx: StateContext<GameStateModel>, action: MakeMove) {
-    console.log('MOVE MADE');
-
     this.websocketService.makeMove(action.move);
 
     ctx.patchState({
