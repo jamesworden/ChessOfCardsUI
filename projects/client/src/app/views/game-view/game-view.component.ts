@@ -70,6 +70,9 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;
 
+  @Select(GameState.waitingForServer)
+  waitingForServer$!: Observable<boolean>;
+
   PlayerOrNone = PlayerOrNone;
   getCardImageFileName = getCardImageFileNameFn;
 

@@ -23,7 +23,7 @@
         [isHost]="playerGameView.IsHost"
         [cards]="playerGameView.Hand.Cards"
         [cardSize]="cardSize"
-        [disabled]="!isPlayersTurn"
+        [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
         (cardDropped)="onPlayerHandCardDrop($event)"
       ></app-player-hand>
     </div>

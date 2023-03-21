@@ -45,6 +45,7 @@ type GameStateModel = {
   gameOverData: GameOverData;
   opponentPassedMove: boolean;
   gameCodeIsInvalid: boolean;
+  waitingForServer: boolean;
 };
 
 const initialGameState: GameStateModel = {
@@ -61,6 +62,7 @@ const initialGameState: GameStateModel = {
   },
   opponentPassedMove: false,
   gameCodeIsInvalid: false,
+  waitingForServer: false,
 };
 
 @State<GameStateModel>({
@@ -124,6 +126,11 @@ export class GameState {
     return state.gameCodeIsInvalid;
   }
 
+  @Selector()
+  static waitingForServer(state: GameStateModel) {
+    return state.waitingForServer;
+  }
+
   constructor(private websocketService: WebsocketService) {}
 
   @Action(UpdatePlayerGameView)
@@ -136,6 +143,7 @@ export class GameState {
       drawOfferSent: false,
       hasPendingDrawOffer: false,
       opponentPassedMove: false,
+      waitingForServer: false,
     });
   }
 
@@ -249,6 +257,7 @@ export class GameState {
   gameOver(ctx: StateContext<GameStateModel>, action: SetGameOverData) {
     ctx.patchState({
       gameOverData: action.gameOverData,
+      waitingForServer: false,
     });
   }
 
@@ -273,13 +282,21 @@ export class GameState {
   }
 
   @Action(PassMove)
-  passMove() {
+  passMove(ctx: StateContext<GameStateModel>) {
     this.websocketService.passMove();
+
+    ctx.patchState({
+      waitingForServer: true,
+    });
   }
 
   @Action(MakeMove)
-  makeMove(_: StateContext<GameStateModel>, action: MakeMove) {
+  makeMove(ctx: StateContext<GameStateModel>, action: MakeMove) {
     this.websocketService.makeMove(action.move);
+
+    ctx.patchState({
+      waitingForServer: true,
+    });
   }
 
   @Action(RearrangeHand)
