@@ -243,6 +243,7 @@ export class GameState {
   ) {
     ctx.patchState({
       pendingGameView: action.pendingGameView,
+      waitingForServer: false,
     });
   }
 
@@ -321,10 +322,14 @@ export class GameState {
 
   @Action(SelectDurationOption)
   selectDurationOption(
-    _: StateContext<GameStateModel>,
+    ctx: StateContext<GameStateModel>,
     action: SelectDurationOption
   ) {
     this.websocketService.selectDurationOption(action.durationOption);
+
+    ctx.patchState({
+      waitingForServer: true,
+    });
   }
 
   @Action(CheckHostForEmptyTimer)
