@@ -86,3 +86,7 @@
     background-color: rgb(236, 38, 78);
   }
 }
+
+.is-not-counting-down {
+  opacity: 0.5;
+}
