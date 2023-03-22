@@ -70,3 +70,9 @@
 .deck-counts {
   margin: 10px 0px;
 }
+
+.player-has-low-time {
+  background-color: crimson;
+  color: white;
+  font-weight: bold;
+}

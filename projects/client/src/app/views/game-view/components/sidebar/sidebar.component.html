@@ -59,6 +59,13 @@
       <app-face-down-card></app-face-down-card>
       <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
     </div>
-    <div class="remaining-time">{{ playersRemainingSecondsString }}</div>
+    <div
+      class="remaining-time"
+      [ngClass]="{
+        'player-has-low-time': playerHasLowTime
+      }"
+    >
+      {{ playersRemainingSecondsString }}
+    </div>
   </div>
 </nav>

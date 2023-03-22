@@ -49,7 +49,7 @@ export class SidebarComponent implements OnDestroy {
   hasPendingDrawOffer: boolean;
   numCardsInPlayerDeck: number | null = null;
   numCardsInOpponentDeck: number | null = null;
-
+  playerHasLowTime = false;
   playersRemainingSecondsString = '';
   opponentsRemainingSecondsString = '';
 
@@ -101,6 +101,8 @@ export class SidebarComponent implements OnDestroy {
               this.secondsToRemainingTimeString(playersRemainingSeconds);
             this.opponentsRemainingSecondsString =
               this.secondsToRemainingTimeString(opponentsRemainingSeconds);
+
+            this.playerHasLowTime = playersRemainingSeconds <= 30;
           }
         })
     );
