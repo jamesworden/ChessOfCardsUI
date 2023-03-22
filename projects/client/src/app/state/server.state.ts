@@ -25,7 +25,7 @@ export class ServerState {
     return state.isConnectedToServer;
   }
 
-  constructor(private signalrService: WebsocketService) {}
+  constructor(private websocketService: WebsocketService) {}
 
   @Action(SetIsConnectedToServer)
   setIsConnectedToServer(
@@ -39,6 +39,6 @@ export class ServerState {
 
   @Action(ConnectToServer)
   connectToServer() {
-    this.signalrService.connectToServer();
+    this.websocketService.connectToServer();
   }
 }
