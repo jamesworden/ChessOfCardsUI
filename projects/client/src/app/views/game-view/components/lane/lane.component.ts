@@ -9,8 +9,8 @@ import {
 } from '../../../../util/get-asset-file-names';
 import { getDefaultCardBackgroundColor } from '../../logic/get-default-card-background-color';
 
-const LIGHT_BLUE_TINT = 'var(--red)';
-const LIGHT_RED_TINT = 'var(--blue)';
+const LIGHT_BLUE_TINT = 'var(--blue)';
+const LIGHT_RED_TINT = 'var(--red)';
 
 @Component({
   selector: 'app-lane',
@@ -90,6 +90,6 @@ export class LaneComponent {
       lastCardPlayed.PlayedBy === PlayerOrNone.Guest && !this.isHost;
     const playerPlayedCard = hostAndPlayedByHost || guestAndPlayedByGuest;
 
-    return playerPlayedCard ? 'var(--blue)' : 'var(--red)';
+    return playerPlayedCard ? LIGHT_BLUE_TINT : LIGHT_RED_TINT;
   }
 }
