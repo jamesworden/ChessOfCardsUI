@@ -52,7 +52,11 @@
     *ngIf="numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null"
     class="game-stats"
   >
-    <div class="remaining-time">{{ opponentsRemainingSecondsString }}</div>
+    <div class="remaining-time">
+      <span>
+        {{ opponentsRemainingSecondsString }}
+      </span>
+    </div>
     <div class="deck-counts">
       <div class="deck-count">{{ numCardsInOpponentDeck }}</div>
       <app-face-down-card></app-face-down-card>
@@ -62,10 +66,10 @@
     <div
       class="remaining-time"
       [ngClass]="{
-        'player-has-low-time': playerHasLowTime
+        'low-time-container': playerHasLowTime
       }"
     >
-      {{ playersRemainingSecondsString }}
+      <span>{{ playersRemainingSecondsString }}</span>
     </div>
   </div>
 </nav>
