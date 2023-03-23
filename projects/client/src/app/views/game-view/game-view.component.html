@@ -1,4 +1,10 @@
-<app-sidebar [isPlayersTurn]="isPlayersTurn"></app-sidebar>
+<app-sidebar
+  [isPlayersTurn]="isPlayersTurn"
+  [ngClass]="{
+    'relative-sidebar': (breakpoint$ | async) === Breakpoint.Mobile,
+    'absolute-sidebar': (breakpoint$ | async) !== Breakpoint.Mobile
+  }"
+></app-sidebar>
 
 <div class="center-horisontally">
   <div class="game-container">

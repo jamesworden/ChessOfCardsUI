@@ -42,3 +42,12 @@
   flex-direction: column;
   justify-content: space-around;
 }
+
+.relative-sidebar {
+  height: 100%;
+}
+
+.absolute-sidebar {
+  position: absolute;
+  height: 100%;
+}

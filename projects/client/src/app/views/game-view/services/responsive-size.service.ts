@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SubscriptionManager } from '../../../util/subscription-manager';
 import { BehaviorSubject, fromEvent } from 'rxjs';
+import { Breakpoint } from '../../../models/breakpoint.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,8 @@ export class ResponsiveSizeService {
 
   public windowDimensions$: BehaviorSubject<[number, number]> =
     new BehaviorSubject([window.innerWidth, window.innerHeight]);
-  public cardSize$: BehaviorSubject<number> = new BehaviorSubject(64);
+  public cardSize$ = new BehaviorSubject(64);
+  public breakpoint$ = new BehaviorSubject<Breakpoint>(Breakpoint.Mobile);
 
   constructor() {
     this.sm.add(
@@ -27,6 +29,17 @@ export class ResponsiveSizeService {
         const cardSize = Math.min(maxCardWidth, maxCardHeight);
 
         this.cardSize$.next(cardSize);
+      })
+    );
+    this.sm.add(
+      this.windowDimensions$.subscribe(([width]) => {
+        if (width < 450) {
+          this.breakpoint$.next(Breakpoint.Mobile);
+        } else if (width < 1000) {
+          this.breakpoint$.next(Breakpoint.Tablet);
+        } else {
+          this.breakpoint$.next(Breakpoint.Desktop);
+        }
       })
     );
   }

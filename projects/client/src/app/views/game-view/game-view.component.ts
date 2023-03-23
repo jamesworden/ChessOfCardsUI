@@ -37,6 +37,7 @@ import { ResponsiveSizeService } from './services/responsive-size.service';
 import { UpdateView } from '../../actions/view.actions';
 import { View } from '..';
 import { GameOverData } from '../../models/game-over-data.model';
+import { Breakpoint } from '../../models/breakpoint.model';
 
 @Component({
   selector: 'app-game-view',
@@ -73,7 +74,10 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.waitingForServer)
   waitingForServer$!: Observable<boolean>;
 
+  breakpoint$ = this.responsiveSizeService.breakpoint$;
+
   PlayerOrNone = PlayerOrNone;
+  Breakpoint = Breakpoint;
   getCardImageFileName = getCardImageFileNameFn;
 
   latestGameViewSnapshot: PlayerGameView;
