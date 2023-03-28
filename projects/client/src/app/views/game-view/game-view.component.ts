@@ -7,6 +7,7 @@ import {
   DenyDrawOffer,
   FinishPlacingMultipleCards,
   MakeMove,
+  PassMove,
   RearrangeHand,
   ResetGameData,
   ResetPendingGameView,
@@ -38,6 +39,8 @@ import { UpdateView } from '../../actions/view.actions';
 import { View } from '..';
 import { GameOverData } from '../../models/game-over-data.model';
 import { Breakpoint } from '../../models/breakpoint.model';
+import { getPossibleInitialPlaceCardAttempts } from './logic/get-possible-initial-place-card-attempts';
+import { isPlayersTurn } from './logic/is-players-turn';
 
 @Component({
   selector: 'app-game-view',
@@ -84,6 +87,7 @@ export class GameViewComponent implements OnDestroy {
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   cardSize = 64;
+  possibleInitialPlaceCardAttempts: PlaceCardAttempt[] = [];
 
   constructor(
     public modal: MatDialog,
@@ -113,7 +117,9 @@ export class GameViewComponent implements OnDestroy {
       this.playerGameView$.subscribe((playerGameView) => {
         if (playerGameView) {
           this.latestGameViewSnapshot = playerGameView;
-          this.setIsPlayersTurn(playerGameView);
+          this.isPlayersTurn = isPlayersTurn(playerGameView);
+          this.possibleInitialPlaceCardAttempts =
+            getPossibleInitialPlaceCardAttempts(playerGameView);
         }
       })
     );
@@ -278,14 +284,6 @@ export class GameViewComponent implements OnDestroy {
     this.store.dispatch(new DenyDrawOffer());
   }
 
-  private setIsPlayersTurn(playerGameView: PlayerGameView) {
-    const { IsHost, IsHostPlayersTurn } = playerGameView;
-
-    const hostAndHostTurn = IsHost && IsHostPlayersTurn;
-    const guestAndGuestTurn = !IsHost && !IsHostPlayersTurn;
-    this.isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
-  }
-
   private rearrangeHand(previousIndex: number, targetIndex: number) {
     moveItemInArray(
       this.latestGameViewSnapshot.Hand.Cards,
@@ -387,5 +385,9 @@ export class GameViewComponent implements OnDestroy {
 
     this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     this.store.dispatch(new MakeMove(move));
+  }
+
+  passMove() {
+    this.store.dispatch(new PassMove());
   }
 }

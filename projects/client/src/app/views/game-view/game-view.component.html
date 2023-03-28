@@ -39,7 +39,9 @@
 <ng-template #opponentHandToolbar>
   <ng-container
     *ngIf="
-      !(isPlacingMultipleCards$ | async) && !(hasPendingDrawOffer$ | async)
+      !(isPlacingMultipleCards$ | async) &&
+      !(hasPendingDrawOffer$ | async) &&
+      !(possibleInitialPlaceCardAttempts.length === 0 && isPlayersTurn)
     "
   >
     <app-opponent-hand
@@ -114,6 +116,39 @@
           matTooltipPosition="below"
           materialSymbol="close"
           (selected)="denyDraw()"
+        ></app-sidebar-item>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container
+    *ngIf="
+      possibleInitialPlaceCardAttempts.length === 0 &&
+      isPlayersTurn &&
+      !(isPlacingMultipleCards$ | async) &&
+      !(hasPendingDrawOffer$ | async)
+    "
+  >
+    <div class="buttons-container">
+      <div
+        class="button-question"
+        [ngStyle]="{
+          'min-width': cardSize + 'px'
+        }"
+      >
+        <span>You have no available moves.<br />Would you like to pass?</span>
+      </div>
+
+      <div style="display: flex">
+        <app-sidebar-item
+          [itemWidth]="cardSize"
+          [itemHeight]="cardSize"
+          [iconSize]="cardSize / 2"
+          iconColor="#33312e"
+          matTooltip="Pass"
+          matTooltipPosition="below"
+          materialSymbol="check"
+          (selected)="passMove()"
         ></app-sidebar-item>
       </div>
     </div>
