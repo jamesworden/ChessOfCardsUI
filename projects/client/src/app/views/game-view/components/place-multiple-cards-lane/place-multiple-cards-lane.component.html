@@ -42,6 +42,7 @@
       [card]="card"
       [cardImageFileName]="getCardImageFileName(card)"
       [playerCanDrag]="true"
+      [reduceHeight]="true"
     ></app-card>
   </div>
 
@@ -53,10 +54,6 @@
   >
     <div
       class="existing-card-position"
-      [ngStyle]="{
-        width: cardSize + 'px',
-        height: cardSize + 'px'
-      }"
       *ngFor="let card of previouslyCapturedCards$ | async"
     >
       <app-card

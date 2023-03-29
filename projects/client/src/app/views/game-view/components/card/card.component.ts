@@ -12,6 +12,8 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 export class CardComponent implements OnChanges, OnDestroy {
   private sm = new SubscriptionManager();
 
+  /* Bug fix to reduce height when in PMC lane. Cards shift upwards for unknown reason... */
+  @Input() reduceHeight = false;
   @Input() cardImageFileName?: string | null;
   @Input() playerCanDrag = false;
   @Input() card: Card;
@@ -20,8 +22,8 @@ export class CardComponent implements OnChanges, OnDestroy {
   @Input() isHost: boolean;
   @Input() backgroundColor?: string | null;
 
-  tiltDegrees = 0;
   cardSize: number;
+  tiltDegrees = 0;
 
   constructor(public responsiveSizeService: ResponsiveSizeService) {
     this.sm.add(

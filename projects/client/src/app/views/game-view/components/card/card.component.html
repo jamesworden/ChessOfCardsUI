@@ -1,16 +1,16 @@
 <img
   *ngIf="cardImageFileName"
   class="card"
-  src="../../../../assets/images/{{ cardImageFileName }}"
-  alt=""
   cdkDrag
   [cdkDragDisabled]="!playerCanDrag"
   cdkDragBoundary=".game"
   [cdkDragData]="card"
+  src="../../../../assets/images/{{ cardImageFileName }}"
   [ngStyle]="{
     rotate: tiltDegrees + 'deg',
     'background-color': backgroundColor ?? 'transparent',
     height: cardSize + 'px',
-    width: cardSize + 'px'
+    width: cardSize + 'px',
+    'margin-bottom': reduceHeight ? '-5px' : 0
   }"
 />
