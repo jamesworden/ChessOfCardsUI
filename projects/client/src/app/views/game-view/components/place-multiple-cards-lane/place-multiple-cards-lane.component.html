@@ -57,6 +57,7 @@
       *ngFor="let card of previouslyCapturedCards$ | async"
     >
       <app-card
+        [reduceHeight]="true"
         [cardImageFileName]="getCardImageFileName(card)"
         [playerCanDrag]="false"
       ></app-card>
