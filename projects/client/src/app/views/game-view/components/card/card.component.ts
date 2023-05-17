@@ -1,29 +1,33 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { Card } from '../../../../models/card.model';
 import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import {
+  getCardImageFileName,
+  getJokerImageFileName,
+} from 'projects/client/src/app/util/get-asset-file-names';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
 })
-export class CardComponent implements OnChanges, OnDestroy {
+export class CardComponent implements OnDestroy, OnInit {
   private sm = new SubscriptionManager();
 
   /* Bug fix to reduce height when in PMC lane. Cards shift upwards for unknown reason... */
   @Input() reduceHeight = false;
-  @Input() cardImageFileName?: string | null;
   @Input() playerCanDrag = false;
   @Input() card: Card;
-  @Input() isMiddleCard: boolean;
-  @Input() isPlayedBy: PlayerOrNone;
   @Input() isHost: boolean;
-  @Input() backgroundColor?: string | null;
+  @Input() rowIndex: number;
+  @Input() wonBy: PlayerOrNone;
+  @Input() laneIndex: number;
 
   cardSize: number;
   tiltDegrees = 0;
+  imageFileName: string;
 
   constructor(public responsiveSizeService: ResponsiveSizeService) {
     this.sm.add(
@@ -33,27 +37,33 @@ export class CardComponent implements OnChanges, OnDestroy {
     );
   }
 
-  ngOnChanges() {
-    this.tiltCardIfMiddle();
+  ngOnInit() {
+    this.initTiltDegrees();
+    this.initImageFileName();
   }
 
   ngOnDestroy() {
     this.sm.unsubscribe();
   }
 
-  tiltCardIfMiddle() {
-    const nobodyPlayedCard = this.isPlayedBy === PlayerOrNone.None;
+  private initTiltDegrees() {
+    const nobodyPlayedCard = this.card.PlayedBy === PlayerOrNone.None;
+    const isMiddleCard = this.rowIndex === 3;
 
-    if (nobodyPlayedCard || !this.isMiddleCard) {
+    if (nobodyPlayedCard || !isMiddleCard) {
       return;
     }
 
     const hostCardAndIsHost =
-      this.isHost && this.isPlayedBy === PlayerOrNone.Host;
+      this.isHost && this.card.PlayedBy === PlayerOrNone.Host;
     const guestCardAndIsGuest =
-      !this.isHost && this.isPlayedBy === PlayerOrNone.Guest;
+      !this.isHost && this.card.PlayedBy === PlayerOrNone.Guest;
     const playerPlayedCard = hostCardAndIsHost || guestCardAndIsGuest;
 
     this.tiltDegrees = playerPlayedCard ? 45 : -45;
+  }
+
+  private initImageFileName() {
+    this.imageFileName = getCardImageFileName(this.card);
   }
 }

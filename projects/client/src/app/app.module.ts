@@ -34,6 +34,7 @@ import { BoardComponent } from './views/game-view/components/board/board.compone
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
 import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
 import { ServerState } from './state/server.state';
+import { JokerCardComponent } from './views/game-view/components/joker-card/joker-card.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ServerState } from './state/server.state';
     BoardComponent,
     SidebarComponent,
     SidebarItemComponent,
+    JokerCardComponent,
   ],
   imports: [
     BrowserModule,

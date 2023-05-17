@@ -9,7 +9,10 @@
     *ngIf="initialPlaceMultipleCardAttempt"
   ></ng-container>
 
-  <div class="lanes">
+  <div
+    class="lanes"
+    [ngClass]="{ 'reverse-lanes-horisontally': !playerGameView.IsHost }"
+  >
     <ng-container
       *ngFor="let lane of playerGameView.Lanes; let laneIndex = index"
     >

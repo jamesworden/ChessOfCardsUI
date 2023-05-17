@@ -54,6 +54,8 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy {
   MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
   Z_INDEXES = Z_INDEXES;
   cardSize: number;
+  laneIndex: number;
+  rowIndex: number;
 
   previouslyCapturedCards$ = combineLatest([
     this.playerGameView$,
