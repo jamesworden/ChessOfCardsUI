@@ -1,66 +1,70 @@
-<div class="lane" *ngIf="playerGameView$ | async">
-  <!-- Lane background color layer beneath place cards -->
-  <div
-    [ngStyle]="{
-      position: 'absolute',
-      width: '64px',
-      'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
-    }"
-  >
+<ng-container
+  *ngIf="
+    initialPlaceMultipleCardAttempt$ | async as initialPlaceMultipleCardAttempt
+  "
+>
+  <div class="lane" *ngIf="playerGameView$ | async">
+    <!-- Lane background color layer beneath place cards -->
     <div
-      *ngFor="let _ of [].constructor(7); let rowIndex = index"
       [ngStyle]="{
-        height: cardSize + 'px',
-        width: cardSize + 'px',
-        'background-color': getDefaultCardBackgroundColor(
-          (initialPlaceMultipleCardAttempt$ | async)?.TargetLaneIndex ?? 0,
-          rowIndex
-        )
+        position: 'absolute',
+        width: '64px',
+        'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
       }"
-    ></div>
-  </div>
+    >
+      <div
+        *ngFor="let position of pseudoPositions"
+        [ngStyle]="{
+          height: cardSize + 'px',
+          width: cardSize + 'px',
+          'background-color': position.backgroundColor
+        }"
+      ></div>
+    </div>
 
-  <div
-    id="place-multiple-cards-list"
-    class="place-multiple-cards-list"
-    cdkDropList
-    cdkDropListData="place-multiple-cards-list"
-    cdkDropListConnectedTo="player-hand"
-    cdkDropListOrientation="vertical"
-    (cdkDropListDropped)="onCardPlaced($event)"
-    [cdkDropListEnterPredicate]="
-      getEnterPredicate(initialPlaceMultipleCardAttempt$ | async)
-    "
-    [ngStyle]="{
-      'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS,
-      'min-height': MIN_CARD_HEIGHT_FACTOR * cardSize + 'px',
-      width: cardSize + 'px'
-    }"
-  >
-    <app-card
-      *ngFor="let card of placeMultipleCards$ | async"
-      [card]="card"
-      [cardImageFileName]="getCardImageFileName(card)"
-      [playerCanDrag]="true"
-      [reduceHeight]="true"
-    ></app-card>
-  </div>
-
-  <div
-    class="existing-cards"
-    [ngStyle]="{
-      'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS
-    }"
-  >
     <div
-      class="existing-card-position"
-      *ngFor="let card of previouslyCapturedCards$ | async"
+      id="place-multiple-cards-list"
+      class="place-multiple-cards-list"
+      cdkDropList
+      cdkDropListData="place-multiple-cards-list"
+      cdkDropListConnectedTo="player-hand"
+      cdkDropListOrientation="vertical"
+      (cdkDropListDropped)="onCardPlaced($event)"
+      [cdkDropListEnterPredicate]="
+        getEnterPredicate(initialPlaceMultipleCardAttempt)
+      "
+      [ngStyle]="{
+        'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS,
+        'min-height': MIN_CARD_HEIGHT_FACTOR * cardSize + 'px',
+        width: cardSize + 'px'
+      }"
     >
       <app-card
+        *ngFor="let card of placeMultipleCards$ | async"
+        [card]="card"
+        [playerCanDrag]="true"
         [reduceHeight]="true"
-        [cardImageFileName]="getCardImageFileName(card)"
-        [playerCanDrag]="false"
+        [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
       ></app-card>
     </div>
+
+    <div
+      class="existing-cards"
+      [ngStyle]="{
+        'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS
+      }"
+    >
+      <div
+        class="existing-card-position"
+        *ngFor="let card of previouslyCapturedCards$ | async"
+      >
+        <app-card
+          [card]="card"
+          [reduceHeight]="true"
+          [playerCanDrag]="false"
+          [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
+        ></app-card>
+      </div>
+    </div>
   </div>
-</div>
+</ng-container>
