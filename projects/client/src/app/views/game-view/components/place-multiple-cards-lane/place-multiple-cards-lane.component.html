@@ -13,14 +13,11 @@
       }"
     >
       <div
-        *ngFor="let _ of [].constructor(7); let rowIndex = index"
+        *ngFor="let position of pseudoPositions"
         [ngStyle]="{
           height: cardSize + 'px',
           width: cardSize + 'px',
-          'background-color': getDefaultCardBackgroundColor(
-            initialPlaceMultipleCardAttempt.TargetLaneIndex,
-            rowIndex
-          )
+          'background-color': position.backgroundColor
         }"
       ></div>
     </div>
