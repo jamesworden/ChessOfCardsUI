@@ -57,32 +57,12 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
     this.playerGameView$,
     this.initialPlaceMultipleCardAttempt$,
   ]).pipe(
-    map(([playerGameView, initialMultiplePlaceCardAttempt]) => {
-      if (!initialMultiplePlaceCardAttempt || !playerGameView) {
-        return [];
-      }
-
-      const { TargetLaneIndex, TargetRowIndex } =
-        initialMultiplePlaceCardAttempt;
-      const lane = playerGameView.Lanes[TargetLaneIndex];
-      const cards: Card[] = [];
-
-      if (playerGameView.IsHost) {
-        for (let i = 0; i < TargetRowIndex; i++) {
-          const row = lane.Rows[i];
-          const topCard = row[row.length - 1];
-          cards.push(topCard);
-        }
-      } else {
-        for (let i = 6; i > TargetRowIndex; i--) {
-          const row = lane.Rows[i];
-          const topCard = row[row.length - 1];
-          cards.push(topCard);
-        }
-      }
-
-      return cards;
-    })
+    map(([playerGameView, initialPlaceMultipleCardAttempt]) =>
+      this.getPreviouslyCapturedCards(
+        initialPlaceMultipleCardAttempt,
+        playerGameView
+      )
+    )
   );
 
   constructor(
@@ -196,5 +176,34 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
     }
 
     this.pseudoPositions = pseudoPositions;
+  }
+
+  private getPreviouslyCapturedCards(
+    initialMultiplePlaceCardAttempt: PlaceCardAttempt | null,
+    playerGameView: PlayerGameView | null
+  ) {
+    if (!initialMultiplePlaceCardAttempt || !playerGameView) {
+      return [];
+    }
+
+    const { TargetLaneIndex, TargetRowIndex } = initialMultiplePlaceCardAttempt;
+    const lane = playerGameView.Lanes[TargetLaneIndex];
+    const cards: Card[] = [];
+
+    if (playerGameView.IsHost) {
+      for (let i = 0; i < TargetRowIndex; i++) {
+        const row = lane.Rows[i];
+        const topCard = row[row.length - 1];
+        cards.push(topCard);
+      }
+    } else {
+      for (let i = 6; i > TargetRowIndex; i--) {
+        const row = lane.Rows[i];
+        const topCard = row[row.length - 1];
+        cards.push(topCard);
+      }
+    }
+
+    return cards;
   }
 }
