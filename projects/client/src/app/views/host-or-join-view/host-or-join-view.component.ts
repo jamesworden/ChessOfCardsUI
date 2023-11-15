@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Select, Store } from '@ngxs/store';
 import { View } from '..';
 import { UpdateView } from '../../actions/view.actions';

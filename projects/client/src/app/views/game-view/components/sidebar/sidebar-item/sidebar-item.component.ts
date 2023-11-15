@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 @Component({
   selector: 'app-sidebar-item',

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Select, Store } from '@ngxs/store';
 import {
   OfferDraw,
@@ -13,7 +13,7 @@ import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
 import { Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 

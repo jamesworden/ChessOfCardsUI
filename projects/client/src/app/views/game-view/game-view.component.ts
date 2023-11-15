@@ -23,9 +23,9 @@ import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.mode
 import { PlayerGameView } from '../../models/player-game-view.model';
 import { GameState } from '../../state/game.state';
 import { getReasonIfMoveInvalid } from './logic/is-move-valid';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ModalComponent } from './components/modal/modal.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { Lane } from '../../models/lane.model';
 import { addCardToArray } from './logic/add-card-to-array';
