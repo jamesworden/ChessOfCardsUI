@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { CreateGame, SelectDurationOption } from '../../actions/game.actions';
 import { DurationOption } from '../../models/duration-option.model';
 import { PendingGameView } from '../../models/pending-game-view.model';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-host-view',

@@ -2,12 +2,12 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
-  HostListener,
   Input,
   Output,
+  inject,
 } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-sidebar-item',
@@ -15,6 +15,9 @@ import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack
   styleUrls: ['./sidebar-item.component.css'],
 })
 export class SidebarItemComponent implements AfterViewInit {
+  readonly #focusMonitor = inject(FocusMonitor);
+  readonly #snackBar = inject(MatSnackBar);
+
   /** CSS width, height, and font size of the item. */
   @Input() itemHeight: number;
   @Input() iconSize: number;
@@ -25,18 +28,13 @@ export class SidebarItemComponent implements AfterViewInit {
 
   @Output() selected = new EventEmitter<void>();
 
-  constructor(
-    private focusMonitor: FocusMonitor,
-    private snackBar: MatSnackBar
-  ) {}
-
   ngAfterViewInit() {
     this.removeButtonHighlightBug();
   }
 
   onClick() {
     if (this.disabled) {
-      this.snackBar.open('Waiting for response from server...', undefined, {
+      this.#snackBar.open('Waiting for response from server...', undefined, {
         duration: 1500,
         verticalPosition: 'top',
       });
@@ -54,7 +52,7 @@ export class SidebarItemComponent implements AfterViewInit {
     const buttonArray = Array.from(buttons);
 
     for (const button of buttonArray) {
-      this.focusMonitor.stopMonitoring(button as HTMLElement);
+      this.#focusMonitor.stopMonitoring(button as HTMLElement);
     }
   }
 }
