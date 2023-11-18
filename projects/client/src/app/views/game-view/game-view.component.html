@@ -28,7 +28,7 @@
         [isPlacingMultipleCards]="isPlacingMultipleCards"
         [isHost]="playerGameView.IsHost"
         [cards]="playerGameView.Hand.Cards"
-        [cardSize]="cardSize"
+        [cardSize]="(cardSize$ | async)!"
         [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
         (cardDropped)="onPlayerHandCardDrop($event)"
       ></app-player-hand>
@@ -45,7 +45,7 @@
     "
   >
     <app-opponent-hand
-      [cardSize]="cardSize"
+      [cardSize]="(cardSize$ | async)!"
       [numCards]="(playerGameView$ | async)!.NumCardsInOpponentsHand"
     ></app-opponent-hand>
   </ng-container>
@@ -55,7 +55,7 @@
       <div
         class="button-question"
         [ngStyle]="{
-          'min-width': cardSize + 'px'
+          'min-width': (cardSize$ | async)! + 'px'
         }"
       >
         <span>Place<br />Cards?</span>
@@ -63,8 +63,8 @@
 
       <div style="display: flex">
         <app-sidebar-item
-          [itemHeight]="cardSize"
-          [iconSize]="cardSize / 2"
+          [itemHeight]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
           iconColor="#33312e"
           matTooltip="Confirm"
           matTooltipPosition="below"
@@ -72,8 +72,8 @@
           (selected)="onConfirmButtonClicked()"
         ></app-sidebar-item>
         <app-sidebar-item
-          [itemHeight]="cardSize"
-          [iconSize]="cardSize / 2"
+          [itemHeight]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
           iconColor="#33312e"
           matTooltip="Cancel"
           matTooltipPosition="below"
@@ -91,7 +91,7 @@
       <div
         class="button-question"
         [ngStyle]="{
-          'min-width': cardSize + 'px'
+          'min-width': (cardSize$ | async)! + 'px'
         }"
       >
         <span>Accept<br />Draw?</span>
@@ -99,9 +99,9 @@
 
       <div style="display: flex">
         <app-sidebar-item
-          [itemWidth]="cardSize"
-          [itemHeight]="cardSize"
-          [iconSize]="cardSize / 2"
+          [itemWidth]="(cardSize$ | async)!"
+          [itemHeight]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
           iconColor="#33312e"
           matTooltip="Accept draw"
           matTooltipPosition="below"
@@ -109,8 +109,8 @@
           (selected)="acceptDraw()"
         ></app-sidebar-item>
         <app-sidebar-item
-          [itemHeight]="cardSize"
-          [iconSize]="cardSize / 2"
+          [itemHeight]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
           iconColor="#33312e"
           matTooltip="Deny draw"
           matTooltipPosition="below"
@@ -133,7 +133,7 @@
       <div
         class="button-question"
         [ngStyle]="{
-          'min-width': cardSize + 'px'
+          'min-width': (cardSize$ | async)! + 'px'
         }"
       >
         <span>You have no available moves.<br />Would you like to pass?</span>
@@ -141,9 +141,9 @@
 
       <div style="display: flex">
         <app-sidebar-item
-          [itemWidth]="cardSize"
-          [itemHeight]="cardSize"
-          [iconSize]="cardSize / 2"
+          [itemWidth]="(cardSize$ | async)!"
+          [itemHeight]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
           iconColor="#33312e"
           matTooltip="Pass"
           matTooltipPosition="below"

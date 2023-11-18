@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { GameState } from '../../../../state/game.state';
 import { Observable, combineLatest } from 'rxjs';
@@ -37,7 +37,9 @@ const MIN_CARD_HEIGHT_FACTOR = 5;
   styleUrls: ['./place-multiple-cards-lane.component.css'],
 })
 export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
-  private sm = new SubscriptionManager();
+  private readonly sm = new SubscriptionManager();
+  readonly #store = inject(Store);
+  readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
@@ -64,17 +66,6 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
       )
     )
   );
-
-  constructor(
-    private store: Store,
-    public responsiveSizeService: ResponsiveSizeService
-  ) {
-    this.sm.add(
-      responsiveSizeService.cardSize$.subscribe((cardSize) => {
-        this.cardSize = cardSize;
-      })
-    );
-  }
 
   ngOnInit() {
     this.initPseudoPositions();
@@ -105,7 +96,7 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
     const { currentIndex: targetIndex, item } = event;
     const card = item.data;
 
-    const placeMultipleCards = this.store.selectSnapshot(
+    const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
 
@@ -134,7 +125,7 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
     }
 
     moveItemInArray(placeMultipleCards, originalIndex, targetIndex);
-    this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
+    this.#store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
     return;
   }
 
@@ -145,7 +136,7 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
   ) {
     addCardToArray(card, placeMultipleCards, targetIndex);
 
-    let placeMultipleCardsHand = this.store.selectSnapshot(
+    let placeMultipleCardsHand = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
 
@@ -155,15 +146,15 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
 
     removeCardFromArray(card, placeMultipleCardsHand);
 
-    this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
-    this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
+    this.#store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
+    this.#store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
   }
 
   private initPseudoPositions() {
     const pseudoPositions: PseudoPosition[] = [];
 
     for (let rowIndex = 0; rowIndex < 7; rowIndex++) {
-      const initialPlaceCardAttempt = this.store.selectSnapshot(
+      const initialPlaceCardAttempt = this.#store.selectSnapshot(
         GameState.initialPlaceMultipleCardAttempt
       )!;
       const { TargetLaneIndex } = initialPlaceCardAttempt;

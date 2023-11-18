@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SubscriptionManager } from '../../../util/subscription-manager';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { Breakpoint } from '../../../models/breakpoint.model';
+import { DEFAULT_CARD_SIZE } from '../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class ResponsiveSizeService {
 
   public windowDimensions$: BehaviorSubject<[number, number]> =
     new BehaviorSubject([window.innerWidth, window.innerHeight]);
-  public cardSize$ = new BehaviorSubject(64);
+  public cardSize$ = new BehaviorSubject(DEFAULT_CARD_SIZE);
   public breakpoint$ = new BehaviorSubject<Breakpoint>(Breakpoint.Mobile);
 
   constructor() {
