@@ -41,10 +41,8 @@
     >
       <app-card
         *ngFor="let card of placeMultipleCards$ | async"
-        class="pb-2"
         [card]="card"
         [playerCanDrag]="true"
-        [reduceHeight]="true"
         [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
         [insideVerticalContainer]="true"
       ></app-card>
@@ -62,7 +60,6 @@
       >
         <app-card
           [card]="card"
-          [reduceHeight]="true"
           [playerCanDrag]="false"
           [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
         ></app-card>

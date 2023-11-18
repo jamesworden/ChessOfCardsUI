@@ -28,8 +28,6 @@ export class CardComponent implements OnDestroy, OnInit {
     return this.insideVerticalContainer ? 'block' : 'flex';
   }
 
-  /* Bug fix to reduce height when in PMC lane. Cards shift upwards for unknown reason... */
-  @Input() reduceHeight = false;
   @Input() playerCanDrag = false;
   @Input() card: Card;
   @Input() isHost: boolean;
