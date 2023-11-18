@@ -15,8 +15,8 @@
       <div
         *ngFor="let position of pseudoPositions"
         [ngStyle]="{
-          height: cardSize + 'px',
-          width: cardSize + 'px',
+          height: (cardSize$ | async)! + 'px',
+          width: (cardSize$ | async)! + 'px',
           'background-color': position.backgroundColor
         }"
       ></div>
@@ -35,16 +35,16 @@
       "
       [ngStyle]="{
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS,
-        'min-height': MIN_CARD_HEIGHT_FACTOR * cardSize + 'px',
-        width: cardSize + 'px'
+        'min-height': MIN_CARD_HEIGHT_FACTOR * (cardSize$ | async)! + 'px',
+        width: (cardSize$ | async)! + 'px'
       }"
     >
       <app-card
         *ngFor="let card of placeMultipleCards$ | async"
         [card]="card"
         [playerCanDrag]="true"
-        [reduceHeight]="true"
         [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
+        [insideVerticalContainer]="true"
       ></app-card>
     </div>
 
@@ -60,7 +60,6 @@
       >
         <app-card
           [card]="card"
-          [reduceHeight]="true"
           [playerCanDrag]="false"
           [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
         ></app-card>

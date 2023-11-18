@@ -48,7 +48,7 @@ import { isPlayersTurn } from './logic/is-players-turn';
   styleUrls: ['./game-view.component.css'],
 })
 export class GameViewComponent implements OnDestroy {
-  private sm = new SubscriptionManager();
+  private readonly sm = new SubscriptionManager();
 
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
@@ -77,7 +77,8 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.waitingForServer)
   waitingForServer$!: Observable<boolean>;
 
-  breakpoint$ = this.responsiveSizeService.breakpoint$;
+  readonly cardSize$ = this.responsiveSizeService.cardSize$;
+  readonly breakpoint$ = this.responsiveSizeService.breakpoint$;
 
   PlayerOrNone = PlayerOrNone;
   Breakpoint = Breakpoint;
@@ -86,7 +87,6 @@ export class GameViewComponent implements OnDestroy {
   latestGameViewSnapshot: PlayerGameView;
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
-  cardSize = 64;
   possibleInitialPlaceCardAttempts: PlaceCardAttempt[] = [];
 
   constructor(
@@ -136,11 +136,6 @@ export class GameViewComponent implements OnDestroy {
     this.sm.add(
       this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
         this.isPlacingMultipleCards = isPlacingMultipleCards;
-      })
-    );
-    this.sm.add(
-      this.responsiveSizeService.cardSize$.subscribe((cardSize) => {
-        this.cardSize = cardSize;
       })
     );
   }
