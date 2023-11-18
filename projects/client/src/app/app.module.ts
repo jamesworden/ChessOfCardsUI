@@ -11,10 +11,6 @@ import { HostViewComponent } from './views/host-view/host-view.component';
 import { JoinViewComponent } from './views/join-view/join-view.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-view.component';
@@ -35,6 +31,10 @@ import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.c
 import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
 import { ServerState } from './state/server.state';
 import { JokerCardComponent } from './views/game-view/components/joker-card/joker-card.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -64,11 +64,11 @@ import { JokerCardComponent } from './views/game-view/components/joker-card/joke
     AppRoutingModule,
     DragDropModule,
     NgxsModule.forRoot([GameState, ViewState, TutorialState, ServerState]),
-    BrowserAnimationsModule,
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,
     MatButtonModule,
+    BrowserAnimationsModule,
     MatIconModule,
     FormsModule,
   ],

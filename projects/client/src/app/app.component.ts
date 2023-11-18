@@ -27,10 +27,8 @@ import {
   ],
 })
 export class AppComponent {
+  readonly View = View;
+
   @Select(ViewState.currentView)
   currentView$: Observable<View>;
-
-  View = View;
-
-  constructor() {}
 }
