@@ -1,4 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  HostBinding,
+} from '@angular/core';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { Card } from '../../../../models/card.model';
 import { PlayerOrNone } from '../../../../models/player-or-none.model';
@@ -13,6 +19,15 @@ import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-fil
 export class CardComponent implements OnDestroy, OnInit {
   private sm = new SubscriptionManager();
 
+  /*
+   * When rearranging cards inside player hand, sometimes multiple card
+   * images that are dragged end up in the same single card component host
+   * element. When this happens, display: flex horisontally spaces them out.
+   */
+  @HostBinding('style.display') get display() {
+    return this.insideVerticalContainer ? 'block' : 'flex';
+  }
+
   /* Bug fix to reduce height when in PMC lane. Cards shift upwards for unknown reason... */
   @Input() reduceHeight = false;
   @Input() playerCanDrag = false;
@@ -21,6 +36,7 @@ export class CardComponent implements OnDestroy, OnInit {
   @Input() rowIndex: number;
   @Input() wonBy: PlayerOrNone;
   @Input() laneIndex: number;
+  @Input() insideVerticalContainer: boolean = false;
 
   cardSize: number;
   tiltDegrees = 0;

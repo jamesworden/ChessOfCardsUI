@@ -1,12 +1,3 @@
-/* 
- * When rearranging cards inside player hand, sometimes multiple card 
- * images that are dragged end up in the same single card component host
- * element. When this happens, display: flex horisontally spaces them out.
- */
-:host {
-  display: flex;
-}
-
 .card.cdk-drag-preview {
   -webkit-filter: drop-shadow(5px 5px 5px gray);
   filter: drop-shadow(5px 5px 5px gray);
