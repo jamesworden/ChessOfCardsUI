@@ -14,7 +14,7 @@
   min-height: 48px;
 }
 
-.container {
+.host-view-container {
   height: 200px;
   margin: 0 auto;
   width: 50%;

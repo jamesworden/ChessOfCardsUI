@@ -1,6 +1,6 @@
 <div class="background"></div>
 
-<div class="container">
+<div class="app-container">
   <ng-container [ngSwitch]="currentView$ | async">
     <app-host-view *ngSwitchCase="View.Host" [@fadeInOut]></app-host-view>
     <app-join-view *ngSwitchCase="View.Join" [@fadeInOut]></app-join-view>
