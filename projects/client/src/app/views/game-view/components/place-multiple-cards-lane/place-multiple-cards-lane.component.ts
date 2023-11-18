@@ -50,9 +50,10 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
   @Select(GameState.placeMultipleCards)
   placeMultipleCards$!: Observable<Card[] | null>;
 
+  cardSize$ = this.#responsiveSizeService.cardSize$;
+
   MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
   Z_INDEXES = Z_INDEXES;
-  cardSize: number;
   pseudoPositions: PseudoPosition[];
 
   previouslyCapturedCards$ = combineLatest([

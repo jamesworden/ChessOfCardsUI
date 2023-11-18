@@ -15,8 +15,8 @@
       <div
         *ngFor="let position of pseudoPositions"
         [ngStyle]="{
-          height: cardSize + 'px',
-          width: cardSize + 'px',
+          height: (cardSize$ | async)! + 'px',
+          width: (cardSize$ | async)! + 'px',
           'background-color': position.backgroundColor
         }"
       ></div>
@@ -35,8 +35,8 @@
       "
       [ngStyle]="{
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS,
-        'min-height': MIN_CARD_HEIGHT_FACTOR * cardSize + 'px',
-        width: cardSize + 'px'
+        'min-height': MIN_CARD_HEIGHT_FACTOR * (cardSize$ | async)! + 'px',
+        width: (cardSize$ | async)! + 'px'
       }"
     >
       <app-card
