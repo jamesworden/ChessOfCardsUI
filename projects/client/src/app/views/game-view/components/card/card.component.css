@@ -1,3 +1,7 @@
+:host {
+  display: flex;
+}
+
 .card.cdk-drag-preview {
   -webkit-filter: drop-shadow(5px 5px 5px gray);
   filter: drop-shadow(5px 5px 5px gray);

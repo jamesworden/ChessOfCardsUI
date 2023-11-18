@@ -3,10 +3,7 @@ import { SubscriptionManager } from 'projects/client/src/app/util/subscription-m
 import { Card } from '../../../../models/card.model';
 import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
-import {
-  getCardImageFileName,
-  getJokerImageFileName,
-} from 'projects/client/src/app/util/get-asset-file-names';
+import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
 
 @Component({
   selector: 'app-card',
