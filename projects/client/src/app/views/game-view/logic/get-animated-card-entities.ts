@@ -192,7 +192,7 @@ function getAnimatedPositionFromOpponentCardIndex(
   const opponentHand = document.getElementsByTagName('app-opponent-hand')[0];
   let { x, y } = opponentHand.getBoundingClientRect();
 
-  x += cardSize * guestCardIndex;
+  x += cardSize * (guestCardIndex + 0.5);
 
   return {
     x,
@@ -207,7 +207,7 @@ function getAnimatedPositionFromPlayerCardIndex(
   const playerHand = document.getElementsByTagName('app-player-hand')[0];
   let { x, y } = playerHand.getBoundingClientRect();
 
-  x += cardSize * guestCardIndex;
+  x += cardSize * (guestCardIndex + 0.5);
 
   return {
     x,
