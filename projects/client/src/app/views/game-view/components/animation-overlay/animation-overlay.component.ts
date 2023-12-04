@@ -54,6 +54,7 @@ import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
         }
       ),
       transition('inactive => active', animate('{{durationMs}}ms ease-in-out')),
+      transition('* => active', animate('{{durationMs}}ms ease-in-out')),
     ]),
   ],
 })
@@ -70,7 +71,7 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
     this.sequencesToDelayMs$.next(getSequencesToDelayMs(animatedEntities));
     this.isAnimating$.next(true);
     this.animatedEntities$.next(animatedEntities);
-    this.currentSequence$.next(0);
+    this.currentSequence$.next(null);
   }
 
   @Output() finishedAnimating = new EventEmitter();
@@ -83,11 +84,16 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
   readonly sequencesToDelayMs$ = new BehaviorSubject<{ [key: number]: number }>(
     {}
   );
-  readonly currentSequence$ = new BehaviorSubject<number>(0);
+  readonly currentSequence$ = new BehaviorSubject<number | null>(null);
 
   ngOnInit() {
     this.sm.add(
       this.currentSequence$.subscribe((currentSequence) => {
+        if (currentSequence === null) {
+          this.currentSequence$.next(0);
+          return;
+        }
+
         const delayMs = this.sequencesToDelayMs$.getValue()[currentSequence];
 
         if (delayMs) {
