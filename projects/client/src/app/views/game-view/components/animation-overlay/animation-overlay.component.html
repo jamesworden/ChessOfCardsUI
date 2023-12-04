@@ -1,0 +1,40 @@
+<div
+  *ngIf="isAnimating$ | async"
+  [ngStyle]="{
+    'z-index': Z_INDEXES.ANIMATION_OVERLAY
+  }"
+  class="h-full w-full absolute left-0 right-0 top-0 bottom-0 bg-black opacity-50"
+>
+  <div class="relative h-full w-full">
+    <div *ngFor="let entity of animatedEntities$ | async">
+      @switch (entity.animationType) { @case (AnimationType.CardMovement) {
+      <div
+        class="absolute"
+        [@cardMovement]="{
+          value:
+            entity.movement.sequence === (currentSequence$ | async)
+              ? 'active'
+              : 'inactive',
+          params: {
+            fromX: entity.movement.from?.x,
+            toX: entity.movement.to?.x,
+            fromY: entity.movement.from?.y,
+            toY: entity.movement.to?.y,
+            durationMs: entity.movement.durationMs,
+            delayMs: ((sequencesToDelayMs$ | async) ?? {})[
+              entity.movement.sequence
+            ]
+          }
+        }"
+      >
+        <ng-container
+          *ngTemplateOutlet="
+            entity.template;
+            context: { $implicit: entity.context }
+          "
+        ></ng-container>
+      </div>
+      } }
+    </div>
+  </div>
+</div>

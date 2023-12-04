@@ -1,7 +1,15 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  inject,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
@@ -26,7 +34,6 @@ import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SubscriptionManager } from '../../util/subscription-manager';
 import { Lane } from '../../models/lane.model';
 import { addCardToArray } from './logic/add-card-to-array';
 import { moveCardToLane } from './logic/move-card-to-lane';
@@ -41,14 +48,32 @@ import { GameOverData } from '../../models/game-over-data.model';
 import { Breakpoint } from '../../models/breakpoint.model';
 import { getPossibleInitialPlaceCardAttempts } from './logic/get-possible-initial-place-card-attempts';
 import { isPlayersTurn } from './logic/is-players-turn';
+import { map, pairwise, startWith } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
+import { CardMovement } from '../../models/card-movement.model';
+import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
+import { SubscriptionManager } from '../../util/subscription-manager';
 
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
   styleUrls: ['./game-view.component.css'],
 })
-export class GameViewComponent implements OnDestroy {
+export class GameViewComponent implements OnInit, AfterViewInit {
   private readonly sm = new SubscriptionManager();
+
+  readonly #modal = inject(MatDialog);
+  readonly #store = inject(Store);
+  readonly #snackBar = inject(MatSnackBar);
+  readonly #responsiveSizeService = inject(ResponsiveSizeService);
+
+  readonly PlayerOrNone = PlayerOrNone;
+  readonly Breakpoint = Breakpoint;
+  readonly getCardImageFileName = getCardImageFileNameFn;
+
+  @ViewChild('cardMovementTemplate', { read: TemplateRef })
+  cardMovementTemplate: TemplateRef<any>;
 
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
@@ -77,42 +102,61 @@ export class GameViewComponent implements OnDestroy {
   @Select(GameState.waitingForServer)
   waitingForServer$!: Observable<boolean>;
 
-  readonly cardSize$ = this.responsiveSizeService.cardSize$;
-  readonly breakpoint$ = this.responsiveSizeService.breakpoint$;
+  @Select(GameState.playerGameViewToAnimate)
+  playerGameViewToAnimate$!: Observable<PlayerGameView>;
 
-  PlayerOrNone = PlayerOrNone;
-  Breakpoint = Breakpoint;
-  getCardImageFileName = getCardImageFileNameFn;
+  private readonly cardMovementTemplate$ =
+    new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
+
+  private readonly prevAndCurrGameViews$ = this.playerGameViewToAnimate$.pipe(
+    startWith(null),
+    pairwise()
+  );
+
+  readonly animatedCardEntities$: Observable<AnimatedEntity<CardMovement>[]> =
+    combineLatest([
+      this.prevAndCurrGameViews$,
+      this.#responsiveSizeService.cardSize$,
+      this.cardMovementTemplate$,
+    ]).pipe(
+      distinctUntilChanged(),
+      map(([prevAndCurrGameViews, cardSize, cardMovementTemplate]) =>
+        getAnimatedCardEntities(
+          prevAndCurrGameViews,
+          cardSize,
+          cardMovementTemplate
+        )
+      )
+    );
+
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly breakpoint$ = this.#responsiveSizeService.breakpoint$;
 
   latestGameViewSnapshot: PlayerGameView;
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   possibleInitialPlaceCardAttempts: PlaceCardAttempt[] = [];
 
-  constructor(
-    public modal: MatDialog,
-    private store: Store,
-    private snackBar: MatSnackBar,
-    private responsiveSizeService: ResponsiveSizeService
-  ) {
+  ngOnInit() {
     this.sm.add(
       this.gameOverData$.subscribe((gameOverData) => {
         if (!gameOverData.isOver) {
           return;
         }
 
-        const modalRef = this.modal.open(ModalComponent, {
+        const modalRef = this.#modal.open(ModalComponent, {
           width: '250px',
           data: { message: gameOverData.message },
         });
 
         modalRef.afterClosed().subscribe(() => {
-          this.store.dispatch(new ResetGameData());
-          this.store.dispatch(new ResetPendingGameView());
-          this.store.dispatch(new UpdateView(View.Home));
+          this.#store.dispatch(new ResetGameData());
+          this.#store.dispatch(new ResetPendingGameView());
+          this.#store.dispatch(new UpdateView(View.Home));
         });
       })
     );
+
     this.sm.add(
       this.playerGameView$.subscribe((playerGameView) => {
         if (playerGameView) {
@@ -123,16 +167,18 @@ export class GameViewComponent implements OnDestroy {
         }
       })
     );
+
     this.sm.add(
       this.opponentPassedMove$.subscribe((opponentPassedMove) => {
         if (opponentPassedMove) {
-          this.snackBar.open('Opponent passed their move.', 'Your turn!', {
+          this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
             duration: 2000,
             verticalPosition: 'top',
           });
         }
       })
     );
+
     this.sm.add(
       this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
         this.isPlacingMultipleCards = isPlacingMultipleCards;
@@ -140,8 +186,20 @@ export class GameViewComponent implements OnDestroy {
     );
   }
 
-  ngOnDestroy() {
-    this.sm.unsubscribe();
+  ngAfterViewInit() {
+    if (this.cardMovementTemplate) {
+      this.cardMovementTemplate$.next(this.cardMovementTemplate);
+    } else {
+      console.error('CARD TEMPLATE');
+    }
+  }
+
+  renderAnimatedGameView() {
+    const view = this.#store.selectSnapshot(GameState.playerGameViewToAnimate);
+
+    if (view) {
+      this.#store.dispatch(new UpdatePlayerGameView(view));
+    }
   }
 
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
@@ -161,7 +219,7 @@ export class GameViewComponent implements OnDestroy {
     );
 
     if (invalidMoveMessage) {
-      this.snackBar.open(invalidMoveMessage, undefined, {
+      this.#snackBar.open(invalidMoveMessage, undefined, {
         duration: 1500,
         verticalPosition: 'top',
       });
@@ -196,7 +254,7 @@ export class GameViewComponent implements OnDestroy {
   }
 
   onCancelButtonClicked() {
-    const placeMultipleCards = this.store.selectSnapshot(
+    const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
 
@@ -204,7 +262,7 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    const placeMultipleCardsHand = this.store.selectSnapshot(
+    const placeMultipleCardsHand = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
 
@@ -217,13 +275,13 @@ export class GameViewComponent implements OnDestroy {
     );
 
     this.latestGameViewSnapshot.Hand.Cards = combinedCards;
-    this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
-    this.store.dispatch(new RearrangeHand(combinedCards));
-    this.store.dispatch(new FinishPlacingMultipleCards());
+    this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
+    this.#store.dispatch(new RearrangeHand(combinedCards));
+    this.#store.dispatch(new FinishPlacingMultipleCards());
   }
 
   onConfirmButtonClicked() {
-    const placeMultipleCards = this.store.selectSnapshot(
+    const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
 
@@ -231,7 +289,7 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    const initialPlaceMultipleCardAttempt = this.store.selectSnapshot(
+    const initialPlaceMultipleCardAttempt = this.#store.selectSnapshot(
       GameState.initialPlaceMultipleCardAttempt
     );
 
@@ -244,7 +302,7 @@ export class GameViewComponent implements OnDestroy {
      * without mutating the original one.
      */
     const reversedPlaceMultipleCards = [...placeMultipleCards].reverse();
-    const playerGameView = this.store.selectSnapshot(GameState.playerGameView);
+    const playerGameView = this.#store.selectSnapshot(GameState.playerGameView);
 
     if (!playerGameView) {
       return;
@@ -259,7 +317,7 @@ export class GameViewComponent implements OnDestroy {
     const invalidMoveMessage = getReasonIfMoveInvalid(playerGameView, move);
 
     if (invalidMoveMessage) {
-      this.snackBar.open(invalidMoveMessage, 'Out of order!', {
+      this.#snackBar.open(invalidMoveMessage, 'Out of order!', {
         duration: 1500,
         verticalPosition: 'top',
       });
@@ -267,16 +325,16 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    this.store.dispatch(new MakeMove(move));
-    this.store.dispatch(new FinishPlacingMultipleCards());
+    this.#store.dispatch(new MakeMove(move));
+    this.#store.dispatch(new FinishPlacingMultipleCards());
   }
 
   acceptDraw() {
-    this.store.dispatch(new AcceptDrawOffer());
+    this.#store.dispatch(new AcceptDrawOffer());
   }
 
   denyDraw() {
-    this.store.dispatch(new DenyDrawOffer());
+    this.#store.dispatch(new DenyDrawOffer());
   }
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {
@@ -286,8 +344,8 @@ export class GameViewComponent implements OnDestroy {
       targetIndex
     );
 
-    this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
-    this.store.dispatch(
+    this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
+    this.#store.dispatch(
       new RearrangeHand(this.latestGameViewSnapshot.Hand.Cards)
     );
   }
@@ -296,7 +354,7 @@ export class GameViewComponent implements OnDestroy {
     previousIndex: number,
     targetIndex: number
   ) {
-    const placeMultipleCardsHand = this.store.selectSnapshot(
+    const placeMultipleCardsHand = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
 
@@ -306,11 +364,11 @@ export class GameViewComponent implements OnDestroy {
 
     moveItemInArray(placeMultipleCardsHand, previousIndex, targetIndex);
 
-    this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
+    this.#store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
   }
 
   private dragCardBackToHand(card: Card, indexInHand: number) {
-    const placeMultipleCards = this.store.selectSnapshot(
+    const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
 
@@ -319,9 +377,9 @@ export class GameViewComponent implements OnDestroy {
     }
 
     removeCardFromArray(card, placeMultipleCards);
-    this.store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
+    this.#store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
 
-    const placeMultipleCardsHand = this.store.selectSnapshot(
+    const placeMultipleCardsHand = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
 
@@ -330,9 +388,9 @@ export class GameViewComponent implements OnDestroy {
     }
 
     addCardToArray(card, placeMultipleCardsHand, indexInHand);
-    this.store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
+    this.#store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
 
-    const cardsAfterSwitch = this.store.selectSnapshot(
+    const cardsAfterSwitch = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
 
@@ -346,7 +404,7 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    const handAfterSwitch = this.store.selectSnapshot(
+    const handAfterSwitch = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
 
@@ -354,9 +412,9 @@ export class GameViewComponent implements OnDestroy {
       return;
     }
 
-    this.store.dispatch(new FinishPlacingMultipleCards());
+    this.#store.dispatch(new FinishPlacingMultipleCards());
     this.latestGameViewSnapshot.Hand.Cards = handAfterSwitch;
-    this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
+    this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     new RearrangeHand(handAfterSwitch);
   }
 
@@ -364,7 +422,7 @@ export class GameViewComponent implements OnDestroy {
     const cardsFromHand = [...this.latestGameViewSnapshot.Hand.Cards];
     removeCardFromArray(placeCardAttempt.Card, cardsFromHand);
 
-    this.store.dispatch(
+    this.#store.dispatch(
       new StartPlacingMultipleCards(placeCardAttempt, cardsFromHand)
     );
   }
@@ -378,11 +436,11 @@ export class GameViewComponent implements OnDestroy {
       );
     }
 
-    this.store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
-    this.store.dispatch(new MakeMove(move));
+    this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
+    this.#store.dispatch(new MakeMove(move));
   }
 
   passMove() {
-    this.store.dispatch(new PassMove());
+    this.#store.dispatch(new PassMove());
   }
 }

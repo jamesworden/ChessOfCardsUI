@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Injectable, inject } from '@angular/core';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
@@ -25,6 +25,7 @@ import {
   ResetPendingGameView,
   CheckHostForEmptyTimer,
   CheckGuestForEmptyTimer,
+  AnimateGameView,
 } from '../actions/game.actions';
 import { Card } from '../models/card.model';
 import { GameOverData } from '../models/game-over-data.model';
@@ -35,6 +36,7 @@ import { WebsocketService } from '../services/websocket.service';
 
 type GameStateModel = {
   playerGameView: PlayerGameView | null;
+  playerGameViewToAnimate: PlayerGameView | null;
   isPlacingMultipleCards: boolean;
   initalPlaceMultipleCardAttempt: PlaceCardAttempt | null;
   placeMultipleCardsHand: Card[] | null;
@@ -50,6 +52,7 @@ type GameStateModel = {
 
 const initialGameState: GameStateModel = {
   playerGameView: null,
+  playerGameViewToAnimate: null,
   isPlacingMultipleCards: false,
   initalPlaceMultipleCardAttempt: null,
   placeMultipleCardsHand: null,
@@ -71,6 +74,13 @@ const initialGameState: GameStateModel = {
 })
 @Injectable()
 export class GameState {
+  readonly #store = inject(Store);
+
+  @Selector()
+  static playerGameViewToAnimate(state: GameStateModel) {
+    return state.playerGameViewToAnimate;
+  }
+
   @Selector()
   static playerGameView(state: GameStateModel) {
     return state.playerGameView;
@@ -340,5 +350,12 @@ export class GameState {
   @Action(CheckGuestForEmptyTimer)
   checkGuestForEmptyTimer() {
     this.websocketService.checkGuestForEmptyTimer();
+  }
+
+  @Action(AnimateGameView)
+  animateGameView(ctx: StateContext<GameStateModel>, action: AnimateGameView) {
+    ctx.patchState({
+      playerGameViewToAnimate: action.playerGameView,
+    });
   }
 }

@@ -10,7 +10,10 @@ import { HomeViewComponent } from './views/home-view/home-view.component';
 import { HostViewComponent } from './views/host-view/host-view.component';
 import { JoinViewComponent } from './views/join-view/join-view.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-view.component';
@@ -35,6 +38,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { AnimationOverlayComponent } from './views/game-view/components/animation-overlay/animation-overlay.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +62,7 @@ import { MatButtonModule } from '@angular/material/button';
     SidebarComponent,
     SidebarItemComponent,
     JokerCardComponent,
+    AnimationOverlayComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,7 +77,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [provideAnimations()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

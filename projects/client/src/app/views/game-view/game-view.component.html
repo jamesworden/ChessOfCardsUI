@@ -6,6 +6,11 @@
   }"
 ></app-sidebar>
 
+<app-animation-overlay
+  [animatedEntities]="(animatedCardEntities$ | async) ?? []"
+  (finishedAnimating)="renderAnimatedGameView()"
+></app-animation-overlay>
+
 <div class="center-horisontally">
   <div class="game-container">
     <div
@@ -153,4 +158,8 @@
       </div>
     </div>
   </ng-container>
+</ng-template>
+
+<ng-template #cardMovementTemplate let-cardMovement>
+  <app-card [card]="cardMovement.Card"></app-card>
 </ng-template>
