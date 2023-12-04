@@ -13,8 +13,10 @@
         [@cardMovement]="{
           value:
             entity.movement.sequence === (currentSequence$ | async)
-              ? 'active'
-              : 'inactive',
+              ? 'in-progress'
+              : entity.movement.sequence < ((currentSequence$ | async) ?? 0)
+              ? 'completed'
+              : 'todo',
           params: {
             fromX: entity.movement.from?.x,
             toX: entity.movement.to?.x,

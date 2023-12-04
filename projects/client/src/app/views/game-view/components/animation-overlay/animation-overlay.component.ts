@@ -28,7 +28,7 @@ import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
   animations: [
     trigger('cardMovement', [
       state(
-        'inactive',
+        'todo',
         style({
           transform: 'translate3d({{fromX}}px, {{fromY}}px, 0)',
           display: 'none',
@@ -41,7 +41,7 @@ import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
         }
       ),
       state(
-        'active',
+        'in-progress',
         style({
           transform: 'translate3d({{toX}}px, {{toY}}px, 0)',
           display: 'flex',
@@ -53,7 +53,20 @@ import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
           },
         }
       ),
-      transition('* => active', animate('{{durationMs}}ms ease-in-out')),
+      state(
+        'completed',
+        style({
+          transform: 'translate3d({{toX}}px, {{toY}}px, 0)',
+          display: 'flex',
+        }),
+        {
+          params: {
+            toX: 0,
+            toY: 0,
+          },
+        }
+      ),
+      transition('* => in-progress', animate('{{durationMs}}ms ease-in-out')),
     ]),
   ],
 })
