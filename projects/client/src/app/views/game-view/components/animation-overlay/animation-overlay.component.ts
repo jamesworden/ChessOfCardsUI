@@ -9,7 +9,6 @@ import {
 import { Z_INDEXES } from '../../z-indexes';
 import { AnimatedEntity } from './models/animated-entity.model';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
   animate,
   state,
@@ -30,7 +29,10 @@ import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
     trigger('cardMovement', [
       state(
         'inactive',
-        style({ transform: 'translate3d({{fromX}}px, 0, 0)' }),
+        style({
+          transform: 'translate3d({{fromX}}px, {{fromY}}px, 0)',
+          display: 'none',
+        }),
         {
           params: {
             fromX: 0,
@@ -38,12 +40,19 @@ import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
           },
         }
       ),
-      state('active', style({ transform: 'translate3d({{toX}}px, 0, 0)' }), {
-        params: {
-          toX: 0,
-          toY: 0,
-        },
-      }),
+      state(
+        'active',
+        style({
+          transform: 'translate3d({{toX}}px, {{toY}}px, 0)',
+          display: 'flex',
+        }),
+        {
+          params: {
+            toX: 0,
+            toY: 0,
+          },
+        }
+      ),
       transition('inactive => active', animate('{{durationMs}}ms ease-in-out')),
     ]),
   ],
