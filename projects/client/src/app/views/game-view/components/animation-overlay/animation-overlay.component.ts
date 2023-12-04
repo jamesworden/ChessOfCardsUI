@@ -53,7 +53,6 @@ import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
           },
         }
       ),
-      transition('inactive => active', animate('{{durationMs}}ms ease-in-out')),
       transition('* => active', animate('{{durationMs}}ms ease-in-out')),
     ]),
   ],
