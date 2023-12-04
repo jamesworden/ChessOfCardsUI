@@ -176,7 +176,6 @@ function getAnimatedPositionFromCardPosition(
 ): AnimatedPosition {
   const { LaneIndex: laneIndex, RowIndex: rowIndex } = cardPosition;
 
-  LaneComponent;
   const lane = document.getElementsByTagName('app-lane')[laneIndex];
   const position = lane.getElementsByTagName('app-position')[rowIndex];
 
