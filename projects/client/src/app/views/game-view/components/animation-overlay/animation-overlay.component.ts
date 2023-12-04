@@ -28,12 +28,23 @@ import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
   styleUrl: './animation-overlay.component.css',
   animations: [
     trigger('cardMovement', [
-      state('inactive', style({ transform: 'translateX(0)' })),
-      state('active', style({ transform: 'translateX(400px)' })),
-      transition(
-        'inactive => active',
-        animate('1000ms {{delayMs}}ms ease-out')
+      state(
+        'inactive',
+        style({ transform: 'translate3d({{fromX}}px, 0, 0)' }),
+        {
+          params: {
+            fromX: 0,
+            fromY: 0,
+          },
+        }
       ),
+      state('active', style({ transform: 'translate3d({{toX}}px, 0, 0)' }), {
+        params: {
+          toX: 0,
+          toY: 0,
+        },
+      }),
+      transition('inactive => active', animate('{{durationMs}}ms ease-in-out')),
     ]),
   ],
 })
