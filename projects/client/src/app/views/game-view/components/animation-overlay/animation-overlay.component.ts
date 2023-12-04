@@ -70,7 +70,7 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
     this.sequencesToDelayMs$.next(getSequencesToDelayMs(animatedEntities));
     this.isAnimating$.next(true);
     this.animatedEntities$.next(animatedEntities);
-    this.currentSequence$.next(null);
+    this.currentSequence$.next(0);
   }
 
   @Output() finishedAnimating = new EventEmitter();
@@ -83,16 +83,11 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
   readonly sequencesToDelayMs$ = new BehaviorSubject<{ [key: number]: number }>(
     {}
   );
-  readonly currentSequence$ = new BehaviorSubject<number | null>(null);
+  readonly currentSequence$ = new BehaviorSubject<number>(0);
 
   ngOnInit() {
     this.sm.add(
       this.currentSequence$.subscribe((currentSequence) => {
-        if (currentSequence === null) {
-          this.currentSequence$.next(0);
-          return;
-        }
-
         const delayMs = this.sequencesToDelayMs$.getValue()[currentSequence];
 
         if (delayMs) {
