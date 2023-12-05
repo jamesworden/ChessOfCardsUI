@@ -54,6 +54,7 @@ import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 import { CardMovement } from '../../models/card-movement.model';
 import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
 import { SubscriptionManager } from '../../util/subscription-manager';
+import { MoveMadeDetails } from './models/move-made-details.model';
 
 @Component({
   selector: 'app-game-view',
@@ -113,19 +114,34 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     pairwise()
   );
 
+  // TODO: Use different control mechanism when click to move has been implemented.
+  private readonly latestMoveMadeDetails$ =
+    new BehaviorSubject<MoveMadeDetails | null>({
+      wasDragged: true,
+    });
+
   readonly animatedCardEntities$: Observable<AnimatedEntity<CardMovement>[]> =
     combineLatest([
       this.prevAndCurrGameViews$,
       this.cardMovementTemplate$,
     ]).pipe(
       distinctUntilChanged(),
-      withLatestFrom(this.#responsiveSizeService.cardSize$),
-      map(([[prevAndCurrGameViews, cardMovementTemplate], cardSize]) =>
-        getAnimatedCardEntities(
-          prevAndCurrGameViews,
+      withLatestFrom(
+        this.#responsiveSizeService.cardSize$,
+        this.latestMoveMadeDetails$
+      ),
+      map(
+        ([
+          [prevAndCurrGameViews, cardMovementTemplate],
           cardSize,
-          cardMovementTemplate
-        )
+          latestMoveMadeDetails,
+        ]) =>
+          getAnimatedCardEntities(
+            prevAndCurrGameViews,
+            cardSize,
+            cardMovementTemplate,
+            latestMoveMadeDetails
+          )
       )
     );
 

@@ -8,11 +8,13 @@ import { LaneComponent } from '../components/lane/lane.component';
 import { AnimatedEntity } from '../components/animation-overlay/models/animated-entity.model';
 import { TemplateRef } from '@angular/core';
 import { AnimationType } from '../components/animation-overlay/models/animation-type.model';
+import { MoveMadeDetails } from '../models/move-made-details.model';
 
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],
   cardSize: number,
-  cardMovementTemplate: TemplateRef<CardMovement> | null
+  cardMovementTemplate: TemplateRef<CardMovement> | null,
+  latestMoveMadeDetails: MoveMadeDetails | null
 ): AnimatedEntity<CardMovement>[] {
   const [prevView, currView] = prevAndCurrGameViews;
 
@@ -27,7 +29,7 @@ export function getAnimatedCardEntities(
     return [];
   }
 
-  const animatedEntities: AnimatedEntity<CardMovement>[] = [];
+  let animatedEntities: AnimatedEntity<CardMovement>[] = [];
 
   for (
     let i = currView.MovesMade.length - numLastMovesToProcess;
@@ -49,6 +51,21 @@ export function getAnimatedCardEntities(
         );
       }
     }
+  }
+
+  if (latestMoveMadeDetails?.wasDragged) {
+    animatedEntities = animatedEntities.filter((animatedEntity) => {
+      const { IsHost } = currView;
+      const hostHandCardIndex = animatedEntity.context.From?.HostHandCardIndex;
+      const fromHostHand =
+        hostHandCardIndex === null || hostHandCardIndex === undefined;
+      const guestHandCardIndex =
+        animatedEntity.context.From?.GuestHandCardIndex;
+      const fromGuestHand =
+        guestHandCardIndex === null || guestHandCardIndex === undefined;
+
+      return (IsHost && fromHostHand) || (!IsHost && fromGuestHand);
+    });
   }
 
   return animatedEntities;
