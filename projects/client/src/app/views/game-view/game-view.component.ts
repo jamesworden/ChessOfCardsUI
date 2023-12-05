@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
@@ -116,11 +116,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly animatedCardEntities$: Observable<AnimatedEntity<CardMovement>[]> =
     combineLatest([
       this.prevAndCurrGameViews$,
-      this.#responsiveSizeService.cardSize$,
       this.cardMovementTemplate$,
     ]).pipe(
       distinctUntilChanged(),
-      map(([prevAndCurrGameViews, cardSize, cardMovementTemplate]) =>
+      withLatestFrom(this.#responsiveSizeService.cardSize$),
+      map(([[prevAndCurrGameViews, cardMovementTemplate], cardSize]) =>
         getAnimatedCardEntities(
           prevAndCurrGameViews,
           cardSize,
@@ -187,11 +187,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.cardMovementTemplate) {
-      this.cardMovementTemplate$.next(this.cardMovementTemplate);
-    } else {
-      console.error('CARD TEMPLATE');
-    }
+    this.cardMovementTemplate$.next(this.cardMovementTemplate);
   }
 
   renderAnimatedGameView() {
