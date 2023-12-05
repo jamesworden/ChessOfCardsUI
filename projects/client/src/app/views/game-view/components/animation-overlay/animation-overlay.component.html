@@ -23,9 +23,6 @@
             fromY: entity.movement.from?.y,
             toY: entity.movement.to?.y,
             durationMs: entity.movement.durationMs,
-            delayMs: ((sequencesToDelayMs$ | async) ?? {})[
-              entity.movement.sequence
-            ]
           }
         }"
       >
@@ -35,6 +32,18 @@
             context: { $implicit: entity.context }
           "
         ></ng-container>
+
+        <div>
+          {{
+            entity.movement.from?.x +
+              " " +
+              entity.movement.to?.x +
+              " | " +
+              entity.movement.from?.y +
+              " " +
+              entity.movement.to?.y
+          }}
+        </div>
       </div>
       } }
     </div>

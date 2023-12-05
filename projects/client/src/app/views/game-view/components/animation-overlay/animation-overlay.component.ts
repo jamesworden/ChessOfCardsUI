@@ -77,13 +77,10 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
   readonly AnimationType = AnimationType;
 
   @Input() set animatedEntities(animatedEntities: AnimatedEntity<unknown>[]) {
-    this.totalAnimatedEntitesDuration$.next(
-      getTotalAnimatedEntitiesDurationMs(animatedEntities)
-    );
     this.sequencesToDelayMs$.next(getSequencesToDelayMs(animatedEntities));
     this.isAnimating$.next(true);
     this.animatedEntities$.next(animatedEntities);
-    this.currentSequence$.next(0);
+    this.currentSequence$.next(-1);
   }
 
   @Output() finishedAnimating = new EventEmitter();
@@ -92,31 +89,33 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
   readonly animatedEntities$ = new BehaviorSubject<AnimatedEntity<unknown>[]>(
     []
   );
-  readonly totalAnimatedEntitesDuration$ = new BehaviorSubject<number>(0);
   readonly sequencesToDelayMs$ = new BehaviorSubject<{ [key: number]: number }>(
     {}
   );
-  readonly currentSequence$ = new BehaviorSubject<number>(0);
+  readonly currentSequence$ = new BehaviorSubject<number>(-1);
 
   ngOnInit() {
     this.sm.add(
       this.currentSequence$.subscribe((currentSequence) => {
-        const delayMs = this.sequencesToDelayMs$.getValue()[currentSequence];
+        // When the current sequence is < 0, it allows all cards to initially be rendered
+        // in their 'from' position so angular can properly tween into the 'to' position.
+        if (currentSequence < 0) {
+          setTimeout(() => {
+            this.currentSequence$.next(currentSequence + 1);
+          });
+          return;
+        }
 
+        const delayMs = this.sequencesToDelayMs$.getValue()[currentSequence];
         if (delayMs) {
           setTimeout(() => {
             this.currentSequence$.next(currentSequence + 1);
           }, delayMs);
+          return;
         }
-      })
-    );
 
-    this.sm.add(
-      this.totalAnimatedEntitesDuration$.subscribe((durationMs) => {
-        setTimeout(() => {
-          this.finishedAnimating.emit();
-          this.isAnimating$.next(false);
-        }, durationMs);
+        this.finishedAnimating.emit();
+        this.isAnimating$.next(false);
       })
     );
   }
