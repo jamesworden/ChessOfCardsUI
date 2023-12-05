@@ -161,5 +161,9 @@
 </ng-template>
 
 <ng-template #cardMovementTemplate let-cardMovement>
+  @if (cardMovement.Card) {
   <app-card [card]="cardMovement.Card"></app-card>
+  } @else {
+  <app-face-down-card></app-face-down-card>
+  }
 </ng-template>
