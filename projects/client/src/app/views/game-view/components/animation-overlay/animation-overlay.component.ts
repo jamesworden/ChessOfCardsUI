@@ -16,7 +16,6 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { getTotalAnimatedEntitiesDurationMs } from './logic/get-total-animated-entities-duration-ms';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { AnimationType } from './models/animation-type.model';
 import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
