@@ -1,5 +1,5 @@
 <div
-  *ngIf="isAnimating$ | async"
+  *ngIf="(currentSequence$ | async) !== null"
   [ngStyle]="{
     'z-index': Z_INDEXES.ANIMATION_OVERLAY
   }"

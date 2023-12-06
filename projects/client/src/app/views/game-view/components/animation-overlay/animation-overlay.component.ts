@@ -19,6 +19,7 @@ import {
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { AnimationType } from './models/animation-type.model';
 import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-animation-overlay',
@@ -76,50 +77,66 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
   readonly AnimationType = AnimationType;
 
   @Input() set animatedEntities(animatedEntities: AnimatedEntity<unknown>[]) {
-    this.sequencesToDelayMs$.next(getSequencesToDelayMs(animatedEntities));
-    this.isAnimating$.next(true);
     this.animatedEntities$.next(animatedEntities);
-    this.currentSequence$.next(-1);
   }
 
   @Output() finishedAnimating = new EventEmitter();
 
-  readonly isAnimating$ = new BehaviorSubject<boolean>(false);
   readonly animatedEntities$ = new BehaviorSubject<AnimatedEntity<unknown>[]>(
     []
   );
-  readonly sequencesToDelayMs$ = new BehaviorSubject<{ [key: number]: number }>(
-    {}
+  readonly sequencesToDelayMs$ = this.animatedEntities$.pipe(
+    map(getSequencesToDelayMs)
   );
-  readonly currentSequence$ = new BehaviorSubject<number>(-1);
+  readonly sequencesWithDelays$ = this.sequencesToDelayMs$.pipe(
+    map((delayDictionary) => {
+      const sequenceArray = Object.entries(delayDictionary).map(
+        ([sequence, delay]) => ({
+          sequence: parseInt(sequence),
+          delay,
+        })
+      );
+      sequenceArray.unshift({
+        sequence: -1,
+        delay: 0,
+      });
+      return sequenceArray;
+    })
+  );
+  readonly currentSequence$ = new BehaviorSubject<number | null>(null);
 
   ngOnInit() {
     this.sm.add(
-      this.currentSequence$.subscribe((currentSequence) => {
-        // When the current sequence is < 0, it allows all cards to initially be rendered
-        // in their 'from' position so angular can properly tween into the 'to' position.
-        if (currentSequence < 0) {
-          setTimeout(() => {
-            this.currentSequence$.next(currentSequence + 1);
-          });
-          return;
-        }
-
-        const delayMs = this.sequencesToDelayMs$.getValue()[currentSequence];
-        if (delayMs) {
-          setTimeout(() => {
-            this.currentSequence$.next(currentSequence + 1);
-          }, delayMs);
-          return;
-        }
-
-        this.finishedAnimating.emit();
-        this.isAnimating$.next(false);
-      })
+      this.sequencesWithDelays$.subscribe((sequencesWithDelays) =>
+        this.updateCurrentSequence(sequencesWithDelays)
+      )
     );
   }
 
   ngOnDestroy() {
     this.sm.unsubscribe();
+  }
+
+  updateCurrentSequence(
+    sequencesWithDelays: {
+      sequence: number;
+      delay: number;
+    }[],
+    initialIndex = 0
+  ) {
+    const sequenceWithDelays = sequencesWithDelays[initialIndex];
+
+    if (!sequenceWithDelays) {
+      this.finishedAnimating.emit();
+      this.currentSequence$.next(null);
+      return;
+    }
+
+    const { sequence, delay } = sequenceWithDelays;
+    this.currentSequence$.next(sequence);
+
+    setTimeout(() => {
+      this.updateCurrentSequence(sequencesWithDelays, initialIndex + 1);
+    }, delay);
   }
 }
