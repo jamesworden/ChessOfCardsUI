@@ -26,7 +26,7 @@ export class StartPlacingMultipleCards {
 
 export class FinishPlacingMultipleCards {
   static readonly type = '[GameState] Finish Placing Multiple Cards';
-  constructor() {}
+  constructor(public cardPlacementsConfirmed: boolean) {}
 }
 
 export class SetPlaceMultipleCards {

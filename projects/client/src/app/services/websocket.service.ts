@@ -122,7 +122,7 @@ export class WebsocketService {
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
-      this.#store.dispatch(new FinishPlacingMultipleCards());
+      this.#store.dispatch(new FinishPlacingMultipleCards(false));
       this.parseAndUpdateGameView(stringifiedGameState);
     });
 

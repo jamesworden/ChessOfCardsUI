@@ -289,7 +289,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.latestGameViewSnapshot.Hand.Cards = combinedCards;
     this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     this.#store.dispatch(new RearrangeHand(combinedCards));
-    this.#store.dispatch(new FinishPlacingMultipleCards());
+    this.#store.dispatch(new FinishPlacingMultipleCards(false));
   }
 
   onConfirmButtonClicked() {
@@ -338,7 +338,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     this.#store.dispatch(new MakeMove(move));
-    this.#store.dispatch(new FinishPlacingMultipleCards());
+    this.#store.dispatch(new FinishPlacingMultipleCards(true));
   }
 
   acceptDraw() {
@@ -424,7 +424,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.#store.dispatch(new FinishPlacingMultipleCards());
+    this.#store.dispatch(new FinishPlacingMultipleCards(false));
     this.latestGameViewSnapshot.Hand.Cards = handAfterSwitch;
     this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
     new RearrangeHand(handAfterSwitch);

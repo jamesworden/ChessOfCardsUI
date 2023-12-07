@@ -171,12 +171,22 @@ export class GameState {
   }
 
   @Action(FinishPlacingMultipleCards)
-  stopPlacingMultipleCards(ctx: StateContext<GameStateModel>) {
+  finshingPlacingMultipleCards(
+    ctx: StateContext<GameStateModel>,
+    { cardPlacementsConfirmed }: FinishPlacingMultipleCards
+  ) {
+    const { playerGameView, placeMultipleCardsHand } = ctx.getState();
+
+    if (cardPlacementsConfirmed && playerGameView && placeMultipleCardsHand) {
+      playerGameView.Hand.Cards = placeMultipleCardsHand;
+    }
+
     ctx.patchState({
       isPlacingMultipleCards: false,
       placeMultipleCards: null,
       placeMultipleCardsHand: null,
       initalPlaceMultipleCardAttempt: null,
+      playerGameView,
     });
   }
 
