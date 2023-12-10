@@ -334,6 +334,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     latestGameViewSnapshot.Hand.Cards = combinedCards;
+    this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
     this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
     this.#store.dispatch(new RearrangeHand(combinedCards));
     this.#store.dispatch(new FinishPlacingMultipleCards(false));
@@ -382,6 +383,31 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       });
 
       return;
+    }
+
+    // Until server responds with update, directly modify the game state snapshot
+    // so the placement appears seamless.
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (latestGameViewSnapshot) {
+      for (const placeCardAttempt of move.PlaceCardAttempts) {
+        for (
+          let laneIndex = 0;
+          laneIndex < latestGameViewSnapshot.Lanes.length;
+          laneIndex++
+        ) {
+          if (placeCardAttempt.TargetLaneIndex === laneIndex) {
+            const lane = latestGameViewSnapshot.Lanes[laneIndex];
+            for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
+              if (rowIndex === placeCardAttempt.TargetRowIndex) {
+                const row = lane.Rows[rowIndex];
+                row.push(placeCardAttempt.Card);
+              }
+            }
+          }
+        }
+      }
+
+      this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
     }
 
     this.#store.dispatch(new MakeMove(move));
@@ -517,7 +543,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       );
     }
 
-    this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
+    this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
     this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
     this.#store.dispatch(new MakeMove(move));
   }
