@@ -398,7 +398,15 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           if (placeCardAttempt.TargetLaneIndex === laneIndex) {
             const lane = latestGameViewSnapshot.Lanes[laneIndex];
             for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
-              if (rowIndex === placeCardAttempt.TargetRowIndex) {
+              // If the card isn't on the player's side, we'll instead wait for the animation to render that
+              const isOnPlayersSide =
+                (latestGameViewSnapshot.IsHost && rowIndex < 3) ||
+                (!latestGameViewSnapshot.IsHost && rowIndex > 3);
+
+              if (
+                isOnPlayersSide &&
+                rowIndex === placeCardAttempt.TargetRowIndex
+              ) {
                 const row = lane.Rows[rowIndex];
                 row.push(placeCardAttempt.Card);
               }
