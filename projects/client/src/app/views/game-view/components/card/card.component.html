@@ -3,11 +3,12 @@
   cdkDrag
   [cdkDragDisabled]="!playerCanDrag"
   cdkDragBoundary=".game"
-  [cdkDragData]="card"
-  src="../../../../assets/images/{{ imageFileName }}"
+  [cdkDragData]="card$ | async"
+  src="../../../../assets/images/{{ imageFileName$ | async }}"
   [ngStyle]="{
-    rotate: tiltDegrees + 'deg',
-    height: cardSize + 'px',
-    width: cardSize + 'px',
+    rotate: (tiltDegrees$ | async) + 'deg',
+    height: (cardSize$ | async) + 'px',
+    width: (cardSize$ | async) + 'px',
+    transition: 'rotate ' + rotationDurationMs + 'ms ease-out'
   }"
 />

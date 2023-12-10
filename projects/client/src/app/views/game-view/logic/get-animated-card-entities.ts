@@ -4,10 +4,14 @@ import { AnimatedMovement } from '../components/animation-overlay/models/animate
 import { CardStore } from '../../../models/card-store.model';
 import { AnimatedPosition } from '../components/animation-overlay/models/animated-position.model';
 import { CardPosition } from '../../../models/card-position.model';
-import { AnimatedEntity } from '../components/animation-overlay/models/animated-entity.model';
+import {
+  AnimatedEntity,
+  AnimatedEntityStyles,
+} from '../components/animation-overlay/models/animated-entity.model';
 import { TemplateRef } from '@angular/core';
 import { AnimationType } from '../components/animation-overlay/models/animation-type.model';
 import { MoveMadeDetails } from '../models/move-made-details.model';
+import { getCardTiltDegrees } from './get-card-tilt-degrees';
 
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],
@@ -113,6 +117,7 @@ function getAnimatedEntity(
   );
 
   const animationValue = getAnimationValue(cardMovement);
+  const animationStyles = getAnimationStyles(cardMovement, isHost);
 
   return {
     animationType: AnimationType.CardMovement,
@@ -120,6 +125,7 @@ function getAnimatedEntity(
     template: cardMovementTemplate,
     context: cardMovement,
     movement,
+    styles: animationStyles,
   };
 }
 
@@ -286,4 +292,26 @@ function hasMatchingCardPosition(
     cardPosition?.LaneIndex === cardPosition2.LaneIndex &&
     cardPosition?.RowIndex === cardPosition2.RowIndex
   );
+}
+
+function getAnimationStyles(cardMovement: CardMovement, isHost: boolean) {
+  if (!cardMovement.Card) {
+    return;
+  }
+
+  const toRowIndex = cardMovement.To?.CardPosition?.RowIndex;
+  const toRowIndexExists = toRowIndex !== undefined;
+
+  const animationStyles: AnimatedEntityStyles = {
+    before: {
+      rotate: '0',
+    },
+    after: {
+      rotate: toRowIndexExists
+        ? `${getCardTiltDegrees(cardMovement.Card, toRowIndex, isHost)}`
+        : '0',
+    },
+  };
+
+  return animationStyles;
 }

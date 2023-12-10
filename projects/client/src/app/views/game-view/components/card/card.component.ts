@@ -1,23 +1,20 @@
-import {
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  HostBinding,
-} from '@angular/core';
-import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
+import { Component, Input, HostBinding, inject } from '@angular/core';
+
 import { Card } from '../../../../models/card.model';
 import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
 })
-export class CardComponent implements OnDestroy, OnInit {
-  private sm = new SubscriptionManager();
+export class CardComponent {
+  readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   /*
    * When rearranging cards inside player hand, sometimes multiple card
@@ -28,53 +25,37 @@ export class CardComponent implements OnDestroy, OnInit {
     return this.insideVerticalContainer ? 'block' : 'flex';
   }
 
+  @Input() rotationDurationMs = 0;
   @Input() playerCanDrag = false;
-  @Input() card: Card;
-  @Input() isHost: boolean;
-  @Input() rowIndex: number;
+  @Input() set card(card: Card) {
+    this.card$.next(card);
+  }
+  @Input() set isHost(isHost: boolean) {
+    this.isHost$.next(isHost);
+  }
+  @Input() set rowIndex(rowIndex: number) {
+    this.rowIndex$.next(rowIndex);
+  }
   @Input() wonBy: PlayerOrNone;
   @Input() laneIndex: number;
   @Input() insideVerticalContainer: boolean = false;
 
-  cardSize: number;
-  tiltDegrees = 0;
-  imageFileName: string;
-
-  constructor(public responsiveSizeService: ResponsiveSizeService) {
-    this.sm.add(
-      responsiveSizeService.cardSize$.subscribe((cardSize) => {
-        this.cardSize = cardSize;
-      })
-    );
-  }
-
-  ngOnInit() {
-    this.initTiltDegrees();
-    this.initImageFileName();
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
-  }
-
-  private initTiltDegrees() {
-    const nobodyPlayedCard = this.card.PlayedBy === PlayerOrNone.None;
-    const isMiddleCard = this.rowIndex === 3;
-
-    if (nobodyPlayedCard || !isMiddleCard) {
-      return;
-    }
-
-    const hostCardAndIsHost =
-      this.isHost && this.card.PlayedBy === PlayerOrNone.Host;
-    const guestCardAndIsGuest =
-      !this.isHost && this.card.PlayedBy === PlayerOrNone.Guest;
-    const playerPlayedCard = hostCardAndIsHost || guestCardAndIsGuest;
-
-    this.tiltDegrees = playerPlayedCard ? 45 : -45;
-  }
-
-  private initImageFileName() {
-    this.imageFileName = getCardImageFileName(this.card);
-  }
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly isHost$ = new BehaviorSubject<boolean | null>(null);
+  readonly rowIndex$ = new BehaviorSubject<number | null>(null);
+  readonly card$ = new BehaviorSubject<Card | null>(null);
+  readonly tiltDegrees$ = combineLatest([
+    this.card$,
+    this.rowIndex$,
+    this.isHost$,
+  ]).pipe(
+    map(([card, rowIndex, isHost]) =>
+      card && rowIndex !== null && isHost !== null
+        ? getCardTiltDegrees(card, rowIndex, isHost)
+        : 0
+    )
+  );
+  readonly imageFileName$ = this.card$.pipe(
+    map((card) => (card ? getCardImageFileName(card) : ''))
+  );
 }

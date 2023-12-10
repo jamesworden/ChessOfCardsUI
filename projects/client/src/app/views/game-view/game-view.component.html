@@ -162,9 +162,14 @@
   </ng-container>
 </ng-template>
 
-<ng-template #cardMovementTemplate let-cardMovement>
-  @if (cardMovement.Card) {
-  <app-card [card]="cardMovement.Card"></app-card>
+<ng-template #cardMovementTemplate let-animatedEntity>
+  @if (animatedEntity.context.Card) {
+  <app-card
+    [card]="animatedEntity.context.Card"
+    [rowIndex]="animatedEntity.movement.CardPosition?.To"
+    [isHost]="animatedEntity.context.Card.PlayedBy === PlayerOrNone.Host"
+    [rotationDurationMs]="animatedEntity.movement.durationMs"
+  ></app-card>
   } @else {
   <app-face-down-card></app-face-down-card>
   }

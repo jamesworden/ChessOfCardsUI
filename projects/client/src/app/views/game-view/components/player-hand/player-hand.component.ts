@@ -24,8 +24,6 @@ export class PlayerHandComponent {
 
   getCardImageFileName = getCardImageFileNameFn;
 
-  constructor() {}
-
   onCardDrop(event: CdkDragDrop<string>) {
     this.cardDropped.emit(event);
   }

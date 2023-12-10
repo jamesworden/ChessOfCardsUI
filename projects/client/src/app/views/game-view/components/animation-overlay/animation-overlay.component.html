@@ -14,26 +14,25 @@
       <div
         class="absolute"
         [@cardMovement]="{
-            value:
-              entity.movement.sequence === (currentSequence$ | async)
-                ? 'in-progress'
-                : entity.movement.sequence < ((currentSequence$ | async) ?? 0)
-                ? 'completed'
-                : 'todo',
-            params: {
-              fromX: entity.movement.from?.x,
-              toX: entity.movement.to?.x,
-              fromY: entity.movement.from?.y,
-              toY: entity.movement.to?.y,
-              durationMs: entity.movement.durationMs,
-            }
-          }"
+          value:
+            entity.movement.sequence === (currentSequence$ | async)
+              ? 'in-progress'
+              : entity.movement.sequence < ((currentSequence$ | async) ?? 0)
+              ? 'completed'
+              : 'todo',
+          params: {
+            fromX: entity.movement.from?.x,
+            toX: entity.movement.to?.x,
+            fromY: entity.movement.from?.y,
+            toY: entity.movement.to?.y,
+            durationMs: entity.movement.durationMs,
+            beforeRotate: entity.styles?.before?.rotate,
+            afterRotate: entity.styles?.after?.rotate
+          }
+        }"
       >
         <ng-container
-          *ngTemplateOutlet="
-            entity.template;
-            context: { $implicit: entity.context }
-          "
+          *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
         ></ng-container>
       </div>
       } } }
