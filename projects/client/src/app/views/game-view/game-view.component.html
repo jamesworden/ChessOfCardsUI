@@ -8,7 +8,8 @@
 
 <app-animation-overlay
   [animatedEntities]="(animatedCardEntities$ | async) ?? []"
-  (finishedAnimating)="renderAnimatedGameView()"
+  (finishedAnimations)="renderAnimatedGameView()"
+  (startingAnimations)="checkToRemoveCardFromBoard($event)"
 ></app-animation-overlay>
 
 <div class="center-horisontally">
@@ -21,6 +22,7 @@
       <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
       <app-board
+        *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
         [playerGameView]="latestGameViewSnapshot"
         [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
         [initialPlaceMultipleCardAttempt]="

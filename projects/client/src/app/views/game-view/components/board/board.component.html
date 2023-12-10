@@ -1,4 +1,5 @@
 <div
+  *ngIf="playerGameView$ | async as playerGameView"
   class="board"
   [ngStyle]="{
     padding: (cardSize$ | async)! / 3 + 'px 0px'

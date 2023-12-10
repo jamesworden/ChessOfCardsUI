@@ -1,5 +1,5 @@
 <div class="lane" [ngClass]="{ 'reverse-rows-vertically': !isHost }">
-  <ng-container *ngFor="let position of positions">
+  <ng-container *ngFor="let position of positions$ | async">
     <app-position
       [laneIndex]="laneIndex"
       [rowIndex]="position.rowIndex"

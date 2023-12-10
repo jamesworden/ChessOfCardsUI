@@ -55,6 +55,23 @@ export function getAnimatedCardEntities(
           animatedEntity.movement.durationMs = 0;
         }
 
+        // If any animated entity card position's TO matches that of
+        // a previous entities FROM, it means that we should hide
+        // the previous animation at this sequence, otherwise it lingers
+        // on the board.
+        if (animatedEntity.context.From.CardPosition) {
+          for (let i = 0; i < animatedEntities.length; i++) {
+            if (
+              hasMatchingCardPosition(
+                animatedEntities[i].context.To.CardPosition,
+                animatedEntity.context.From.CardPosition
+              )
+            ) {
+              animatedEntities[i].movement.terminalSequence = sequence;
+            }
+          }
+        }
+
         animatedEntities.push(animatedEntity);
       }
     }
@@ -127,7 +144,7 @@ function getAnimatedMovement(
   sequence: number,
   cardSize: number,
   isHost: boolean,
-  durationMs = 500
+  durationMs: number
 ): AnimatedMovement {
   const from = getAnimatedPosition(From, isHost, cardSize) ?? undefined;
   const to = getAnimatedPosition(To, isHost, cardSize) ?? undefined;
@@ -213,10 +230,10 @@ function getAnimatedPositionFromOpponentCardIndex(
   guestCardIndex: number,
   cardSize: number
 ) {
-  const opponentHand = document.getElementsByTagName('app-opponent-hand')[0];
+  const opponentHand = document.getElementById('opponent-hand')!;
   let { x, y } = opponentHand.getBoundingClientRect();
 
-  x += cardSize * (guestCardIndex + 0.5);
+  x += cardSize * guestCardIndex;
 
   return {
     x,
@@ -228,10 +245,10 @@ function getAnimatedPositionFromPlayerCardIndex(
   guestCardIndex: number,
   cardSize: number
 ) {
-  const playerHand = document.getElementsByTagName('app-player-hand')[0];
+  const playerHand = document.getElementById('player-hand')!;
   let { x, y } = playerHand.getBoundingClientRect();
 
-  x += cardSize * (guestCardIndex + 0.5);
+  x += cardSize * guestCardIndex;
 
   return {
     x,
@@ -257,4 +274,16 @@ function getAnimatedPositionFromOpponentDeck() {
     x,
     y,
   };
+}
+
+function hasMatchingCardPosition(
+  cardPosition?: CardPosition | null,
+  cardPosition2?: CardPosition | null
+) {
+  return (
+    cardPosition &&
+    cardPosition2 &&
+    cardPosition?.LaneIndex === cardPosition2.LaneIndex &&
+    cardPosition?.RowIndex === cardPosition2.RowIndex
+  );
 }

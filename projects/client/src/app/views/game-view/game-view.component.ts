@@ -147,13 +147,21 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly breakpoint$ = this.#responsiveSizeService.breakpoint$;
+  readonly latestGameViewSnapshot$ = new BehaviorSubject<PlayerGameView | null>(
+    null
+  );
 
-  latestGameViewSnapshot: PlayerGameView;
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   possibleInitialPlaceCardAttempts: PlaceCardAttempt[] = [];
 
   ngOnInit() {
+    this.sm.add(
+      this.latestGameViewSnapshot$.subscribe((x) => {
+        console.log('BONG');
+      })
+    );
+
     this.sm.add(
       this.gameOverData$.subscribe((gameOverData) => {
         if (!gameOverData.isOver) {
@@ -176,7 +184,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.sm.add(
       this.playerGameView$.subscribe((playerGameView) => {
         if (playerGameView) {
-          this.latestGameViewSnapshot = playerGameView;
+          this.latestGameViewSnapshot$.next(playerGameView);
           this.isPlayersTurn = isPlayersTurn(playerGameView);
           this.possibleInitialPlaceCardAttempts =
             getPossibleInitialPlaceCardAttempts(playerGameView);
@@ -214,19 +222,53 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
   }
 
+  checkToRemoveCardFromBoard(animatedEntities: AnimatedEntity<unknown>[]) {
+    let latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
+    let cardEntities = animatedEntities as AnimatedEntity<CardMovement>[];
+    for (const cardEntity of cardEntities) {
+      for (
+        let laneIndex = 0;
+        laneIndex < latestGameViewSnapshot.Lanes.length;
+        laneIndex++
+      ) {
+        const lane = latestGameViewSnapshot.Lanes[laneIndex];
+
+        for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
+          const { CardPosition } = cardEntity.context.From;
+          const sameLane = CardPosition?.LaneIndex === laneIndex;
+          const sameRow = CardPosition?.RowIndex === rowIndex;
+
+          if (sameLane && sameRow) {
+            lane.Rows[rowIndex] = [];
+          }
+        }
+      }
+    }
+
+    this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
+  }
+
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
     if (this.isPlacingMultipleCards) {
       return;
     }
 
-    console.log(placeCardAttempt);
-
     const move: Move = {
       PlaceCardAttempts: [placeCardAttempt],
     };
 
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
     const invalidMoveMessage = getReasonIfMoveInvalid(
-      this.latestGameViewSnapshot,
+      latestGameViewSnapshot,
       move
     );
 
@@ -239,9 +281,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    canPlaceMultipleCards(placeCardAttempt, this.latestGameViewSnapshot)
+    canPlaceMultipleCards(placeCardAttempt, latestGameViewSnapshot)
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
-      : this.makeValidatedMove(move, this.latestGameViewSnapshot.Lanes);
+      : this.makeValidatedMove(move, latestGameViewSnapshot.Lanes);
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
@@ -286,8 +328,13 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       placeMultipleCards.reverse()
     );
 
-    this.latestGameViewSnapshot.Hand.Cards = combinedCards;
-    this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
+    latestGameViewSnapshot.Hand.Cards = combinedCards;
+    this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
     this.#store.dispatch(new RearrangeHand(combinedCards));
     this.#store.dispatch(new FinishPlacingMultipleCards(false));
   }
@@ -350,16 +397,20 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
     moveItemInArray(
-      this.latestGameViewSnapshot.Hand.Cards,
+      latestGameViewSnapshot.Hand.Cards,
       previousIndex,
       targetIndex
     );
 
-    this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
-    this.#store.dispatch(
-      new RearrangeHand(this.latestGameViewSnapshot.Hand.Cards)
-    );
+    this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
+    this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
+    this.#store.dispatch(new RearrangeHand(latestGameViewSnapshot.Hand.Cards));
   }
 
   private rearrangePlaceMultipleHand(
@@ -425,14 +476,27 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     this.#store.dispatch(new FinishPlacingMultipleCards(false));
-    this.latestGameViewSnapshot.Hand.Cards = handAfterSwitch;
-    this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
+
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
+    latestGameViewSnapshot.Hand.Cards = handAfterSwitch;
+    this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
+    this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
     new RearrangeHand(handAfterSwitch);
   }
 
   private initiatePlaceMultipleCards(placeCardAttempt: PlaceCardAttempt) {
-    const cardsFromHand = [...this.latestGameViewSnapshot.Hand.Cards];
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
+    const cardsFromHand = [...latestGameViewSnapshot.Hand.Cards];
     removeCardFromArray(placeCardAttempt.Card, cardsFromHand);
+    this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
 
     this.#store.dispatch(
       new StartPlacingMultipleCards(placeCardAttempt, cardsFromHand)
@@ -440,15 +504,21 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   private makeValidatedMove(move: Move, lanes: Lane[]) {
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
     for (const placeCardAttempt of move.PlaceCardAttempts) {
       moveCardToLane(placeCardAttempt, lanes);
       removeCardFromArray(
         placeCardAttempt.Card,
-        this.latestGameViewSnapshot.Hand.Cards
+        latestGameViewSnapshot.Hand.Cards
       );
     }
 
-    this.#store.dispatch(new UpdatePlayerGameView(this.latestGameViewSnapshot));
+    this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
+    this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
     this.#store.dispatch(new MakeMove(move));
   }
 

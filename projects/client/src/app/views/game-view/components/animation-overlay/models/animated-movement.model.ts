@@ -5,4 +5,5 @@ export type AnimatedMovement = {
   to?: AnimatedPosition;
   durationMs: number;
   sequence: number;
+  terminalSequence?: number;
 };

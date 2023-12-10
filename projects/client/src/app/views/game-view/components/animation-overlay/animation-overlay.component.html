@@ -7,24 +7,27 @@
 >
   <div class="relative h-full w-full">
     <div *ngFor="let entity of animatedEntities$ | async">
+      @if (entity.movement.terminalSequence === undefined ||
+      entity.movement.terminalSequence === null ||
+      entity.movement.terminalSequence > ((currentSequence$ | async) ?? 0)) {
       @switch (entity.animationType) { @case (AnimationType.CardMovement) {
       <div
         class="absolute"
         [@cardMovement]="{
-          value:
-            entity.movement.sequence === (currentSequence$ | async)
-              ? 'in-progress'
-              : entity.movement.sequence < ((currentSequence$ | async) ?? 0)
-              ? 'completed'
-              : 'todo',
-          params: {
-            fromX: entity.movement.from?.x,
-            toX: entity.movement.to?.x,
-            fromY: entity.movement.from?.y,
-            toY: entity.movement.to?.y,
-            durationMs: entity.movement.durationMs,
-          }
-        }"
+            value:
+              entity.movement.sequence === (currentSequence$ | async)
+                ? 'in-progress'
+                : entity.movement.sequence < ((currentSequence$ | async) ?? 0)
+                ? 'completed'
+                : 'todo',
+            params: {
+              fromX: entity.movement.from?.x,
+              toX: entity.movement.to?.x,
+              fromY: entity.movement.from?.y,
+              toY: entity.movement.to?.y,
+              durationMs: entity.movement.durationMs,
+            }
+          }"
       >
         <ng-container
           *ngTemplateOutlet="
@@ -33,7 +36,7 @@
           "
         ></ng-container>
       </div>
-      } }
+      } } }
     </div>
   </div>
 </div>

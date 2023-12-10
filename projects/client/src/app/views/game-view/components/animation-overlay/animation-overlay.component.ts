@@ -80,7 +80,8 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
     this.animatedEntities$.next(animatedEntities);
   }
 
-  @Output() finishedAnimating = new EventEmitter();
+  @Output() finishedAnimations = new EventEmitter();
+  @Output() startingAnimations = new EventEmitter<AnimatedEntity<unknown>[]>();
 
   readonly animatedEntities$ = new BehaviorSubject<AnimatedEntity<unknown>[]>(
     []
@@ -127,12 +128,21 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
     const sequenceWithDelays = sequencesWithDelays[initialIndex];
 
     if (!sequenceWithDelays) {
-      this.finishedAnimating.emit();
+      this.finishedAnimations.emit();
       this.currentSequence$.next(null);
       return;
     }
 
     const { sequence, delay } = sequenceWithDelays;
+    const animatedEntities = this.animatedEntities$.getValue();
+    const currentEntities = animatedEntities.filter(
+      (animatedEntity) => animatedEntity.movement.sequence === sequence
+    );
+
+    if (currentEntities.length > 0) {
+      this.startingAnimations.next(currentEntities);
+    }
+
     this.currentSequence$.next(sequence);
 
     setTimeout(() => {

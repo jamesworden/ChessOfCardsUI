@@ -1,11 +1,13 @@
 <div
-  class="opponent-hand"
+  class="flex justify-content-around"
   [ngStyle]="{
     height: cardSize + 'px',
     padding: '0px ' + cardSize / 2 + 'px'
   }"
 >
-  <app-face-down-card
-    *ngFor="let _ of [].constructor(numCards)"
-  ></app-face-down-card>
+  <div class="flex pb-0 justify-content-around" id="opponent-hand">
+    <app-face-down-card
+      *ngFor="let _ of [].constructor(numCards)"
+    ></app-face-down-card>
+  </div>
 </div>
