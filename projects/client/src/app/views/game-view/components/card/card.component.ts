@@ -15,6 +15,8 @@ import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
 export class CardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
+  readonly TIMER_BUFFER = 100;
+
   /*
    * When rearranging cards inside player hand, sometimes multiple card
    * images that are dragged end up in the same single card component host
@@ -58,6 +60,11 @@ export class CardComponent {
     )
   );
 
+  /**
+   * Unfortunately, I couldn't figure out how to immediately load two values into this
+   * observable if a duration > 0 was specified AND have CSS transition between them.
+   * To resolve this, I add a hardcoded delay to make CSS transition register the change.
+   */
   readonly rotationAfterDurationApplied$ = combineLatest([
     this.rotationDurationMs$,
     this.rotationDegrees$,
@@ -66,7 +73,7 @@ export class CardComponent {
       if (durationMs === 0) {
         return [degrees];
       } else {
-        return timer(durationMs).pipe(map(() => degrees));
+        return timer(this.TIMER_BUFFER).pipe(map(() => degrees));
       }
     })
   );
