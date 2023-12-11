@@ -223,6 +223,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    // Remove cards from board when they move from a card position to somewhere else.
     let cardEntities = animatedEntities as AnimatedEntity<CardMovement>[];
     for (const cardEntity of cardEntities) {
       for (
@@ -241,6 +242,18 @@ export class GameViewComponent implements OnInit, AfterViewInit {
             lane.Rows[rowIndex] = [];
           }
         }
+      }
+
+      // Remove cards from opponents hand when they are to be animated to the opponents hand
+      const opponentHandCardIndex = this.latestGameViewSnapshot$.getValue()
+        ?.IsHost
+        ? cardEntity.context.From?.GuestHandCardIndex
+        : cardEntity.context.From?.HostHandCardIndex;
+      if (
+        opponentHandCardIndex !== null &&
+        opponentHandCardIndex !== undefined
+      ) {
+        latestGameViewSnapshot.NumCardsInOpponentsHand--;
       }
     }
 

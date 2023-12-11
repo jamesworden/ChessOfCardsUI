@@ -53,7 +53,7 @@
   >
     <app-opponent-hand
       [cardSize]="(cardSize$ | async)!"
-      [numCards]="(playerGameView$ | async)!.NumCardsInOpponentsHand"
+      [numCards]="(latestGameViewSnapshot$ | async)!.NumCardsInOpponentsHand"
     ></app-opponent-hand>
   </ng-container>
 
