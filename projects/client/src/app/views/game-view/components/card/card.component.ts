@@ -1,11 +1,10 @@
 import { Component, Input, HostBinding, inject } from '@angular/core';
-
 import { Card } from '../../../../models/card.model';
 import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, timer } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
 
 @Component({
@@ -25,7 +24,9 @@ export class CardComponent {
     return this.insideVerticalContainer ? 'block' : 'flex';
   }
 
-  @Input() rotationDurationMs = 0;
+  @Input() set rotationDurationMs(rotationDurationMs: number) {
+    this.rotationDurationMs$.next(rotationDurationMs);
+  }
   @Input() playerCanDrag = false;
   @Input() set card(card: Card) {
     this.card$.next(card);
@@ -37,14 +38,15 @@ export class CardComponent {
     this.rowIndex$.next(rowIndex);
   }
   @Input() wonBy: PlayerOrNone;
-  @Input() laneIndex: number;
   @Input() insideVerticalContainer: boolean = false;
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly rotationDurationMs$ = new BehaviorSubject<number>(0);
   readonly isHost$ = new BehaviorSubject<boolean | null>(null);
   readonly rowIndex$ = new BehaviorSubject<number | null>(null);
   readonly card$ = new BehaviorSubject<Card | null>(null);
-  readonly tiltDegrees$ = combineLatest([
+
+  readonly rotationDegrees$ = combineLatest([
     this.card$,
     this.rowIndex$,
     this.isHost$,
@@ -55,6 +57,20 @@ export class CardComponent {
         : 0
     )
   );
+
+  readonly rotationAfterDurationApplied$ = combineLatest([
+    this.rotationDurationMs$,
+    this.rotationDegrees$,
+  ]).pipe(
+    switchMap(([durationMs, degrees]) => {
+      if (durationMs === 0) {
+        return [degrees];
+      } else {
+        return timer(durationMs).pipe(map(() => degrees));
+      }
+    })
+  );
+
   readonly imageFileName$ = this.card$.pipe(
     map((card) => (card ? getCardImageFileName(card) : ''))
   );

@@ -43,7 +43,6 @@
         *ngFor="let card of placeMultipleCards$ | async"
         [card]="card"
         [playerCanDrag]="true"
-        [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
         [insideVerticalContainer]="true"
       ></app-card>
     </div>
@@ -58,11 +57,7 @@
         class="existing-card-position"
         *ngFor="let card of previouslyCapturedCards$ | async"
       >
-        <app-card
-          [card]="card"
-          [playerCanDrag]="false"
-          [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
-        ></app-card>
+        <app-card [card]="card" [playerCanDrag]="false"></app-card>
       </div>
     </div>
   </div>

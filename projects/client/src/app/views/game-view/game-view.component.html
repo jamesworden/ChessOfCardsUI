@@ -166,7 +166,7 @@
   @if (animatedEntity.context.Card) {
   <app-card
     [card]="animatedEntity.context.Card"
-    [rowIndex]="animatedEntity.movement.CardPosition?.To"
+    [rowIndex]="animatedEntity.context.To?.CardPosition?.RowIndex"
     [isHost]="animatedEntity.context.Card.PlayedBy === PlayerOrNone.Host"
     [rotationDurationMs]="animatedEntity.movement.durationMs"
   ></app-card>

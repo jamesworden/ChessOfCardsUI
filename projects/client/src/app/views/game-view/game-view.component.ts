@@ -157,12 +157,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.sm.add(
-      this.latestGameViewSnapshot$.subscribe((x) => {
-        console.log('BONG');
-      })
-    );
-
-    this.sm.add(
       this.gameOverData$.subscribe((gameOverData) => {
         if (!gameOverData.isOver) {
           return;
