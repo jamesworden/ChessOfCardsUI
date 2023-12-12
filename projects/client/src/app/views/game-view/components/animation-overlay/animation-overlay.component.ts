@@ -68,6 +68,51 @@ import { map } from 'rxjs/operators';
       ),
       transition('* => in-progress', animate('{{durationMs}}ms ease-in-out')),
     ]),
+    trigger('fadeOut', [
+      state(
+        'todo',
+        style({
+          transform: 'translate3d({{x}}px, {{y}}px, 0)',
+          display: 'none',
+          opacity: 1,
+        }),
+        {
+          params: {
+            x: 0,
+            y: 0,
+          },
+        }
+      ),
+      state(
+        'in-progress',
+        style({
+          transform: 'translate3d({{x}}px, {{y}}px, 0)',
+          display: 'flex',
+          opacity: 0,
+        }),
+        {
+          params: {
+            x: 0,
+            y: 0,
+          },
+        }
+      ),
+      state(
+        'completed',
+        style({
+          transform: 'translate3d({{x}}px, {{y}}px, 0)',
+          display: 'flex',
+          opacity: 0,
+        }),
+        {
+          params: {
+            x: 0,
+            y: 0,
+          },
+        }
+      ),
+      transition('* => in-progress', animate('{{durationMs}}ms ease-in-out')),
+    ]),
   ],
 })
 export class AnimationOverlayComponent implements OnInit, OnDestroy {

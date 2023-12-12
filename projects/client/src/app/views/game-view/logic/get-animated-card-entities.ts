@@ -113,9 +113,12 @@ function getAnimatedEntity(
   );
 
   const animationValue = getAnimationValue(cardMovement);
+  const animationType = cardMovement.To.Destroyed
+    ? AnimationType.FadeOut
+    : AnimationType.CardMovement;
 
   return {
-    animationType: AnimationType.CardMovement,
+    animationType,
     animationValue,
     template: cardMovementTemplate,
     context: cardMovement,
