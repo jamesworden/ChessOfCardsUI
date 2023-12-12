@@ -5,7 +5,13 @@
     padding: '0px ' + cardSize / 2 + 'px'
   }"
 >
-  <div class="flex pb-0 justify-content-around" id="opponent-hand">
+  <div
+    class="flex pb-0 justify-content-around"
+    id="opponent-hand"
+    [ngStyle]="{
+      minWidth: 5 * cardSize + 'px'
+    }"
+  >
     <app-face-down-card
       *ngFor="let _ of [].constructor(numCards)"
     ></app-face-down-card>
