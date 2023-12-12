@@ -6,6 +6,7 @@ import {
   inject,
   ViewChild,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -61,7 +62,7 @@ import { MoveMadeDetails } from './models/move-made-details.model';
   templateUrl: './game-view.component.html',
   styleUrls: ['./game-view.component.css'],
 })
-export class GameViewComponent implements OnInit, AfterViewInit {
+export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly sm = new SubscriptionManager();
 
   readonly #modal = inject(MatDialog);
@@ -167,10 +168,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           data: { message: gameOverData.message },
         });
 
-        modalRef.afterClosed().subscribe(() => {
+        const subscription = modalRef.afterClosed().subscribe(() => {
           this.#store.dispatch(new ResetGameData());
           this.#store.dispatch(new ResetPendingGameView());
           this.#store.dispatch(new UpdateView(View.Home));
+          subscription.unsubscribe();
         });
       })
     );
@@ -202,6 +204,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         this.isPlacingMultipleCards = isPlacingMultipleCards;
       })
     );
+  }
+
+  ngOnDestroy() {
+    this.sm.unsubscribe();
   }
 
   ngAfterViewInit() {
