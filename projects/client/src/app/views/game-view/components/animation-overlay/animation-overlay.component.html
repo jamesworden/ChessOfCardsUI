@@ -54,6 +54,27 @@
           *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
         ></ng-container>
       </div>
+      } @case (AnimationType.FadeIn) {
+      <div
+        class="absolute"
+        [@fadeIn]="{
+            value:
+              entity.movement.sequence === (currentSequence$ | async)
+                ? 'in-progress'
+                : entity.movement.sequence < ((currentSequence$ | async) ?? 0)
+                ? 'completed'
+                : 'todo',
+            params: {
+              x: entity.movement.to?.x,
+              y: entity.movement.to?.y,
+              durationMs: entity.movement.durationMs,
+            }
+          }"
+      >
+        <ng-container
+          *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
+        ></ng-container>
+      </div>
       } } }
     </div>
   </div>

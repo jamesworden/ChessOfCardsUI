@@ -413,8 +413,10 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
             for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
               // If the card isn't on the player's side, we'll instead wait for the animation to render that
               const isOnPlayersSide =
-                (latestGameViewSnapshot.IsHost && rowIndex < 3) ||
-                (!latestGameViewSnapshot.IsHost && rowIndex > 3);
+                (latestGameViewSnapshot.IsHost &&
+                  placeCardAttempt.TargetRowIndex < 3) ||
+                (!latestGameViewSnapshot.IsHost &&
+                  placeCardAttempt.TargetRowIndex > 3);
 
               if (
                 isOnPlayersSide &&

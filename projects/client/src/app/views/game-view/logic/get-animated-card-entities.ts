@@ -44,16 +44,9 @@ export function getAnimatedCardEntities(
           sequence,
           currView.IsHost,
           cardSize,
-          cardMovementTemplate
+          cardMovementTemplate,
+          latestMoveMadeDetails
         );
-
-        const wasDraggedFromPlayerHand =
-          latestMoveMadeDetails?.wasDragged &&
-          isFromPlayerHand(animatedEntity, currView.IsHost);
-
-        if (wasDraggedFromPlayerHand) {
-          animatedEntity.movement.durationMs = 0;
-        }
 
         // If any animated entity card position's TO matches that of
         // a previous entities FROM, it means that we should hide
@@ -80,14 +73,11 @@ export function getAnimatedCardEntities(
   return animatedEntities;
 }
 
-function isFromPlayerHand(
-  animatedEntity: AnimatedEntity<CardMovement>,
-  isHost: boolean
-) {
-  const hostHandCardIndex = animatedEntity.context.From?.HostHandCardIndex;
+function isFromPlayerHand(cardMovement: CardMovement, isHost: boolean) {
+  const hostHandCardIndex = cardMovement.From?.HostHandCardIndex;
   const fromHostHand =
     hostHandCardIndex !== null && hostHandCardIndex !== undefined;
-  const guestHandCardIndex = animatedEntity.context.From?.GuestHandCardIndex;
+  const guestHandCardIndex = cardMovement.From?.GuestHandCardIndex;
   const fromGuestHand =
     guestHandCardIndex !== null && guestHandCardIndex !== undefined;
   const isHostAndFromHostHand = isHost && fromHostHand && true;
@@ -102,6 +92,7 @@ function getAnimatedEntity(
   isHost: boolean,
   cardSize: number,
   cardMovementTemplate: TemplateRef<CardMovement>,
+  latestMoveMadeDetails: MoveMadeDetails | null,
   durationMs = 500
 ): AnimatedEntity<CardMovement> {
   const movement = getAnimatedMovement(
@@ -112,9 +103,26 @@ function getAnimatedEntity(
     durationMs
   );
 
-  const animationType = cardMovement.To.Destroyed
+  let animationType = cardMovement.To.Destroyed
     ? AnimationType.FadeOut
     : AnimationType.CardMovement;
+
+  const wasDraggedFromPlayerHand =
+    latestMoveMadeDetails?.wasDragged && isFromPlayerHand(cardMovement, isHost);
+
+  if (wasDraggedFromPlayerHand) {
+    const toGuestSideAndIsHost =
+      (cardMovement.To.CardPosition?.RowIndex ?? 3) > 3 && isHost;
+    const toHostSideAndIsGuest =
+      (cardMovement.To.CardPosition?.RowIndex ?? 3) < 3 && !isHost;
+    const ontoOpposingSide = toGuestSideAndIsHost || toHostSideAndIsGuest;
+
+    if (ontoOpposingSide) {
+      animationType = AnimationType.FadeIn;
+    } else {
+      movement.durationMs = 0;
+    }
+  }
 
   return {
     animationType,
