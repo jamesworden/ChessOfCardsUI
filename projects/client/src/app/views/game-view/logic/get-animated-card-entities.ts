@@ -112,34 +112,16 @@ function getAnimatedEntity(
     durationMs
   );
 
-  const animationValue = getAnimationValue(cardMovement);
   const animationType = cardMovement.To.Destroyed
     ? AnimationType.FadeOut
     : AnimationType.CardMovement;
 
   return {
     animationType,
-    animationValue,
     template: cardMovementTemplate,
     context: cardMovement,
     movement,
   };
-}
-
-function getAnimationValue(cardMovement: CardMovement) {
-  if (cardMovement.From && cardMovement.To) {
-    return 'movement';
-  }
-
-  if (!cardMovement.From) {
-    return 'fadeIn';
-  }
-
-  if (!cardMovement.To) {
-    return 'fadeOut';
-  }
-
-  return '';
 }
 
 function getAnimatedMovement(
