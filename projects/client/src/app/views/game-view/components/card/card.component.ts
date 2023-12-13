@@ -15,6 +15,9 @@ import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
 export class CardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
+  /**
+   * TODO: Explain.
+   */
   readonly TIMER_BUFFER_MS = 50;
 
   /*
