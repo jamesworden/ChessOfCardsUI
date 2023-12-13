@@ -165,9 +165,10 @@
 <ng-template #cardMovementTemplate let-animatedEntity>
   @if (animatedEntity.context.Card) {
   <app-card
+    *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
     [card]="animatedEntity.context.Card"
     [rowIndex]="animatedEntity.context.To?.CardPosition?.RowIndex"
-    [isHost]="animatedEntity.context.Card.PlayedBy === PlayerOrNone.Host"
+    [isHost]="latestGameViewSnapshot.IsHost"
     [rotationDurationMs]="animatedEntity.movement.durationMs"
   ></app-card>
   } @else {
