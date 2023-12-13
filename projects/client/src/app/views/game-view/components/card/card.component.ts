@@ -4,7 +4,7 @@ import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
 import { BehaviorSubject, combineLatest, timer } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
 
 @Component({
@@ -15,7 +15,7 @@ import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
 export class CardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
-  readonly TIMER_BUFFER = 100;
+  readonly TIMER_BUFFER_MS = 50;
 
   /*
    * When rearranging cards inside player hand, sometimes multiple card
@@ -26,7 +26,9 @@ export class CardComponent {
     return this.insideVerticalContainer ? 'block' : 'flex';
   }
 
-  @Input() set rotationDurationMs(rotationDurationMs: number) {
+  @Input({ required: true }) set rotationDurationMs(
+    rotationDurationMs: number
+  ) {
     this.rotationDurationMs$.next(rotationDurationMs);
   }
   @Input() playerCanDrag = false;
@@ -43,10 +45,12 @@ export class CardComponent {
   @Input() insideVerticalContainer: boolean = false;
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
-  readonly rotationDurationMs$ = new BehaviorSubject<number>(0);
+  readonly rotationDurationMs$ = new BehaviorSubject<number | null>(null);
   readonly isHost$ = new BehaviorSubject<boolean | null>(null);
   readonly rowIndex$ = new BehaviorSubject<number | null>(null);
   readonly card$ = new BehaviorSubject<Card | null>(null);
+
+  rotationDegrees: number = 0;
 
   readonly rotationDegrees$ = combineLatest([
     this.card$,
@@ -60,25 +64,22 @@ export class CardComponent {
     )
   );
 
-  /**
-   * Unfortunately, I couldn't figure out how to immediately load two values into this
-   * observable if a duration > 0 was specified AND have CSS transition between them.
-   * To resolve this, I add a hardcoded delay to make CSS transition register the change.
-   */
-  readonly rotationAfterDurationApplied$ = combineLatest([
-    this.rotationDurationMs$,
-    this.rotationDegrees$,
-  ]).pipe(
-    switchMap(([durationMs, degrees]) => {
-      if (durationMs === 0) {
-        return [degrees];
-      } else {
-        return timer(this.TIMER_BUFFER).pipe(map(() => degrees));
-      }
-    })
-  );
-
   readonly imageFileName$ = this.card$.pipe(
     map((card) => (card ? getCardImageFileName(card) : ''))
   );
+
+  constructor() {
+    combineLatest([
+      this.rotationDurationMs$.pipe(filter((duration) => duration !== null)),
+      this.rotationDegrees$,
+    ]).subscribe(([durationMs, degrees]) => {
+      if (durationMs === 0) {
+        this.rotationDegrees = degrees;
+      } else {
+        setTimeout(() => {
+          this.rotationDegrees = degrees;
+        }, 200);
+      }
+    });
+  }
 }
