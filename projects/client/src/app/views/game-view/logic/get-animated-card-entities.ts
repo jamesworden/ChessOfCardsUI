@@ -53,14 +53,14 @@ export function getAnimatedCardEntities(
         // the previous animation at this sequence, otherwise it lingers
         // on the board.
         if (animatedEntity.context.From.CardPosition) {
-          for (let i = 0; i < animatedEntities.length; i++) {
+          for (let j = 0; j < animatedEntities.length; j++) {
             if (
               hasMatchingCardPosition(
-                animatedEntities[i].context.To.CardPosition,
+                animatedEntities[j].context.To.CardPosition,
                 animatedEntity.context.From.CardPosition
               )
             ) {
-              animatedEntities[i].movement.terminalSequence = sequence;
+              animatedEntities[j].movement.terminalSequence = sequence;
             }
           }
         }
