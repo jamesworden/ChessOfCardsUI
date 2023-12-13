@@ -8,6 +8,7 @@ import { AnimatedEntity } from '../components/animation-overlay/models/animated-
 import { TemplateRef } from '@angular/core';
 import { AnimationType } from '../components/animation-overlay/models/animation-type.model';
 import { MoveMadeDetails } from '../models/move-made-details.model';
+import { MoveMade } from '../../../models/move-made.model';
 
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],
@@ -28,6 +29,22 @@ export function getAnimatedCardEntities(
     return [];
   }
 
+  return getAnimatedEntitiesFromCurrentView(
+    currView,
+    numLastMovesToProcess,
+    cardSize,
+    cardMovementTemplate,
+    latestMoveMadeDetails
+  );
+}
+
+function getAnimatedEntitiesFromCurrentView(
+  currView: PlayerGameView,
+  numLastMovesToProcess: number,
+  cardSize: number,
+  cardMovementTemplate: TemplateRef<CardMovement>,
+  latestMoveMadeDetails: MoveMadeDetails | null
+) {
   let animatedEntities: AnimatedEntity<CardMovement>[] = [];
 
   for (
@@ -35,38 +52,67 @@ export function getAnimatedCardEntities(
     i < currView.MovesMade.length;
     i++
   ) {
-    const { CardMovements } = currView.MovesMade[i];
+    const moveMade = currView.MovesMade[i];
+    const animatedEntities = getAnimatedEntitiesFromMoveMade(
+      moveMade,
+      currView,
+      cardSize,
+      cardMovementTemplate,
+      latestMoveMadeDetails
+    );
+    animatedEntities.push(...animatedEntities);
+  }
 
-    for (let sequence = 0; sequence < CardMovements.length; sequence++) {
-      for (const cardMovement of CardMovements[sequence]) {
-        const animatedEntity = getAnimatedEntity(
-          cardMovement,
-          sequence,
-          currView.IsHost,
-          cardSize,
-          cardMovementTemplate,
-          latestMoveMadeDetails
-        );
+  return animatedEntities;
+}
 
-        // If any animated entity card position's TO matches that of
-        // a previous entities FROM, it means that we should hide
-        // the previous animation at this sequence, otherwise it lingers
-        // on the board.
-        if (animatedEntity.context.From.CardPosition) {
-          for (let j = 0; j < animatedEntities.length; j++) {
-            if (
-              hasMatchingCardPosition(
-                animatedEntities[j].context.To.CardPosition,
-                animatedEntity.context.From.CardPosition
-              )
-            ) {
-              animatedEntities[j].movement.terminalSequence = sequence;
-            }
+function getAnimatedEntitiesFromMoveMade(
+  { CardMovements }: MoveMade,
+  currView: PlayerGameView,
+  cardSize: number,
+  cardMovementTemplate: TemplateRef<CardMovement>,
+  latestMoveMadeDetails: MoveMadeDetails | null
+) {
+  let animatedEntities: AnimatedEntity<CardMovement>[] = [];
+
+  for (let sequence = 0; sequence < CardMovements.length; sequence++) {
+    for (const cardMovement of CardMovements[sequence]) {
+      const animatedEntity = getAnimatedEntity(
+        cardMovement,
+        sequence,
+        currView.IsHost,
+        cardSize,
+        cardMovementTemplate,
+        latestMoveMadeDetails
+      );
+
+      /**
+       * If a move made has several cardMovements involving the same card, for example -
+       * hand to position, position to middle position, middle position to deck -
+       * Then the terminal sequence, according to the following chunk of code, will
+       * be set to whatever the first time we see that card is. The problem is that the
+       * card will reappear in a card movement further down the line, so we need better logic
+       * to account for that.
+       */
+
+      // If any animated entity card position's TO matches that of
+      // a previous entities FROM, it means that we should hide
+      // the previous animation at this sequence, otherwise it lingers
+      // on the board.
+      if (animatedEntity.context.From.CardPosition) {
+        for (let j = 0; j < animatedEntities.length; j++) {
+          if (
+            hasMatchingCardPosition(
+              animatedEntities[j].context.To.CardPosition,
+              animatedEntity.context.From.CardPosition
+            )
+          ) {
+            animatedEntities[j].movement.terminalSequence = sequence;
           }
         }
-
-        animatedEntities.push(animatedEntity);
       }
+
+      animatedEntities.push(animatedEntity);
     }
   }
 
