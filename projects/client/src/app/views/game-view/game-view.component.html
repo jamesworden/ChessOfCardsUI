@@ -164,13 +164,18 @@
 
 <ng-template #cardMovementTemplate let-animatedEntity>
   @if (animatedEntity.context.Card) {
-  <app-card
-    *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
-    [card]="animatedEntity.context.Card"
-    [rowIndex]="animatedEntity.context.To?.CardPosition?.RowIndex"
-    [isHost]="latestGameViewSnapshot.IsHost"
-    [rotationDurationMs]="animatedEntity.movement.durationMs"
-  ></app-card>
+  <ng-container
+    *ngIf="playerGameViewToAnimate$ | async as playerGameViewToAnimate"
+  >
+    <app-card
+      *ngIf="animatedEntity.context.To?.CardPosition as toCardPosition"
+      [card]="animatedEntity.context.Card"
+      [rowIndex]="toCardPosition.RowIndex"
+      [isHost]="playerGameViewToAnimate.IsHost"
+      [rotationDurationMs]="animatedEntity.movement.durationMs"
+      [lane]="playerGameViewToAnimate.Lanes[toCardPosition.LaneIndex]"
+    ></app-card>
+  </ng-container>
   } @else {
   <app-face-down-card></app-face-down-card>
   }

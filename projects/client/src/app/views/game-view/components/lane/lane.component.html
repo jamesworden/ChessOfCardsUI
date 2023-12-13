@@ -1,4 +1,8 @@
-<div class="lane" [ngClass]="{ 'reverse-rows-vertically': !isHost }">
+<div
+  *ngIf="lane$ | async as lane"
+  class="lane"
+  [ngClass]="{ 'reverse-rows-vertically': !isHost }"
+>
   <ng-container *ngFor="let position of positions$ | async">
     <app-position
       [laneIndex]="laneIndex"
@@ -12,6 +16,7 @@
         [rowIndex]="position.rowIndex"
         [isHost]="isHost"
         [rotationDurationMs]="0"
+        [lane]="lane"
       ></app-card>
 
       <ng-container *ngIf="position.rowIndex === 3">

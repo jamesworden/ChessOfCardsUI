@@ -6,6 +6,7 @@ import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-fil
 import { BehaviorSubject, combineLatest, timer } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
+import { Lane } from 'projects/client/src/app/models/lane.model';
 
 @Component({
   selector: 'app-card',
@@ -34,8 +35,7 @@ export class CardComponent {
   ) {
     this.rotationDurationMs$.next(rotationDurationMs);
   }
-  @Input() playerCanDrag = false;
-  @Input() set card(card: Card) {
+  @Input({ required: true }) set card(card: Card) {
     this.card$.next(card);
   }
   @Input() set isHost(isHost: boolean) {
@@ -44,6 +44,10 @@ export class CardComponent {
   @Input() set rowIndex(rowIndex: number) {
     this.rowIndex$.next(rowIndex);
   }
+  @Input() set lane(lane: Lane) {
+    this.lane$.next(lane);
+  }
+  @Input() playerCanDrag = false;
   @Input() wonBy: PlayerOrNone;
   @Input() insideVerticalContainer: boolean = false;
 
@@ -52,6 +56,7 @@ export class CardComponent {
   readonly isHost$ = new BehaviorSubject<boolean | null>(null);
   readonly rowIndex$ = new BehaviorSubject<number | null>(null);
   readonly card$ = new BehaviorSubject<Card | null>(null);
+  readonly lane$ = new BehaviorSubject<Lane | null>(null);
 
   rotationDegrees: number = 0;
 
@@ -59,10 +64,11 @@ export class CardComponent {
     this.card$,
     this.rowIndex$,
     this.isHost$,
+    this.lane$,
   ]).pipe(
-    map(([card, rowIndex, isHost]) =>
-      card && rowIndex !== null && isHost !== null
-        ? getCardTiltDegrees(card, rowIndex, isHost)
+    map(([card, rowIndex, isHost, lane]) =>
+      card && rowIndex !== null && isHost !== null && lane
+        ? getCardTiltDegrees(card, rowIndex, isHost, lane.LaneAdvantage)
         : 0
     )
   );
