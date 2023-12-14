@@ -48,20 +48,20 @@ export function getAnimatedCardEntities(
           latestMoveMadeDetails
         );
 
-        // If any animated entity card position's TO matches that of
-        // a previous entities FROM, it means that we should hide
-        // the previous animation at this sequence, otherwise it lingers
-        // on the board.
-        if (animatedEntity.context.From.CardPosition) {
-          for (let j = 0; j < animatedEntities.length; j++) {
-            if (
-              hasMatchingCardPosition(
-                animatedEntities[j].context.To.CardPosition,
-                animatedEntity.context.From.CardPosition
-              )
-            ) {
-              animatedEntities[j].movement.terminalSequence = sequence;
-            }
+        for (const entity of animatedEntities) {
+          const prevSequence = entity.movement.sequence < sequence;
+          const suitMatches =
+            entity.context.Card?.Suit === cardMovement.Card?.Suit;
+          const kindMatches =
+            entity.context.Card?.Kind === cardMovement.Card?.Kind;
+
+          if (
+            prevSequence &&
+            suitMatches &&
+            kindMatches &&
+            !entity.movement.terminalSequence
+          ) {
+            entity.movement.terminalSequence = sequence;
           }
         }
 
