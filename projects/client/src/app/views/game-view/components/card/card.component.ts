@@ -19,7 +19,7 @@ export class CardComponent {
   /**
    * TODO: Explain.
    */
-  readonly TIMER_BUFFER_MS = 50;
+  readonly TIMER_BUFFER_MS = 225;
 
   /*
    * When rearranging cards inside player hand, sometimes multiple card
@@ -87,7 +87,7 @@ export class CardComponent {
       } else {
         setTimeout(() => {
           this.rotationDegrees = degrees;
-        }, 200);
+        }, this.TIMER_BUFFER_MS);
       }
     });
   }
