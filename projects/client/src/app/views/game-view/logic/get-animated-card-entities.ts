@@ -268,15 +268,3 @@ function getAnimatedPositionFromOpponentDeck() {
     y,
   };
 }
-
-function hasMatchingCardPosition(
-  cardPosition?: CardPosition | null,
-  cardPosition2?: CardPosition | null
-) {
-  return (
-    cardPosition &&
-    cardPosition2 &&
-    cardPosition?.LaneIndex === cardPosition2.LaneIndex &&
-    cardPosition?.RowIndex === cardPosition2.RowIndex
-  );
-}
