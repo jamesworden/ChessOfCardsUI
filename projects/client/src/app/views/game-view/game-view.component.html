@@ -168,12 +168,19 @@
     *ngIf="playerGameViewToAnimate$ | async as playerGameViewToAnimate"
   >
     <app-card
-      *ngIf="animatedEntity.context.To?.CardPosition as toCardPosition"
       [card]="animatedEntity.context.Card"
-      [rowIndex]="toCardPosition.RowIndex"
+      [rowIndex]="
+        animatedEntity.context.To.CardPosition?.RowIndex ??
+        animatedEntity.context.From.CardPosition?.RowIndex
+      "
       [isHost]="playerGameViewToAnimate.IsHost"
       [rotationDurationMs]="animatedEntity.movement.durationMs"
-      [lane]="playerGameViewToAnimate.Lanes[toCardPosition.LaneIndex]"
+      [lane]="
+        playerGameViewToAnimate.Lanes[
+          animatedEntity.context.To.CardPosition?.LaneIndex ??
+            animatedEntity.context.From.CardPosition?.LaneIndex
+        ]
+      "
     ></app-card>
   </ng-container>
   } @else {
