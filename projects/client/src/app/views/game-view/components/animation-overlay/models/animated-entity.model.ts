@@ -15,7 +15,6 @@ export type AnimatedEntity<Context> = {
   template: TemplateRef<Context>;
   context: Context;
   movement: AnimatedMovement;
-  /** Corresponds to a class of animations. */
   animationType: AnimationType;
   styles?: AnimatedEntityStyles;
 };

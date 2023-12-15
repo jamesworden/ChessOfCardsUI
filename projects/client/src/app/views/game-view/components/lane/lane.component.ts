@@ -9,11 +9,13 @@ import { LIGHT_BLUE_TINT, LIGHT_RED_TINT } from '../../constants';
 import { getLastCardPlayedBackgroundColor } from '../../logic/get-last-card-played-background-color';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
 
 interface PositionDetails {
   topCard?: Card;
   rowIndex: number;
   backgroundColor: string;
+  cardRotation: number;
 }
 
 @Component({
@@ -41,15 +43,21 @@ export class LaneComponent {
       lane
         ? lane?.Rows.map((row, i) => {
             const topCard = row[row.length - 1];
+
             const backgroundColor =
               lane.WonBy === PlayerOrNone.None
                 ? this.getPositionBackgroundColor(lane, i, topCard)
                 : this.getLaneBackgroundColor(lane);
 
+            const cardRotation = topCard
+              ? getCardTiltDegrees(topCard, i, this.isHost, lane.LaneAdvantage)
+              : 0;
+
             const position: PositionDetails = {
               rowIndex: i,
               backgroundColor,
               topCard,
+              cardRotation,
             };
 
             return position;

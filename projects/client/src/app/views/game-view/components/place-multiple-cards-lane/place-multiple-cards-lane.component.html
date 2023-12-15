@@ -44,7 +44,6 @@
         [card]="card"
         [playerCanDrag]="true"
         [insideVerticalContainer]="true"
-        [rotationDurationMs]="0"
       ></app-card>
     </div>
 
@@ -58,11 +57,7 @@
         class="existing-card-position"
         *ngFor="let card of previouslyCapturedCards$ | async"
       >
-        <app-card
-          [card]="card"
-          [playerCanDrag]="false"
-          [rotationDurationMs]="0"
-        ></app-card>
+        <app-card [card]="card" [playerCanDrag]="false"></app-card>
       </div>
     </div>
   </div>

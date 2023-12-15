@@ -6,8 +6,6 @@
   [cdkDragData]="card$ | async"
   src="../../../../assets/images/{{ imageFileName$ | async }}"
   [ngStyle]="{
-    transition: 'transform ' + (((rotationDurationMs$ | async) ?? TIMER_BUFFER_MS) - TIMER_BUFFER_MS)  + 'ms ease-out',
-    transform: 'rotate(' + (rotationDegrees) + 'deg)',
     height: (cardSize$ | async) + 'px',
     width: (cardSize$ | async) + 'px',
   }"

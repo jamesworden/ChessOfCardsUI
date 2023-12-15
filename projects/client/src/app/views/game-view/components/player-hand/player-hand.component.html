@@ -21,10 +21,8 @@
         ? (placeMultipleCardsHand$ | async) ?? []
         : cards
     "
-    [isHost]="isHost"
     [card]="card"
     [playerCanDrag]="!disabled"
-    [rotationDurationMs]="0"
     [ngStyle]="{
       opacity: disabled ? 0.5 : 1
     }"

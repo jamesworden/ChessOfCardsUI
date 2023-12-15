@@ -12,11 +12,10 @@
     >
       <app-card
         *ngIf="position.topCard"
+        [ngStyle]="{
+          rotate: position.cardRotation + 'deg'
+        }"
         [card]="position.topCard"
-        [rowIndex]="position.rowIndex"
-        [isHost]="isHost"
-        [rotationDurationMs]="0"
-        [lane]="lane"
       ></app-card>
 
       <ng-container *ngIf="position.rowIndex === 3">
