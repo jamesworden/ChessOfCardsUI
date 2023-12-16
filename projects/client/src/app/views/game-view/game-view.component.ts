@@ -58,7 +58,6 @@ import { SubscriptionManager } from '../../util/subscription-manager';
 import { MoveMadeDetails } from './models/move-made-details.model';
 import {
   animate,
-  keyframes,
   state,
   style,
   transition,
@@ -71,29 +70,21 @@ import {
   styleUrls: ['./game-view.component.css'],
   animations: [
     trigger('cardRotation', [
-      state(
-        'rotated',
-        style({
-          transform: 'rotate({{ toRotate }})',
-        }),
-        { params: { toRotate: '0deg' } }
-      ),
-      transition(
-        'void => rotated',
-        [
-          style({
-            transform: 'rotate({{ fromRotate }}) !important',
-          }),
-          animate(
-            '{{ durationMs }}ms',
-            keyframes([
-              style({ transform: 'rotate({{ fromRotate }})' }),
-              style({ transform: 'rotate({{ toRotate }})' }),
-            ])
-          ),
-        ],
-        { params: { fromRotate: '0deg', durationMs: 500 } }
-      ),
+      state('*', style({ transform: 'rotate({{ fromRotate }})' }), {
+        params: {
+          fromRotate: '0deg',
+        },
+      }),
+      state('rotating', style({ transform: 'rotate({{ toRotate }})' }), {
+        params: {
+          toRotate: '0deg',
+        },
+      }),
+      transition('* => rotating', animate('{{ durationMs }}ms ease'), {
+        params: {
+          durationMs: 500,
+        },
+      }),
     ]),
   ],
 })
