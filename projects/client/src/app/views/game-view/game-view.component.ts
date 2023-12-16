@@ -70,21 +70,29 @@ import {
   styleUrls: ['./game-view.component.css'],
   animations: [
     trigger('cardRotation', [
-      state('*', style({ transform: 'rotate({{ fromRotate }})' }), {
-        params: {
-          fromRotate: '0deg',
-        },
-      }),
+      state(
+        'void, not-rotating',
+        style({ transform: 'rotate({{ fromRotate }})' }),
+        {
+          params: {
+            fromRotate: '0deg',
+          },
+        }
+      ),
       state('rotating', style({ transform: 'rotate({{ toRotate }})' }), {
         params: {
           toRotate: '0deg',
         },
       }),
-      transition('* => rotating', animate('{{ durationMs }}ms ease'), {
-        params: {
-          durationMs: 500,
-        },
-      }),
+      transition(
+        'not-rotating => rotating, void => rotating',
+        animate('{{ durationMs }}ms ease'),
+        {
+          params: {
+            durationMs: 500,
+          },
+        }
+      ),
     ]),
   ],
 })

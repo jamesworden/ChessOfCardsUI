@@ -170,7 +170,11 @@
     <app-card
       [card]="animatedEntity.context.Card"
       [@cardRotation]="{
-        value: 'rotating',
+        value:
+          (animatedEntity.styles?.before.rotate ?? 0) ===
+          (animatedEntity.styles?.after.rotate ?? 0)
+            ? 'not-rotating'
+            : 'rotating',
         params: {
           fromRotate: animatedEntity.styles?.before.rotate ?? 0,
           toRotate: animatedEntity.styles?.after.rotate ?? 0,
