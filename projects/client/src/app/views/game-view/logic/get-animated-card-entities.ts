@@ -63,6 +63,7 @@ export function getAnimatedCardEntities(
             entity.context.Card?.Kind === cardMovement.Card?.Kind;
 
           if (
+            entity.context.Card &&
             prevSequence &&
             suitMatches &&
             kindMatches &&
