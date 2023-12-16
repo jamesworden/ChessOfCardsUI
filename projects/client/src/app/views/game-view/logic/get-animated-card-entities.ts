@@ -4,10 +4,15 @@ import { AnimatedMovement } from '../components/animation-overlay/models/animate
 import { CardStore } from '../../../models/card-store.model';
 import { AnimatedPosition } from '../components/animation-overlay/models/animated-position.model';
 import { CardPosition } from '../../../models/card-position.model';
-import { AnimatedEntity } from '../components/animation-overlay/models/animated-entity.model';
+import {
+  AnimatedEntity,
+  AnimatedEntityStyles,
+} from '../components/animation-overlay/models/animated-entity.model';
 import { TemplateRef } from '@angular/core';
 import { AnimationType } from '../components/animation-overlay/models/animation-type.model';
 import { MoveMadeDetails } from '../models/move-made-details.model';
+import { getCardTiltDegrees } from './get-card-tilt-degrees';
+import { PlayerOrNone } from '../../../models/player-or-none.model';
 
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],
@@ -45,7 +50,9 @@ export function getAnimatedCardEntities(
           currView.IsHost,
           cardSize,
           cardMovementTemplate,
-          latestMoveMadeDetails
+          latestMoveMadeDetails,
+          prevView,
+          currView
         );
 
         for (const entity of animatedEntities) {
@@ -93,6 +100,8 @@ function getAnimatedEntity(
   cardSize: number,
   cardMovementTemplate: TemplateRef<CardMovement>,
   latestMoveMadeDetails: MoveMadeDetails | null,
+  prevView: PlayerGameView,
+  currView: PlayerGameView,
   durationMs = 500
 ): AnimatedEntity<CardMovement> {
   const movement = getAnimatedMovement(
@@ -124,11 +133,49 @@ function getAnimatedEntity(
     }
   }
 
+  const beforeRotation =
+    cardMovement.Card &&
+    typeof cardMovement.From.CardPosition?.RowIndex === 'number'
+      ? getCardTiltDegrees(
+          cardMovement.Card,
+          cardMovement.From.CardPosition?.RowIndex,
+          isHost,
+          cardMovement.From.CardPosition?.LaneIndex
+            ? prevView.Lanes[cardMovement.From.CardPosition?.LaneIndex]
+                .LaneAdvantage
+            : PlayerOrNone.None
+        )
+      : 0;
+
+  const afterRotation =
+    cardMovement.Card &&
+    typeof cardMovement.To.CardPosition?.RowIndex === 'number'
+      ? getCardTiltDegrees(
+          cardMovement.Card,
+          cardMovement.To.CardPosition?.RowIndex,
+          isHost,
+          cardMovement.To.CardPosition?.LaneIndex
+            ? currView.Lanes[cardMovement.To.CardPosition?.LaneIndex]
+                .LaneAdvantage
+            : PlayerOrNone.None
+        )
+      : 0;
+
+  const styles: AnimatedEntityStyles = {
+    before: {
+      rotate: `${beforeRotation}deg`,
+    },
+    after: {
+      rotate: `${afterRotation}deg`,
+    },
+  };
+
   return {
     animationType,
     template: cardMovementTemplate,
     context: cardMovement,
     movement,
+    styles,
   };
 }
 

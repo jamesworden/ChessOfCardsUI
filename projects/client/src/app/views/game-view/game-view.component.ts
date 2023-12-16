@@ -56,11 +56,46 @@ import { CardMovement } from '../../models/card-movement.model';
 import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { MoveMadeDetails } from './models/move-made-details.model';
+import {
+  animate,
+  keyframes,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
   styleUrls: ['./game-view.component.css'],
+  animations: [
+    trigger('cardRotation', [
+      state(
+        'rotated',
+        style({
+          transform: 'rotate({{ toRotate }})',
+        }),
+        { params: { toRotate: '0deg' } }
+      ),
+      transition(
+        'void => rotated',
+        [
+          style({
+            transform: 'rotate({{ fromRotate }}) !important',
+          }),
+          animate(
+            '{{ durationMs }}ms',
+            keyframes([
+              style({ transform: 'rotate({{ fromRotate }})' }),
+              style({ transform: 'rotate({{ toRotate }})' }),
+            ])
+          ),
+        ],
+        { params: { fromRotate: '0deg', durationMs: 500 } }
+      ),
+    ]),
+  ],
 })
 export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly sm = new SubscriptionManager();

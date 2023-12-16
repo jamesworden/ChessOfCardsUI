@@ -167,7 +167,17 @@
   <ng-container
     *ngIf="playerGameViewToAnimate$ | async as playerGameViewToAnimate"
   >
-    <app-card [card]="animatedEntity.context.Card"></app-card>
+    <app-card
+      [card]="animatedEntity.context.Card"
+      [@cardRotation]="{
+        value: 'rotated',
+        params: {
+          fromRotate: animatedEntity.styles?.before.rotate ?? 0,
+          toRotate: animatedEntity.styles?.after.rotate ?? 0,
+          durationMs: animatedEntity.movement.durationMs
+        }
+      }"
+    ></app-card>
   </ng-container>
   } @else {
   <app-face-down-card></app-face-down-card>
