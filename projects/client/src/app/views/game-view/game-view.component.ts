@@ -86,7 +86,7 @@ import {
       }),
       transition(
         'not-rotating => rotating, void => rotating',
-        animate('{{ durationMs }}ms ease'),
+        animate('{{ durationMs }}ms ease-out'),
         {
           params: {
             durationMs: 500,

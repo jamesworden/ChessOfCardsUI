@@ -176,8 +176,8 @@
             ? 'not-rotating'
             : 'rotating',
         params: {
-          fromRotate: animatedEntity.styles?.before.rotate ?? 0,
-          toRotate: animatedEntity.styles?.after.rotate ?? 0,
+          fromRotate: animatedEntity.styles?.before.rotate ?? '0deg',
+          toRotate: animatedEntity.styles?.after.rotate ?? '0deg',
           durationMs: animatedEntity.movement.durationMs
         }
       }"
