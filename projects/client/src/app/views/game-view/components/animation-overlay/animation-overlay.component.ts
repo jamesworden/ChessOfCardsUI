@@ -30,8 +30,8 @@ import { map } from 'rxjs/operators';
       state(
         'todo',
         style({
-          transform: 'translate3d({{fromX}}px, {{fromY}}px, 0)',
-          display: 'none',
+          top: '{{fromY}}px',
+          left: '{{fromX}}px',
         }),
         {
           params: {
@@ -43,8 +43,8 @@ import { map } from 'rxjs/operators';
       state(
         'in-progress',
         style({
-          transform: 'translate3d({{toX}}px, {{toY}}px, 0)',
-          display: 'flex',
+          top: '{{toY}}px',
+          left: '{{toX}}px',
         }),
         {
           params: {
@@ -56,8 +56,8 @@ import { map } from 'rxjs/operators';
       state(
         'completed',
         style({
-          transform: 'translate3d({{toX}}px, {{toY}}px, 0)',
-          display: 'flex',
+          top: '{{toY}}px',
+          left: '{{toX}}px',
         }),
         {
           params: {
@@ -72,8 +72,8 @@ import { map } from 'rxjs/operators';
       state(
         'todo',
         style({
-          transform: 'translate3d({{x}}px, {{y}}px, 0)',
-          display: 'none',
+          top: '{{y}}px',
+          left: '{{x}}px',
           opacity: 1,
         }),
         {
@@ -86,8 +86,8 @@ import { map } from 'rxjs/operators';
       state(
         'in-progress',
         style({
-          transform: 'translate3d({{x}}px, {{y}}px, 0)',
-          display: 'flex',
+          top: '{{y}}px',
+          left: '{{x}}px',
           opacity: 0,
         }),
         {
@@ -100,8 +100,8 @@ import { map } from 'rxjs/operators';
       state(
         'completed',
         style({
-          transform: 'translate3d({{x}}px, {{y}}px, 0)',
-          display: 'flex',
+          top: '{{y}}px',
+          left: '{{x}}px',
           opacity: 0,
         }),
         {
@@ -118,8 +118,8 @@ import { map } from 'rxjs/operators';
       state(
         'todo',
         style({
-          transform: 'translate3d({{x}}px, {{y}}px, 0)',
-          display: 'none',
+          top: '{{y}}px',
+          left: '{{x}}px',
           opacity: 0,
         }),
         {
@@ -132,8 +132,8 @@ import { map } from 'rxjs/operators';
       state(
         'in-progress',
         style({
-          transform: 'translate3d({{x}}px, {{y}}px, 0)',
-          display: 'flex',
+          top: '{{y}}px',
+          left: '{{x}}px',
           opacity: 1,
         }),
         {
@@ -146,8 +146,8 @@ import { map } from 'rxjs/operators';
       state(
         'completed',
         style({
-          transform: 'translate3d({{x}}px, {{y}}px, 0)',
-          display: 'flex',
+          top: '{{y}}px',
+          left: '{{x}}px',
           opacity: 1,
         }),
         {
