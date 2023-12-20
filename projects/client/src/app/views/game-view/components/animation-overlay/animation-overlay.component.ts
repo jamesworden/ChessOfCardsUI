@@ -11,6 +11,7 @@ import { AnimatedEntity } from './models/animated-entity.model';
 import { BehaviorSubject } from 'rxjs';
 import {
   animate,
+  keyframes,
   state,
   style,
   transition,
@@ -29,35 +30,17 @@ import { map } from 'rxjs/operators';
     trigger('cardMovement', [
       state(
         'todo',
+        // Off screen hack
         style({
-          top: '{{fromY}}px',
-          left: '{{fromX}}px',
-        }),
-        {
-          params: {
-            fromX: 0,
-            fromY: 0,
-          },
-        }
-      ),
-      state(
-        'in-progress',
-        style({
-          top: '{{toY}}px',
-          left: '{{toX}}px',
-        }),
-        {
-          params: {
-            toX: 0,
-            toY: 0,
-          },
-        }
+          top: '-100px',
+          left: '-100px',
+        })
       ),
       state(
         'completed',
         style({
-          top: '{{toY}}px',
-          left: '{{toX}}px',
+          top: '{{ toY }}px',
+          left: '{{ toX }}px',
         }),
         {
           params: {
@@ -66,7 +49,30 @@ import { map } from 'rxjs/operators';
           },
         }
       ),
-      transition('* => in-progress', animate('{{durationMs}}ms ease-in-out')),
+      transition(
+        '* => in-progress',
+        [
+          animate(
+            '{{ durationMs }}ms',
+            keyframes([
+              style({ top: '{{ fromY }}px', left: '{{ fromX }}px' }),
+              style({ top: '{{ toY }}px', left: '{{ toX }}px' }),
+            ])
+          ),
+          style({
+            opacity: 1,
+          }),
+        ],
+        {
+          params: {
+            toX: 0,
+            toY: 0,
+            fromX: 0,
+            fromY: 0,
+            durationMs: 0,
+          },
+        }
+      ),
     ]),
     trigger('fadeOut', [
       state(
@@ -231,7 +237,7 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
     );
 
     if (currentEntities.length > 0) {
-      this.startingAnimations.next(currentEntities);
+      this.startingAnimations.emit(currentEntities);
     }
 
     this.currentSequence$.next(sequence);
