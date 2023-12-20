@@ -53,7 +53,7 @@ import { map } from 'rxjs/operators';
         '* => in-progress',
         [
           animate(
-            '{{ durationMs }}ms',
+            '{{ durationMs }}ms ease',
             keyframes([
               style({ top: '{{ fromY }}px', left: '{{ fromX }}px' }),
               style({ top: '{{ toY }}px', left: '{{ toX }}px' }),
