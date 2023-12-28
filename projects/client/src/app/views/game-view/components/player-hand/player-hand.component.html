@@ -1,4 +1,10 @@
 <div
+  [@bounceCards]="{
+    value: (bouncingCards$ | async) ? 'bouncing' : 'not-bouncing',
+    params: {
+      heightPx: cardSize / 5
+    }
+  }"
   class="flex player-hand"
   id="player-hand"
   cdkDropList
@@ -19,10 +25,12 @@
     *ngFor="
       let card of isPlacingMultipleCards
         ? (placeMultipleCardsHand$ | async) ?? []
-        : cards
+        : cards;
+      let i = index
     "
     [card]="card"
     [playerCanDrag]="!disabled"
+    class="transition"
     [ngStyle]="{
       opacity: disabled ? 0.5 : 1
     }"
