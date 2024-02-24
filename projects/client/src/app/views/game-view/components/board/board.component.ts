@@ -27,6 +27,8 @@ export class BoardComponent {
   }
   @Input() initialPlaceMultipleCardAttempt: PlaceCardAttempt | null;
   @Input() isPlacingMultipleCards: boolean | null;
+  @Input() transparentTiles = false;
+
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
 

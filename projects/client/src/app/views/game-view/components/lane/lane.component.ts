@@ -33,6 +33,8 @@ export class LaneComponent {
   @Input() isHost: boolean;
   @Input() redJokerLaneIndex?: number;
   @Input() blackJokerLaneIndex?: number;
+  @Input() transparentTiles = false;
+
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
 

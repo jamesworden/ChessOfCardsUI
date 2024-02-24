@@ -21,6 +21,8 @@ export class PositionComponent implements OnDestroy {
   @Input() laneIndex: number;
   @Input() rowIndex: number;
   @Input() backgroundColor: string;
+  @Input() transparentTile = false;
+
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
 

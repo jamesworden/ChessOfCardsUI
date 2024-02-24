@@ -39,6 +39,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AnimationOverlayComponent } from './views/game-view/components/animation-overlay/animation-overlay.component';
+import { NavbarComponent } from './views/home-view/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { AnimationOverlayComponent } from './views/game-view/components/animatio
     SidebarItemComponent,
     JokerCardComponent,
     AnimationOverlayComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,

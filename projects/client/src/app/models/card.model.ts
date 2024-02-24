@@ -6,4 +6,7 @@ export type Card = {
   Kind: Kind;
   Suit: Suit;
   PlayedBy: PlayerOrNone;
+  customStyles?: {
+    [key: string]: string;
+  };
 };

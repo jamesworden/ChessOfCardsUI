@@ -1,34 +1,60 @@
-<div class="home-container">
-  <div class="content">
-    <div class="title-container">
-      <h1>lanes</h1>
-      <h2>the chess of cards.</h2>
+<div class="min-h-screen h-full w-full flex flex-col">
+  <section class="hero-section">
+    <app-navbar></app-navbar>
+
+    <h1 class="text-center py-24 text-5xl px-2 text-white font-bold">
+      Fast paced, two player <br />
+      strategy game.
+    </h1>
+
+    <div class="w-full flex justify-center">
+      <div>
+        <div class="flex-row flex gap-x-8 mb-16">
+          <button
+            class="bg-white text-emerald-600 rounded-full py-2 px-8 font-bold"
+            (click)="onPlayAsGuest()"
+          >
+            Play now
+          </button>
+
+          <button
+            class="text-white border border-white rounded-full py-2 px-8 font-bold"
+          >
+            Tutorial
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section
+    class="bg-gray-200 h-full w-full flex justify-around flex-col relative flex-grow overflow-hidden"
+  >
+    <div class="w-full h-full z-10">
+      <div class="w-full flex justify-around">
+        <h2 class="text-3xl font-bold mb-4 text-center">
+          Capture two of your <br />
+          opponent's lanes to win!
+        </h2>
+      </div>
+
+      <div class="w-full flex justify-around">
+        <p class="w-72 text-center font-bold">
+          Follow our interactive tutoral to see what a lane is and how to
+          capture it.
+        </p>
+      </div>
     </div>
 
-    <div class="button-container">
-      <!-- <button
-        mat-raised-button
-        class="big-button"
-        color="basic"
-        (click)="onHowToPlay()"
-      >
-        How to play
-      </button> -->
-      <button
-        class="big-button"
-        mat-raised-button
-        class="big-button"
-        color="basic"
-        (click)="onPlayAsGuest()"
-      >
-        Play as guest
-      </button>
+    <div class="absolute w-full h-full z-1 flex justify-around">
+      <app-board
+        class="rotate-45"
+        [playerGameView]="DEMO_PLAYER_GAME_VIEW"
+        [transparentTiles]="true"
+        [ngStyle]="{
+          right: '-' + ((cardSize$ | async) ?? 64) / 2 + 'px',
+        }"
+      ></app-board>
     </div>
-  </div>
-</div>
-
-<div class="footer-link-container">
-  <a href="https://www.jamesworden.com/" target="_blank" class="footer-link">
-    James Worden &copy; {{ currentYear }}
-  </a>
+  </section>
 </div>

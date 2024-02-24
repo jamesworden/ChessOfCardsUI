@@ -2,7 +2,7 @@ import { Component, Input, HostBinding, inject } from '@angular/core';
 import { Card } from '../../../../models/card.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -32,5 +32,16 @@ export class CardComponent {
   readonly card$ = new BehaviorSubject<Card | null>(null);
   readonly imageFileName$ = this.card$.pipe(
     map((card) => (card ? getCardImageFileName(card) : ''))
+  );
+  readonly cardStyles$ = combineLatest([this.card$, this.cardSize$]).pipe(
+    map(([card, cardSize]) => {
+      return Object.assign(
+        {
+          height: cardSize + 'px',
+          width: cardSize + 'px',
+        },
+        card?.customStyles ?? {}
+      );
+    })
   );
 }

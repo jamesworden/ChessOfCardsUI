@@ -5,6 +5,7 @@
 >
   <ng-container *ngFor="let position of positions$ | async">
     <app-position
+      [transparentTile]="transparentTiles"
       [laneIndex]="laneIndex"
       [rowIndex]="position.rowIndex"
       [backgroundColor]="position.backgroundColor"
