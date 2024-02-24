@@ -40,6 +40,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AnimationOverlayComponent } from './views/game-view/components/animation-overlay/animation-overlay.component';
 import { NavbarComponent } from './views/home-view/navbar/navbar.component';
+import { CardWheelComponent } from './views/home-view/card-wheel/card-wheel.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { NavbarComponent } from './views/home-view/navbar/navbar.component';
     JokerCardComponent,
     AnimationOverlayComponent,
     NavbarComponent,
+    CardWheelComponent,
   ],
   imports: [
     BrowserModule,

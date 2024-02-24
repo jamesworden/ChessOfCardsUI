@@ -10,36 +10,41 @@ import { DEFAULT_CARD_SIZE } from '../constants';
 export class ResponsiveSizeService {
   private sm = new SubscriptionManager();
 
-  public windowDimensions$: BehaviorSubject<[number, number]> =
+  private _windowDimensions$: BehaviorSubject<[number, number]> =
     new BehaviorSubject([window.innerWidth, window.innerHeight]);
-  public cardSize$ = new BehaviorSubject(DEFAULT_CARD_SIZE);
-  public breakpoint$ = new BehaviorSubject<Breakpoint>(Breakpoint.Mobile);
+  public windowDimensions$ = this._windowDimensions$.asObservable();
+
+  private _cardSize$ = new BehaviorSubject(DEFAULT_CARD_SIZE);
+  public cardSize$ = this._cardSize$.asObservable();
+
+  private _breakpoint$ = new BehaviorSubject<Breakpoint>(Breakpoint.Mobile);
+  public breakpoint$ = this._breakpoint$.asObservable();
 
   constructor() {
     this.sm.add(
       fromEvent(window, 'resize').subscribe(() => {
-        this.windowDimensions$.next([window.innerWidth, window.innerHeight]);
+        this._windowDimensions$.next([window.innerWidth, window.innerHeight]);
       })
     );
     this.sm.add(
-      this.windowDimensions$.subscribe(([width, height]) => {
+      this._windowDimensions$.subscribe(([width, height]) => {
         width -= 48; // Width of sidebar
         // 6 Width to 11 Height ratio.
         const maxCardWidth = width / 6;
         const maxCardHeight = height / 11;
         const cardSize = Math.min(maxCardWidth, maxCardHeight);
 
-        this.cardSize$.next(cardSize);
+        this._cardSize$.next(cardSize);
       })
     );
     this.sm.add(
-      this.windowDimensions$.subscribe(([width]) => {
+      this._windowDimensions$.subscribe(([width]) => {
         if (width < 450) {
-          this.breakpoint$.next(Breakpoint.Mobile);
+          this._breakpoint$.next(Breakpoint.Mobile);
         } else if (width < 1000) {
-          this.breakpoint$.next(Breakpoint.Tablet);
+          this._breakpoint$.next(Breakpoint.Tablet);
         } else {
-          this.breakpoint$.next(Breakpoint.Desktop);
+          this._breakpoint$.next(Breakpoint.Desktop);
         }
       })
     );
