@@ -1,3 +1,7 @@
+:host {
+  overflow: hidden;
+}
+
 .hero-section {
   background: rgb(0, 146, 105);
   background: radial-gradient(
@@ -5,4 +9,17 @@
     rgba(0, 146, 105, 1) 20%,
     rgba(2, 115, 83, 1) 100%
   );
+}
+
+@keyframes slowRotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.slow-rotation {
+  animation: slowRotation 10s linear infinite; /* Adjust the duration (10s in this case) as needed */
 }

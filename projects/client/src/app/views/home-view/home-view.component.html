@@ -1,27 +1,31 @@
-<div class="min-h-screen h-full w-full flex flex-col">
+<div class="min-h-screen h-full w-full flex flex-col overflow-hidden">
   <section class="hero-section">
     <app-navbar></app-navbar>
 
-    <h1 class="text-center py-24 text-5xl px-2 text-white font-bold">
-      Fast paced, two player <br />
-      strategy game.
-    </h1>
-
-    <div class="w-full flex justify-center">
+    <div class="w-full flex justify-around relative">
       <div>
-        <div class="flex-row flex gap-x-8 mb-16">
-          <button
-            class="bg-white text-emerald-600 rounded-full py-2 px-8 font-bold"
-            (click)="onPlayAsGuest()"
-          >
-            Play now
-          </button>
+        <h1 class="text-center py-24 text-5xl px-2 text-white font-bold">
+          Fast paced, two player <br />
+          strategy game.
+        </h1>
 
-          <button
-            class="text-white border border-white rounded-full py-2 px-8 font-bold"
-          >
-            Tutorial
-          </button>
+        <div class="w-full flex justify-center">
+          <div>
+            <div class="flex-row flex gap-x-8 mb-16">
+              <button
+                class="bg-white text-emerald-600 rounded-full py-2 px-8 font-bold"
+                (click)="onPlayAsGuest()"
+              >
+                Play now
+              </button>
+
+              <button
+                class="text-white border border-white rounded-full py-2 px-8 font-bold"
+              >
+                Tutorial
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -58,3 +62,14 @@
     </div>
   </section>
 </div>
+
+<!-- Card Wheel Overlay -->
+<app-card-wheel
+  class="absolute top-0 left-0"
+  [cards]="LEFT_CARD_WHEEL_CARDS"
+></app-card-wheel>
+
+<app-card-wheel
+  class="absolute top-0 right-0"
+  [cards]="RIGHT_CARD_WHEEL_CARDS"
+></app-card-wheel>

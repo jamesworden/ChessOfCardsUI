@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { Breakpoint } from '../../../models/breakpoint.model';
-import { ResponsiveSizeService } from '../../game-view/services/responsive-size.service';
-import { View } from '../..';
 import { Store } from '@ngxs/store';
-import { UpdateView } from '../../../actions/view.actions';
 import { BehaviorSubject } from 'rxjs';
+import { Breakpoint } from '../../models/breakpoint.model';
+import { ResponsiveSizeService } from '../../views/game-view/services/responsive-size.service';
+import { UpdateView } from '../../actions/view.actions';
+import { View } from '../../views';
 
 @Component({
   selector: 'app-navbar',
