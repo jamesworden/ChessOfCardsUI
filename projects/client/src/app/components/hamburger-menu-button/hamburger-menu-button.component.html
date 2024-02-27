@@ -6,7 +6,7 @@
 <!-- Overlay -->
 <div
   *ngIf="isOpen$ | async"
-  class="bg-black absolute top-0 left-0 z-20 w-full h-full transition bg-black opacity-70"
+  class="bg-black absolute top-0 left-0 z-20 w-full h-screen transition bg-black opacity-70"
   [@fadeInOut]
 ></div>
 
@@ -14,25 +14,31 @@
 <div
   [@fadeInOut]
   *ngIf="isOpen$ | async"
-  class="bg-gray-200 right-0 w-3/4 top-0 absolute z-30 h-full flex flex-col"
+  class="bg-gray-200 right-0 w-3/4 top-0 absolute z-30 flex flex-col justify-between h-screen"
 >
-  <div class="flex justify-between py-8 pb-0 px-4">
-    <div class="flex gap-x-4">
-      <h3 class="text-xl text-emerald-600">Chess of Cards</h3>
-      <ng-container [ngTemplateOutlet]="icon"></ng-container>
+  <div>
+    <div class="flex justify-between py-8 pb-0 px-4">
+      <div class="flex gap-x-4">
+        <h3 class="text-xl text-gray-800">Chess of Cards</h3>
+        <ng-container [ngTemplateOutlet]="icon"></ng-container>
+      </div>
+
+      <div (click)="toggleHamburgerMenu()" class="flex flex-col justify-around">
+        <ng-container *ngTemplateOutlet="hamburgerMenuIcon"></ng-container>
+      </div>
     </div>
 
-    <div (click)="toggleHamburgerMenu()" class="flex flex-col justify-around">
-      <ng-container *ngTemplateOutlet="hamburgerMenuIcon"></ng-container>
+    <div class="flex flex-col gap-y-2 py-8 px-4 text-gray-800">
+      <div>Home</div>
+      <div>About</div>
+      <div>Rules</div>
+      <div>Sign In</div>
     </div>
   </div>
 
-  <div class="flex flex-col p-16">
-    <div>Home</div>
-    <div>About</div>
-    <div>Rules</div>
-    <div>Sign In</div>
-  </div>
+  <button class="m-8 bg-gold-600 text-white rounded-full py-2 px-8 font-bold">
+    Play now
+  </button>
 </div>
 
 <ng-template #hamburgerMenuIcon let-data>
@@ -60,7 +66,7 @@
         <rect
           [ngClass]="{
             'fill-gray-200': (isOpen$ | async) === false,
-            'fill-emerald-600': isOpen$ | async
+            'fill-gray-800': isOpen$ | async
           }"
           x="-19"
           y="-5"
@@ -115,7 +121,7 @@
           y="-4.5"
           width="39.6"
           height="36.9"
-          class="fill-emerald-600"
+          class="fill-gray-800"
         />
       </g>
       <defs>

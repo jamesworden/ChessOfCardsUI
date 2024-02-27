@@ -1,6 +1,11 @@
 <div class="background"></div>
 
-<div class="app-container">
+<div
+  class="app-container"
+  [ngClass]="{
+    fixed: isOpen$ | async
+  }"
+>
   <ng-container [ngSwitch]="currentView$ | async">
     <app-host-view *ngSwitchCase="View.Host" [@fadeInOut]></app-host-view>
     <app-join-view *ngSwitchCase="View.Join" [@fadeInOut]></app-join-view>
