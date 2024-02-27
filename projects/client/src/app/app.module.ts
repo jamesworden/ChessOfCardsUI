@@ -40,6 +40,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AnimationOverlayComponent } from './views/game-view/components/animation-overlay/animation-overlay.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { NavbarState } from './state/navbar.state';
+import { HamburgerMenuButtonComponent } from './components/hamburger-menu-button/hamburger-menu-button.component';
 
 @NgModule({
   declarations: [
@@ -65,12 +67,19 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     JokerCardComponent,
     AnimationOverlayComponent,
     NavbarComponent,
+    HamburgerMenuButtonComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState, ViewState, TutorialState, ServerState]),
+    NgxsModule.forRoot([
+      GameState,
+      ViewState,
+      TutorialState,
+      ServerState,
+      NavbarState,
+    ]),
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,

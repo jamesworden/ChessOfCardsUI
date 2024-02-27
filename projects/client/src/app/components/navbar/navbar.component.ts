@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { BehaviorSubject } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
 import { Breakpoint } from '../../models/breakpoint.model';
 import { ResponsiveSizeService } from '../../views/game-view/services/responsive-size.service';
 import { UpdateView } from '../../actions/view.actions';
 import { View } from '../../views';
+import { NavbarState } from '../../state/navbar.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -14,18 +15,15 @@ import { View } from '../../views';
 export class NavbarComponent {
   readonly Breakpoint = Breakpoint;
 
+  @Select(NavbarState.isOpen)
+  isOpen$!: Observable<boolean>;
+
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #store = inject(Store);
 
   readonly breakpoint$ = this.#responsiveSizeService.breakpoint$;
-  readonly hamburgerMenuOpen$ = new BehaviorSubject<boolean>(false);
 
   updateView(view: View) {
     this.#store.dispatch(new UpdateView(view));
-  }
-
-  toggleHamburgerMenu() {
-    const currentValue = this.hamburgerMenuOpen$.getValue();
-    this.hamburgerMenuOpen$.next(!currentValue);
   }
 }

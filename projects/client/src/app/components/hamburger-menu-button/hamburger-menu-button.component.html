@@ -1,40 +1,90 @@
-<div class="w-full flex justify-around">
-  <div
-    class="py-8 pb-0 px-4 flex justify-between w-full max-w-screen-xl text-gray-200"
-  >
-    <ng-container
-      *ngIf="
-        (breakpoint$ | async) === Breakpoint.Tablet ||
-          (breakpoint$ | async) === Breakpoint.Mobile;
-        else wideNavbar
-      "
-    >
-      <ng-container [ngTemplateOutlet]="chessOfCardsHeader"></ng-container>
+<!-- Button -->
+<div (click)="toggleHamburgerMenu()" class="flex flex-col justify-around">
+  <ng-container *ngTemplateOutlet="hamburgerMenuIcon"></ng-container>
+</div>
 
-      <app-hamburger-menu-button></app-hamburger-menu-button>
-    </ng-container>
+<!-- Overlay -->
+<div
+  *ngIf="isOpen$ | async"
+  class="bg-black absolute top-0 left-0 z-20 w-full h-full transition bg-black opacity-70"
+  [@fadeInOut]
+></div>
 
-    <ng-template #wideNavbar>
-      <span class="opacity-50">rules</span>
-      <span class="opacity-50">about</span>
+<!-- Menu -->
+<div
+  [@fadeInOut]
+  *ngIf="isOpen$ | async"
+  class="bg-gray-200 right-0 w-3/4 top-0 absolute z-30 h-full flex flex-col"
+>
+  <div class="flex justify-between py-8 pb-0 px-4">
+    <div class="flex gap-x-4">
+      <h3 class="text-xl text-emerald-600">Chess of Cards</h3>
+      <ng-container [ngTemplateOutlet]="icon"></ng-container>
+    </div>
 
-      <ng-container [ngTemplateOutlet]="chessOfCardsHeader"></ng-container>
+    <div (click)="toggleHamburgerMenu()" class="flex flex-col justify-around">
+      <ng-container *ngTemplateOutlet="hamburgerMenuIcon"></ng-container>
+    </div>
+  </div>
 
-      <span class="opacity-50">sign up</span>
-      <span class="opacity-50">sign in</span>
-    </ng-template>
+  <div class="flex flex-col p-16">
+    <div>Home</div>
+    <div>About</div>
+    <div>Rules</div>
+    <div>Sign In</div>
   </div>
 </div>
 
-<ng-template #chessOfCardsHeader>
-  <div
-    class="flex gap-x-4 transition"
-    [ngClass]="{
-      'opacity-0': isOpen$ | async
-    }"
-  >
-    <h3 class="text-xl">Chess of Cards</h3>
-    <ng-container [ngTemplateOutlet]="icon"></ng-container>
+<ng-template #hamburgerMenuIcon let-data>
+  <div>
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+    >
+      <mask
+        id="mask0_23_8"
+        style="mask-type: alpha"
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width="24"
+        height="24"
+      >
+        <rect width="24" height="24" fill="url(#pattern1)" />
+      </mask>
+      <g mask="url(#mask0_23_8)">
+        <rect
+          [ngClass]="{
+            'fill-gray-200': (isOpen$ | async) === false,
+            'fill-emerald-600': isOpen$ | async
+          }"
+          x="-19"
+          y="-5"
+          width="68"
+          height="44"
+        />
+      </g>
+      <defs>
+        <pattern
+          id="pattern1"
+          patternContentUnits="objectBoundingBox"
+          width="1"
+          height="1"
+        >
+          <use xlink:href="#image0_23_8" transform="scale(0.0111111)" />
+        </pattern>
+        <image
+          id="image0_23_8"
+          width="90"
+          height="90"
+          xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAv0lEQVR4nO3awWrCQABF0Ys7/XxrqV9pu2m3kUDWYmahAz0H8gOXMAN5KQAAAAAAAADe6lR9Vj/V4ulRg+/qUh1HQl/Fbe8Ltjbb5VD9Cd3e0L9bO6GbLLSjo6HQXw1YD/aP7aB3Gfawwa06j16GAAAAAAD/nHG2p7/DG2d77WhhnO01oY2zTRp65b+OjLPLZIOxcRYAAAAAYJxxNuPsMsHHfuNs7wttnG3S0CvjbMbZZYLz2DgLAAAAAAAA0GTuqD9gUMDt6+cAAAAASUVORK5CYII="
+        />
+      </defs>
+    </svg>
   </div>
 </ng-template>
 
@@ -60,7 +110,13 @@
         <rect width="27" height="27" fill="url(#pattern0)" />
       </mask>
       <g mask="url(#mask0_4_163)">
-        <rect x="-6.30005" y="-4.5" width="39.6" height="36.9" fill="#F2F2F2" />
+        <rect
+          x="-6.30005"
+          y="-4.5"
+          width="39.6"
+          height="36.9"
+          class="fill-emerald-600"
+        />
       </g>
       <defs>
         <pattern
