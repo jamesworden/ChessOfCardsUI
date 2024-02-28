@@ -3,11 +3,7 @@
     class="py-8 pb-0 px-4 flex justify-between w-full max-w-screen-xl text-gray-200"
   >
     <ng-container
-      *ngIf="
-        (breakpoint$ | async) === Breakpoint.Tablet ||
-          (breakpoint$ | async) === Breakpoint.Mobile;
-        else wideNavbar
-      "
+      *ngIf="(breakpoint$ | async) === Breakpoint.Mobile; else wideNavbar"
     >
       <ng-container [ngTemplateOutlet]="chessOfCardsHeader"></ng-container>
 

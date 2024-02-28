@@ -39,7 +39,7 @@ export class ResponsiveSizeService {
     );
     this.sm.add(
       this._windowDimensions$.subscribe(([width]) => {
-        if (width < 500) {
+        if (width < 700) {
           this._breakpoint$.next(Breakpoint.Mobile);
         } else if (width < 1000) {
           this._breakpoint$.next(Breakpoint.Tablet);
