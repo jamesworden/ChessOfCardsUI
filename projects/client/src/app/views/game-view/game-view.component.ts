@@ -43,8 +43,6 @@ import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-
 import { getCardImageFileName as getCardImageFileNameFn } from '../../util/get-asset-file-names';
 import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 import { ResponsiveSizeService } from './services/responsive-size.service';
-import { UpdateView } from '../../actions/view.actions';
-import { View } from '..';
 import { GameOverData } from '../../models/game-over-data.model';
 import { Breakpoint } from '../../models/breakpoint.model';
 import { getPossibleInitialPlaceCardAttempts } from './logic/get-possible-initial-place-card-attempts';
@@ -63,6 +61,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game-view',
@@ -103,6 +102,7 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly #store = inject(Store);
   readonly #snackBar = inject(MatSnackBar);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
+  readonly #router = inject(Router);
 
   readonly PlayerOrNone = PlayerOrNone;
   readonly Breakpoint = Breakpoint;
@@ -205,7 +205,7 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
         const subscription = modalRef.afterClosed().subscribe(() => {
           this.#store.dispatch(new ResetGameData());
           this.#store.dispatch(new ResetPendingGameView());
-          this.#store.dispatch(new UpdateView(View.Home));
+          this.#router.navigate(['home']);
           subscription.unsubscribe();
         });
       })

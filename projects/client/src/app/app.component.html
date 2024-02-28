@@ -1,23 +1,8 @@
-<div class="background"></div>
-
 <div
-  class="app-container"
+  class="h-full w-full"
   [ngClass]="{
     fixed: isOpen$ | async
   }"
 >
-  <ng-container [ngSwitch]="currentView$ | async">
-    <app-host-view *ngSwitchCase="View.Host" [@fadeInOut]></app-host-view>
-    <app-join-view *ngSwitchCase="View.Join" [@fadeInOut]></app-join-view>
-    <app-game-view *ngSwitchCase="View.Game" [@fadeInOut]></app-game-view>
-    <app-host-or-join-view
-      *ngSwitchCase="View.HostOrJoin"
-      [@fadeInOut]
-    ></app-host-or-join-view>
-    <app-tutorial-view
-      *ngSwitchCase="View.Tutorial"
-      [@fadeInOut]
-    ></app-tutorial-view>
-    <app-home-view *ngSwitchDefault [@fadeInOut]></app-home-view>
-  </ng-container>
+  <router-outlet></router-outlet>
 </div>

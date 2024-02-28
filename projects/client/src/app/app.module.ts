@@ -1,14 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxsModule } from '@ngxs/store';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GameState } from './state/game.state';
 import { GameViewComponent } from './views/game-view/game-view.component';
 import { HomeViewComponent } from './views/home-view/home-view.component';
-import { HostViewComponent } from './views/host-view/host-view.component';
-import { JoinViewComponent } from './views/join-view/join-view.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import {
   BrowserAnimationsModule,
@@ -16,8 +13,6 @@ import {
 } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { HostOrJoinViewComponent } from './views/host-or-join-view/host-or-join-view.component';
-import { ViewState } from './state/view.state';
 import { TutorialViewComponent } from './views/tutorial-view/tutorial-view.component';
 import { TutorialButtonComponent } from './views/tutorial-view/components/tutorial-button/tutorial-button.component';
 import { TutorialState } from './state/tutorial.state';
@@ -42,20 +37,18 @@ import { AnimationOverlayComponent } from './views/game-view/components/animatio
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NavbarState } from './state/navbar.state';
 import { HamburgerMenuButtonComponent } from './components/hamburger-menu-button/hamburger-menu-button.component';
+import { PlayAsGuestViewComponent } from './views/play-as-guest-view/play-as-guest-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameViewComponent,
     HomeViewComponent,
-    HostViewComponent,
-    JoinViewComponent,
     FaceDownCardComponent,
     CardComponent,
     PositionComponent,
     ModalComponent,
     PlaceMultipleCardsLaneComponent,
-    HostOrJoinViewComponent,
     TutorialViewComponent,
     TutorialButtonComponent,
     LaneComponent,
@@ -68,18 +61,13 @@ import { HamburgerMenuButtonComponent } from './components/hamburger-menu-button
     AnimationOverlayComponent,
     NavbarComponent,
     HamburgerMenuButtonComponent,
+    PlayAsGuestViewComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([
-      GameState,
-      ViewState,
-      TutorialState,
-      ServerState,
-      NavbarState,
-    ]),
+    NgxsModule.forRoot([GameState, TutorialState, ServerState, NavbarState]),
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,

@@ -1,0 +1,84 @@
+<div class="view-container h-full w-full">
+  <app-navbar></app-navbar>
+
+  <div class="my-16 mx-4 text-lg text-gray-200 font-bold" (click)="goBack()">
+    ← back
+  </div>
+
+  <div class="mx-4">
+    <ng-container
+      *ngIf="(breakpoint$ | async) === Breakpoint.Desktop; else collapsedView"
+    >
+      <ng-container *ngTemplateOutlet="expandedView"></ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #collapsedView>
+  <div class="flex gap-x-12 pb-8">
+    <ng-container
+      *ngTemplateOutlet="
+        optionButton;
+        context: {
+          $implicit: {
+            label: 'Host Game',
+            selected: (onHostGameCollapsedOption$ | async)
+          }
+        }
+      "
+    ></ng-container>
+
+    <ng-container
+      *ngTemplateOutlet="
+        optionButton;
+        context: {
+          $implicit: {
+            label: 'Join Game',
+            selected: (onHostGameCollapsedOption$ | async) === false
+          }
+        }
+      "
+    ></ng-container>
+  </div>
+
+  <ng-container *ngIf="onHostGameCollapsedOption$ | async; else hostGame">
+    <ng-container *ngTemplateOutlet="joinGame"></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #expandedView> </ng-template>
+
+<ng-template #joinGame>
+  <div class="text-gray-200 flex flex-col gap-y-6 max-w-xs my-8 text-xl">
+    <label class="font-bold">Game Code</label>
+
+    <input
+      type="text"
+      class="bg-orange-100 border border-solid border-yellow-600 text-lg text-black outline-none rounded-md p-2"
+    />
+
+    <button
+      class="bg-yellow-700 text-white rounded-full py-4 px-8 font-bold text-lg uppercase"
+    >
+      Join Game
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #hostGame>
+  <div class="text-gray-200 flex flex-col gap-y-4">
+    <label class="font-bold">Your game code is:</label>
+
+    <div class="text-yellow-700">BQJL</div>
+
+    <p class="font-bold">
+      Share this code with your opponent so they can start the game!
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #optionButton let-data>
+  <div>
+    <h3 class="text-2xl text-gray-200">{{ data.label }}</h3>
+  </div>
+</ng-template>

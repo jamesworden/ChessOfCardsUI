@@ -1,8 +1,8 @@
-import { DurationOption } from '../../../models/duration-option.model';
-import { Kind } from '../../../models/kind.model';
-import { PlayerGameView } from '../../../models/player-game-view.model';
-import { PlayerOrNone } from '../../../models/player-or-none.model';
-import { Suit } from '../../../models/suit.model';
+import { DurationOption } from '../models/duration-option.model';
+import { Kind } from '../models/kind.model';
+import { PlayerGameView } from '../models/player-game-view.model';
+import { PlayerOrNone } from '../models/player-or-none.model';
+import { Suit } from '../models/suit.model';
 
 export const DEMO_PLAYER_GAME_VIEW: PlayerGameView = {
   DurationOption: DurationOption.FiveMinutes,

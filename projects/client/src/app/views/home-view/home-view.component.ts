@@ -1,13 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { View } from '..';
-import { UpdateView } from '../../actions/view.actions';
-import { DEMO_PLAYER_GAME_VIEW } from './data/demo-player-game-view';
+import { DEMO_PLAYER_GAME_VIEW } from '../../metadata/demo-player-game-view';
 import { ResponsiveSizeService } from '../game-view/services/responsive-size.service';
-import {
-  LEFT_CARD_WHEEL_CARDS,
-  RIGHT_CARD_WHEEL_CARDS,
-} from './data/card-wheel-cards';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-view',
@@ -16,19 +10,17 @@ import {
 })
 export class HomeViewComponent {
   readonly DEMO_PLAYER_GAME_VIEW = DEMO_PLAYER_GAME_VIEW;
-  readonly RIGHT_CARD_WHEEL_CARDS = RIGHT_CARD_WHEEL_CARDS;
-  readonly LEFT_CARD_WHEEL_CARDS = LEFT_CARD_WHEEL_CARDS;
 
-  readonly #store = inject(Store);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
+  readonly #router = inject(Router);
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
-  onHowToPlay() {
-    this.#store.dispatch(new UpdateView(View.Tutorial));
+  navigateToTutorial() {
+    this.#router.navigate(['tutorial']);
   }
 
-  onPlayAsGuest() {
-    this.#store.dispatch(new UpdateView(View.HostOrJoin));
+  navigateToPlayAsGuest() {
+    this.#router.navigate(['play-as-guest']);
   }
 }

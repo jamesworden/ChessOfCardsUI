@@ -20,11 +20,10 @@ import { Card } from '../models/card.model';
 import { Move } from '../models/move.model';
 import { PlayerGameView } from '../models/player-game-view.model';
 import { environment } from '../../environments/environment';
-import { UpdateView } from '../actions/view.actions';
-import { View } from '../views';
 import { SetIsConnectedToServer } from '../actions/server.actions';
 import { DurationOption } from '../models/duration-option.model';
 import { PendingGameView } from '../models/pending-game-view.model';
+import { Router } from '@angular/router';
 
 const { serverUrl } = environment;
 
@@ -35,6 +34,7 @@ export class WebsocketService {
   private hubConnection: HubConnection;
 
   readonly #store = inject(Store);
+  readonly #router = inject(Router);
 
   constructor() {
     this.initConnection();
@@ -109,7 +109,7 @@ export class WebsocketService {
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
       this.parseAndUpdateGameView(stringifiedGameState);
-      this.#store.dispatch(new UpdateView(View.Game));
+      this.#router.navigate(['game']);
     });
 
     this.hubConnection.on('GameOver', (message?: string) => {

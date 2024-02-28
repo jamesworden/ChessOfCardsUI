@@ -4,7 +4,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { NavbarState } from '../../state/navbar.state';
 import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
-import { DEMO_PLAYER_GAME_VIEW } from '../../views/home-view/data/demo-player-game-view';
+import { DEMO_PLAYER_GAME_VIEW } from '../../metadata/demo-player-game-view';
 import { ResponsiveSizeService } from '../../views/game-view/services/responsive-size.service';
 
 @Component({
