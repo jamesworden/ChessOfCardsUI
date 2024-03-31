@@ -13,9 +13,6 @@ import {
 } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { TutorialViewComponent } from './views/tutorial-view/tutorial-view.component';
-import { TutorialButtonComponent } from './views/tutorial-view/components/tutorial-button/tutorial-button.component';
-import { TutorialState } from './state/tutorial.state';
 import { CardComponent } from './views/game-view/components/card/card.component';
 import { FaceDownCardComponent } from './views/game-view/components/face-down-card/face-down-card.component';
 import { PositionComponent } from './views/game-view/components/position/position.component';
@@ -34,10 +31,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AnimationOverlayComponent } from './views/game-view/components/animation-overlay/animation-overlay.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { NavbarState } from './state/navbar.state';
-import { HamburgerMenuButtonComponent } from './components/hamburger-menu-button/hamburger-menu-button.component';
-import { PlayAsGuestViewComponent } from './views/play-as-guest-view/play-as-guest-view.component';
 
 @NgModule({
   declarations: [
@@ -49,8 +43,6 @@ import { PlayAsGuestViewComponent } from './views/play-as-guest-view/play-as-gue
     PositionComponent,
     ModalComponent,
     PlaceMultipleCardsLaneComponent,
-    TutorialViewComponent,
-    TutorialButtonComponent,
     LaneComponent,
     PlayerHandComponent,
     OpponentHandComponent,
@@ -59,15 +51,12 @@ import { PlayAsGuestViewComponent } from './views/play-as-guest-view/play-as-gue
     SidebarItemComponent,
     JokerCardComponent,
     AnimationOverlayComponent,
-    NavbarComponent,
-    HamburgerMenuButtonComponent,
-    PlayAsGuestViewComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState, TutorialState, ServerState, NavbarState]),
+    NgxsModule.forRoot([GameState, ServerState, NavbarState]),
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,

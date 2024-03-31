@@ -66,7 +66,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
-  styleUrls: ['./game-view.component.css'],
+  styleUrls: ['./game-view.component.scss'],
   animations: [
     trigger('cardRotation', [
       state(

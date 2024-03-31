@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  styleUrls: ['./card.component.css'],
+  styleUrls: ['./card.component.scss'],
 })
 export class CardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);

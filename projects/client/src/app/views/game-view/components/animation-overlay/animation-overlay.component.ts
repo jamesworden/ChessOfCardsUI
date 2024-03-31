@@ -25,7 +25,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-animation-overlay',
   templateUrl: './animation-overlay.component.html',
-  styleUrl: './animation-overlay.component.css',
+  styleUrl: './animation-overlay.component.scss',
   animations: [
     trigger('cardMovement', [
       state(

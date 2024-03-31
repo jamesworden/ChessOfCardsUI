@@ -25,7 +25,7 @@ enum YesNoButtons {
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css'],
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnDestroy {
   private sm = new SubscriptionManager();

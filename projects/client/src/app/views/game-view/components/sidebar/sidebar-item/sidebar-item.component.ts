@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-sidebar-item',
   templateUrl: './sidebar-item.component.html',
-  styleUrls: ['./sidebar-item.component.css'],
+  styleUrls: ['./sidebar-item.component.scss'],
 })
 export class SidebarItemComponent implements AfterViewInit {
   readonly #focusMonitor = inject(FocusMonitor);

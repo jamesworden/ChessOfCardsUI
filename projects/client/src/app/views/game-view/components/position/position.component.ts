@@ -13,7 +13,7 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 @Component({
   selector: 'app-position',
   templateUrl: './position.component.html',
-  styleUrls: ['./position.component.css'],
+  styleUrls: ['./position.component.scss'],
 })
 export class PositionComponent implements OnDestroy {
   private sm = new SubscriptionManager();

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-home-view',
   templateUrl: './home-view.component.html',
-  styleUrls: ['./home-view.component.css'],
+  styleUrls: ['./home-view.component.scss'],
 })
 export class HomeViewComponent {
   readonly DEMO_PLAYER_GAME_VIEW = DEMO_PLAYER_GAME_VIEW;
@@ -15,12 +15,4 @@ export class HomeViewComponent {
   readonly #router = inject(Router);
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
-
-  navigateToTutorial() {
-    this.#router.navigate(['tutorial']);
-  }
-
-  navigateToPlayAsGuest() {
-    this.#router.navigate(['play-as-guest']);
-  }
 }

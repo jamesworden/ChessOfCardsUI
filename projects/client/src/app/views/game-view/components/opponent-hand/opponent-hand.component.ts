@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-opponent-hand',
   templateUrl: './opponent-hand.component.html',
-  styleUrls: ['./opponent-hand.component.css'],
+  styleUrls: ['./opponent-hand.component.scss'],
 })
 export class OpponentHandComponent {
   @Input() numCards: number;

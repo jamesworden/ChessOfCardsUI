@@ -20,7 +20,7 @@ export class NavbarState {
   }
 
   @Action(ToggleNavbar)
-  updateView(ctx: StateContext<NavbarStateModel>) {
+  toggleNavbar(ctx: StateContext<NavbarStateModel>) {
     ctx.patchState({
       isOpen: !ctx.getState().isOpen,
     });

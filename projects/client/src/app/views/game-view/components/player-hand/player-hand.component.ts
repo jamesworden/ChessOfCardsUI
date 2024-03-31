@@ -29,7 +29,7 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 @Component({
   selector: 'app-player-hand',
   templateUrl: './player-hand.component.html',
-  styleUrls: ['./player-hand.component.css'],
+  styleUrls: ['./player-hand.component.scss'],
   animations: [
     trigger('bounceCards', [
       transition(

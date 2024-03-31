@@ -21,7 +21,7 @@ interface PositionDetails {
 @Component({
   selector: 'app-lane',
   templateUrl: './lane.component.html',
-  styleUrls: ['./lane.component.css'],
+  styleUrls: ['./lane.component.scss'],
 })
 export class LaneComponent {
   readonly PlayerOrNone = PlayerOrNone;

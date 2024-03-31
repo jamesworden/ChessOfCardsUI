@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
-  styleUrls: ['./board.component.css'],
+  styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
