@@ -191,6 +191,10 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
   possibleInitialPlaceCardAttempts: PlaceCardAttempt[] = [];
 
   ngOnInit() {
+    if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
+      this.#router.navigate(['']);
+    }
+
     this.sm.add(
       this.gameOverData$.subscribe((gameOverData) => {
         if (!gameOverData.isOver) {

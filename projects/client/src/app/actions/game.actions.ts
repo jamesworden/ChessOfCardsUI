@@ -122,3 +122,8 @@ export class CheckHostForEmptyTimer {
 export class CheckGuestForEmptyTimer {
   static readonly type = '[GameState] Check Guest For Empty Timer';
 }
+
+export class SetGameIsActive {
+  static readonly type = '[GameState] Game Is Active';
+  constructor(public gameIsActive: boolean) {}
+}

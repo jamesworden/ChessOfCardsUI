@@ -15,6 +15,7 @@ import {
   SetPendingGameView,
   ResetPendingGameView,
   AnimateGameView,
+  SetGameIsActive,
 } from '../actions/game.actions';
 import { Card } from '../models/card.model';
 import { Move } from '../models/move.model';
@@ -108,6 +109,7 @@ export class WebsocketService {
     });
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
+      this.#store.dispatch(new SetGameIsActive(true));
       this.parseAndUpdateGameView(stringifiedGameState);
       this.#router.navigate(['game']);
     });
