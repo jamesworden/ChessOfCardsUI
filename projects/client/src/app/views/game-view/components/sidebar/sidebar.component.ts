@@ -16,6 +16,7 @@ import { withLatestFrom } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { RemainingTimeService } from '../../services/remaining-time.service';
+import { map } from 'rxjs/operators';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -43,6 +44,10 @@ export class SidebarComponent implements OnDestroy {
 
   @Select(GameState.waitingForServer)
   waitingForServer$!: Observable<boolean>;
+
+  readonly gameCode$ = this.store
+    .select(GameState.pendingGameView)
+    .pipe(map((pendingGameView) => pendingGameView?.GameCode));
 
   cardSize: number;
   drawOfferSent: boolean;

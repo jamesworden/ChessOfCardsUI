@@ -75,4 +75,23 @@
       <span>{{ playersRemainingSecondsString }}</span>
     </div>
   </div>
+
+  <div
+    *ngIf="numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null"
+    class="divider"
+    [ngStyle]="{
+      margin: cardSize / 3.5 + 'px 8px'
+    }"
+  ></div>
+
+  <div
+    class="flex flex-col justify-around text-center"
+    [ngStyle]="{
+      height: cardSize + 'px'
+    }"
+  >
+    <span class="text-gray-200 tracking-widest font-bold">{{
+      gameCode$ | async
+    }}</span>
+  </div>
 </nav>
