@@ -21,6 +21,7 @@
           <div>
             <button
               class="uppercase tracking-widest border border-black px-8 text-sm py-2 my-2"
+              (click)="scrollToPlayNow()"
             >
               Play
             </button>
@@ -39,7 +40,10 @@
         </div>
       </section>
 
-      <hr class="border-solid border-1 border-black my-12" />
+      <hr
+        class="border-solid border-1 border-black my-12"
+        id="play-now-section"
+      />
 
       <section class="flex">
         <div class="flex-1 flex flex-col">
