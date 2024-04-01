@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
   AcceptDrawOffer,
@@ -74,8 +74,6 @@ const initialGameState: GameStateModel = {
 })
 @Injectable()
 export class GameState {
-  readonly #store = inject(Store);
-
   @Selector()
   static playerGameViewToAnimate(state: GameStateModel) {
     return state.playerGameViewToAnimate;
