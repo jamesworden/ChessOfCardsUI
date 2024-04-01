@@ -5,19 +5,18 @@
   }"
 >
   <div
-    class="branding"
+    class="flex flex-col justify-around text-center"
     [ngStyle]="{
       height: cardSize + 'px'
     }"
   >
-    <span>Lanes</span>
+    <span class="text-gray-200 tracking-widest font-bold">CoC</span>
   </div>
   <app-sidebar-item
     [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
     [iconSize]="cardSize / 2"
-    matTooltip="Pass move"
-    matTooltipPosition="right"
+    tooltip="Pass move"
     materialSymbol="waving_hand"
     (selected)="attemptToOpenPassMoveModal()"
   ></app-sidebar-item>
@@ -25,8 +24,7 @@
     [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
     [iconSize]="cardSize / 2"
-    matTooltip="Offer draw"
-    matTooltipPosition="right"
+    tooltip="Offer draw"
     materialSymbol="handshake"
     (selected)="attemptToOpenOfferDrawModel()"
   ></app-sidebar-item>
@@ -34,8 +32,7 @@
     [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
     [iconSize]="cardSize / 2"
-    matTooltip="Resign"
-    matTooltipPosition="right"
+    tooltip="Resign"
     materialSymbol="flag"
     (selected)="openResignModal()"
   ></app-sidebar-item>

@@ -25,6 +25,7 @@ export class SidebarItemComponent implements AfterViewInit {
   @Input() iconColor = 'white';
   @Input() itemWidth: number;
   @Input() disabled = false;
+  @Input() tooltip: string = '';
 
   @Output() selected = new EventEmitter<void>();
 
