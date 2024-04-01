@@ -45,10 +45,6 @@ export class SidebarComponent implements OnDestroy {
   @Select(GameState.waitingForServer)
   waitingForServer$!: Observable<boolean>;
 
-  readonly gameCode$ = this.store
-    .select(GameState.pendingGameView)
-    .pipe(map((pendingGameView) => pendingGameView?.GameCode));
-
   cardSize: number;
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
