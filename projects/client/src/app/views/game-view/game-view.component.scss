@@ -6,22 +6,6 @@
   width: 100%;
 }
 
-.center-horisontally {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-}
-
-.game-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-.game {
-  max-width: 500px;
-}
-
 .buttons-container {
   background-color: white;
   display: flex;
@@ -41,13 +25,4 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-}
-
-.relative-sidebar {
-  height: 100%;
-}
-
-.absolute-sidebar {
-  position: absolute;
-  height: 100%;
 }

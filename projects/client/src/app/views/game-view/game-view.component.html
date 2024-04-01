@@ -1,10 +1,4 @@
-<app-sidebar
-  [isPlayersTurn]="isPlayersTurn"
-  [ngClass]="{
-    'relative-sidebar': (breakpoint$ | async) === Breakpoint.Mobile,
-    'absolute-sidebar': (breakpoint$ | async) !== Breakpoint.Mobile
-  }"
-></app-sidebar>
+<app-sidebar class="h-full" [isPlayersTurn]="isPlayersTurn"></app-sidebar>
 
 <app-animation-overlay
   [animatedEntities]="(animatedCardEntities$ | async) ?? []"
@@ -12,8 +6,8 @@
   (startingAnimations)="checkToRemoveCardFromBoard($event)"
 ></app-animation-overlay>
 
-<div class="center-horisontally">
-  <div class="game-container">
+<div class="flex justify-around w-full">
+  <div class="flex flex-col justify-around">
     <div
       class="game"
       *ngIf="playerGameView$ | async as playerGameView"
