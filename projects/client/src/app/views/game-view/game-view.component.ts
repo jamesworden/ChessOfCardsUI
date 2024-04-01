@@ -205,7 +205,7 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
         const subscription = modalRef.afterClosed().subscribe(() => {
           this.#store.dispatch(new ResetGameData());
           this.#store.dispatch(new ResetPendingGameView());
-          this.#router.navigate(['home']);
+          this.#router.navigate(['']);
           subscription.unsubscribe();
         });
       })
