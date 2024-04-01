@@ -32,6 +32,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AnimationOverlayComponent } from './views/game-view/components/animation-overlay/animation-overlay.component';
 import { NavbarState } from './state/navbar.state';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { NavbarState } from './state/navbar.state';
     SidebarItemComponent,
     JokerCardComponent,
     AnimationOverlayComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

@@ -53,3 +53,12 @@ html {
 .card.cdk-drag-animating {
   transition: transform 100ms ease-out;
 }
+
+.lanes-bg-gradient {
+  background: rgb(239, 239, 239);
+  background: radial-gradient(
+    circle,
+    rgba(239, 239, 239, 1) 0%,
+    rgba(209, 208, 208, 1) 100%
+  );
+}
