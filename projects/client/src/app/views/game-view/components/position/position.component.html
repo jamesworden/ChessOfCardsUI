@@ -17,21 +17,23 @@
 
 @if(!hideMarker) { @if((marker$ | async)?.topLeft; as topLeft) {
 <span
-  class="absolute text-xs font-semibold"
+  class="absolute font-semibold"
   [ngStyle]="{
     color: textColor,
     top: ((cardSize$ | async) ?? 64) / 6 + 'px',
-    left: ((cardSize$ | async) ?? 64) / 6 + 'px'
+    left: ((cardSize$ | async) ?? 64) / 6 + 'px',
+    fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px',
   }"
   >{{ topLeft }}</span
 >
 } @if((marker$ | async)?.bottomRight; as bottomRight) {
 <span
-  class="absolute text-xs font-semibold"
+  class="absolute font-semibold"
   [ngStyle]="{
     color: textColor,
     bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
-    right: ((cardSize$ | async) ?? 64) / 6 + 'px'
+    right: ((cardSize$ | async) ?? 64) / 6 + 'px',
+    fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px',
   }"
   >{{ bottomRight }}</span
 >
