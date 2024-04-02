@@ -11,14 +11,12 @@ export function getPositionBackgroundClass(
   isPlayersTurn: boolean,
   topCard?: Card
 ) {
-  const { LastCardPlayed } = lane;
-
   const isLastCardPlayed =
     topCard &&
-    LastCardPlayed &&
-    LastCardPlayed.PlayedBy !== PlayerOrNone.None &&
-    topCard.Kind === LastCardPlayed.Kind &&
-    topCard.Suit === LastCardPlayed.Suit;
+    lane.LastCardPlayed &&
+    lane.LastCardPlayed.PlayedBy !== PlayerOrNone.None &&
+    topCard.Kind === lane.LastCardPlayed.Kind &&
+    topCard.Suit === lane.LastCardPlayed.Suit;
 
   const positionColor = isLastCardPlayed
     ? getLastCardPlayedBackgroundClass(topCard!, isHost, isPlayersTurn)
@@ -26,7 +24,7 @@ export function getPositionBackgroundClass(
 
   const inverseBackgroundClasses = getDefaultBackgroundClasses(
     laneIndex,
-    rowIndex + 1
+    rowIndex + 1 // Add one to get the opposite result
   );
 
   const { laneColor } = getLaneBackgroundClass(lane, isHost, isPlayersTurn);

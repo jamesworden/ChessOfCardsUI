@@ -11,9 +11,10 @@
   <div class="game flex flex-col justify-between h-full" cdkDropListGroup>
     <app-player-banner
       [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
-      class="rounded-b-md bg-rose-900 transition"
+      class="rounded-b-md transition"
       [ngClass]="{
-        'bg-rose-700': !isPlayersTurn
+        'bg-rose-700': !isPlayersTurn,
+        'bg-rose-900': isPlayersTurn
       }"
     ></app-player-banner>
 
@@ -41,9 +42,10 @@
 
     <app-player-banner
       [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
-      class="rounded-t-md bg-sky-900 transition"
+      class="rounded-t-md transition"
       [ngClass]="{
-        'bg-sky-700': isPlayersTurn
+        'bg-sky-700': isPlayersTurn,
+        'bg-sky-900': !isPlayersTurn
       }"
     ></app-player-banner>
   </div>
