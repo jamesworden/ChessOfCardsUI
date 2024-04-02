@@ -1,3 +1,4 @@
+@if(cards) {
 <div
   [@bounceCards]="{
     value: (bouncingCards$ | async) ? 'bouncing' : 'not-bouncing',
@@ -14,7 +15,6 @@
   (cdkDropListDropped)="onCardDrop($event)"
   cdkDropListData="player-hand"
   cdkDropListOrientation="horizontal"
-  *ngIf="cards"
   [ngStyle]="{
     height: cardSize + 'px',
     width: 5 * cardSize + 'px',
@@ -33,3 +33,4 @@
   ></app-card>
   }
 </div>
+}
