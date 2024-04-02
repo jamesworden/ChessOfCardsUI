@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Lane } from '../../../../models/lane.model';
 import { PlaceCardAttempt } from '../../../../models/place-card-attempt.model';
 import { PlayerOrNone } from '../../../../models/player-or-none.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getPositionDetails } from './get-position-details';
 
@@ -14,30 +14,33 @@ import { getPositionDetails } from './get-position-details';
 export class LaneComponent {
   readonly PlayerOrNone = PlayerOrNone;
 
-  @Input({ required: true }) set lane(lane: Lane) {
-    this.lane$.next(lane);
-  }
   @Input({ required: true }) laneIndex: number;
   @Input({ required: true }) isHost: boolean;
   @Input() redJokerLaneIndex?: number;
   @Input() blackJokerLaneIndex?: number;
   @Input() transparentTiles = false;
-  @Input() isPlayersTurn = false;
+  @Input() set isPlayersTurn(isPlayersTurn: boolean) {
+    this.isPlayersTurn$.next(isPlayersTurn);
+  }
+  @Input({ required: true }) set lane(lane: Lane) {
+    this.lane$.next(lane);
+  }
 
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
 
   readonly lane$ = new BehaviorSubject<Lane | null>(null);
+  readonly isPlayersTurn$ = new BehaviorSubject(false);
 
-  positions$ = this.lane$.pipe(
-    map((lane) =>
+  positions$ = combineLatest([this.lane$, this.isPlayersTurn$]).pipe(
+    map(([lane, isPlayersTurn]) =>
       lane
         ? lane?.Rows.map((row, rowIndex) =>
             getPositionDetails(
               lane,
               row,
               this.isHost,
-              this.isPlayersTurn,
+              isPlayersTurn,
               rowIndex,
               this.laneIndex
             )
