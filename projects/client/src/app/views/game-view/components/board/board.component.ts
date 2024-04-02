@@ -30,6 +30,7 @@ export class BoardComponent {
   @Input() initialPlaceMultipleCardAttempt: PlaceCardAttempt | null;
   @Input() isPlacingMultipleCards: boolean | null;
   @Input() transparentTiles = false;
+  @Input({ required: true }) isPlayersTurn = false;
 
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
