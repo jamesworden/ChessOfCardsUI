@@ -19,11 +19,11 @@ export class SidebarItemComponent implements AfterViewInit {
   readonly #snackBar = inject(MatSnackBar);
 
   /** CSS width, height, and font size of the item. */
-  @Input() itemHeight: number;
-  @Input() iconSize: number;
-  @Input() materialSymbol: string;
+  @Input({ required: true }) itemHeight: number;
+  @Input({ required: true }) iconSize: number;
+  @Input({ required: true }) materialSymbol: string;
   @Input() iconColor = 'white';
-  @Input() itemWidth: number;
+  @Input({ required: true }) itemWidth: number;
   @Input() disabled = false;
   @Input() tooltip: string = '';
 

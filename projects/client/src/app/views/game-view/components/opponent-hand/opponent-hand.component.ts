@@ -6,6 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./opponent-hand.component.scss'],
 })
 export class OpponentHandComponent {
-  @Input() numCards: number;
-  @Input() cardSize: number;
+  @Input({ required: true }) numCards: number;
+  @Input({ required: true }) cardSize: number;
 }

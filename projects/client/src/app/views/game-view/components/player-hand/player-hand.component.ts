@@ -61,9 +61,9 @@ export class PlayerHandComponent implements OnInit, OnChanges, OnDestroy {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   @Input() isPlacingMultipleCards = false;
-  @Input() isHost: boolean;
-  @Input() cards: Card[];
-  @Input() cardSize: number;
+  @Input({ required: true }) isHost: boolean;
+  @Input({ required: true }) cards: Card[];
+  @Input({ required: true }) cardSize: number;
   @Input() disabled = true;
   @Output() cardDropped = new EventEmitter<CdkDragDrop<string>>();
 

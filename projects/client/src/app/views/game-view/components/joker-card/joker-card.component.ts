@@ -11,7 +11,7 @@ import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.mode
 export class JokerCardComponent implements OnInit {
   private sm = new SubscriptionManager();
 
-  @Input() isRedJoker: boolean;
+  @Input({ required: true }) isRedJoker: boolean;
 
   cardSize: number;
   imageFileName: string;

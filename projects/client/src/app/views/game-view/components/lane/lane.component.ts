@@ -26,11 +26,11 @@ interface PositionDetails {
 export class LaneComponent {
   readonly PlayerOrNone = PlayerOrNone;
 
-  @Input() set lane(lane: Lane) {
+  @Input({ required: true }) set lane(lane: Lane) {
     this.lane$.next(lane);
   }
-  @Input() laneIndex: number;
-  @Input() isHost: boolean;
+  @Input({ required: true }) laneIndex: number;
+  @Input({ required: true }) isHost: boolean;
   @Input() redJokerLaneIndex?: number;
   @Input() blackJokerLaneIndex?: number;
   @Input() transparentTiles = false;

@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { ResponsiveSizeService } from '../game-view/services/responsive-size.service';
-import { Router } from '@angular/router';
 import { WebsocketService } from '../../services/websocket.service';
 import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,7 +22,6 @@ import { map, withLatestFrom } from 'rxjs/operators';
 export class HomeViewComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #websocketService = inject(WebsocketService);
-  readonly #router = inject(Router);
   readonly #destroyRef = inject(DestroyRef);
   readonly #store = inject(Store);
 

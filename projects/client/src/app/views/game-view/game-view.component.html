@@ -73,6 +73,7 @@
       <div style="display: flex">
         <app-sidebar-item
           [itemHeight]="(cardSize$ | async)!"
+          [itemWidth]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
           iconColor="#33312e"
           matTooltip="Confirm"
@@ -82,6 +83,7 @@
         ></app-sidebar-item>
         <app-sidebar-item
           [itemHeight]="(cardSize$ | async)!"
+          [itemWidth]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
           iconColor="#33312e"
           matTooltip="Cancel"
@@ -119,6 +121,7 @@
         ></app-sidebar-item>
         <app-sidebar-item
           [itemHeight]="(cardSize$ | async)!"
+          [itemWidth]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
           iconColor="#33312e"
           matTooltip="Deny draw"

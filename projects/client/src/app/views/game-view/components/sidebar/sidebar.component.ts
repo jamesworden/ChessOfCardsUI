@@ -16,7 +16,6 @@ import { withLatestFrom } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { RemainingTimeService } from '../../services/remaining-time.service';
-import { map } from 'rxjs/operators';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -31,7 +30,7 @@ enum YesNoButtons {
 export class SidebarComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Input() isPlayersTurn = false;
+  @Input({ required: true }) isPlayersTurn = false;
 
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;

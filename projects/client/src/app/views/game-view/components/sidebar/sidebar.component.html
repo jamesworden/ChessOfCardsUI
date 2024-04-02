@@ -15,6 +15,7 @@
   <app-sidebar-item
     [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
+    [itemWidth]="cardSize"
     [iconSize]="cardSize / 2"
     tooltip="Pass move"
     materialSymbol="waving_hand"
@@ -23,6 +24,7 @@
   <app-sidebar-item
     [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
+    [itemWidth]="cardSize"
     [iconSize]="cardSize / 2"
     tooltip="Offer draw"
     materialSymbol="handshake"
@@ -31,6 +33,7 @@
   <app-sidebar-item
     [disabled]="!!(waitingForServer$ | async)"
     [itemHeight]="cardSize"
+    [itemWidth]="cardSize"
     [iconSize]="cardSize / 2"
     tooltip="Resign"
     materialSymbol="flag"

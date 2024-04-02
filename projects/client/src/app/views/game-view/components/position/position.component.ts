@@ -18,9 +18,9 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 export class PositionComponent implements OnDestroy {
   private sm = new SubscriptionManager();
 
-  @Input() laneIndex: number;
-  @Input() rowIndex: number;
-  @Input() backgroundColor: string;
+  @Input({ required: true }) laneIndex: number;
+  @Input({ required: true }) rowIndex: number;
+  @Input({ required: true }) backgroundColor: string;
   @Input() transparentTile = false;
 
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =

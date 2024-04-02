@@ -18,7 +18,9 @@ export class BoardComponent {
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly defaultCardSize = DEFAULT_CARD_SIZE;
 
-  @Input() set playerGameView(playerGameView: PlayerGameView) {
+  @Input({ required: true }) set playerGameView(
+    playerGameView: PlayerGameView
+  ) {
     // Hacky change detection to update lanes
     playerGameView.Lanes = [...playerGameView.Lanes];
     const x = JSON.stringify(playerGameView);

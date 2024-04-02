@@ -173,7 +173,9 @@ export class AnimationOverlayComponent implements OnInit, OnDestroy {
   readonly Z_INDEXES = Z_INDEXES;
   readonly AnimationType = AnimationType;
 
-  @Input() set animatedEntities(animatedEntities: AnimatedEntity<unknown>[]) {
+  @Input({ required: true }) set animatedEntities(
+    animatedEntities: AnimatedEntity<unknown>[]
+  ) {
     this.animatedEntities$.next(animatedEntities);
   }
 
