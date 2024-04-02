@@ -49,8 +49,8 @@ export class LaneComponent {
 
             const { positionColor, reversePositionColor } =
               this.getPositionBackgroundColor(lane, i, topCard);
-            const { laneColor, reverseLaneColor } =
-              this.getLaneBackgroundColor(lane);
+            const { laneColor } = this.getLaneBackgroundColor(lane);
+            const reverseLaneColor = 'var(--light-green)';
             const backgroundColor =
               lane.WonBy === PlayerOrNone.None ? positionColor : laneColor;
             const textColor =
