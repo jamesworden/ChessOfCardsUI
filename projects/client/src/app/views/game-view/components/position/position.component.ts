@@ -17,8 +17,8 @@ import {
 export class PositionComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
-  @Input({ required: true }) backgroundColor: string;
-  @Input({ required: true }) textColor: string;
+  @Input() backgroundClass = '';
+  @Input() textClass = '';
   @Input() transparentTile = false;
   @Input() hideMarker = false;
   @Input({ required: true }) set isHost(isHost: boolean) {

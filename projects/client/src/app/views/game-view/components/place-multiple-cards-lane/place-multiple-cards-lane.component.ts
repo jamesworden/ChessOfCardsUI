@@ -17,12 +17,12 @@ import {
 import { addCardToArray } from '../../logic/add-card-to-array';
 import { removeCardFromArray } from '../../logic/remove-card-from-array';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
-import { getDefaultCardBackgroundColor } from '../../logic/get-default-card-background-color';
 import { Z_INDEXES } from '../../z-indexes';
 import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
+import { getDefaultBackgroundClasses } from '../../logic/get-background-class';
 
 interface PseudoPosition {
-  backgroundColor: string;
+  backgroundClass: string;
 }
 
 /*
@@ -160,10 +160,8 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
       )!;
       const { TargetLaneIndex } = initialPlaceCardAttempt;
       pseudoPositions.push({
-        backgroundColor: getDefaultCardBackgroundColor(
-          TargetLaneIndex,
-          rowIndex
-        ),
+        backgroundClass: getDefaultBackgroundClasses(TargetLaneIndex, rowIndex)
+          .backgroundClass,
       });
     }
 

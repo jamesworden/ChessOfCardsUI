@@ -4,14 +4,6 @@
 
 @import "@fontsource-variable/bricolage-grotesque";
 
-:root {
-  --white: whitesmoke;
-  --red: #965656;
-  --blue: #566296;
-  --dark-green: #769656;
-  --light-green: #eeeed2;
-}
-
 body,
 html {
   font-family: "Bricolage Grotesque Variable", sans-serif;
@@ -59,4 +51,20 @@ html {
     rgba(239, 239, 239, 1) 0%,
     rgba(209, 208, 208, 1) 100%
   );
+}
+
+.lanes-bg-green {
+  background-color: #769656;
+}
+
+.lanes-bg-lightgreen {
+  background-color: #eeeed2;
+}
+
+.lanes-text-green {
+  color: #769656;
+}
+
+.lanes-text-lightgreen {
+  color: #eeeed2;
 }
