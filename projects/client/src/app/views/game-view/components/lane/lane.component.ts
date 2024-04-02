@@ -16,6 +16,7 @@ interface PositionDetails {
   rowIndex: number;
   backgroundColor: string;
   cardRotation: number;
+  textColor: string;
 }
 
 @Component({
@@ -46,10 +47,16 @@ export class LaneComponent {
         ? lane?.Rows.map((row, i) => {
             const topCard = row[row.length - 1];
 
+            const { positionColor, reversePositionColor } =
+              this.getPositionBackgroundColor(lane, i, topCard);
+            const { laneColor, reverseLaneColor } =
+              this.getLaneBackgroundColor(lane);
             const backgroundColor =
+              lane.WonBy === PlayerOrNone.None ? positionColor : laneColor;
+            const textColor =
               lane.WonBy === PlayerOrNone.None
-                ? this.getPositionBackgroundColor(lane, i, topCard)
-                : this.getLaneBackgroundColor(lane);
+                ? reversePositionColor
+                : reverseLaneColor;
 
             const cardRotation = topCard
               ? getCardTiltDegrees(topCard, i, this.isHost, lane.LaneAdvantage)
@@ -60,6 +67,7 @@ export class LaneComponent {
               backgroundColor,
               topCard,
               cardRotation,
+              textColor,
             };
 
             return position;
@@ -69,9 +77,18 @@ export class LaneComponent {
   );
 
   private getLaneBackgroundColor(lane: Lane) {
-    return playerHasWonLane(this.isHost, lane)
+    const laneColor = playerHasWonLane(this.isHost, lane)
       ? LIGHT_BLUE_TINT
       : LIGHT_RED_TINT;
+
+    const reverseLaneColor = playerHasWonLane(this.isHost, lane)
+      ? LIGHT_RED_TINT
+      : LIGHT_BLUE_TINT;
+
+    return {
+      laneColor,
+      reverseLaneColor,
+    };
   }
 
   private getPositionBackgroundColor(
@@ -88,9 +105,19 @@ export class LaneComponent {
       topCard.Kind === LastCardPlayed.Kind &&
       topCard.Suit === LastCardPlayed.Suit;
 
-    return isLastCardPlayed
+    const positionColor = isLastCardPlayed
       ? getLastCardPlayedBackgroundColor(topCard!, this.isHost)
       : getDefaultCardBackgroundColor(this.laneIndex, rowIndex);
+
+    const reversePositionColor = getDefaultCardBackgroundColor(
+      this.laneIndex,
+      rowIndex + 1
+    );
+
+    return {
+      positionColor,
+      reversePositionColor,
+    };
   }
 
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
