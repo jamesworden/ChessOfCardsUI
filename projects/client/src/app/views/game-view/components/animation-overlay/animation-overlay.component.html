@@ -1,5 +1,5 @@
+@if ((currentSequence$ | async) !== null) {
 <div
-  *ngIf="(currentSequence$ | async) !== null"
   [ngStyle]="{
     'z-index': Z_INDEXES.ANIMATION_OVERLAY
   }"
@@ -78,3 +78,5 @@
     } } } }
   </div>
 </div>
+
+}
