@@ -6,14 +6,14 @@
   class="h-full w-full absolute left-0 right-0 top-0 bottom-0"
 >
   <div class="relative h-full w-full">
-    <div *ngFor="let entity of animatedEntities$ | async">
-      @if (entity.movement.terminalSequence === undefined ||
-      entity.movement.terminalSequence === null ||
-      entity.movement.terminalSequence > ((currentSequence$ | async) ?? 0)) {
-      @switch (entity.animationType) { @case (AnimationType.CardMovement) {
-      <div
-        class="absolute"
-        [@cardMovement]="{
+    @for (entity of (animatedEntities$ | async); track i; let i = $index) { @if
+    (entity.movement.terminalSequence === undefined ||
+    entity.movement.terminalSequence === null ||
+    entity.movement.terminalSequence > ((currentSequence$ | async) ?? 0)) {
+    @switch (entity.animationType) { @case (AnimationType.CardMovement) {
+    <div
+      class="absolute"
+      [@cardMovement]="{
           value:
             entity.movement.sequence === (currentSequence$ | async)
               ? 'in-progress'
@@ -28,15 +28,15 @@
             durationMs: entity.movement.durationMs,
           }
         }"
-      >
-        <ng-container
-          *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
-        ></ng-container>
-      </div>
-      } @case (AnimationType.FadeOut) {
-      <div
-        class="absolute"
-        [@fadeOut]="{
+    >
+      <ng-container
+        *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
+      ></ng-container>
+    </div>
+    } @case (AnimationType.FadeOut) {
+    <div
+      class="absolute"
+      [@fadeOut]="{
           value:
             entity.movement.sequence === (currentSequence$ | async)
               ? 'in-progress'
@@ -49,15 +49,15 @@
             durationMs: entity.movement.durationMs,
           }
         }"
-      >
-        <ng-container
-          *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
-        ></ng-container>
-      </div>
-      } @case (AnimationType.FadeIn) {
-      <div
-        class="absolute"
-        [@fadeIn]="{
+    >
+      <ng-container
+        *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
+      ></ng-container>
+    </div>
+    } @case (AnimationType.FadeIn) {
+    <div
+      class="absolute"
+      [@fadeIn]="{
             value:
               entity.movement.sequence === (currentSequence$ | async)
                 ? 'in-progress'
@@ -70,12 +70,11 @@
               durationMs: entity.movement.durationMs,
             }
           }"
-      >
-        <ng-container
-          *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
-        ></ng-container>
-      </div>
-      } } }
+    >
+      <ng-container
+        *ngTemplateOutlet="entity.template; context: { $implicit: entity }"
+      ></ng-container>
     </div>
+    } } } }
   </div>
 </div>

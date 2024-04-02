@@ -11,8 +11,8 @@
       minWidth: 5 * cardSize + 'px'
     }"
   >
-    <app-face-down-card
-      *ngFor="let _ of [].constructor(numCards)"
-    ></app-face-down-card>
+    @for(_ of [].constructor(numCards); track i; let i = $index) {
+    <app-face-down-card></app-face-down-card>
+    }
   </div>
 </div>

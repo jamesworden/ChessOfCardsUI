@@ -8,29 +8,28 @@
     class="lanes"
     [ngClass]="{ 'reverse-lanes-horisontally': !playerGameView.IsHost }"
   >
+    @for(lane of playerGameView.Lanes; track laneIndex; let laneIndex = $index)
+    {
     <ng-container
-      *ngFor="let lane of playerGameView.Lanes; let laneIndex = index"
-    >
-      <ng-container
-        *ngIf="
-          initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex;
-          else regularLane
-        "
-        ><app-place-multiple-cards-lane></app-place-multiple-cards-lane
-      ></ng-container>
+      *ngIf="
+        initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex;
+        else regularLane
+      "
+      ><app-place-multiple-cards-lane></app-place-multiple-cards-lane
+    ></ng-container>
 
-      <ng-template #regularLane>
-        <app-lane
-          [lane]="lane"
-          [laneIndex]="laneIndex"
-          [isHost]="playerGameView.IsHost"
-          [redJokerLaneIndex]="playerGameView.RedJokerLaneIndex"
-          [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
-          [transparentTiles]="transparentTiles"
-          (placeCardAttempted)="onPlaceCardAttempted($event)"
-        ></app-lane>
-      </ng-template>
-    </ng-container>
+    <ng-template #regularLane>
+      <app-lane
+        [lane]="lane"
+        [laneIndex]="laneIndex"
+        [isHost]="playerGameView.IsHost"
+        [redJokerLaneIndex]="playerGameView.RedJokerLaneIndex"
+        [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
+        [transparentTiles]="transparentTiles"
+        (placeCardAttempted)="onPlaceCardAttempted($event)"
+      ></app-lane>
+    </ng-template>
+    }
   </div>
 </div>
 

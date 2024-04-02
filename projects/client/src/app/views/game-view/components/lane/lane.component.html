@@ -3,33 +3,33 @@
   class="lane"
   [ngClass]="{ 'reverse-rows-vertically': !isHost }"
 >
-  <ng-container *ngFor="let position of positions$ | async">
-    <app-position
-      [transparentTile]="transparentTiles"
-      [laneIndex]="laneIndex"
-      [rowIndex]="position.rowIndex"
-      [backgroundColor]="position.backgroundColor"
-      (placeCardAttempted)="onPlaceCardAttempted($event)"
-    >
-      <app-card
-        *ngIf="position.topCard"
-        [ngStyle]="{
-          rotate: position.cardRotation + 'deg'
-        }"
-        [card]="position.topCard"
-      ></app-card>
+  @for(position of (positions$ | async); track i; let i = $index) {
+  <app-position
+    [transparentTile]="transparentTiles"
+    [laneIndex]="laneIndex"
+    [rowIndex]="position.rowIndex"
+    [backgroundColor]="position.backgroundColor"
+    (placeCardAttempted)="onPlaceCardAttempted($event)"
+  >
+    <app-card
+      *ngIf="position.topCard"
+      [ngStyle]="{
+        rotate: position.cardRotation + 'deg'
+      }"
+      [card]="position.topCard"
+    ></app-card>
 
-      <ng-container *ngIf="position.rowIndex === 3">
-        <app-joker-card
-          *ngIf="redJokerLaneIndex === laneIndex"
-          [isRedJoker]="true"
-        ></app-joker-card>
+    <ng-container *ngIf="position.rowIndex === 3">
+      <app-joker-card
+        *ngIf="redJokerLaneIndex === laneIndex"
+        [isRedJoker]="true"
+      ></app-joker-card>
 
-        <app-joker-card
-          *ngIf="blackJokerLaneIndex === laneIndex"
-          [isRedJoker]="false"
-        ></app-joker-card>
-      </ng-container>
-    </app-position>
-  </ng-container>
+      <app-joker-card
+        *ngIf="blackJokerLaneIndex === laneIndex"
+        [isRedJoker]="false"
+      ></app-joker-card>
+    </ng-container>
+  </app-position>
+  }
 </div>

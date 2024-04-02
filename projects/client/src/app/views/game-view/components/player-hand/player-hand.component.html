@@ -21,13 +21,9 @@
     margin: 'auto'
   }"
 >
+  @for(card of (isPlacingMultipleCards ? (placeMultipleCardsHand$ | async) ?? []
+  : cards); track i; let i = $index) {
   <app-card
-    *ngFor="
-      let card of isPlacingMultipleCards
-        ? (placeMultipleCardsHand$ | async) ?? []
-        : cards;
-      let i = index
-    "
     [card]="card"
     [playerCanDrag]="!disabled"
     class="transition"
@@ -35,4 +31,5 @@
       opacity: disabled ? 0.5 : 1
     }"
   ></app-card>
+  }
 </div>
