@@ -4,6 +4,13 @@ import { BehaviorSubject, fromEvent } from 'rxjs';
 import { Breakpoint } from '../../../models/breakpoint.model';
 import { DEFAULT_CARD_SIZE } from '../constants';
 
+const cardRatio = {
+  x: 6,
+  y: 12,
+};
+
+const sidebarWidth = 48;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,10 +35,9 @@ export class ResponsiveSizeService {
     );
     this.sm.add(
       this._windowDimensions$.subscribe(([width, height]) => {
-        width -= 48; // Width of sidebar
-        // 6 Width to 11 Height ratio.
-        const maxCardWidth = width / 6;
-        const maxCardHeight = height / 11;
+        width -= sidebarWidth;
+        const maxCardWidth = width / cardRatio.x;
+        const maxCardHeight = height / cardRatio.y;
         const cardSize = Math.min(maxCardWidth, maxCardHeight);
 
         this._cardSize$.next(cardSize);

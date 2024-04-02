@@ -7,33 +7,41 @@
 ></app-animation-overlay>
 
 <div class="flex justify-around w-full bg-gray-800">
-  <div class="flex flex-col justify-around">
-    <div
-      class="game"
-      *ngIf="playerGameView$ | async as playerGameView"
-      cdkDropListGroup
-    >
-      <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
+  <div
+    class="game flex flex-col justify-between h-full"
+    *ngIf="playerGameView$ | async as playerGameView"
+    cdkDropListGroup
+  >
+    <app-player-banner
+      [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
+      class="rounded-b-md bg-rose-900"
+    ></app-player-banner>
 
-      <app-board
-        *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
-        [playerGameView]="latestGameViewSnapshot"
-        [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
-        [initialPlaceMultipleCardAttempt]="
-          initialPlaceMultipleCardAttempt$ | async
-        "
-        (placeCardAttempted)="onPlaceCardAttempted($event)"
-      ></app-board>
+    <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
-      <app-player-hand
-        [isPlacingMultipleCards]="isPlacingMultipleCards"
-        [isHost]="playerGameView.IsHost"
-        [cards]="playerGameView.Hand.Cards"
-        [cardSize]="(cardSize$ | async)!"
-        [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
-        (cardDropped)="onPlayerHandCardDrop($event)"
-      ></app-player-hand>
-    </div>
+    <app-board
+      *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
+      [playerGameView]="latestGameViewSnapshot"
+      [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
+      [initialPlaceMultipleCardAttempt]="
+        initialPlaceMultipleCardAttempt$ | async
+      "
+      (placeCardAttempted)="onPlaceCardAttempted($event)"
+    ></app-board>
+
+    <app-player-hand
+      [isPlacingMultipleCards]="isPlacingMultipleCards"
+      [isHost]="playerGameView.IsHost"
+      [cards]="playerGameView.Hand.Cards"
+      [cardSize]="(cardSize$ | async)!"
+      [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
+      (cardDropped)="onPlayerHandCardDrop($event)"
+    ></app-player-hand>
+
+    <app-player-banner
+      [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
+      class="rounded-t-md bg-sky-900"
+    ></app-player-banner>
   </div>
 </div>
 

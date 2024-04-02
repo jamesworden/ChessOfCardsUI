@@ -1,10 +1,4 @@
-<div
-  *ngIf="playerGameView$ | async as playerGameView"
-  class="board"
-  [ngStyle]="{
-    padding: (cardSize$ | async)! / 3 + 'px 0px'
-  }"
->
+<div *ngIf="playerGameView$ | async as playerGameView" class="board">
   <ng-container
     [ngTemplateOutlet]="placeMultipleCardsOverlay"
     *ngIf="initialPlaceMultipleCardAttempt"
