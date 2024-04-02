@@ -33,7 +33,7 @@ export function getPositionBackgroundClass(
   const textClass =
     lane.WonBy === PlayerOrNone.None
       ? inverseBackgroundClasses.textClass
-      : 'lanes-bg-lightgreen';
+      : 'lanes-text-lightgreen';
 
   return {
     positionClass,
