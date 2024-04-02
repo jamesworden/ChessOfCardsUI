@@ -17,17 +17,18 @@ import {
 export class PositionComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
+  @Input({ required: true }) backgroundColor: string;
+  @Input({ required: true }) textColor: string;
+  @Input() transparentTile = false;
+  @Input() hideMarker = false;
+  @Input({ required: true }) set isHost(isHost: boolean) {
+    this.isHost$.next(isHost);
+  }
   @Input({ required: true }) set laneIndex(laneIndex: number) {
     this.laneIndex$.next(laneIndex);
   }
   @Input({ required: true }) set rowIndex(rowIndex: number) {
     this.rowIndex$.next(rowIndex);
-  }
-  @Input({ required: true }) backgroundColor: string;
-  @Input({ required: true }) textColor: string;
-  @Input() transparentTile = false;
-  @Input({ required: true }) set isHost(isHost: boolean) {
-    this.isHost$.next(isHost);
   }
 
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =

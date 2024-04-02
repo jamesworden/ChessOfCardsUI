@@ -13,19 +13,19 @@
     [textColor]="position.textColor"
     [isHost]="isHost"
     (placeCardAttempted)="onPlaceCardAttempted($event)"
+    [hideMarker]="!!position.topCard"
   >
     @if(position.topCard) {
     <app-card
-      class="absolute z-10"
       [ngStyle]="{
         rotate: position.cardRotation + 'deg'
       }"
       [card]="position.topCard"
     ></app-card>
     } @if(position.rowIndex === 3) { @if (redJokerLaneIndex === laneIndex) {
-    <app-joker-card class="absolute z-10" [isRedJoker]="true"></app-joker-card>
+    <app-joker-card [isRedJoker]="true"></app-joker-card>
     } @if (blackJokerLaneIndex === laneIndex) {
-    <app-joker-card class="absolute z-10" [isRedJoker]="false"></app-joker-card>
+    <app-joker-card [isRedJoker]="false"></app-joker-card>
     } }
   </app-position>
   }
