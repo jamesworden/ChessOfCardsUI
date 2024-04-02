@@ -59,7 +59,17 @@
 
       <section class="flex">
         <div class="flex-1 flex flex-col">
-          <h1 class="font-bold text-4xl mb-4">Play Now</h1>
+          <div class="mb-4">
+            <h1 class="font-bold text-4xl">Play Now</h1>
+
+            <p
+              *ngIf="!isConnectedToServer"
+              class="italic text-xs text-red-700 cursor-pointer"
+              (click)="reconnectToServer()"
+            >
+              Could not connect to server, click here to retry
+            </p>
+          </div>
 
           <div class="flex flex-col md:flex-row gap-y-8">
             <div class="flex-1 flex flex-col">
@@ -67,20 +77,15 @@
               <div class="mt-4">
                 <span
                   class="py-2 px-4 bg-gray-300 border border-gray-400 border-solid font-bold text-xl uppercase min-w-24"
+                  [ngClass]="{
+                    'border-red-700': !isConnectedToServer
+                  }"
                   >{{ gameCode$ | async }}</span
                 >
               </div>
             </div>
             <div class="flex-1 flex flex-col">
               <p>Or enter your opponent's game code here:</p>
-
-              <p
-                *ngIf="!isConnectedToServer"
-                class="italic text-xs text-red-700"
-                (click)="reconnectToServer()"
-              >
-                Could not connect to server, click here to retry
-              </p>
 
               <p
                 *ngIf="gameCodeIsInvalid$ | async"
@@ -98,6 +103,7 @@
                   }"
                   type="text"
                   maxlength="4"
+                  [disabled]="!isConnectedToServer"
                   [(ngModel)]="gameCodeInput"
                   (ngModelChange)="checkToJoinGame()"
                 />
