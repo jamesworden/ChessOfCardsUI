@@ -5,7 +5,7 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 @Component({
   selector: 'app-face-down-card',
   templateUrl: './face-down-card.component.html',
-  styleUrls: ['./face-down-card.component.css'],
+  styleUrls: ['./face-down-card.component.scss'],
 })
 export class FaceDownCardComponent implements OnDestroy {
   private sm = new SubscriptionManager();

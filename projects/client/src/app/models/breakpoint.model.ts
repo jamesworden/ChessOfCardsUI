@@ -1,5 +1,5 @@
 export enum Breakpoint {
-  Mobile,
-  Tablet,
-  Desktop,
+  Mobile = 'mobile',
+  Tablet = 'tablet',
+  Desktop = 'desktop',
 }

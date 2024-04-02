@@ -1,44 +1,6 @@
-<div
-  class="board"
-  [ngStyle]="{
-    padding: (cardSize$ | async)! / 3 + 'px 0px'
-  }"
->
-  <ng-container
-    [ngTemplateOutlet]="placeMultipleCardsOverlay"
-    *ngIf="initialPlaceMultipleCardAttempt"
-  ></ng-container>
-
-  <div
-    class="lanes"
-    [ngClass]="{ 'reverse-lanes-horisontally': !playerGameView.IsHost }"
-  >
-    <ng-container
-      *ngFor="let lane of playerGameView.Lanes; let laneIndex = index"
-    >
-      <ng-container
-        *ngIf="
-          initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex;
-          else regularLane
-        "
-        ><app-place-multiple-cards-lane></app-place-multiple-cards-lane
-      ></ng-container>
-
-      <ng-template #regularLane>
-        <app-lane
-          [lane]="lane"
-          [laneIndex]="laneIndex"
-          [isHost]="playerGameView.IsHost"
-          [redJokerLaneIndex]="playerGameView.RedJokerLaneIndex"
-          [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
-          (placeCardAttempted)="onPlaceCardAttempted($event)"
-        ></app-lane>
-      </ng-template>
-    </ng-container>
-  </div>
-</div>
-
-<ng-template #placeMultipleCardsOverlay>
+@if((playerGameView$ | async); as playerGameView) {
+<div class="board">
+  @if (initialPlaceMultipleCardAttempt) {
   <div
     [ngStyle]="{
       position: 'absolute',
@@ -51,4 +13,26 @@
       overflow: 'hidden'
     }"
   ></div>
-</ng-template>
+  }
+
+  <div
+    class="lanes"
+    [ngClass]="{ 'reverse-lanes-horisontally': !playerGameView.IsHost }"
+  >
+    @for(lane of playerGameView.Lanes; track laneIndex; let laneIndex = $index)
+    { @if(initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex) {
+    <app-place-multiple-cards-lane></app-place-multiple-cards-lane>
+    } @else {
+    <app-lane
+      [lane]="lane"
+      [laneIndex]="laneIndex"
+      [isHost]="playerGameView.IsHost"
+      [redJokerLaneIndex]="playerGameView.RedJokerLaneIndex"
+      [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
+      [transparentTiles]="transparentTiles"
+      (placeCardAttempted)="onPlaceCardAttempted($event)"
+    ></app-lane>
+    } }
+  </div>
+</div>
+}

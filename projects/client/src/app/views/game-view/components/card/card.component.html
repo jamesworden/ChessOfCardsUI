@@ -1,13 +1,9 @@
 <img
-  class="card"
+  class="card z-5"
   cdkDrag
   [cdkDragDisabled]="!playerCanDrag"
   cdkDragBoundary=".game"
-  [cdkDragData]="card"
-  src="../../../../assets/images/{{ imageFileName }}"
-  [ngStyle]="{
-    rotate: tiltDegrees + 'deg',
-    height: cardSize + 'px',
-    width: cardSize + 'px',
-  }"
+  [cdkDragData]="card$ | async"
+  src="../../../../assets/images/{{ imageFileName$ | async }}"
+  [ngStyle]="cardStyles$ | async"
 />

@@ -12,19 +12,20 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-sidebar-item',
   templateUrl: './sidebar-item.component.html',
-  styleUrls: ['./sidebar-item.component.css'],
+  styleUrls: ['./sidebar-item.component.scss'],
 })
 export class SidebarItemComponent implements AfterViewInit {
   readonly #focusMonitor = inject(FocusMonitor);
   readonly #snackBar = inject(MatSnackBar);
 
   /** CSS width, height, and font size of the item. */
-  @Input() itemHeight: number;
-  @Input() iconSize: number;
-  @Input() materialSymbol: string;
+  @Input({ required: true }) itemHeight: number;
+  @Input({ required: true }) iconSize: number;
+  @Input({ required: true }) materialSymbol: string;
   @Input() iconColor = 'white';
-  @Input() itemWidth: number;
+  @Input({ required: true }) itemWidth: number;
   @Input() disabled = false;
+  @Input() tooltip: string = '';
 
   @Output() selected = new EventEmitter<void>();
 

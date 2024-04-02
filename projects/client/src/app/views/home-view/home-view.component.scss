@@ -1,0 +1,25 @@
+:host {
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.hero-section {
+  background-image: linear-gradient(
+    109.6deg,
+    rgba(61, 131, 97, 1) 11.2%,
+    rgba(28, 103, 88, 1) 91.1%
+  );
+}
+
+@keyframes slowRotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.slow-rotation {
+  animation: slowRotation 10s linear infinite; /* Adjust the duration (10s in this case) as needed */
+}

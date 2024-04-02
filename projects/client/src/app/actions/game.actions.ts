@@ -6,6 +6,11 @@ import { PendingGameView } from '../models/pending-game-view.model';
 import { PlaceCardAttempt } from '../models/place-card-attempt.model';
 import { PlayerGameView } from '../models/player-game-view.model';
 
+export class AnimateGameView {
+  static readonly type = '[GameState] Animate Game View';
+  constructor(public playerGameView: PlayerGameView) {}
+}
+
 export class UpdatePlayerGameView {
   static readonly type = '[GameState] Update Game State';
   constructor(public playerGameView: PlayerGameView) {}
@@ -21,7 +26,7 @@ export class StartPlacingMultipleCards {
 
 export class FinishPlacingMultipleCards {
   static readonly type = '[GameState] Finish Placing Multiple Cards';
-  constructor() {}
+  constructor(public cardPlacementsConfirmed: boolean) {}
 }
 
 export class SetPlaceMultipleCards {
@@ -116,4 +121,9 @@ export class CheckHostForEmptyTimer {
 
 export class CheckGuestForEmptyTimer {
   static readonly type = '[GameState] Check Guest For Empty Timer';
+}
+
+export class SetGameIsActive {
+  static readonly type = '[GameState] Game Is Active';
+  constructor(public gameIsActive: boolean) {}
 }

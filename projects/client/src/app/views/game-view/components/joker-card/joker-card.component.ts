@@ -6,12 +6,12 @@ import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.mode
 @Component({
   selector: 'app-joker-card',
   templateUrl: './joker-card.component.html',
-  styleUrls: ['./joker-card.component.css'],
+  styleUrls: ['./joker-card.component.scss'],
 })
 export class JokerCardComponent implements OnInit {
   private sm = new SubscriptionManager();
 
-  @Input() isRedJoker: boolean;
+  @Input({ required: true }) isRedJoker: boolean;
 
   cardSize: number;
   imageFileName: string;

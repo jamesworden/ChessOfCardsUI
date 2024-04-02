@@ -1,11 +1,13 @@
-<p class="message" *ngIf="data.message">{{ data.message }}</p>
-
-<div class="button-container" *ngIf="data.buttons && data.buttons.length > 0">
-  <button
-    mat-raised-button
-    *ngFor="let button of data.buttons"
-    (click)="onButtonClicked(button)"
-  >
-    {{ button }}
-  </button>
+<div class="flex flex-col gap-y-2 p-4">
+  @if(data.message) {
+  <p class="text-left">{{ data.message }}</p>
+  } @if(data.buttons && data.buttons.length > 0) {
+  <div class="flex gap-x-4">
+    @for(button of data.buttons; track i; let i = $index) {
+    <button mat-raised-button (click)="onButtonClicked(button)">
+      {{ button }}
+    </button>
+    }
+  </div>
+  }
 </div>

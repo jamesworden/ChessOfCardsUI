@@ -1,4 +1,11 @@
+@if(cards) {
 <div
+  [@bounceCards]="{
+    value: (bouncingCards$ | async) ? 'bouncing' : 'not-bouncing',
+    params: {
+      heightPx: cardSize / 5
+    }
+  }"
   class="flex player-hand"
   id="player-hand"
   cdkDropList
@@ -8,24 +15,22 @@
   (cdkDropListDropped)="onCardDrop($event)"
   cdkDropListData="player-hand"
   cdkDropListOrientation="horizontal"
-  *ngIf="cards"
   [ngStyle]="{
     height: cardSize + 'px',
     width: 5 * cardSize + 'px',
     margin: 'auto'
   }"
 >
+  @for(card of (isPlacingMultipleCards ? (placeMultipleCardsHand$ | async) ?? []
+  : cards); track i; let i = $index) {
   <app-card
-    *ngFor="
-      let card of isPlacingMultipleCards
-        ? (placeMultipleCardsHand$ | async) ?? []
-        : cards
-    "
-    [isHost]="isHost"
     [card]="card"
     [playerCanDrag]="!disabled"
+    class="transition"
     [ngStyle]="{
       opacity: disabled ? 0.5 : 1
     }"
   ></app-card>
+  }
 </div>
+}

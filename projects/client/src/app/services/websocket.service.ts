@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HubConnection,
   HubConnectionBuilder,
@@ -10,21 +10,21 @@ import {
   DrawOffered,
   FinishPlacingMultipleCards,
   SetGameOverData,
-  UpdatePlayerGameView,
   SetOpponentPassedMove,
   SetGameCodeIsInvalid,
   SetPendingGameView,
   ResetPendingGameView,
+  AnimateGameView,
+  SetGameIsActive,
 } from '../actions/game.actions';
 import { Card } from '../models/card.model';
 import { Move } from '../models/move.model';
 import { PlayerGameView } from '../models/player-game-view.model';
 import { environment } from '../../environments/environment';
-import { UpdateView } from '../actions/view.actions';
-import { View } from '../views';
 import { SetIsConnectedToServer } from '../actions/server.actions';
 import { DurationOption } from '../models/duration-option.model';
 import { PendingGameView } from '../models/pending-game-view.model';
+import { Router } from '@angular/router';
 
 const { serverUrl } = environment;
 
@@ -34,7 +34,10 @@ const { serverUrl } = environment;
 export class WebsocketService {
   private hubConnection: HubConnection;
 
-  constructor(private store: Store) {
+  readonly #store = inject(Store);
+  readonly #router = inject(Router);
+
+  constructor() {
     this.initConnection();
     this.connectToServer();
     this.registerConnectionEvents();
@@ -57,22 +60,22 @@ export class WebsocketService {
     this.hubConnection.start().then(
       () => {
         console.log('Connected to server.');
-        this.store.dispatch(new SetIsConnectedToServer(true));
+        this.#store.dispatch(new SetIsConnectedToServer(true));
       },
       () => {
         console.error('Unable to connect to server.');
-        this.store.dispatch(new SetIsConnectedToServer(false));
+        this.#store.dispatch(new SetIsConnectedToServer(false));
       }
     );
   }
 
   private registerConnectionEvents() {
     this.hubConnection.onreconnecting(() => {
-      this.store.dispatch(new SetIsConnectedToServer(false));
+      this.#store.dispatch(new SetIsConnectedToServer(false));
     });
 
     this.hubConnection.onreconnected(() => {
-      this.store.dispatch(new SetIsConnectedToServer(true));
+      this.#store.dispatch(new SetIsConnectedToServer(true));
     });
   }
 
@@ -83,7 +86,7 @@ export class WebsocketService {
         const pendingGameView: PendingGameView = JSON.parse(
           stringifiedPendingGameView
         );
-        this.store.dispatch(new SetPendingGameView(pendingGameView));
+        this.#store.dispatch(new SetPendingGameView(pendingGameView));
       }
     );
 
@@ -93,25 +96,26 @@ export class WebsocketService {
         const pendingGameView: PendingGameView = JSON.parse(
           stringifiedPendingGameView
         );
-        this.store.dispatch(new SetPendingGameView(pendingGameView));
+        this.#store.dispatch(new SetPendingGameView(pendingGameView));
       }
     );
 
     this.hubConnection.on('OpponentDisconnected', () => {
-      this.store.dispatch(new ResetPendingGameView());
+      this.#store.dispatch(new ResetPendingGameView());
     });
 
     this.hubConnection.on('InvalidGameCode', () => {
-      this.store.dispatch(new SetGameCodeIsInvalid(true));
+      this.#store.dispatch(new SetGameCodeIsInvalid(true));
     });
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
+      this.#store.dispatch(new SetGameIsActive(true));
       this.parseAndUpdateGameView(stringifiedGameState);
-      this.store.dispatch(new UpdateView(View.Game));
+      this.#router.navigate(['game']);
     });
 
     this.hubConnection.on('GameOver', (message?: string) => {
-      this.store.dispatch(
+      this.#store.dispatch(
         new SetGameOverData({
           isOver: true,
           message,
@@ -120,7 +124,7 @@ export class WebsocketService {
     });
 
     this.hubConnection.on('GameUpdated', (stringifiedGameState) => {
-      this.store.dispatch(new FinishPlacingMultipleCards());
+      this.#store.dispatch(new FinishPlacingMultipleCards(false));
       this.parseAndUpdateGameView(stringifiedGameState);
     });
 
@@ -129,27 +133,25 @@ export class WebsocketService {
       const isPlayersTurn = this.isPlayersTurn(gameState);
 
       if (isPlayersTurn) {
-        this.store.dispatch(new SetOpponentPassedMove(true));
+        this.#store.dispatch(new SetOpponentPassedMove(true));
       }
     });
 
     this.hubConnection.on('DrawOffered', () => {
-      this.store.dispatch(new DrawOffered());
+      this.#store.dispatch(new DrawOffered());
     });
   }
 
   private isPlayersTurn(gameState: PlayerGameView) {
     const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
     const guestAndGuestTurn = !gameState.IsHostPlayersTurn && !gameState.IsHost;
-    const isPlayersTurn = hostAndHostTurn || guestAndGuestTurn;
-
-    return isPlayersTurn;
+    return hostAndHostTurn || guestAndGuestTurn;
   }
 
   private parseAndUpdateGameView(stringifiedGameState: string) {
     let playerGameView: PlayerGameView = JSON.parse(stringifiedGameState);
     console.log(playerGameView);
-    this.store.dispatch(new UpdatePlayerGameView(playerGameView));
+    this.#store.dispatch(new AnimateGameView(playerGameView));
 
     return playerGameView;
   }

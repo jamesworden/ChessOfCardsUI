@@ -12,14 +12,15 @@
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
       }"
     >
+      @for(position of pseudoPositions; track i; let i = $index) {
       <div
-        *ngFor="let position of pseudoPositions"
         [ngStyle]="{
           height: (cardSize$ | async)! + 'px',
           width: (cardSize$ | async)! + 'px',
           'background-color': position.backgroundColor
         }"
       ></div>
+      }
     </div>
 
     <div
@@ -39,13 +40,13 @@
         width: (cardSize$ | async)! + 'px'
       }"
     >
+      @for (card of (placeMultipleCards$ | async); track i; let i = $index) {
       <app-card
-        *ngFor="let card of placeMultipleCards$ | async"
         [card]="card"
         [playerCanDrag]="true"
-        [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
         [insideVerticalContainer]="true"
       ></app-card>
+      }
     </div>
 
     <div
@@ -54,16 +55,12 @@
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS
       }"
     >
-      <div
-        class="existing-card-position"
-        *ngFor="let card of previouslyCapturedCards$ | async"
-      >
-        <app-card
-          [card]="card"
-          [playerCanDrag]="false"
-          [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
-        ></app-card>
+      @for(card of (previouslyCapturedCards$ | async); track i; let i = $index)
+      {
+      <div class="existing-card-position">
+        <app-card [card]="card" [playerCanDrag]="false"></app-card>
       </div>
+      }
     </div>
   </div>
 </ng-container>

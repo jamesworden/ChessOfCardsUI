@@ -1,73 +1,102 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Card } from '../../../../models/card.model';
 import { Lane } from '../../../../models/lane.model';
 import { PlaceCardAttempt } from '../../../../models/place-card-attempt.model';
 import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { getDefaultCardBackgroundColor } from '../../logic/get-default-card-background-color';
 import { playerHasWonLane } from '../../logic/player-has-won-lane';
-import { LIGHT_BLUE_TINT, LIGHT_RED_TINT, TRANSPARENT } from '../../constants';
+import { LIGHT_BLUE_TINT, LIGHT_RED_TINT } from '../../constants';
 import { getLastCardPlayedBackgroundColor } from '../../logic/get-last-card-played-background-color';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { getCardTiltDegrees } from '../../logic/get-card-tilt-degrees';
 
 interface PositionDetails {
   topCard?: Card;
   rowIndex: number;
   backgroundColor: string;
+  cardRotation: number;
+  textColor: string;
 }
 
 @Component({
   selector: 'app-lane',
   templateUrl: './lane.component.html',
-  styleUrls: ['./lane.component.css'],
+  styleUrls: ['./lane.component.scss'],
 })
-export class LaneComponent implements OnInit {
-  @Input() lane: Lane;
-  @Input() laneIndex: number;
-  @Input() isHost: boolean;
+export class LaneComponent {
+  readonly PlayerOrNone = PlayerOrNone;
+
+  @Input({ required: true }) set lane(lane: Lane) {
+    this.lane$.next(lane);
+  }
+  @Input({ required: true }) laneIndex: number;
+  @Input({ required: true }) isHost: boolean;
   @Input() redJokerLaneIndex?: number;
   @Input() blackJokerLaneIndex?: number;
+  @Input() transparentTiles = false;
+
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
 
-  PlayerOrNone = PlayerOrNone;
-  positions: PositionDetails[] = [];
+  readonly lane$ = new BehaviorSubject<Lane | null>(null);
 
-  constructor() {}
+  positions$ = this.lane$.pipe(
+    map((lane) =>
+      lane
+        ? lane?.Rows.map((row, i) => {
+            const topCard = row[row.length - 1];
 
-  ngOnInit() {
-    this.initPositions();
-  }
+            const { positionColor, reversePositionColor } =
+              this.getPositionBackgroundColor(lane, i, topCard);
+            const { laneColor } = this.getLaneBackgroundColor(lane);
+            const reverseLaneColor = 'var(--light-green)';
+            const backgroundColor =
+              lane.WonBy === PlayerOrNone.None ? positionColor : laneColor;
+            const textColor =
+              lane.WonBy === PlayerOrNone.None
+                ? reversePositionColor
+                : reverseLaneColor;
 
-  private initPositions() {
-    const positions: PositionDetails[] = [];
+            const cardRotation = topCard
+              ? getCardTiltDegrees(topCard, i, this.isHost, lane.LaneAdvantage)
+              : 0;
 
-    for (let rowIndex = 0; rowIndex < this.lane.Rows.length; rowIndex++) {
-      const row = this.lane.Rows[rowIndex];
-      const topCard = row[row.length - 1];
-      const backgroundColor =
-        this.lane.WonBy === PlayerOrNone.None
-          ? this.getPositionBackgroundColor(rowIndex, topCard)
-          : this.getLaneBackgroundColor();
+            const position: PositionDetails = {
+              rowIndex: i,
+              backgroundColor,
+              topCard,
+              cardRotation,
+              textColor,
+            };
 
-      const position: PositionDetails = {
-        rowIndex,
-        backgroundColor,
-        topCard,
-      };
+            return position;
+          })
+        : []
+    )
+  );
 
-      positions.push(position);
-
-      this.positions = positions;
-    }
-  }
-
-  private getLaneBackgroundColor() {
-    return playerHasWonLane(this.isHost, this.lane)
+  private getLaneBackgroundColor(lane: Lane) {
+    const laneColor = playerHasWonLane(this.isHost, lane)
       ? LIGHT_BLUE_TINT
       : LIGHT_RED_TINT;
+
+    const reverseLaneColor = playerHasWonLane(this.isHost, lane)
+      ? LIGHT_RED_TINT
+      : LIGHT_BLUE_TINT;
+
+    return {
+      laneColor,
+      reverseLaneColor,
+    };
   }
 
-  private getPositionBackgroundColor(rowIndex: number, topCard?: Card) {
-    const { LastCardPlayed } = this.lane;
+  private getPositionBackgroundColor(
+    lane: Lane,
+    rowIndex: number,
+    topCard?: Card
+  ) {
+    const { LastCardPlayed } = lane;
 
     const isLastCardPlayed =
       topCard &&
@@ -76,9 +105,19 @@ export class LaneComponent implements OnInit {
       topCard.Kind === LastCardPlayed.Kind &&
       topCard.Suit === LastCardPlayed.Suit;
 
-    return isLastCardPlayed
+    const positionColor = isLastCardPlayed
       ? getLastCardPlayedBackgroundColor(topCard!, this.isHost)
       : getDefaultCardBackgroundColor(this.laneIndex, rowIndex);
+
+    const reversePositionColor = getDefaultCardBackgroundColor(
+      this.laneIndex,
+      rowIndex + 1
+    );
+
+    return {
+      positionColor,
+      reversePositionColor,
+    };
   }
 
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {

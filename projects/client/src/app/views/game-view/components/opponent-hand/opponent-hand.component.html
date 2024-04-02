@@ -1,11 +1,18 @@
 <div
-  class="opponent-hand"
+  class="flex justify-content-around"
   [ngStyle]="{
     height: cardSize + 'px',
-    padding: '0px ' + cardSize / 2 + 'px'
   }"
 >
-  <app-face-down-card
-    *ngFor="let _ of [].constructor(numCards)"
-  ></app-face-down-card>
+  <div
+    class="flex pb-0"
+    id="opponent-hand"
+    [ngStyle]="{
+      minWidth: 5 * cardSize + 'px'
+    }"
+  >
+    @for(_ of [].constructor(numCards); track i; let i = $index) {
+    <app-face-down-card></app-face-down-card>
+    }
+  </div>
 </div>

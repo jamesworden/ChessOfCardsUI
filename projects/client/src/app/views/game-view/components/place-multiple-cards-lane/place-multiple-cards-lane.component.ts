@@ -34,7 +34,7 @@ const MIN_CARD_HEIGHT_FACTOR = 5;
 @Component({
   selector: 'app-place-multiple-cards-lane',
   templateUrl: './place-multiple-cards-lane.component.html',
-  styleUrls: ['./place-multiple-cards-lane.component.css'],
+  styleUrls: ['./place-multiple-cards-lane.component.scss'],
 })
 export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
   private readonly sm = new SubscriptionManager();

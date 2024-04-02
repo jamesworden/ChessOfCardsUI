@@ -12,7 +12,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.css'],
+  styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent implements AfterViewInit {
   @Output() buttonClicked = new EventEmitter<string>();

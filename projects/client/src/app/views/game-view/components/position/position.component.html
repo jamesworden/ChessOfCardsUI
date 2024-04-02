@@ -6,10 +6,32 @@
   cdkDropListConnectedTo="player-hand"
   (cdkDropListDropped)="drop($event)"
   [ngStyle]="{
-    height: cardSize + 'px',
-    width: cardSize + 'px',
-    backgroundColor
+    height: (cardSize$ | async) + 'px',
+    width: (cardSize$ | async) + 'px',
+    backgroundColor: transparentTile ? 'transparent' : backgroundColor
   }"
 >
   <ng-content></ng-content>
 </div>
+
+@if((marker$ | async)?.topLeft; as topLeft) {
+<span
+  class="absolute text-xs font-semibold"
+  [ngStyle]="{
+    color: textColor,
+    top: ((cardSize$ | async) ?? 64) / 6 + 'px',
+    left: ((cardSize$ | async) ?? 64) / 6 + 'px'
+  }"
+  >{{ topLeft }}</span
+>
+} @if((marker$ | async)?.bottomRight; as bottomRight) {
+<span
+  class="absolute text-xs font-semibold"
+  [ngStyle]="{
+    color: textColor,
+    bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
+    right: ((cardSize$ | async) ?? 64) / 6 + 'px'
+  }"
+  >{{ bottomRight }}</span
+>
+}

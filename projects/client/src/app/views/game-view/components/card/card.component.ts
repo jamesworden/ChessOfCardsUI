@@ -1,23 +1,17 @@
-import {
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  HostBinding,
-} from '@angular/core';
-import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
+import { Component, Input, HostBinding, inject } from '@angular/core';
 import { Card } from '../../../../models/card.model';
-import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  styleUrls: ['./card.component.css'],
+  styleUrls: ['./card.component.scss'],
 })
-export class CardComponent implements OnDestroy, OnInit {
-  private sm = new SubscriptionManager();
+export class CardComponent {
+  readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   /*
    * When rearranging cards inside player hand, sometimes multiple card
@@ -28,53 +22,26 @@ export class CardComponent implements OnDestroy, OnInit {
     return this.insideVerticalContainer ? 'block' : 'flex';
   }
 
+  @Input({ required: true }) set card(card: Card) {
+    this.card$.next(card);
+  }
   @Input() playerCanDrag = false;
-  @Input() card: Card;
-  @Input() isHost: boolean;
-  @Input() rowIndex: number;
-  @Input() wonBy: PlayerOrNone;
-  @Input() laneIndex: number;
   @Input() insideVerticalContainer: boolean = false;
 
-  cardSize: number;
-  tiltDegrees = 0;
-  imageFileName: string;
-
-  constructor(public responsiveSizeService: ResponsiveSizeService) {
-    this.sm.add(
-      responsiveSizeService.cardSize$.subscribe((cardSize) => {
-        this.cardSize = cardSize;
-      })
-    );
-  }
-
-  ngOnInit() {
-    this.initTiltDegrees();
-    this.initImageFileName();
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
-  }
-
-  private initTiltDegrees() {
-    const nobodyPlayedCard = this.card.PlayedBy === PlayerOrNone.None;
-    const isMiddleCard = this.rowIndex === 3;
-
-    if (nobodyPlayedCard || !isMiddleCard) {
-      return;
-    }
-
-    const hostCardAndIsHost =
-      this.isHost && this.card.PlayedBy === PlayerOrNone.Host;
-    const guestCardAndIsGuest =
-      !this.isHost && this.card.PlayedBy === PlayerOrNone.Guest;
-    const playerPlayedCard = hostCardAndIsHost || guestCardAndIsGuest;
-
-    this.tiltDegrees = playerPlayedCard ? 45 : -45;
-  }
-
-  private initImageFileName() {
-    this.imageFileName = getCardImageFileName(this.card);
-  }
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly card$ = new BehaviorSubject<Card | null>(null);
+  readonly imageFileName$ = this.card$.pipe(
+    map((card) => (card ? getCardImageFileName(card) : ''))
+  );
+  readonly cardStyles$ = combineLatest([this.card$, this.cardSize$]).pipe(
+    map(([card, cardSize]) => {
+      return Object.assign(
+        {
+          height: cardSize + 'px',
+          width: cardSize + 'px',
+        },
+        card?.customStyles ?? {}
+      );
+    })
+  );
 }
