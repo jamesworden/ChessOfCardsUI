@@ -55,13 +55,14 @@ import { AnimatedEntity } from './components/animation-overlay/models/animated-e
 import { SubscriptionManager } from '../../util/subscription-manager';
 import { MoveMadeDetails } from './models/move-made-details.model';
 import { Router } from '@angular/router';
-import { cardRotation } from '../../animations/card-rotation.animation';
+import { cardRotationAnimation } from '../../animations/card-rotation.animation';
+import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
   styleUrls: ['./game-view.component.scss'],
-  animations: [cardRotation],
+  animations: [cardRotationAnimation, fadeInOutAnimation],
 })
 export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly sm = new SubscriptionManager();

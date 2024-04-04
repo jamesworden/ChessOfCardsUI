@@ -14,11 +14,13 @@ import {
 import { GameState } from '../../state/game.state';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 
 @Component({
   selector: 'app-home-view',
   templateUrl: './home-view.component.html',
   styleUrls: ['./home-view.component.scss'],
+  animations: [fadeInOutAnimation],
 })
 export class HomeViewComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);

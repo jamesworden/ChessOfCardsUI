@@ -6,7 +6,7 @@ import {
   trigger,
 } from '@angular/animations';
 
-export const cardRotation = trigger('cardRotation', [
+export const cardRotationAnimation = trigger('cardRotation', [
   state(
     'void, not-rotating',
     style({ transform: 'rotate({{ fromRotate }})' }),
