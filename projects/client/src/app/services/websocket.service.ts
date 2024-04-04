@@ -25,6 +25,7 @@ import { SetIsConnectedToServer } from '../actions/server.actions';
 import { DurationOption } from '../models/duration-option.model';
 import { PendingGameView } from '../models/pending-game-view.model';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const { serverUrl } = environment;
 
@@ -34,6 +35,7 @@ const { serverUrl } = environment;
 export class WebsocketService {
   private hubConnection: HubConnection;
 
+  readonly #snackBar = inject(MatSnackBar);
   readonly #store = inject(Store);
   readonly #router = inject(Router);
 
@@ -110,8 +112,21 @@ export class WebsocketService {
 
     this.hubConnection.on('GameStarted', (stringifiedGameState) => {
       this.#store.dispatch(new SetGameIsActive(true));
-      this.parseAndUpdateGameView(stringifiedGameState);
+      const playerGameView = this.parseAndUpdateGameView(stringifiedGameState);
       this.#router.navigate(['game']);
+
+      const isPlayersTurn =
+        (playerGameView.IsHost && playerGameView.IsHostPlayersTurn) ||
+        (!playerGameView.IsHost && !playerGameView.IsHostPlayersTurn);
+
+      const secondaryText = isPlayersTurn
+        ? "It's your turn!"
+        : "It's your opponent's turn!";
+
+      this.#snackBar.open('Game started.', secondaryText, {
+        duration: 2000,
+        verticalPosition: 'top',
+      });
     });
 
     this.hubConnection.on('GameOver', (message?: string) => {
