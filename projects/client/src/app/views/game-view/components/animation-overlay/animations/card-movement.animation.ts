@@ -1,12 +1,19 @@
-import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  keyframes,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 export const cardMovementAnimation = trigger('cardMovement', [
   state(
     'todo',
     // Off screen hack
     style({
-      top: '-100px',
-      left: '-100px',
+      top: '-200px',
+      left: '-200px',
     })
   ),
   state(
@@ -46,4 +53,4 @@ export const cardMovementAnimation = trigger('cardMovement', [
       },
     }
   ),
-])
+]);
