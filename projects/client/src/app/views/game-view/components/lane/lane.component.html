@@ -1,8 +1,8 @@
 @if((lane$ | async); as lane) {
 <div
   *ngIf="lane$ | async as lane"
-  class="lane"
-  [ngClass]="{ 'reverse-rows-vertically': !isHost }"
+  class="lane rounded-md flex"
+  [ngClass]="{ 'flex-col': !isHost, 'flex-col-reverse': isHost }"
 >
   @for(position of (positions$ | async); track i; let i = $index) {
   <app-position
