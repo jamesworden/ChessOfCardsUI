@@ -10,7 +10,6 @@ import {
   inject,
 } from '@angular/core';
 import { Card } from 'projects/client/src/app/models/card.model';
-import { getCardImageFileName as getCardImageFileNameFn } from '../../../../util/get-asset-file-names';
 import { Observable, timer, BehaviorSubject, Subject } from 'rxjs';
 import { GameState } from 'projects/client/src/app/state/game.state';
 import { Select } from '@ngxs/store';
@@ -70,7 +69,6 @@ export class PlayerHandComponent implements OnInit, OnChanges, OnDestroy {
   @Select(GameState.placeMultipleCardsHand)
   placeMultipleCardsHand$!: Observable<Card[] | null>;
 
-  readonly getCardImageFileName = getCardImageFileNameFn;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly bouncingCards$ = new BehaviorSubject(false);
   readonly disabled$ = new BehaviorSubject(true);

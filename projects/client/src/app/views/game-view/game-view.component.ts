@@ -40,7 +40,6 @@ import { addCardToArray } from './logic/add-card-to-array';
 import { moveCardToLane } from './logic/move-card-to-lane';
 import { removeCardFromArray } from './logic/remove-card-from-array';
 import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-cards-to-move';
-import { getCardImageFileName as getCardImageFileNameFn } from '../../util/get-asset-file-names';
 import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 import { ResponsiveSizeService } from './services/responsive-size.service';
 import { GameOverData } from '../../models/game-over-data.model';
@@ -75,7 +74,6 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly PlayerOrNone = PlayerOrNone;
   readonly Breakpoint = Breakpoint;
-  readonly getCardImageFileName = getCardImageFileNameFn;
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
