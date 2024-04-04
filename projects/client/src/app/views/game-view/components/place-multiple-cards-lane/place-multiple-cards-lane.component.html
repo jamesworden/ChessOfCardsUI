@@ -1,8 +1,7 @@
-<ng-container
-  *ngIf="
-    initialPlaceMultipleCardAttempt$ | async as initialPlaceMultipleCardAttempt
-  "
->
+@if (
+  initialPlaceMultipleCardAttempt$ | async;
+  as initialPlaceMultipleCardAttempt
+) {
   <div class="lane" *ngIf="playerGameView$ | async">
     <!-- Pseudo-position background beneath actual card list -->
     <div
@@ -62,4 +61,4 @@
       }
     </div>
   </div>
-</ng-container>
+}
