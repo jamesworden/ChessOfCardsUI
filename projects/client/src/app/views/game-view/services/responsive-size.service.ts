@@ -38,7 +38,6 @@ export class ResponsiveSizeService implements OnInit {
         const maxCardWidth = width / cardRatio.x;
         const maxCardHeight = height / cardRatio.y;
         const cardSize = Math.min(maxCardWidth, maxCardHeight);
-
         this._cardSize$.next(cardSize);
       });
   }
