@@ -12,6 +12,7 @@ export const cardMovementAnimation = trigger('cardMovement', [
     'todo',
     // Off screen hack
     style({
+      opacity: 1,
       top: '-200px',
       left: '-200px',
     })
