@@ -8,6 +8,7 @@ import {
   guestLaneIndexesToRowIndexMarkers,
   hostLaneIndexesToRowIndexMarkers,
 } from './lane-indexes-to-row-index-markers';
+import { Z_INDEXES } from '../../z-indexes';
 
 @Component({
   selector: 'app-position',
@@ -15,6 +16,8 @@ import {
   styleUrls: ['./position.component.scss'],
 })
 export class PositionComponent {
+  readonly Z_INDEXES = Z_INDEXES;
+
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   @Input() backgroundClass = '';

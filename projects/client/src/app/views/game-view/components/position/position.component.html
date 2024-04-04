@@ -13,29 +13,44 @@
   [ngStyle]="{
     height: (cardSize$ | async) + 'px',
     width: (cardSize$ | async) + 'px',
+    'z-index': Z_INDEXES.POSITION_CONTENT
   }"
 >
   <ng-content></ng-content>
-</div>
 
-@if(!hideMarker) { @if((marker$ | async)?.topLeft; as topLeft) {
-<span
-  [class]="'absolute font-semibold select-none' + ' ' + textClass"
-  [ngStyle]="{
-    top: ((cardSize$ | async) ?? 64) / 6 + 'px',
-    left: ((cardSize$ | async) ?? 64) / 6 + 'px',
-    fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px',
-  }"
-  >{{ topLeft }}</span
->
-} @if((marker$ | async)?.bottomRight; as bottomRight) {
-<span
-  [class]="'absolute font-semibold select-none' + ' ' + textClass"
-  [ngStyle]="{
-    bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
-    right: ((cardSize$ | async) ?? 64) / 6 + 'px',
-    fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px',
-  }"
-  >{{ bottomRight }}</span
->
-} }
+  <div class="h-0 w-0 relative">
+    <div
+      *ngIf="!hideMarker"
+      class="absolute top-0"
+      [ngStyle]="{
+        height: (cardSize$ | async) + 'px',
+        width: (cardSize$ | async) + 'px',
+        'z-index': Z_INDEXES.POSITION_MARKER_CONTAINER
+      }"
+    >
+      <div class="relative w-full h-full">
+        @if((marker$ | async)?.topLeft; as topLeft) {
+        <span
+          [class]="'absolute font-semibold select-none' + ' ' + textClass"
+          [ngStyle]="{
+          top: ((cardSize$ | async) ?? 64) / 6 + 'px',
+          left: ((cardSize$ | async) ?? 64) / 6 + 'px',
+          fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px',
+        }"
+          >{{ topLeft }}</span
+        >
+        } @if((marker$ | async)?.bottomRight; as bottomRight) {
+        <span
+          [class]="'absolute font-semibold select-none' + ' ' + textClass"
+          [ngStyle]="{
+          bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
+          right: ((cardSize$ | async) ?? 64) / 6 + 'px',
+          fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px',
+        }"
+          >{{ bottomRight }}</span
+        >
+        }
+      </div>
+    </div>
+  </div>
+</div>
