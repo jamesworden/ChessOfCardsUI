@@ -5,7 +5,7 @@ import {
   Output,
   OnInit,
   inject,
-  DestroyRef
+  DestroyRef,
 } from '@angular/core';
 import { Z_INDEXES } from '../../z-indexes';
 import { AnimatedEntity } from './models/animated-entity.model';
@@ -22,11 +22,7 @@ import { fadeInAnimation } from './animations/fade-in.animation';
   selector: 'app-animation-overlay',
   templateUrl: './animation-overlay.component.html',
   styleUrl: './animation-overlay.component.scss',
-  animations: [
-    cardMovementAnimation,
-    fadeOutAnimation,
-    fadeInAnimation
-  ],
+  animations: [cardMovementAnimation, fadeOutAnimation, fadeInAnimation],
 })
 export class AnimationOverlayComponent implements OnInit {
   readonly Z_INDEXES = Z_INDEXES;
@@ -67,9 +63,11 @@ export class AnimationOverlayComponent implements OnInit {
   readonly currentSequence$ = new BehaviorSubject<number | null>(null);
 
   ngOnInit() {
-    this.sequencesWithDelays$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((sequencesWithDelays) =>
+    this.sequencesWithDelays$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((sequencesWithDelays) =>
         this.updateCurrentSequence(sequencesWithDelays)
-      )
+      );
   }
 
   updateCurrentSequence(
