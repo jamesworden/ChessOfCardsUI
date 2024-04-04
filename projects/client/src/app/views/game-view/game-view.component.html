@@ -68,7 +68,9 @@
     [numCards]="(latestGameViewSnapshot$ | async)!.NumCardsInOpponentsHand"
   ></app-opponent-hand>
   } @if(isPlacingMultipleCards$ | async) {
-  <div class="buttons-container">
+  <div
+    class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
+  >
     <div
       class="button-question text-gray-800"
       [ngStyle]="{
@@ -102,7 +104,9 @@
     </div>
   </div>
   } @if(!(isPlacingMultipleCards$ | async) && (hasPendingDrawOffer$ | async)) {
-  <div class="buttons-container">
+  <div
+    class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
+  >
     <div
       class="button-question text-gray-800"
       [ngStyle]="{
@@ -137,7 +141,9 @@
   </div>
   } @if(possibleInitialPlaceCardAttempts.length === 0 && isPlayersTurn &&
   !(isPlacingMultipleCards$ | async) && !(hasPendingDrawOffer$ | async)) {
-  <div class="buttons-container">
+  <div
+    class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
+  >
     <div
       class="button-question text-gray-800"
       [ngStyle]="{
