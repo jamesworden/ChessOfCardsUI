@@ -6,19 +6,20 @@
   <div class="lane" *ngIf="playerGameView$ | async">
     <!-- Lane background color layer beneath place cards -->
     <div
-      class="absolute"
+      class="absolute flex flex-col-reverse"
       [ngStyle]="{
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
       }"
     >
       @for(position of pseudoPositions; track i; let i = $index) {
-      <div
-        [class]="position.backgroundClass"
-        [ngStyle]="{
-          height: (cardSize$ | async)! + 'px',
-          width: (cardSize$ | async)! + 'px',
-        }"
-      ></div>
+      <app-position
+        [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
+        [rowIndex]="position.rowIndex"
+        [backgroundClass]="position.backgroundClass"
+        [textClass]="position.textClass"
+        [isHost]="isHost"
+        [dragDropDisabled]="true"
+      ></app-position>
       }
     </div>
 

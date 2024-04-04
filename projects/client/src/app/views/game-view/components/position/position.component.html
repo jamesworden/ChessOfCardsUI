@@ -9,6 +9,7 @@
   cdkDropList
   cdkDropListData="position"
   cdkDropListConnectedTo="player-hand"
+  [cdkDropListDisabled]="dragDropDisabled"
   (cdkDropListDropped)="drop($event)"
   [ngStyle]="{
     height: (cardSize$ | async) + 'px',

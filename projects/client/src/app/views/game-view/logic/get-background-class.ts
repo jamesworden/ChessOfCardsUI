@@ -18,22 +18,24 @@ export function getPositionBackgroundClass(
     topCard.Kind === lane.LastCardPlayed.Kind &&
     topCard.Suit === lane.LastCardPlayed.Suit;
 
-  const positionColor = isLastCardPlayed
-    ? getLastCardPlayedBackgroundClass(topCard!, isHost, isPlayersTurn)
-    : getDefaultBackgroundClasses(laneIndex, rowIndex).backgroundClass;
-
-  const inverseBackgroundClasses = getDefaultBackgroundClasses(
+  let { backgroundClass, textClass } = getDefaultBackgroundClasses(
     laneIndex,
-    rowIndex + 1 // Add one to get the opposite result
+    rowIndex
   );
-
+  if (isLastCardPlayed) {
+    backgroundClass = getLastCardPlayedBackgroundClass(
+      topCard!,
+      isHost,
+      isPlayersTurn
+    );
+  }
   const { laneColor } = getLaneBackgroundClass(lane, isHost, isPlayersTurn);
   const positionClass =
-    lane.WonBy === PlayerOrNone.None ? positionColor : laneColor;
-  const textClass =
-    lane.WonBy === PlayerOrNone.None
-      ? inverseBackgroundClasses.textClass
-      : 'lanes-text-lightgreen';
+    lane.WonBy === PlayerOrNone.None ? backgroundClass : laneColor;
+
+  if (lane.WonBy !== PlayerOrNone.None) {
+    textClass = 'lanes-text-lightgreen';
+  }
 
   return {
     positionClass,
@@ -50,7 +52,7 @@ export function getDefaultBackgroundClasses(
 
   return {
     backgroundClass: evenSum ? 'lanes-bg-green' : 'lanes-bg-lightgreen',
-    textClass: evenSum ? 'lanes-text-green' : 'lanes-text-lightgreen',
+    textClass: evenSum ? 'lanes-text-lightgreen' : 'lanes-text-green',
   };
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, Input } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { GameState } from '../../../../state/game.state';
 import { Observable, combineLatest } from 'rxjs';
@@ -23,6 +23,8 @@ import { getDefaultBackgroundClasses } from '../../logic/get-background-class';
 
 interface PseudoPosition {
   backgroundClass: string;
+  textClass: string;
+  rowIndex: number;
 }
 
 /*
@@ -49,6 +51,8 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
 
   @Select(GameState.placeMultipleCards)
   placeMultipleCards$!: Observable<Card[] | null>;
+
+  @Input({ required: true }) isHost: boolean;
 
   cardSize$ = this.#responsiveSizeService.cardSize$;
 
@@ -154,14 +158,25 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
   private initPseudoPositions() {
     const pseudoPositions: PseudoPosition[] = [];
 
-    for (let rowIndex = 0; rowIndex < 7; rowIndex++) {
+    for (
+      let rowIndex = this.isHost ? 0 : 6;
+      this.isHost ? rowIndex <= 6 : rowIndex >= 0;
+      this.isHost ? rowIndex++ : rowIndex--
+    ) {
       const initialPlaceCardAttempt = this.#store.selectSnapshot(
         GameState.initialPlaceMultipleCardAttempt
       )!;
       const { TargetLaneIndex } = initialPlaceCardAttempt;
+
+      const { backgroundClass, textClass } = getDefaultBackgroundClasses(
+        TargetLaneIndex,
+        rowIndex
+      );
+
       pseudoPositions.push({
-        backgroundClass: getDefaultBackgroundClasses(TargetLaneIndex, rowIndex)
-          .backgroundClass,
+        backgroundClass,
+        textClass,
+        rowIndex,
       });
     }
 

@@ -19,7 +19,9 @@
       @for(lane of playerGameView.Lanes; track laneIndex; let laneIndex =
       $index) { @if(initialPlaceMultipleCardAttempt?.TargetLaneIndex ===
       laneIndex) {
-      <app-place-multiple-cards-lane></app-place-multiple-cards-lane>
+      <app-place-multiple-cards-lane
+        [isHost]="playerGameView.IsHost"
+      ></app-place-multiple-cards-lane>
       } @else {
       <app-lane
         [lane]="lane"

@@ -20,6 +20,7 @@ export class PositionComponent {
 
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
+  @Input() dragDropDisabled = false;
   @Input() backgroundClass = '';
   @Input() textClass = '';
   @Input() transparentTile = false;
