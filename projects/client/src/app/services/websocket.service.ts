@@ -157,20 +157,6 @@ export class WebsocketService {
     });
   }
 
-  private isPlayersTurn(gameState: PlayerGameView) {
-    const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
-    const guestAndGuestTurn = !gameState.IsHostPlayersTurn && !gameState.IsHost;
-    return hostAndHostTurn || guestAndGuestTurn;
-  }
-
-  private parseAndUpdateGameView(stringifiedGameState: string) {
-    let playerGameView: PlayerGameView = JSON.parse(stringifiedGameState);
-    console.log(playerGameView);
-    this.#store.dispatch(new AnimateGameView(playerGameView));
-
-    return playerGameView;
-  }
-
   public createGame() {
     this.hubConnection.invoke('CreateGame');
   }
@@ -215,5 +201,19 @@ export class WebsocketService {
 
   public checkGuestForEmptyTimer() {
     this.hubConnection.invoke('CheckGuestForEmptyTimer');
+  }
+
+  private isPlayersTurn(gameState: PlayerGameView) {
+    const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
+    const guestAndGuestTurn = !gameState.IsHostPlayersTurn && !gameState.IsHost;
+    return hostAndHostTurn || guestAndGuestTurn;
+  }
+
+  private parseAndUpdateGameView(stringifiedGameState: string) {
+    let playerGameView: PlayerGameView = JSON.parse(stringifiedGameState);
+    console.log(playerGameView);
+    this.#store.dispatch(new AnimateGameView(playerGameView));
+
+    return playerGameView;
   }
 }
