@@ -13,6 +13,7 @@ import {
 } from '../../actions/game.actions';
 import { GameState } from '../../state/game.state';
 import { map, withLatestFrom } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-view',
@@ -24,6 +25,7 @@ export class HomeViewComponent implements OnInit {
   readonly #websocketService = inject(WebsocketService);
   readonly #destroyRef = inject(DestroyRef);
   readonly #store = inject(Store);
+  readonly #router = inject(Router);
 
   @Select(ServerState.isConnectedToServer)
   isConnectedToServer$: Observable<boolean>;
@@ -84,5 +86,9 @@ export class HomeViewComponent implements OnInit {
     }
 
     this.#store.dispatch(new JoinGame(upperCaseGameCode));
+  }
+
+  navigateToHome() {
+    this.#router.navigate(['']);
   }
 }
