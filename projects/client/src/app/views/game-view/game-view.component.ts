@@ -6,11 +6,12 @@ import {
   inject,
   ViewChild,
   AfterViewInit,
-  OnDestroy,
+  DestroyRef,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
@@ -51,7 +52,6 @@ import { combineLatest } from 'rxjs';
 import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 import { CardMovement } from '../../models/card-movement.model';
 import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
-import { SubscriptionManager } from '../../util/subscription-manager';
 import { MoveMadeDetails } from './models/move-made-details.model';
 import { Router } from '@angular/router';
 import { cardRotationAnimation } from '../../animations/card-rotation.animation';
@@ -63,17 +63,16 @@ import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
   styleUrls: ['./game-view.component.scss'],
   animations: [cardRotationAnimation, fadeInOutAnimation],
 })
-export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
-  private readonly sm = new SubscriptionManager();
+export class GameViewComponent implements OnInit, AfterViewInit {
+  readonly PlayerOrNone = PlayerOrNone;
+  readonly Breakpoint = Breakpoint;
 
   readonly #modal = inject(MatDialog);
   readonly #store = inject(Store);
   readonly #snackBar = inject(MatSnackBar);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #router = inject(Router);
-
-  readonly PlayerOrNone = PlayerOrNone;
-  readonly Breakpoint = Breakpoint;
+  readonly #destroyRef = inject(DestroyRef);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -161,58 +160,42 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
       this.#router.navigate(['']);
     }
+    this.gameOverData$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((gameOverData) => {
+      if (!gameOverData.isOver) {
+        return;
+      }
 
-    this.sm.add(
-      this.gameOverData$.subscribe((gameOverData) => {
-        if (!gameOverData.isOver) {
-          return;
-        }
+      const modalRef = this.#modal.open(ModalComponent, {
+        width: '250px',
+        data: { message: gameOverData.message },
+      });
 
-        const modalRef = this.#modal.open(ModalComponent, {
-          width: '250px',
-          data: { message: gameOverData.message },
+      const subscription = modalRef.afterClosed().subscribe(() => {
+        this.#store.dispatch(new ResetGameData());
+        this.#store.dispatch(new ResetPendingGameView());
+        this.#router.navigate(['']);
+        subscription.unsubscribe();
+      });
+    })
+    this.playerGameView$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((playerGameView) => {
+      if (playerGameView) {
+        this.latestGameViewSnapshot$.next(playerGameView);
+        this.isPlayersTurn = isPlayersTurn(playerGameView);
+        this.possibleInitialPlaceCardAttempts =
+          getPossibleInitialPlaceCardAttempts(playerGameView);
+      }
+    })
+    this.opponentPassedMove$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((opponentPassedMove) => {
+      if (opponentPassedMove) {
+        this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
+          duration: 2000,
+          verticalPosition: 'top',
         });
-
-        const subscription = modalRef.afterClosed().subscribe(() => {
-          this.#store.dispatch(new ResetGameData());
-          this.#store.dispatch(new ResetPendingGameView());
-          this.#router.navigate(['']);
-          subscription.unsubscribe();
-        });
-      })
-    );
-
-    this.sm.add(
-      this.playerGameView$.subscribe((playerGameView) => {
-        if (playerGameView) {
-          this.latestGameViewSnapshot$.next(playerGameView);
-          this.isPlayersTurn = isPlayersTurn(playerGameView);
-          this.possibleInitialPlaceCardAttempts =
-            getPossibleInitialPlaceCardAttempts(playerGameView);
-        }
-      })
-    );
-
-    this.sm.add(
-      this.opponentPassedMove$.subscribe((opponentPassedMove) => {
-        if (opponentPassedMove) {
-          this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
-            duration: 2000,
-            verticalPosition: 'top',
-          });
-        }
-      })
-    );
-
-    this.sm.add(
-      this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
-        this.isPlacingMultipleCards = isPlacingMultipleCards;
-      })
-    );
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
+      }
+    })
+    this.isPlacingMultipleCards$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((isPlacingMultipleCards) => {
+      this.isPlacingMultipleCards = isPlacingMultipleCards;
+    })
   }
 
   ngAfterViewInit() {
