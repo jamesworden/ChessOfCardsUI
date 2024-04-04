@@ -1,40 +1,40 @@
 <nav
   class="sidebar bg-gray-900 h-full"
   [ngStyle]="{
-    width: cardSize + 'px'
+    width: ((cardSize$ | async) ?? 64) + 'px'
   }"
 >
   <div
     class="flex flex-col justify-around text-center"
     [ngStyle]="{
-      height: cardSize + 'px'
+      height: ((cardSize$ | async) ?? 64) + 'px'
     }"
   >
     <span class="text-gray-200 tracking-widest font-bold">CoC</span>
   </div>
   <app-sidebar-item
     [disabled]="!!(waitingForServer$ | async)"
-    [itemHeight]="cardSize"
-    [itemWidth]="cardSize"
-    [iconSize]="cardSize / 2"
+    [itemHeight]="(cardSize$ | async) ?? 64"
+    [itemWidth]="(cardSize$ | async) ?? 64"
+    [iconSize]="((cardSize$ | async) ?? 64) / 2"
     tooltip="Pass move"
     materialSymbol="waving_hand"
     (selected)="attemptToOpenPassMoveModal()"
   ></app-sidebar-item>
   <app-sidebar-item
     [disabled]="!!(waitingForServer$ | async)"
-    [itemHeight]="cardSize"
-    [itemWidth]="cardSize"
-    [iconSize]="cardSize / 2"
+    [itemHeight]="(cardSize$ | async) ?? 64"
+    [itemWidth]="(cardSize$ | async) ?? 64"
+    [iconSize]="((cardSize$ | async) ?? 64) / 2"
     tooltip="Offer draw"
     materialSymbol="handshake"
     (selected)="attemptToOpenOfferDrawModel()"
   ></app-sidebar-item>
   <app-sidebar-item
     [disabled]="!!(waitingForServer$ | async)"
-    [itemHeight]="cardSize"
-    [itemWidth]="cardSize"
-    [iconSize]="cardSize / 2"
+    [itemHeight]="(cardSize$ | async) ?? 64"
+    [itemWidth]="(cardSize$ | async) ?? 64"
+    [iconSize]="((cardSize$ | async) ?? 64) / 2"
     tooltip="Resign"
     materialSymbol="flag"
     (selected)="openResignModal()"
@@ -44,7 +44,7 @@
     <div
       class="divider"
       [ngStyle]="{
-        margin: cardSize / 3.5 + 'px 8px'
+        margin: ((cardSize$ | async) ?? 64) / 3.5 + 'px 8px'
       }"
     ></div>
   }

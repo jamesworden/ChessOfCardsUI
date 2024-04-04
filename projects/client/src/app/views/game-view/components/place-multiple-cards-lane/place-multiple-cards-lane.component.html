@@ -10,13 +10,13 @@
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
       }"
     >
-      @for (position of pseudoPositions; track i; let i = $index) {
+      @for (position of pseudoPositions$ | async; track i; let i = $index) {
         <app-position
           [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
           [rowIndex]="position.rowIndex"
           [backgroundClass]="position.backgroundClass"
           [textClass]="position.textClass"
-          [isHost]="isHost"
+          [isHost]="(isHost$ | async) ?? false"
           [dragDropDisabled]="true"
         ></app-position>
       }
