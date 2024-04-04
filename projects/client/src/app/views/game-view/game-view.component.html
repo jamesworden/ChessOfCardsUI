@@ -11,48 +11,48 @@
   ></app-animation-overlay>
 
   <div class="flex justify-around w-full bg-gray-800">
-    @if(playerGameView$ | async; as playerGameView) {
-    <div class="game flex flex-col justify-between h-full" cdkDropListGroup>
-      <app-player-banner
-        [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
-        class="rounded-b-md transition"
-        [ngClass]="{
-          'bg-rose-700': !isPlayersTurn,
-          'bg-rose-900': isPlayersTurn
-        }"
-      ></app-player-banner>
+    @if (playerGameView$ | async; as playerGameView) {
+      <div class="game flex flex-col justify-between h-full" cdkDropListGroup>
+        <app-player-banner
+          [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
+          class="rounded-b-md transition"
+          [ngClass]="{
+            'bg-rose-700': !isPlayersTurn,
+            'bg-rose-900': isPlayersTurn
+          }"
+        ></app-player-banner>
 
-      <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
+        <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
-      <app-board
-        *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
-        [playerGameView]="latestGameViewSnapshot"
-        [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
-        [initialPlaceMultipleCardAttempt]="
-          initialPlaceMultipleCardAttempt$ | async
-        "
-        [isPlayersTurn]="isPlayersTurn"
-        (placeCardAttempted)="onPlaceCardAttempted($event)"
-      ></app-board>
+        <app-board
+          *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
+          [playerGameView]="latestGameViewSnapshot"
+          [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
+          [initialPlaceMultipleCardAttempt]="
+            initialPlaceMultipleCardAttempt$ | async
+          "
+          [isPlayersTurn]="isPlayersTurn"
+          (placeCardAttempted)="onPlaceCardAttempted($event)"
+        ></app-board>
 
-      <app-player-hand
-        [isPlacingMultipleCards]="isPlacingMultipleCards"
-        [isHost]="playerGameView.IsHost"
-        [cards]="playerGameView.Hand.Cards"
-        [cardSize]="(cardSize$ | async)!"
-        [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
-        (cardDropped)="onPlayerHandCardDrop($event)"
-      ></app-player-hand>
+        <app-player-hand
+          [isPlacingMultipleCards]="isPlacingMultipleCards"
+          [isHost]="playerGameView.IsHost"
+          [cards]="playerGameView.Hand.Cards"
+          [cardSize]="(cardSize$ | async)!"
+          [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
+          (cardDropped)="onPlayerHandCardDrop($event)"
+        ></app-player-hand>
 
-      <app-player-banner
-        [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
-        class="rounded-t-md transition"
-        [ngClass]="{
-          'bg-sky-700': isPlayersTurn,
-          'bg-sky-900': !isPlayersTurn
-        }"
-      ></app-player-banner>
-    </div>
+        <app-player-banner
+          [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
+          class="rounded-t-md transition"
+          [ngClass]="{
+            'bg-sky-700': isPlayersTurn,
+            'bg-sky-900': !isPlayersTurn
+          }"
+        ></app-player-banner>
+      </div>
     }
   </div>
 
@@ -62,135 +62,146 @@
 </div>
 
 <ng-template #opponentHandToolbar>
-  @if(!(isPlacingMultipleCards$ | async) && !(hasPendingDrawOffer$ | async) &&
-  !(possibleInitialPlaceCardAttempts.length === 0 && isPlayersTurn)) {
-  <app-opponent-hand
-    [cardSize]="(cardSize$ | async)!"
-    [numCards]="(latestGameViewSnapshot$ | async)!.NumCardsInOpponentsHand"
-  ></app-opponent-hand>
-  } @if(isPlacingMultipleCards$ | async) {
-  <div
-    class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
-  >
+  @if (
+    !(isPlacingMultipleCards$ | async) &&
+    !(hasPendingDrawOffer$ | async) &&
+    !(possibleInitialPlaceCardAttempts.length === 0 && isPlayersTurn)
+  ) {
+    <app-opponent-hand
+      [cardSize]="(cardSize$ | async)!"
+      [numCards]="(latestGameViewSnapshot$ | async)!.NumCardsInOpponentsHand"
+    ></app-opponent-hand>
+  }
+  @if (isPlacingMultipleCards$ | async) {
     <div
-      class="button-question text-gray-800"
-      [ngStyle]="{
-        'min-width': (cardSize$ | async)! + 'px'
-      }"
+      class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
     >
-      <span class="text-left">Place<br />Cards?</span>
-    </div>
-
-    <div style="display: flex">
-      <app-sidebar-item
-        [itemHeight]="(cardSize$ | async)!"
-        [itemWidth]="(cardSize$ | async)!"
-        [iconSize]="(cardSize$ | async)! / 2"
-        iconColor="#33312e"
-        matTooltip="Confirm"
-        matTooltipPosition="below"
-        materialSymbol="check"
-        (selected)="onConfirmButtonClicked()"
-      ></app-sidebar-item>
-      <app-sidebar-item
-        [itemHeight]="(cardSize$ | async)!"
-        [itemWidth]="(cardSize$ | async)!"
-        [iconSize]="(cardSize$ | async)! / 2"
-        iconColor="#33312e"
-        matTooltip="Cancel"
-        matTooltipPosition="below"
-        materialSymbol="close"
-        (selected)="onCancelButtonClicked()"
-      ></app-sidebar-item>
-    </div>
-  </div>
-  } @if(!(isPlacingMultipleCards$ | async) && (hasPendingDrawOffer$ | async)) {
-  <div
-    class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
-  >
-    <div
-      class="button-question text-gray-800"
-      [ngStyle]="{
-        'min-width': (cardSize$ | async)! + 'px'
-      }"
-    >
-      <span class="text-left">Accept<br />Draw?</span>
-    </div>
-
-    <div style="display: flex">
-      <app-sidebar-item
-        [itemWidth]="(cardSize$ | async)!"
-        [itemHeight]="(cardSize$ | async)!"
-        [iconSize]="(cardSize$ | async)! / 2"
-        iconColor="#33312e"
-        matTooltip="Accept draw"
-        matTooltipPosition="below"
-        materialSymbol="check"
-        (selected)="acceptDraw()"
-      ></app-sidebar-item>
-      <app-sidebar-item
-        [itemHeight]="(cardSize$ | async)!"
-        [itemWidth]="(cardSize$ | async)!"
-        [iconSize]="(cardSize$ | async)! / 2"
-        iconColor="#33312e"
-        matTooltip="Deny draw"
-        matTooltipPosition="below"
-        materialSymbol="close"
-        (selected)="denyDraw()"
-      ></app-sidebar-item>
-    </div>
-  </div>
-  } @if(possibleInitialPlaceCardAttempts.length === 0 && isPlayersTurn &&
-  !(isPlacingMultipleCards$ | async) && !(hasPendingDrawOffer$ | async)) {
-  <div
-    class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
-  >
-    <div
-      class="button-question text-gray-800"
-      [ngStyle]="{
-        'min-width': (cardSize$ | async)! + 'px'
-      }"
-    >
-      <span class="text-left"
-        >You have no available moves.<br />Would you like to pass?</span
+      <div
+        class="button-question text-gray-800"
+        [ngStyle]="{
+          'min-width': (cardSize$ | async)! + 'px'
+        }"
       >
-    </div>
+        <span class="text-left">Place<br />Cards?</span>
+      </div>
 
-    <div style="display: flex">
-      <app-sidebar-item
-        [itemWidth]="(cardSize$ | async)!"
-        [itemHeight]="(cardSize$ | async)!"
-        [iconSize]="(cardSize$ | async)! / 2"
-        iconColor="#33312e"
-        matTooltip="Pass"
-        matTooltipPosition="below"
-        materialSymbol="check"
-        (selected)="passMove()"
-      ></app-sidebar-item>
+      <div style="display: flex">
+        <app-sidebar-item
+          [itemHeight]="(cardSize$ | async)!"
+          [itemWidth]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
+          iconColor="#33312e"
+          matTooltip="Confirm"
+          matTooltipPosition="below"
+          materialSymbol="check"
+          (selected)="onConfirmButtonClicked()"
+        ></app-sidebar-item>
+        <app-sidebar-item
+          [itemHeight]="(cardSize$ | async)!"
+          [itemWidth]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
+          iconColor="#33312e"
+          matTooltip="Cancel"
+          matTooltipPosition="below"
+          materialSymbol="close"
+          (selected)="onCancelButtonClicked()"
+        ></app-sidebar-item>
+      </div>
     </div>
-  </div>
+  }
+  @if (!(isPlacingMultipleCards$ | async) && (hasPendingDrawOffer$ | async)) {
+    <div
+      class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
+    >
+      <div
+        class="button-question text-gray-800"
+        [ngStyle]="{
+          'min-width': (cardSize$ | async)! + 'px'
+        }"
+      >
+        <span class="text-left">Accept<br />Draw?</span>
+      </div>
+
+      <div style="display: flex">
+        <app-sidebar-item
+          [itemWidth]="(cardSize$ | async)!"
+          [itemHeight]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
+          iconColor="#33312e"
+          matTooltip="Accept draw"
+          matTooltipPosition="below"
+          materialSymbol="check"
+          (selected)="acceptDraw()"
+        ></app-sidebar-item>
+        <app-sidebar-item
+          [itemHeight]="(cardSize$ | async)!"
+          [itemWidth]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
+          iconColor="#33312e"
+          matTooltip="Deny draw"
+          matTooltipPosition="below"
+          materialSymbol="close"
+          (selected)="denyDraw()"
+        ></app-sidebar-item>
+      </div>
+    </div>
+  }
+  @if (
+    possibleInitialPlaceCardAttempts.length === 0 &&
+    isPlayersTurn &&
+    !(isPlacingMultipleCards$ | async) &&
+    !(hasPendingDrawOffer$ | async)
+  ) {
+    <div
+      class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
+    >
+      <div
+        class="button-question text-gray-800"
+        [ngStyle]="{
+          'min-width': (cardSize$ | async)! + 'px'
+        }"
+      >
+        <span class="text-left"
+          >You have no available moves.<br />Would you like to pass?</span
+        >
+      </div>
+
+      <div style="display: flex">
+        <app-sidebar-item
+          [itemWidth]="(cardSize$ | async)!"
+          [itemHeight]="(cardSize$ | async)!"
+          [iconSize]="(cardSize$ | async)! / 2"
+          iconColor="#33312e"
+          matTooltip="Pass"
+          matTooltipPosition="below"
+          materialSymbol="check"
+          (selected)="passMove()"
+        ></app-sidebar-item>
+      </div>
+    </div>
   }
 </ng-template>
 
 <ng-template #cardMovementTemplate let-animatedEntity>
-  @if (animatedEntity.context.Card) { @if (playerGameViewToAnimate$ | async; as
-  playerGameViewToAnimate) {
-  <app-card
-    [card]="animatedEntity.context.Card"
-    [@cardRotation]="{
-      value:
-        (animatedEntity.styles?.before.rotate ?? 0) ===
-        (animatedEntity.styles?.after.rotate ?? 0)
-          ? 'not-rotating'
-          : 'rotating',
-      params: {
-        fromRotate: animatedEntity.styles?.before.rotate ?? '0deg',
-        toRotate: animatedEntity.styles?.after.rotate ?? '0deg',
-        durationMs: animatedEntity.movement.durationMs
-      }
-    }"
-  ></app-card>
-  } } @else {
-  <app-face-down-card></app-face-down-card>
+  @if (animatedEntity.context.Card) {
+    @if (playerGameViewToAnimate$ | async; as playerGameViewToAnimate) {
+      <app-card
+        [card]="animatedEntity.context.Card"
+        [@cardRotation]="{
+          value:
+            (animatedEntity.styles?.before.rotate ?? 0) ===
+            (animatedEntity.styles?.after.rotate ?? 0)
+              ? 'not-rotating'
+              : 'rotating',
+          params: {
+            fromRotate: animatedEntity.styles?.before.rotate ?? '0deg',
+            toRotate: animatedEntity.styles?.after.rotate ?? '0deg',
+            durationMs: animatedEntity.movement.durationMs
+          }
+        }"
+      ></app-card>
+    }
+  } @else {
+    <app-face-down-card></app-face-down-card>
   }
 </ng-template>

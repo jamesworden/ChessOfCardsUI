@@ -40,40 +40,41 @@
     (selected)="openResignModal()"
   ></app-sidebar-item>
 
-  @if(numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
-  <div
-    class="divider"
-    [ngStyle]="{
-      margin: cardSize / 3.5 + 'px 8px'
-    }"
-  ></div>
-  } @if(numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
-  <div class="game-stats">
+  @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
     <div
-      class="remaining-time"
-      [ngClass]="{
-        'is-not-counting-down': isPlayersTurn
+      class="divider"
+      [ngStyle]="{
+        margin: cardSize / 3.5 + 'px 8px'
       }"
-    >
-      <span>
-        {{ opponentsRemainingSecondsString }}
-      </span>
+    ></div>
+  }
+  @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
+    <div class="game-stats">
+      <div
+        class="remaining-time"
+        [ngClass]="{
+          'is-not-counting-down': isPlayersTurn
+        }"
+      >
+        <span>
+          {{ opponentsRemainingSecondsString }}
+        </span>
+      </div>
+      <div class="deck-counts">
+        <div class="deck-count">{{ numCardsInOpponentDeck }}</div>
+        <app-face-down-card></app-face-down-card>
+        <app-face-down-card></app-face-down-card>
+        <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
+      </div>
+      <div
+        class="remaining-time"
+        [ngClass]="{
+          'low-time-container': playerHasLowTime,
+          'is-not-counting-down': !isPlayersTurn
+        }"
+      >
+        <span>{{ playersRemainingSecondsString }}</span>
+      </div>
     </div>
-    <div class="deck-counts">
-      <div class="deck-count">{{ numCardsInOpponentDeck }}</div>
-      <app-face-down-card></app-face-down-card>
-      <app-face-down-card></app-face-down-card>
-      <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
-    </div>
-    <div
-      class="remaining-time"
-      [ngClass]="{
-        'low-time-container': playerHasLowTime,
-        'is-not-counting-down': !isPlayersTurn
-      }"
-    >
-      <span>{{ playersRemainingSecondsString }}</span>
-    </div>
-  </div>
   }
 </nav>

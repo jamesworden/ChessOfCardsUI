@@ -1,34 +1,37 @@
-@if((lane$ | async); as lane) {
-<div
-  *ngIf="lane$ | async as lane"
-  class="lane rounded-md flex"
-  [ngClass]="{ 'flex-col': !isHost, 'flex-col-reverse': isHost }"
->
-  @for(position of (positions$ | async); track i; let i = $index) {
-  <app-position
-    [transparentTile]="transparentTiles"
-    [laneIndex]="laneIndex"
-    [rowIndex]="position.rowIndex"
-    [backgroundClass]="position.backgroundClass"
-    [textClass]="position.textClass"
-    [isHost]="isHost"
-    (placeCardAttempted)="onPlaceCardAttempted($event)"
-    [hideMarker]="!!position.topCard"
+@if (lane$ | async; as lane) {
+  <div
+    *ngIf="lane$ | async as lane"
+    class="lane rounded-md flex"
+    [ngClass]="{ 'flex-col': !isHost, 'flex-col-reverse': isHost }"
   >
-    @if(position.topCard) {
-    <app-card
-      [ngStyle]="{
-        rotate: position.cardRotation + 'deg'
-      }"
-      [card]="position.topCard"
-    ></app-card>
-    } @if(position.rowIndex === 3) { @if (redJokerLaneIndex === laneIndex) {
-    <app-joker-card [isRedJoker]="true"></app-joker-card>
-    } @if (blackJokerLaneIndex === laneIndex) {
-    <app-joker-card [isRedJoker]="false"></app-joker-card>
-    } }
-  </app-position>
-  }
-</div>
-
+    @for (position of positions$ | async; track i; let i = $index) {
+      <app-position
+        [transparentTile]="transparentTiles"
+        [laneIndex]="laneIndex"
+        [rowIndex]="position.rowIndex"
+        [backgroundClass]="position.backgroundClass"
+        [textClass]="position.textClass"
+        [isHost]="isHost"
+        (placeCardAttempted)="onPlaceCardAttempted($event)"
+        [hideMarker]="!!position.topCard"
+      >
+        @if (position.topCard) {
+          <app-card
+            [ngStyle]="{
+              rotate: position.cardRotation + 'deg'
+            }"
+            [card]="position.topCard"
+          ></app-card>
+        }
+        @if (position.rowIndex === 3) {
+          @if (redJokerLaneIndex === laneIndex) {
+            <app-joker-card [isRedJoker]="true"></app-joker-card>
+          }
+          @if (blackJokerLaneIndex === laneIndex) {
+            <app-joker-card [isRedJoker]="false"></app-joker-card>
+          }
+        }
+      </app-position>
+    }
+  </div>
 }

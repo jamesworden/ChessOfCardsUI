@@ -1,40 +1,44 @@
 <div class="flex justify-around relative rounded-md overflow-hidden">
-  @if((playerGameView$ | async); as playerGameView) {
-  <div class="flex">
-    @if (initialPlaceMultipleCardAttempt) {
-    <div
-      class="absolute bg-black opacity-80 overflow-hidden"
-      [ngStyle]="{
-          'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_OVERLAY,
-          height: (cardSize$ | async)! * 7 + 'px',
-          width: (cardSize$ | async)! * 5 + 'px',
-        }"
-    ></div>
-    }
+  @if (playerGameView$ | async; as playerGameView) {
+    <div class="flex">
+      @if (initialPlaceMultipleCardAttempt) {
+        <div
+          class="absolute bg-black opacity-80 overflow-hidden"
+          [ngStyle]="{
+            'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_OVERLAY,
+            height: (cardSize$ | async)! * 7 + 'px',
+            width: (cardSize$ | async)! * 5 + 'px'
+          }"
+        ></div>
+      }
 
-    <div
-      class="flex"
-      [ngClass]="{ 'flex-row-reverse': !playerGameView.IsHost }"
-    >
-      @for(lane of playerGameView.Lanes; track laneIndex; let laneIndex =
-      $index) { @if(initialPlaceMultipleCardAttempt?.TargetLaneIndex ===
-      laneIndex) {
-      <app-place-multiple-cards-lane
-        [isHost]="playerGameView.IsHost"
-      ></app-place-multiple-cards-lane>
-      } @else {
-      <app-lane
-        [lane]="lane"
-        [laneIndex]="laneIndex"
-        [isHost]="playerGameView.IsHost"
-        [redJokerLaneIndex]="playerGameView.RedJokerLaneIndex"
-        [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
-        [transparentTiles]="transparentTiles"
-        [isPlayersTurn]="isPlayersTurn"
-        (placeCardAttempted)="onPlaceCardAttempted($event)"
-      ></app-lane>
-      } }
+      <div
+        class="flex"
+        [ngClass]="{ 'flex-row-reverse': !playerGameView.IsHost }"
+      >
+        @for (
+          lane of playerGameView.Lanes;
+          track laneIndex;
+          let laneIndex = $index
+        ) {
+          @if (initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex) {
+            <app-place-multiple-cards-lane
+              [isHost]="playerGameView.IsHost"
+            ></app-place-multiple-cards-lane>
+          } @else {
+            <app-lane
+              [lane]="lane"
+              [laneIndex]="laneIndex"
+              [isHost]="playerGameView.IsHost"
+              [redJokerLaneIndex]="playerGameView.RedJokerLaneIndex"
+              [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
+              [transparentTiles]="transparentTiles"
+              [isPlayersTurn]="isPlayersTurn"
+              (placeCardAttempted)="onPlaceCardAttempted($event)"
+            ></app-lane>
+          }
+        }
+      </div>
     </div>
-  </div>
   }
 </div>

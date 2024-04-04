@@ -30,26 +30,27 @@
       }"
     >
       <div class="relative w-full h-full">
-        @if((marker$ | async)?.topLeft; as topLeft) {
-        <span
-          [class]="'absolute font-semibold select-none' + ' ' + textClass"
-          [ngStyle]="{
-          top: ((cardSize$ | async) ?? 64) / 6 + 'px',
-          left: ((cardSize$ | async) ?? 64) / 6 + 'px',
-          fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px',
-        }"
-          >{{ topLeft }}</span
-        >
-        } @if((marker$ | async)?.bottomRight; as bottomRight) {
-        <span
-          [class]="'absolute font-semibold select-none' + ' ' + textClass"
-          [ngStyle]="{
-          bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
-          right: ((cardSize$ | async) ?? 64) / 6 + 'px',
-          fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px',
-        }"
-          >{{ bottomRight }}</span
-        >
+        @if ((marker$ | async)?.topLeft; as topLeft) {
+          <span
+            [class]="'absolute font-semibold select-none' + ' ' + textClass"
+            [ngStyle]="{
+              top: ((cardSize$ | async) ?? 64) / 6 + 'px',
+              left: ((cardSize$ | async) ?? 64) / 6 + 'px',
+              fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px'
+            }"
+            >{{ topLeft }}</span
+          >
+        }
+        @if ((marker$ | async)?.bottomRight; as bottomRight) {
+          <span
+            [class]="'absolute font-semibold select-none' + ' ' + textClass"
+            [ngStyle]="{
+              bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
+              right: ((cardSize$ | async) ?? 64) / 6 + 'px',
+              fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px'
+            }"
+            >{{ bottomRight }}</span
+          >
         }
       </div>
     </div>
