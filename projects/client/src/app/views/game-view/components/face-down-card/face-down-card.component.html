@@ -3,7 +3,7 @@
   src="../../../../assets/images/card_back.png"
   alt=""
   [ngStyle]="{
-    height: cardSize + 'px',
-    width: cardSize + 'px'
+    height: (cardSize$ | async) + 'px',
+    width: (cardSize$ | async) + 'px'
   }"
 />
