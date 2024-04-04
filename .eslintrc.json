@@ -1,5 +1,10 @@
 {
   "extends": [
     "semistandard"
-  ]
+  ],
+  "rules": {
+    "class-methods-use-this": [
+      "error"
+    ]
+  }
 }
