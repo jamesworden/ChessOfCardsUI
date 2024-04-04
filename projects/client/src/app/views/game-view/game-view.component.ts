@@ -44,7 +44,6 @@ import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-
 import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 import { ResponsiveSizeService } from './services/responsive-size.service';
 import { GameOverData } from '../../models/game-over-data.model';
-import { Breakpoint } from '../../models/breakpoint.model';
 import { getPossibleInitialPlaceCardAttempts } from './logic/get-possible-initial-place-card-attempts';
 import { isPlayersTurn } from './logic/is-players-turn';
 import { map, pairwise, startWith } from 'rxjs/operators';
@@ -65,9 +64,8 @@ import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 })
 export class GameViewComponent implements OnInit, AfterViewInit {
   readonly PlayerOrNone = PlayerOrNone;
-  readonly Breakpoint = Breakpoint;
 
-  readonly #modal = inject(MatDialog);
+  readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
   readonly #snackBar = inject(MatSnackBar);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
@@ -147,7 +145,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     );
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
-  readonly breakpoint$ = this.#responsiveSizeService.breakpoint$;
   readonly latestGameViewSnapshot$ = new BehaviorSubject<PlayerGameView | null>(
     null
   );
@@ -160,42 +157,50 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
       this.#router.navigate(['']);
     }
-    this.gameOverData$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((gameOverData) => {
-      if (!gameOverData.isOver) {
-        return;
-      }
+    this.gameOverData$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((gameOverData) => {
+        if (!gameOverData.isOver) {
+          return;
+        }
 
-      const modalRef = this.#modal.open(ModalComponent, {
-        width: '250px',
-        data: { message: gameOverData.message },
-      });
-
-      const subscription = modalRef.afterClosed().subscribe(() => {
-        this.#store.dispatch(new ResetGameData());
-        this.#store.dispatch(new ResetPendingGameView());
-        this.#router.navigate(['']);
-        subscription.unsubscribe();
-      });
-    })
-    this.playerGameView$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((playerGameView) => {
-      if (playerGameView) {
-        this.latestGameViewSnapshot$.next(playerGameView);
-        this.isPlayersTurn = isPlayersTurn(playerGameView);
-        this.possibleInitialPlaceCardAttempts =
-          getPossibleInitialPlaceCardAttempts(playerGameView);
-      }
-    })
-    this.opponentPassedMove$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((opponentPassedMove) => {
-      if (opponentPassedMove) {
-        this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
-          duration: 2000,
-          verticalPosition: 'top',
+        const modalRef = this.#matDialog.open(ModalComponent, {
+          width: '250px',
+          data: { message: gameOverData.message },
         });
-      }
-    })
-    this.isPlacingMultipleCards$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((isPlacingMultipleCards) => {
-      this.isPlacingMultipleCards = isPlacingMultipleCards;
-    })
+
+        const subscription = modalRef.afterClosed().subscribe(() => {
+          this.#store.dispatch(new ResetGameData());
+          this.#store.dispatch(new ResetPendingGameView());
+          this.#router.navigate(['']);
+          subscription.unsubscribe();
+        });
+      });
+    this.playerGameView$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((playerGameView) => {
+        if (playerGameView) {
+          this.latestGameViewSnapshot$.next(playerGameView);
+          this.isPlayersTurn = isPlayersTurn(playerGameView);
+          this.possibleInitialPlaceCardAttempts =
+            getPossibleInitialPlaceCardAttempts(playerGameView);
+        }
+      });
+    this.opponentPassedMove$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((opponentPassedMove) => {
+        if (opponentPassedMove) {
+          this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
+            duration: 2000,
+            verticalPosition: 'top',
+          });
+        }
+      });
+    this.isPlacingMultipleCards$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((isPlacingMultipleCards) => {
+        this.isPlacingMultipleCards = isPlacingMultipleCards;
+      });
   }
 
   ngAfterViewInit() {

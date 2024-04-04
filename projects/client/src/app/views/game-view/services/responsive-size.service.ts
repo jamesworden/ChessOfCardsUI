@@ -1,6 +1,5 @@
 import { DestroyRef, Injectable, OnInit, inject } from '@angular/core';
 import { BehaviorSubject, fromEvent } from 'rxjs';
-import { Breakpoint } from '../../../models/breakpoint.model';
 import { DEFAULT_CARD_SIZE } from '../constants';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -24,11 +23,6 @@ export class ResponsiveSizeService implements OnInit {
   private readonly _cardSize$ = new BehaviorSubject(DEFAULT_CARD_SIZE);
   public readonly cardSize$ = this._cardSize$.asObservable();
 
-  private readonly _breakpoint$ = new BehaviorSubject<Breakpoint>(
-    Breakpoint.Mobile
-  );
-  public readonly breakpoint$ = this._breakpoint$.asObservable();
-
   private readonly _windowResize$ = fromEvent(window, 'resize');
 
   ngOnInit() {
@@ -46,17 +40,6 @@ export class ResponsiveSizeService implements OnInit {
         const cardSize = Math.min(maxCardWidth, maxCardHeight);
 
         this._cardSize$.next(cardSize);
-      });
-    this._windowDimensions$
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe(([width]) => {
-        if (width < 700) {
-          this._breakpoint$.next(Breakpoint.Mobile);
-        } else if (width < 1000) {
-          this._breakpoint$.next(Breakpoint.Tablet);
-        } else {
-          this._breakpoint$.next(Breakpoint.Desktop);
-        }
       });
   }
 }
