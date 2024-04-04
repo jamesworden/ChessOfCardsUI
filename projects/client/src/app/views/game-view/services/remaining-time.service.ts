@@ -1,10 +1,4 @@
-import {
-  DestroyRef,
-  Injectable,
-  OnDestroy,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import { timer, BehaviorSubject, Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { SecondsRemaining } from '../../../models/seconds-remaining.model';
@@ -22,7 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Injectable({
   providedIn: 'root',
 })
-export class RemainingTimeService implements OnInit {
+export class RemainingTimeService {
   readonly #store = inject(Store);
   readonly #destroyRef = inject(DestroyRef);
 
@@ -39,7 +33,7 @@ export class RemainingTimeService implements OnInit {
     null
   );
 
-  ngOnInit(): void {
+  constructor() {
     this.playerGameView$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((playerGameView) => {

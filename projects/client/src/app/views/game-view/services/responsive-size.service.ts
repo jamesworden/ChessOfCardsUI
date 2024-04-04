@@ -1,4 +1,4 @@
-import { DestroyRef, Injectable, OnInit, inject } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { DEFAULT_CARD_SIZE } from '../constants';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -13,7 +13,7 @@ const sidebarWidth = 48;
 @Injectable({
   providedIn: 'root',
 })
-export class ResponsiveSizeService implements OnInit {
+export class ResponsiveSizeService {
   readonly #destroyRef = inject(DestroyRef);
 
   private readonly _windowDimensions$: BehaviorSubject<[number, number]> =
@@ -25,7 +25,7 @@ export class ResponsiveSizeService implements OnInit {
 
   private readonly _windowResize$ = fromEvent(window, 'resize');
 
-  ngOnInit() {
+  constructor() {
     this._windowResize$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(() => {
