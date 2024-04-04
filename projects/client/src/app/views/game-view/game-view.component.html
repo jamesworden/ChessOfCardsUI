@@ -1,55 +1,63 @@
-<app-sidebar class="h-full" [isPlayersTurn]="isPlayersTurn"></app-sidebar>
+<div
+  class="min-h-[calc(100dvh)] max-h-[calc(100dvh)] h-100 fixed flex justify-between w-full"
+>
+  <app-sidebar [isPlayersTurn]="isPlayersTurn"></app-sidebar>
 
-<app-animation-overlay
-  [animatedEntities]="(animatedCardEntities$ | async) ?? []"
-  (finishedAnimations)="renderAnimatedGameView()"
-  (startingAnimations)="checkToRemoveCardFromBoard($event)"
-></app-animation-overlay>
+  <app-animation-overlay
+    [animatedEntities]="(animatedCardEntities$ | async) ?? []"
+    (finishedAnimations)="renderAnimatedGameView()"
+    (startingAnimations)="checkToRemoveCardFromBoard($event)"
+  ></app-animation-overlay>
 
-<div class="flex justify-around w-full bg-gray-800">
-  @if(playerGameView$ | async; as playerGameView) {
-  <div class="game flex flex-col justify-between h-full" cdkDropListGroup>
-    <app-player-banner
-      [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
-      class="rounded-b-md transition"
-      [ngClass]="{
-        'bg-rose-700': !isPlayersTurn,
-        'bg-rose-900': isPlayersTurn
-      }"
-    ></app-player-banner>
+  <div class="flex justify-around w-full bg-gray-800">
+    @if(playerGameView$ | async; as playerGameView) {
+    <div class="game flex flex-col justify-between h-full" cdkDropListGroup>
+      <app-player-banner
+        [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
+        class="rounded-b-md transition"
+        [ngClass]="{
+          'bg-rose-700': !isPlayersTurn,
+          'bg-rose-900': isPlayersTurn
+        }"
+      ></app-player-banner>
 
-    <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
+      <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
-    <app-board
-      *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
-      [playerGameView]="latestGameViewSnapshot"
-      [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
-      [initialPlaceMultipleCardAttempt]="
-        initialPlaceMultipleCardAttempt$ | async
-      "
-      [isPlayersTurn]="isPlayersTurn"
-      (placeCardAttempted)="onPlaceCardAttempted($event)"
-    ></app-board>
+      <app-board
+        *ngIf="latestGameViewSnapshot$ | async as latestGameViewSnapshot"
+        [playerGameView]="latestGameViewSnapshot"
+        [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
+        [initialPlaceMultipleCardAttempt]="
+          initialPlaceMultipleCardAttempt$ | async
+        "
+        [isPlayersTurn]="isPlayersTurn"
+        (placeCardAttempted)="onPlaceCardAttempted($event)"
+      ></app-board>
 
-    <app-player-hand
-      [isPlacingMultipleCards]="isPlacingMultipleCards"
-      [isHost]="playerGameView.IsHost"
-      [cards]="playerGameView.Hand.Cards"
-      [cardSize]="(cardSize$ | async)!"
-      [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
-      (cardDropped)="onPlayerHandCardDrop($event)"
-    ></app-player-hand>
+      <app-player-hand
+        [isPlacingMultipleCards]="isPlacingMultipleCards"
+        [isHost]="playerGameView.IsHost"
+        [cards]="playerGameView.Hand.Cards"
+        [cardSize]="(cardSize$ | async)!"
+        [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
+        (cardDropped)="onPlayerHandCardDrop($event)"
+      ></app-player-hand>
 
-    <app-player-banner
-      [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
-      class="rounded-t-md transition"
-      [ngClass]="{
-        'bg-sky-700': isPlayersTurn,
-        'bg-sky-900': !isPlayersTurn
-      }"
-    ></app-player-banner>
+      <app-player-banner
+        [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
+        class="rounded-t-md transition"
+        [ngClass]="{
+          'bg-sky-700': isPlayersTurn,
+          'bg-sky-900': !isPlayersTurn
+        }"
+      ></app-player-banner>
+    </div>
+    }
   </div>
-  }
+
+  <div>
+    <!-- Empty div on mobile, stats panel on desktop. -->
+  </div>
 </div>
 
 <ng-template #opponentHandToolbar>
