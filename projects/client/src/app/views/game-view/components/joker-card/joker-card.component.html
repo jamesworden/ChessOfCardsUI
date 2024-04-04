@@ -1,9 +1,9 @@
 <img
   class="card"
-  src="../../../../assets/images/{{ imageFileName }}"
+  src="../../../../assets/images/{{ imageFileName$ | async }}"
   [ngStyle]="{
-    rotate: tiltDegrees + 'deg',
-    height: cardSize + 'px',
-    width: cardSize + 'px'
+    rotate: (tiltDegrees$ | async) + 'deg',
+    height: (cardSize$ | async) + 'px',
+    width: (cardSize$ | async) + 'px'
   }"
 />

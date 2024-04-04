@@ -24,10 +24,18 @@
         }
         @if (position.rowIndex === 3) {
           @if (redJokerLaneIndex === laneIndex) {
-            <app-joker-card [isRedJoker]="true"></app-joker-card>
+            <app-joker-card
+              [isRedJoker]="true"
+              [wonBy]="lane.WonBy"
+              [isHost]="isHost"
+            ></app-joker-card>
           }
           @if (blackJokerLaneIndex === laneIndex) {
-            <app-joker-card [isRedJoker]="false"></app-joker-card>
+            <app-joker-card
+              [isRedJoker]="false"
+              [wonBy]="lane.WonBy"
+              [isHost]="isHost"
+            ></app-joker-card>
           }
         }
       </app-position>
