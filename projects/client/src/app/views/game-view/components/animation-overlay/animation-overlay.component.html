@@ -14,9 +14,8 @@
         ) {
           @switch (entity.animationType) {
             @case (AnimationType.CardMovement) {
-              <!-- Zero opacity ensures that the card doesn't quickly flicker on screen. It gains opacity from the applied animation. -->
               <div
-                class="absolute opacity-0"
+                class="absolute"
                 [@cardMovement]="{
                   value:
                     entity.movement.sequence === (currentSequence$ | async)
