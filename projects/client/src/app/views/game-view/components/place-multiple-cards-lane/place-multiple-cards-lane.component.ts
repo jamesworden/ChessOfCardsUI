@@ -54,7 +54,7 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
 
   @Input({ required: true }) isHost: boolean;
 
-  cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
   MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
   Z_INDEXES = Z_INDEXES;

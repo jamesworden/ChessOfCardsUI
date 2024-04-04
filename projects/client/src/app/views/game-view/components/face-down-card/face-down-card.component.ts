@@ -9,5 +9,5 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 export class FaceDownCardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService)
   
-  public cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 }
