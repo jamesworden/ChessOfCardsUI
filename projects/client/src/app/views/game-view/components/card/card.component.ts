@@ -26,7 +26,7 @@ export class CardComponent {
     this.card$.next(card);
   }
   @Input() playerCanDrag = false;
-  @Input() insideVerticalContainer: boolean = false;
+  @Input() insideVerticalContainer = false;
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly card$ = new BehaviorSubject<Card | null>(null);
