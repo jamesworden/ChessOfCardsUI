@@ -25,10 +25,10 @@
                         ? 'completed'
                         : 'todo',
                   params: {
-                    fromX: entity.movement.from?.x ?? 100,
-                    toX: entity.movement.to?.x ?? 100,
-                    fromY: entity.movement.from?.y ?? 100,
-                    toY: entity.movement.to?.y ?? 100,
+                    fromX: entity.movement.from?.x,
+                    toX: entity.movement.to?.x,
+                    fromY: entity.movement.from?.y,
+                    toY: entity.movement.to?.y,
                     durationMs: entity.movement.durationMs
                   }
                 }"
