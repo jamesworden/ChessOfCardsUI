@@ -6,9 +6,8 @@
   <div class="lane" *ngIf="playerGameView$ | async">
     <!-- Lane background color layer beneath place cards -->
     <div
+      class="absolute"
       [ngStyle]="{
-        position: 'absolute',
-        width: '64px',
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
       }"
     >

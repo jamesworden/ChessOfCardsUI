@@ -1,9 +1,9 @@
-<div class="flex justify-around relative">
+<div class="flex justify-around relative rounded-md overflow-hidden">
   @if((playerGameView$ | async); as playerGameView) {
   <div class="flex">
     @if (initialPlaceMultipleCardAttempt) {
     <div
-      class="rounded-md absolute bg-black opacity-80 overflow-hidden"
+      class="absolute bg-black opacity-80 overflow-hidden"
       [ngStyle]="{
           'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_OVERLAY,
           height: (cardSize$ | async)! * 7 + 'px',
@@ -13,7 +13,7 @@
     }
 
     <div
-      class="flex rounded-md overflow-hidden"
+      class="flex"
       [ngClass]="{ 'flex-row-reverse': !playerGameView.IsHost }"
     >
       @for(lane of playerGameView.Lanes; track laneIndex; let laneIndex =
