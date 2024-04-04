@@ -78,7 +78,7 @@ export class PlayerHandComponent implements OnInit, OnChanges, OnDestroy {
   readonly startBounceTimer$ = new Subject();
 
   ngOnChanges() {
-    this.updateBounceTimer();
+    this.resetBounceTimer();
   }
 
   ngOnInit() {
@@ -97,7 +97,7 @@ export class PlayerHandComponent implements OnInit, OnChanges, OnDestroy {
         })
     );
 
-    this.updateBounceTimer();
+    this.resetBounceTimer();
   }
 
   ngOnDestroy() {
@@ -106,12 +106,13 @@ export class PlayerHandComponent implements OnInit, OnChanges, OnDestroy {
 
   onCardDrop(event: CdkDragDrop<string>) {
     this.cardDropped.emit(event);
+    this.resetBounceTimer();
   }
 
-  private updateBounceTimer() {
-    if (this.disabled) {
-      this.stopBounceTimer$.next();
-    } else {
+  resetBounceTimer() {
+    this.stopBounceTimer$.next();
+
+    if (!this.disabled) {
       this.startBounceTimer$.next();
     }
   }
