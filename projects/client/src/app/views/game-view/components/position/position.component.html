@@ -20,7 +20,7 @@
 
 @if(!hideMarker) { @if((marker$ | async)?.topLeft; as topLeft) {
 <span
-  [class]="'absolute font-semibold' + ' ' + textClass"
+  [class]="'absolute font-semibold select-none' + ' ' + textClass"
   [ngStyle]="{
     top: ((cardSize$ | async) ?? 64) / 6 + 'px',
     left: ((cardSize$ | async) ?? 64) / 6 + 'px',
@@ -30,7 +30,7 @@
 >
 } @if((marker$ | async)?.bottomRight; as bottomRight) {
 <span
-  [class]="'absolute font-semibold' + ' ' + textClass"
+  [class]="'absolute font-semibold select-none' + ' ' + textClass"
   [ngStyle]="{
     bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
     right: ((cardSize$ | async) ?? 64) / 6 + 'px',
