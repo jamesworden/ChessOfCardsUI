@@ -16,6 +16,7 @@ import { map, withLatestFrom } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { toggleDarkMode } from '../../logic/toggle-dark-mode';
 
 @Component({
   selector: 'app-home-view',
@@ -98,5 +99,9 @@ export class HomeViewComponent implements OnInit {
 
   copyToClipboard(text: string) {
     this.#clipboard.copy(text);
+  }
+
+  toggleDarkMode() {
+    toggleDarkMode();
   }
 }

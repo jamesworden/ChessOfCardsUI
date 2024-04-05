@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="en"">
   <head>
+    <script>
+      if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+      } else {
+          document.documentElement.classList.remove('dark')
+      }
+    </script>
     <meta
       http-equiv="Content-Security-Policy"
       content="upgrade-insecure-requests"
@@ -20,7 +27,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="m-0 p-0 lanes-bg-gradient">
+  <body class="m-0 p-0 bg-gray-200 dark:bg-gray-700 text-black dark:text-white">
     <app-root></app-root>
   </body>
 </html>

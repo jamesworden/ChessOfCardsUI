@@ -1,5 +1,5 @@
 <div
-  class="h-full w-full min-w-screen lanes-bg-gradient py-4 flex flex-col"
+  class="h-full w-full min-w-screen bg-gray-200 dark:bg-gray-800 py-4 flex flex-col transition"
   [@fadeInOut]
 >
   <div class="w-full px-4 flex justify-around">
@@ -23,10 +23,24 @@
           >
             Sign Up
           </li>
+          <li>
+            <span
+              (click)="toggleDarkMode()"
+              class="material-symbols-outlined px-2 select-none cursor-pointer flex dark:hidden"
+            >
+              dark_mode
+            </span>
+            <span
+              (click)="toggleDarkMode()"
+              class="material-symbols-outlined px-2 select-none hidden cursor-pointer dark:flex"
+            >
+              light_mode
+            </span>
+          </li>
         </ul>
       </nav>
 
-      <hr class="border-solid border-1 border-black mt-24" />
+      <hr class="border-solid border-1 border-black dark:border-white mt-24" />
 
       <section class="flex">
         <div class="flex-1 hidden md:block"></div>
@@ -35,7 +49,7 @@
           <p class="mb-4">Fast paced, two player strategy game</p>
           <div>
             <button
-              class="uppercase tracking-widest border border-black px-8 text-sm py-2 my-2"
+              class="uppercase tracking-widest border border-black dark:border-white px-8 text-sm py-2 my-2"
               (click)="scrollToPlayNow()"
             >
               Play
@@ -56,7 +70,7 @@
       </section>
 
       <hr
-        class="border-solid border-1 border-black my-12"
+        class="border-solid border-1 border-black dark:border-white my-12"
         id="play-now-section"
       />
 
@@ -67,7 +81,7 @@
 
             @if (!isConnectedToServer) {
               <p
-                class="italic text-xs text-red-700 cursor-pointer"
+                class="italic text-xs text-red-700 cursor-pointer dark:font-bold"
                 (click)="reconnectToServer()"
               >
                 Could not connect to server, click here to retry
@@ -80,7 +94,7 @@
               <p>Send this game code to your opponent:</p>
               <div class="mt-4">
                 <div
-                  class="py-2 px-4 bg-gray-300 border border-gray-400 border-solid font-bold text-xl uppercase min-w-24 flex gap-x-1 w-36"
+                  class="py-2 px-4 bg-gray-300 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl uppercase min-w-24 flex gap-x-1 w-36"
                   [ngClass]="{
                     'border-red-700': !isConnectedToServer
                   }"
@@ -103,12 +117,14 @@
               <p>Or enter your opponent's game code here:</p>
 
               @if (gameCodeIsInvalid$ | async) {
-                <p class="italic text-xs text-red-700">Invalid game code</p>
+                <p class="italic text-xs text-red-700 dark:font-bold">
+                  Invalid game code
+                </p>
               }
 
               <div class="mt-4">
                 <input
-                  class="py-2 px-4 bg-gray-300 border border-gray-400 border-solid font-bold text-xl w-36 outline-none uppercase"
+                  class="py-2 px-4 bg-gray-300 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl w-36 outline-none uppercase"
                   [ngClass]="{
                     'border-red-700':
                       (gameCodeIsInvalid$ | async) || !isConnectedToServer
@@ -125,7 +141,7 @@
         </div>
       </section>
 
-      <hr class="border-solid border-1 border-black my-12" />
+      <hr class="border-solid border-1 border-black dark:border-white my-12" />
     </div>
   </div>
 </div>
