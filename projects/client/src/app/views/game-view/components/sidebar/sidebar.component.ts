@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toggleDarkMode } from 'projects/client/src/app/logic/toggle-dark-mode';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -213,6 +214,14 @@ export class SidebarComponent implements OnInit {
 
   resign() {
     this.#store.dispatch(new ResignGame());
+  }
+
+  toggleDarkMode() {
+    toggleDarkMode();
+  }
+
+  reportBug() {
+    // TODO
   }
 
   private secondsToRemainingTimeString(seconds: number) {

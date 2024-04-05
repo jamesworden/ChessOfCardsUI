@@ -7,7 +7,9 @@
     (startingAnimations)="checkToRemoveCardFromBoard($event)"
   ></app-animation-overlay>
 
-  <div class="flex justify-around w-full bg-gray-800">
+  <div
+    class="flex justify-around w-full dark:bg-gray-800 bg-gray-300 transition"
+  >
     @if (playerGameView$ | async; as playerGameView) {
       <div class="game flex flex-col justify-between h-full" cdkDropListGroup>
         <app-player-banner
@@ -38,7 +40,7 @@
           [isHost]="playerGameView.IsHost"
           [cards]="playerGameView.Hand.Cards"
           [cardSize]="(cardSize$ | async)!"
-          [disabled]="!isPlayersTurn || !!(waitingForServer$ | async)"
+          [disabled]="!!(waitingForServer$ | async)"
           (cardDropped)="onPlayerHandCardDrop($event)"
         ></app-player-hand>
 
