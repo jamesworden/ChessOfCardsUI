@@ -15,6 +15,7 @@ import { GameState } from '../../state/game.state';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-home-view',
@@ -28,6 +29,7 @@ export class HomeViewComponent implements OnInit {
   readonly #destroyRef = inject(DestroyRef);
   readonly #store = inject(Store);
   readonly #router = inject(Router);
+  readonly #clipboard = inject(Clipboard);
 
   @Select(ServerState.isConnectedToServer)
   isConnectedToServer$: Observable<boolean>;
@@ -92,5 +94,9 @@ export class HomeViewComponent implements OnInit {
 
   navigateToHome() {
     this.#router.navigate(['']);
+  }
+
+  copyToClipboard(text: string) {
+    this.#clipboard.copy(text);
   }
 }
