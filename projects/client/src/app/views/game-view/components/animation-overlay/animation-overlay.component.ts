@@ -98,7 +98,7 @@ export class AnimationOverlayComponent implements OnInit {
     this.currentSequence$.next(sequence);
 
     /** [Animation Overlay Documenation] [LAN-308] */
-    const correctedDelayMs = delay - 10;
+    const correctedDelayMs = delay - 25;
 
     setTimeout(() => {
       this.updateCurrentSequence(sequencesWithDelays, initialIndex + 1);
