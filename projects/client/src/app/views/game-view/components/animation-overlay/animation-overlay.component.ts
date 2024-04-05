@@ -62,12 +62,6 @@ export class AnimationOverlayComponent implements OnInit {
   );
   readonly currentSequence$ = new BehaviorSubject<number | null>(null);
 
-  /**
-   * [Debugging Only]
-   * Allows developers to see the animation details displayed while the animation is happening.
-   */
-  showDebugWindow = true;
-
   ngOnInit() {
     this.sequencesWithDelays$
       .pipe(takeUntilDestroyed(this.#destroyRef))
