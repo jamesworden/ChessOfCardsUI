@@ -62,6 +62,12 @@ export class AnimationOverlayComponent implements OnInit {
   );
   readonly currentSequence$ = new BehaviorSubject<number | null>(null);
 
+  /**
+   * [Debugging Only]
+   * Allows developers to see the animation details displayed while the animation is happening.
+   */
+  showDebugWindow = true;
+
   ngOnInit() {
     this.sequencesWithDelays$
       .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -97,8 +103,11 @@ export class AnimationOverlayComponent implements OnInit {
 
     this.currentSequence$.next(sequence);
 
+    /** [Animation Overlay Documenation] [LAN-308] */
+    const correctedDelayMs = delay - 10;
+
     setTimeout(() => {
       this.updateCurrentSequence(sequencesWithDelays, initialIndex + 1);
-    }, delay);
+    }, correctedDelayMs);
   }
 }
