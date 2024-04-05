@@ -1,16 +1,20 @@
 import {
+  trigger,
+  transition,
   style,
   animate,
-  transition,
-  trigger,
-  state,
+  query,
+  animateChild,
 } from '@angular/animations';
 
 export const fadeInOutAnimation = trigger('fadeInOut', [
-  state('*', style({ position: 'absolute' })),
   transition(':enter', [
     style({ opacity: 0 }),
     animate(100, style({ opacity: 1 })),
+    query('@*', animateChild(), { optional: true }),
   ]),
-  transition(':leave', [animate(100, style({ opacity: 0 }))]),
+  transition(':leave', [
+    query('@*', animateChild(), { optional: true }),
+    animate(100, style({ opacity: 0 })),
+  ]),
 ]);

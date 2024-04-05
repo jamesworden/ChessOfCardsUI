@@ -1,10 +1,13 @@
 <div
-  class="h-full w-full min-h-[calc(100dvh)] min-w-screen lanes-bg-gradient py-4 flex flex-col"
+  class="h-full w-full min-w-screen lanes-bg-gradient py-4 flex flex-col"
+  [@fadeInOut]
 >
   <div class="w-full px-4 flex justify-around">
     <div class="max-w-3xl w-full mx-auto">
       <nav class="flex justify-between">
-        <h3 class="font-semibold">Chess of Cards</h3>
+        <h3 class="font-semibold cursor-pointer" (click)="navigateToHome()">
+          Chess of Cards
+        </h3>
         <ul class="list-none flex gap-x-8">
           <li
             class="opacity-50"
@@ -48,7 +51,7 @@
             <div class="mt-3 bg-gray-800 pr-3"></div>
           </div>
 
-          <div class="flex ml-3 h-3 w-full bg-gray800"></div>
+          <div class="flex ml-3 h-3 w-full bg-gray-800"></div>
         </div>
       </section>
 
@@ -62,13 +65,13 @@
           <div class="mb-4">
             <h1 class="font-bold text-4xl">Play Now</h1>
 
-            @if(!isConnectedToServer) {
-            <p
-              class="italic text-xs text-red-700 cursor-pointer"
-              (click)="reconnectToServer()"
-            >
-              Could not connect to server, click here to retry
-            </p>
+            @if (!isConnectedToServer) {
+              <p
+                class="italic text-xs text-red-700 cursor-pointer"
+                (click)="reconnectToServer()"
+              >
+                Could not connect to server, click here to retry
+              </p>
             }
           </div>
 
@@ -76,25 +79,36 @@
             <div class="flex-1 flex flex-col">
               <p>Send this game code to your opponent:</p>
               <div class="mt-4">
-                <span
-                  class="py-2 px-4 bg-gray-300 border border-gray-400 border-solid font-bold text-xl uppercase min-w-24"
+                <div
+                  class="py-2 px-4 bg-gray-300 border border-gray-400 border-solid font-bold text-xl uppercase min-w-24 flex gap-x-1 w-36"
                   [ngClass]="{
                     'border-red-700': !isConnectedToServer
                   }"
-                  >{{ gameCode$ | async }}</span
                 >
+                  @if (gameCode$ | async; as gameCode) {
+                    <div class="flex justify-around flex-col">
+                      <span
+                        matTooltip="Copy"
+                        (click)="copyToClipboard(gameCode)"
+                        class="material-symbols-outlined mr-2 cursor-pointer"
+                        >content_copy</span
+                      >
+                    </div>
+                    <span>{{ gameCode$ | async }}</span>
+                  }
+                </div>
               </div>
             </div>
             <div class="flex-1 flex flex-col">
               <p>Or enter your opponent's game code here:</p>
 
-              @if(gameCodeIsInvalid$ | async) {
-              <p class="italic text-xs text-red-700">Invalid game code</p>
+              @if (gameCodeIsInvalid$ | async) {
+                <p class="italic text-xs text-red-700">Invalid game code</p>
               }
 
               <div class="mt-4">
                 <input
-                  class="py-2 px-4 bg-gray-300 border border-gray-400 border-solid font-bold text-xl w-24 outline-none uppercase"
+                  class="py-2 px-4 bg-gray-300 border border-gray-400 border-solid font-bold text-xl w-36 outline-none uppercase"
                   [ngClass]="{
                     'border-red-700':
                       (gameCodeIsInvalid$ | async) || !isConnectedToServer

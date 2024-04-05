@@ -1,5 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
-import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
+import { Component, inject } from '@angular/core';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 @Component({
@@ -7,20 +6,8 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
   templateUrl: './face-down-card.component.html',
   styleUrls: ['./face-down-card.component.scss'],
 })
-export class FaceDownCardComponent implements OnDestroy {
-  private sm = new SubscriptionManager();
-
-  cardSize: number;
-
-  constructor(public responsiveSizeService: ResponsiveSizeService) {
-    this.sm.add(
-      responsiveSizeService.cardSize$.subscribe((cardSize) => {
-        this.cardSize = cardSize;
-      })
-    );
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
-  }
+export class FaceDownCardComponent {
+  readonly #responsiveSizeService = inject(ResponsiveSizeService)
+  
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 }

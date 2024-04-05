@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import {
@@ -7,7 +7,6 @@ import {
   ResignGame,
 } from 'projects/client/src/app/actions/game.actions';
 import { GameState } from 'projects/client/src/app/state/game.state';
-import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
@@ -16,6 +15,7 @@ import { withLatestFrom } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
 import { RemainingTimeService } from '../../services/remaining-time.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 enum YesNoButtons {
   Yes = 'Yes',
@@ -27,8 +27,13 @@ enum YesNoButtons {
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnDestroy {
-  private sm = new SubscriptionManager();
+export class SidebarComponent implements OnInit {
+  readonly #responsiveSizeService = inject(ResponsiveSizeService);
+  readonly #matDialog = inject(MatDialog);
+  readonly #store = inject(Store);
+  readonly #matSnackBar = inject(MatSnackBar);
+  readonly #remainingTimeService = inject(RemainingTimeService);
+  readonly #destroyRef = inject(DestroyRef);
 
   @Input({ required: true }) isPlayersTurn = false;
 
@@ -44,7 +49,8 @@ export class SidebarComponent implements OnDestroy {
   @Select(GameState.waitingForServer)
   waitingForServer$!: Observable<boolean>;
 
-  cardSize: number;
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
   numCardsInPlayerDeck: number | null = null;
@@ -53,73 +59,57 @@ export class SidebarComponent implements OnDestroy {
   playersRemainingSecondsString = '';
   opponentsRemainingSecondsString = '';
 
-  constructor(
-    public responsiveSizeService: ResponsiveSizeService,
-    public modal: MatDialog,
-    private store: Store,
-    private snackBar: MatSnackBar,
-    private remainingTimeService: RemainingTimeService
-  ) {
-    this.sm.add(
-      responsiveSizeService.cardSize$.subscribe((cardSize) => {
-        this.cardSize = cardSize;
-      })
-    );
-    this.sm.add(
-      this.drawOfferSent$.subscribe((drawOfferSent) => {
+  ngOnInit() {
+    this.drawOfferSent$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((drawOfferSent) => {
         this.drawOfferSent = drawOfferSent;
-      })
-    );
-    this.sm.add(
-      this.hasPendingDrawOffer$.subscribe((hasPendingDrawOffer) => {
+      });
+    this.hasPendingDrawOffer$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((hasPendingDrawOffer) => {
         this.hasPendingDrawOffer = hasPendingDrawOffer;
-      })
-    );
-    this.sm.add(
-      this.playerGameView$.subscribe((playerGameView) => {
+      });
+    this.playerGameView$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((playerGameView) => {
         if (playerGameView) {
           this.numCardsInPlayerDeck = playerGameView.NumCardsInPlayersDeck;
           this.numCardsInOpponentDeck = playerGameView.NumCardsInOpponentsDeck;
         }
-      })
-    );
-    this.sm.add(
-      this.remainingTimeService.secondsRemainingFromLastMove$
-        .pipe(withLatestFrom(this.playerGameView$))
-        .subscribe(([secondsRemaining, playerGameView]) => {
-          if (secondsRemaining && playerGameView) {
-            const { IsHost } = playerGameView;
+      });
+    this.#remainingTimeService.secondsRemainingFromLastMove$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .pipe(withLatestFrom(this.playerGameView$))
+      .subscribe(([secondsRemaining, playerGameView]) => {
+        if (secondsRemaining && playerGameView) {
+          const { IsHost } = playerGameView;
 
-            const playersRemainingSeconds = IsHost
-              ? secondsRemaining.host
-              : secondsRemaining.guest;
-            const opponentsRemainingSeconds = IsHost
-              ? secondsRemaining.guest
-              : secondsRemaining.host;
+          const playersRemainingSeconds = IsHost
+            ? secondsRemaining.host
+            : secondsRemaining.guest;
+          const opponentsRemainingSeconds = IsHost
+            ? secondsRemaining.guest
+            : secondsRemaining.host;
 
-            this.playersRemainingSecondsString =
-              this.secondsToRemainingTimeString(playersRemainingSeconds);
-            this.opponentsRemainingSecondsString =
-              this.secondsToRemainingTimeString(opponentsRemainingSeconds);
+          this.playersRemainingSecondsString =
+            this.secondsToRemainingTimeString(playersRemainingSeconds);
+          this.opponentsRemainingSecondsString =
+            this.secondsToRemainingTimeString(opponentsRemainingSeconds);
 
-            this.playerHasLowTime = playersRemainingSeconds <= 30;
-          }
-        })
-    );
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
+          this.playerHasLowTime = playersRemainingSeconds <= 30;
+        }
+      });
   }
 
   attemptToOpenOfferDrawModel() {
     if (this.drawOfferSent) {
-      this.snackBar.open('You already offered a draw.', undefined, {
+      this.#matSnackBar.open('You already offered a draw.', undefined, {
         duration: 2000,
         verticalPosition: 'top',
       });
     } else if (this.hasPendingDrawOffer) {
-      this.snackBar.open(
+      this.#matSnackBar.open(
         'Your opponent already offered you a draw.',
         undefined,
         {
@@ -138,7 +128,7 @@ export class SidebarComponent implements OnDestroy {
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.modal.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ModalComponent, {
       width: '250px',
       data: modalData,
     });
@@ -153,9 +143,9 @@ export class SidebarComponent implements OnDestroy {
   }
 
   offerDraw() {
-    this.store.dispatch(new OfferDraw());
+    this.#store.dispatch(new OfferDraw());
 
-    this.snackBar.open('Offered draw.', undefined, {
+    this.#matSnackBar.open('Offered draw.', undefined, {
       duration: 1500,
       verticalPosition: 'top',
     });
@@ -165,7 +155,7 @@ export class SidebarComponent implements OnDestroy {
     if (this.isPlayersTurn) {
       this.openPassMoveModal();
     } else {
-      this.snackBar.open("It's not your turn!", undefined, {
+      this.#matSnackBar.open("It's not your turn!", undefined, {
         duration: 1500,
         verticalPosition: 'top',
       });
@@ -178,7 +168,7 @@ export class SidebarComponent implements OnDestroy {
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.modal.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ModalComponent, {
       width: '250px',
       data: modalData,
     });
@@ -193,9 +183,9 @@ export class SidebarComponent implements OnDestroy {
   }
 
   passMove() {
-    this.store.dispatch(new PassMove());
+    this.#store.dispatch(new PassMove());
 
-    this.snackBar.open('Move passed.', undefined, {
+    this.#matSnackBar.open('Move passed.', undefined, {
       duration: 1500,
       verticalPosition: 'top',
     });
@@ -207,7 +197,7 @@ export class SidebarComponent implements OnDestroy {
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.modal.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ModalComponent, {
       width: '250px',
       data: modalData,
     });
@@ -222,7 +212,7 @@ export class SidebarComponent implements OnDestroy {
   }
 
   resign() {
-    this.store.dispatch(new ResignGame());
+    this.#store.dispatch(new ResignGame());
   }
 
   private secondsToRemainingTimeString(seconds: number) {

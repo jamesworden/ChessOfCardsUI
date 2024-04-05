@@ -1,79 +1,80 @@
 <nav
-  class="sidebar bg-gray-900 h-full"
+  class="sidebar bg-gray-900 h-full flex flex-col gap-y-4"
   [ngStyle]="{
-    width: cardSize + 'px'
+    width: '64px'
   }"
 >
-  <div
-    class="flex flex-col justify-around text-center"
-    [ngStyle]="{
-      height: cardSize + 'px'
-    }"
-  >
-    <span class="text-gray-200 tracking-widest font-bold">CoC</span>
+  <div class="flex flex-col justify-around text-center mt-6">
+    <div class="text-gray-200 semibold text-center text-sm mb-3">
+      Game Code:
+    </div>
+    <div class="text-gray-200 tracking-widest font-bold text-center text-md">
+      WXYZ
+    </div>
   </div>
-  <app-sidebar-item
-    [disabled]="!!(waitingForServer$ | async)"
-    [itemHeight]="cardSize"
-    [itemWidth]="cardSize"
-    [iconSize]="cardSize / 2"
-    tooltip="Pass move"
-    materialSymbol="waving_hand"
-    (selected)="attemptToOpenPassMoveModal()"
-  ></app-sidebar-item>
-  <app-sidebar-item
-    [disabled]="!!(waitingForServer$ | async)"
-    [itemHeight]="cardSize"
-    [itemWidth]="cardSize"
-    [iconSize]="cardSize / 2"
-    tooltip="Offer draw"
-    materialSymbol="handshake"
-    (selected)="attemptToOpenOfferDrawModel()"
-  ></app-sidebar-item>
-  <app-sidebar-item
-    [disabled]="!!(waitingForServer$ | async)"
-    [itemHeight]="cardSize"
-    [itemWidth]="cardSize"
-    [iconSize]="cardSize / 2"
-    tooltip="Resign"
-    materialSymbol="flag"
-    (selected)="openResignModal()"
-  ></app-sidebar-item>
 
-  @if(numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
-  <div
-    class="divider"
-    [ngStyle]="{
-      margin: cardSize / 3.5 + 'px 8px'
-    }"
-  ></div>
-  } @if(numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
-  <div class="game-stats">
-    <div
-      class="remaining-time"
-      [ngClass]="{
-        'is-not-counting-down': isPlayersTurn
-      }"
-    >
-      <span>
-        {{ opponentsRemainingSecondsString }}
-      </span>
-    </div>
-    <div class="deck-counts">
-      <div class="deck-count">{{ numCardsInOpponentDeck }}</div>
-      <app-face-down-card></app-face-down-card>
-      <app-face-down-card></app-face-down-card>
-      <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
-    </div>
-    <div
-      class="remaining-time"
-      [ngClass]="{
-        'low-time-container': playerHasLowTime,
-        'is-not-counting-down': !isPlayersTurn
-      }"
-    >
-      <span>{{ playersRemainingSecondsString }}</span>
-    </div>
+  <div class="divider mx-2"></div>
+
+  <div>
+    <app-sidebar-item
+      [disabled]="!!(waitingForServer$ | async)"
+      [itemHeight]="64"
+      [itemWidth]="64"
+      [iconSize]="32"
+      tooltip="Pass move"
+      materialSymbol="waving_hand"
+      (selected)="attemptToOpenPassMoveModal()"
+    ></app-sidebar-item>
+    <app-sidebar-item
+      [disabled]="!!(waitingForServer$ | async)"
+      [itemHeight]="64"
+      [itemWidth]="64"
+      [iconSize]="32"
+      tooltip="Offer draw"
+      materialSymbol="handshake"
+      (selected)="attemptToOpenOfferDrawModel()"
+    ></app-sidebar-item>
+    <app-sidebar-item
+      [disabled]="!!(waitingForServer$ | async)"
+      [itemHeight]="64"
+      [itemWidth]="64"
+      [iconSize]="32"
+      tooltip="Resign"
+      materialSymbol="flag"
+      (selected)="openResignModal()"
+    ></app-sidebar-item>
   </div>
+
+  @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
+    <div class="divider mx-2"></div>
+  }
+  @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
+    <div class="game-stats">
+      <div
+        class="remaining-time"
+        [ngClass]="{
+          'is-not-counting-down': isPlayersTurn
+        }"
+      >
+        <span>
+          {{ opponentsRemainingSecondsString }}
+        </span>
+      </div>
+      <div class="deck-counts">
+        <div class="deck-count">{{ numCardsInOpponentDeck }}</div>
+        <app-face-down-card></app-face-down-card>
+        <app-face-down-card></app-face-down-card>
+        <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
+      </div>
+      <div
+        class="remaining-time"
+        [ngClass]="{
+          'low-time-container': playerHasLowTime,
+          'is-not-counting-down': !isPlayersTurn
+        }"
+      >
+        <span>{{ playersRemainingSecondsString }}</span>
+      </div>
+    </div>
   }
 </nav>

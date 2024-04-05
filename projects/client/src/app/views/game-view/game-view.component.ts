@@ -6,11 +6,12 @@ import {
   inject,
   ViewChild,
   AfterViewInit,
-  OnDestroy,
+  DestroyRef,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
@@ -40,11 +41,9 @@ import { addCardToArray } from './logic/add-card-to-array';
 import { moveCardToLane } from './logic/move-card-to-lane';
 import { removeCardFromArray } from './logic/remove-card-from-array';
 import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-cards-to-move';
-import { getCardImageFileName as getCardImageFileNameFn } from '../../util/get-asset-file-names';
 import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
 import { ResponsiveSizeService } from './services/responsive-size.service';
 import { GameOverData } from '../../models/game-over-data.model';
-import { Breakpoint } from '../../models/breakpoint.model';
 import { getPossibleInitialPlaceCardAttempts } from './logic/get-possible-initial-place-card-attempts';
 import { isPlayersTurn } from './logic/is-players-turn';
 import { map, pairwise, startWith } from 'rxjs/operators';
@@ -52,61 +51,26 @@ import { combineLatest } from 'rxjs';
 import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 import { CardMovement } from '../../models/card-movement.model';
 import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
-import { SubscriptionManager } from '../../util/subscription-manager';
 import { MoveMadeDetails } from './models/move-made-details.model';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { Router } from '@angular/router';
+import { cardRotationAnimation } from '../../animations/card-rotation.animation';
+import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
   styleUrls: ['./game-view.component.scss'],
-  animations: [
-    trigger('cardRotation', [
-      state(
-        'void, not-rotating',
-        style({ transform: 'rotate({{ fromRotate }})' }),
-        {
-          params: {
-            fromRotate: '0deg',
-          },
-        }
-      ),
-      state('rotating', style({ transform: 'rotate({{ toRotate }})' }), {
-        params: {
-          toRotate: '0deg',
-        },
-      }),
-      transition(
-        'not-rotating => rotating, void => rotating',
-        animate('{{ durationMs }}ms ease-out'),
-        {
-          params: {
-            durationMs: 500,
-          },
-        }
-      ),
-    ]),
-  ],
+  animations: [cardRotationAnimation, fadeInOutAnimation],
 })
-export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
-  private readonly sm = new SubscriptionManager();
+export class GameViewComponent implements OnInit, AfterViewInit {
+  readonly PlayerOrNone = PlayerOrNone;
 
-  readonly #modal = inject(MatDialog);
+  readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
   readonly #snackBar = inject(MatSnackBar);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #router = inject(Router);
-
-  readonly PlayerOrNone = PlayerOrNone;
-  readonly Breakpoint = Breakpoint;
-  readonly getCardImageFileName = getCardImageFileNameFn;
+  readonly #destroyRef = inject(DestroyRef);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -181,7 +145,6 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
-  readonly breakpoint$ = this.#responsiveSizeService.breakpoint$;
   readonly latestGameViewSnapshot$ = new BehaviorSubject<PlayerGameView | null>(
     null
   );
@@ -194,14 +157,14 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
       this.#router.navigate(['']);
     }
-
-    this.sm.add(
-      this.gameOverData$.subscribe((gameOverData) => {
+    this.gameOverData$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((gameOverData) => {
         if (!gameOverData.isOver) {
           return;
         }
 
-        const modalRef = this.#modal.open(ModalComponent, {
+        const modalRef = this.#matDialog.open(ModalComponent, {
           width: '250px',
           data: { message: gameOverData.message },
         });
@@ -212,40 +175,32 @@ export class GameViewComponent implements OnInit, AfterViewInit, OnDestroy {
           this.#router.navigate(['']);
           subscription.unsubscribe();
         });
-      })
-    );
-
-    this.sm.add(
-      this.playerGameView$.subscribe((playerGameView) => {
+      });
+    this.playerGameView$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((playerGameView) => {
         if (playerGameView) {
           this.latestGameViewSnapshot$.next(playerGameView);
           this.isPlayersTurn = isPlayersTurn(playerGameView);
           this.possibleInitialPlaceCardAttempts =
             getPossibleInitialPlaceCardAttempts(playerGameView);
         }
-      })
-    );
-
-    this.sm.add(
-      this.opponentPassedMove$.subscribe((opponentPassedMove) => {
+      });
+    this.opponentPassedMove$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((opponentPassedMove) => {
         if (opponentPassedMove) {
           this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
             duration: 2000,
             verticalPosition: 'top',
           });
         }
-      })
-    );
-
-    this.sm.add(
-      this.isPlacingMultipleCards$.subscribe((isPlacingMultipleCards) => {
+      });
+    this.isPlacingMultipleCards$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((isPlacingMultipleCards) => {
         this.isPlacingMultipleCards = isPlacingMultipleCards;
-      })
-    );
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
+      });
   }
 
   ngAfterViewInit() {

@@ -1,48 +1,43 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
+import { Component, Input, inject } from '@angular/core';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators'
 
 @Component({
   selector: 'app-joker-card',
   templateUrl: './joker-card.component.html',
   styleUrls: ['./joker-card.component.scss'],
 })
-export class JokerCardComponent implements OnInit {
-  private sm = new SubscriptionManager();
+export class JokerCardComponent {
+  readonly #responsiveSizeService = inject(ResponsiveSizeService)
 
-  @Input({ required: true }) isRedJoker: boolean;
-
-  cardSize: number;
-  imageFileName: string;
-  tiltDegrees: number;
-  wonBy: PlayerOrNone;
-  isHost: boolean;
-
-  constructor(public responsiveSizeService: ResponsiveSizeService) {
-    this.sm.add(
-      responsiveSizeService.cardSize$.subscribe((cardSize) => {
-        this.cardSize = cardSize;
-      })
-    );
+  @Input({ required: true }) set isRedJoker(isRedJoker: boolean) {
+    this.isRedJoker$.next(isRedJoker)
+  }
+  @Input({ required: true }) set isHost(isHost: boolean) {
+    this.isHost$.next(isHost)
+  }
+  @Input({ required: true }) set wonBy(wonBy: PlayerOrNone) {
+    this.wonBy$.next(wonBy)
   }
 
-  ngOnInit() {
-    this.initImageFileName();
-    this.initTiltDegrees();
-  }
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$
 
-  private initImageFileName() {
-    this.imageFileName = this.isRedJoker
-      ? 'card_joker_red.png'
-      : 'card_joker_black.png';
-  }
+  readonly isRedJoker$ = new BehaviorSubject<boolean>(false)
+  readonly isHost$ = new BehaviorSubject<boolean>(false)
+  readonly wonBy$ = new BehaviorSubject<PlayerOrNone>(PlayerOrNone.None)
 
-  private initTiltDegrees() {
-    const isHostAndHostWon = this.isHost && this.wonBy === PlayerOrNone.Host;
-    const isGuestAndGuestWon =
-      !this.isHost && this.wonBy === PlayerOrNone.Guest;
-    const playerWonLane = isHostAndHostWon || isGuestAndGuestWon;
-    this.tiltDegrees = playerWonLane ? 45 : -45;
-  }
+  readonly imageFileName$ = this.isRedJoker$.pipe(map((isRedJoker) => 
+    isRedJoker ? 'card_joker_red.png': 'card_joker_black.png'
+  ))
+
+  readonly tiltDegrees$ = combineLatest([this.isHost$, this.wonBy$]).pipe(
+    map(([isHost, wonBy]) => {
+      const isHostAndHostWon = isHost && wonBy === PlayerOrNone.Host;
+      const isGuestAndGuestWon = !isHost && wonBy === PlayerOrNone.Guest;
+      const playerWonLane = isHostAndHostWon || isGuestAndGuestWon;
+      return playerWonLane ? 45 : -45;
+    })
+  )
 }

@@ -6,59 +6,27 @@ import {
   EventEmitter,
   OnInit,
   OnChanges,
-  OnDestroy,
   inject,
+  DestroyRef,
 } from '@angular/core';
 import { Card } from 'projects/client/src/app/models/card.model';
-import { getCardImageFileName as getCardImageFileNameFn } from '../../../../util/get-asset-file-names';
 import { Observable, timer, BehaviorSubject, Subject } from 'rxjs';
 import { GameState } from 'projects/client/src/app/state/game.state';
 import { Select } from '@ngxs/store';
 import { takeUntil, repeatWhen } from 'rxjs/operators';
-import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
-import {
-  trigger,
-  style,
-  animate,
-  transition,
-  query,
-  stagger,
-} from '@angular/animations';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { bounceCardAnimation } from './bounce-cards.animation';
 
 @Component({
   selector: 'app-player-hand',
   templateUrl: './player-hand.component.html',
   styleUrls: ['./player-hand.component.scss'],
-  animations: [
-    trigger('bounceCards', [
-      transition(
-        'not-bouncing => bouncing',
-        [
-          query('app-card', [
-            style({ transform: 'none' }),
-            stagger(150, [
-              animate(
-                '100ms ease',
-                style({ transform: 'translateY({{ heightPx }}px)' })
-              ),
-              animate('100ms ease', style({ transform: 'none' })),
-            ]),
-          ]),
-        ],
-        {
-          params: {
-            heightPx: 0,
-          },
-        }
-      ),
-    ]),
-  ],
+  animations: [bounceCardAnimation],
 })
-export class PlayerHandComponent implements OnInit, OnChanges, OnDestroy {
-  private readonly sm = new SubscriptionManager();
-
+export class PlayerHandComponent implements OnInit, OnChanges {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
+  readonly #destroyRef = inject(DestroyRef);
 
   @Input() isPlacingMultipleCards = false;
   @Input({ required: true }) isHost: boolean;
@@ -70,7 +38,6 @@ export class PlayerHandComponent implements OnInit, OnChanges, OnDestroy {
   @Select(GameState.placeMultipleCardsHand)
   placeMultipleCardsHand$!: Observable<Card[] | null>;
 
-  readonly getCardImageFileName = getCardImageFileNameFn;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly bouncingCards$ = new BehaviorSubject(false);
   readonly disabled$ = new BehaviorSubject(true);
@@ -78,40 +45,36 @@ export class PlayerHandComponent implements OnInit, OnChanges, OnDestroy {
   readonly startBounceTimer$ = new Subject();
 
   ngOnChanges() {
-    this.updateBounceTimer();
+    this.resetBounceTimer();
   }
 
   ngOnInit() {
-    this.sm.add(
-      timer(10000, 5000)
-        .pipe(
-          takeUntil(this.stopBounceTimer$),
-          repeatWhen(() => this.startBounceTimer$)
-        )
-        .subscribe(() => {
-          this.bouncingCards$.next(false);
+    timer(10000, 5000)
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+        takeUntil(this.stopBounceTimer$),
+        repeatWhen(() => this.startBounceTimer$)
+      )
+      .subscribe(() => {
+        this.bouncingCards$.next(false);
 
-          setTimeout(() => {
-            this.bouncingCards$.next(true);
-          });
-        })
-    );
+        setTimeout(() => {
+          this.bouncingCards$.next(true);
+        });
+      });
 
-    this.updateBounceTimer();
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
+    this.resetBounceTimer();
   }
 
   onCardDrop(event: CdkDragDrop<string>) {
     this.cardDropped.emit(event);
+    this.resetBounceTimer();
   }
 
-  private updateBounceTimer() {
-    if (this.disabled) {
-      this.stopBounceTimer$.next();
-    } else {
+  resetBounceTimer() {
+    this.stopBounceTimer$.next();
+
+    if (!this.disabled) {
       this.startBounceTimer$.next();
     }
   }

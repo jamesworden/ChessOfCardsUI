@@ -13,17 +13,23 @@ import {
 } from '../../actions/game.actions';
 import { GameState } from '../../state/game.state';
 import { map, withLatestFrom } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-home-view',
   templateUrl: './home-view.component.html',
   styleUrls: ['./home-view.component.scss'],
+  animations: [fadeInOutAnimation],
 })
 export class HomeViewComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #websocketService = inject(WebsocketService);
   readonly #destroyRef = inject(DestroyRef);
   readonly #store = inject(Store);
+  readonly #router = inject(Router);
+  readonly #clipboard = inject(Clipboard);
 
   @Select(ServerState.isConnectedToServer)
   isConnectedToServer$: Observable<boolean>;
@@ -84,5 +90,13 @@ export class HomeViewComponent implements OnInit {
     }
 
     this.#store.dispatch(new JoinGame(upperCaseGameCode));
+  }
+
+  navigateToHome() {
+    this.#router.navigate(['']);
+  }
+
+  copyToClipboard(text: string) {
+    this.#clipboard.copy(text);
   }
 }

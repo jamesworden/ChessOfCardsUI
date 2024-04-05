@@ -1,5 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { SubscriptionManager } from '../../../util/subscription-manager';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import { timer, BehaviorSubject, Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { SecondsRemaining } from '../../../models/seconds-remaining.model';
@@ -12,12 +11,14 @@ import {
   CheckGuestForEmptyTimer,
   CheckHostForEmptyTimer,
 } from '../../../actions/game.actions';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RemainingTimeService implements OnDestroy {
-  private sm = new SubscriptionManager();
+export class RemainingTimeService {
+  readonly #store = inject(Store);
+  readonly #destroyRef = inject(DestroyRef);
 
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
@@ -32,61 +33,57 @@ export class RemainingTimeService implements OnDestroy {
     null
   );
 
-  constructor(private store: Store) {
-    this.sm.add(
-      this.playerGameView$.subscribe((playerGameView) => {
+  constructor() {
+    this.playerGameView$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((playerGameView) => {
         if (playerGameView) {
           this.playerGameView = playerGameView;
           this.setSecondsRemainingFromLastMove(playerGameView);
         }
-      })
-    );
-    this.sm.add(
-      this.everySecond$
-        .pipe(
-          withLatestFrom(
-            this.secondsRemainingFromLastMove$,
-            this.waitingForServer$
-          )
+      });
+    this.everySecond$
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+        withLatestFrom(
+          this.secondsRemainingFromLastMove$,
+          this.waitingForServer$
         )
-        .subscribe(([_, secondsRemainingFromLastMove, waitingFromServer]) => {
-          if (
-            secondsRemainingFromLastMove &&
-            this.playerGameView &&
-            !waitingFromServer
-          ) {
-            const { IsHostPlayersTurn } = this.playerGameView;
+      )
+      .subscribe(([_, secondsRemainingFromLastMove, waitingFromServer]) => {
+        if (
+          secondsRemainingFromLastMove &&
+          this.playerGameView &&
+          !waitingFromServer
+        ) {
+          const { IsHostPlayersTurn } = this.playerGameView;
 
-            if (IsHostPlayersTurn) {
-              secondsRemainingFromLastMove.host--;
-            } else {
-              secondsRemainingFromLastMove.guest--;
-            }
-
-            const updatedSecondsRemaining = {
-              host: secondsRemainingFromLastMove.host,
-              guest: secondsRemainingFromLastMove.guest,
-            };
-
-            this.secondsRemainingFromLastMove$.next(updatedSecondsRemaining);
+          if (IsHostPlayersTurn) {
+            secondsRemainingFromLastMove.host--;
+          } else {
+            secondsRemainingFromLastMove.guest--;
           }
-        })
-    );
-    this.sm.add(
-      this.secondsRemainingFromLastMove$.subscribe((secondsRemaining) => {
+
+          const updatedSecondsRemaining = {
+            host: secondsRemainingFromLastMove.host,
+            guest: secondsRemainingFromLastMove.guest,
+          };
+
+          this.secondsRemainingFromLastMove$.next(updatedSecondsRemaining);
+        }
+      });
+
+    this.secondsRemainingFromLastMove$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((secondsRemaining) => {
         if (secondsRemaining) {
           if (secondsRemaining.host <= 0) {
-            this.store.dispatch(new CheckHostForEmptyTimer());
+            this.#store.dispatch(new CheckHostForEmptyTimer());
           } else if (secondsRemaining.guest <= 0) {
-            this.store.dispatch(new CheckGuestForEmptyTimer());
+            this.#store.dispatch(new CheckGuestForEmptyTimer());
           }
         }
-      })
-    );
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
+      });
   }
 
   private setSecondsRemainingFromLastMove(playerGameView: PlayerGameView) {

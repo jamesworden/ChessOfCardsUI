@@ -15,7 +15,6 @@ export class BoardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   readonly Z_INDEXES = Z_INDEXES;
-  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly defaultCardSize = DEFAULT_CARD_SIZE;
 
   @Input({ required: true }) set playerGameView(
@@ -34,6 +33,8 @@ export class BoardComponent {
 
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
+
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
   readonly playerGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
 

@@ -262,7 +262,8 @@ function getAnimatedPositionFromCardPosition(
   const lane = document.getElementsByTagName('app-lane')[laneIndex];
   const position = lane.getElementsByTagName('app-position')[rowIndex];
 
-  const { x, y } = position.getBoundingClientRect();
+  let { x, y } = position.getBoundingClientRect();
+  y += window.scrollY;
 
   return { x, y };
 }
@@ -273,7 +274,7 @@ function getAnimatedPositionFromOpponentCardIndex(
 ) {
   const opponentHand = document.getElementById('opponent-hand')!;
   let { x, y } = opponentHand.getBoundingClientRect();
-
+  y += window.scrollY;
   x += cardSize * guestCardIndex;
 
   return {
@@ -288,7 +289,7 @@ function getAnimatedPositionFromPlayerCardIndex(
 ) {
   const playerHand = document.getElementById('player-hand')!;
   let { x, y } = playerHand.getBoundingClientRect();
-
+  y += window.scrollY;
   x += cardSize * guestCardIndex;
 
   return {
@@ -299,7 +300,8 @@ function getAnimatedPositionFromPlayerCardIndex(
 
 function getAnimatedPositionFromPlayerDeck() {
   const playerDeck = document.getElementsByTagName('app-face-down-card')[1];
-  const { x, y } = playerDeck.getBoundingClientRect();
+  let { x, y } = playerDeck.getBoundingClientRect();
+  y += window.scrollY;
 
   return {
     x,
@@ -309,7 +311,8 @@ function getAnimatedPositionFromPlayerDeck() {
 
 function getAnimatedPositionFromOpponentDeck() {
   const playerDeck = document.getElementsByTagName('app-face-down-card')[0];
-  const { x, y } = playerDeck.getBoundingClientRect();
+  let { x, y } = playerDeck.getBoundingClientRect();
+  y += window.scrollY;
 
   return {
     x,

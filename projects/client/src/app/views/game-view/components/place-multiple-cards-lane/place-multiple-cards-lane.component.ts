@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { GameState } from '../../../../state/game.state';
-import { Observable, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PlayerGameView } from '../../../../models/player-game-view.model';
 import { Card } from '../../../../models/card.model';
@@ -18,12 +18,9 @@ import { addCardToArray } from '../../logic/add-card-to-array';
 import { removeCardFromArray } from '../../logic/remove-card-from-array';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { Z_INDEXES } from '../../z-indexes';
-import { SubscriptionManager } from 'projects/client/src/app/util/subscription-manager';
 import { getDefaultBackgroundClasses } from '../../logic/get-background-class';
-
-interface PseudoPosition {
-  backgroundClass: string;
-}
+import { getPseudoPositions } from './get-pseudo-positions';
+import { getPreviouslyCapturedCards } from './get-previously-captured-cards';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards
@@ -36,10 +33,12 @@ const MIN_CARD_HEIGHT_FACTOR = 5;
   templateUrl: './place-multiple-cards-lane.component.html',
   styleUrls: ['./place-multiple-cards-lane.component.scss'],
 })
-export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
-  private readonly sm = new SubscriptionManager();
+export class PlaceMultipleCardsLaneComponent {
   readonly #store = inject(Store);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
+
+  readonly MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
+  readonly Z_INDEXES = Z_INDEXES;
 
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
@@ -50,31 +49,34 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
   @Select(GameState.placeMultipleCards)
   placeMultipleCards$!: Observable<Card[] | null>;
 
-  cardSize$ = this.#responsiveSizeService.cardSize$;
+  @Input({ required: true }) isHost: boolean;
 
-  MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
-  Z_INDEXES = Z_INDEXES;
-  pseudoPositions: PseudoPosition[];
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
-  previouslyCapturedCards$ = combineLatest([
+  readonly isHost$ = new BehaviorSubject(false);
+
+  readonly previouslyCapturedCards$ = combineLatest([
     this.playerGameView$,
     this.initialPlaceMultipleCardAttempt$,
   ]).pipe(
     map(([playerGameView, initialPlaceMultipleCardAttempt]) =>
-      this.getPreviouslyCapturedCards(
+      getPreviouslyCapturedCards(
         initialPlaceMultipleCardAttempt,
         playerGameView
       )
     )
   );
 
-  ngOnInit() {
-    this.initPseudoPositions();
-  }
-
-  ngOnDestroy() {
-    this.sm.unsubscribe();
-  }
+  readonly pseudoPositions$ = combineLatest([
+    this.isHost$,
+    this.initialPlaceMultipleCardAttempt$,
+  ]).pipe(
+    map(([isHost, initialPlaceCardAttempt]) =>
+      initialPlaceCardAttempt
+        ? getPseudoPositions(isHost, initialPlaceCardAttempt)
+        : []
+    )
+  );
 
   /**
    * Angular is annoying: this.memberVariable returns undefined when passing the predicate
@@ -149,51 +151,5 @@ export class PlaceMultipleCardsLaneComponent implements OnDestroy, OnInit {
 
     this.#store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
     this.#store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
-  }
-
-  private initPseudoPositions() {
-    const pseudoPositions: PseudoPosition[] = [];
-
-    for (let rowIndex = 0; rowIndex < 7; rowIndex++) {
-      const initialPlaceCardAttempt = this.#store.selectSnapshot(
-        GameState.initialPlaceMultipleCardAttempt
-      )!;
-      const { TargetLaneIndex } = initialPlaceCardAttempt;
-      pseudoPositions.push({
-        backgroundClass: getDefaultBackgroundClasses(TargetLaneIndex, rowIndex)
-          .backgroundClass,
-      });
-    }
-
-    this.pseudoPositions = pseudoPositions;
-  }
-
-  private getPreviouslyCapturedCards(
-    initialMultiplePlaceCardAttempt: PlaceCardAttempt | null,
-    playerGameView: PlayerGameView | null
-  ) {
-    if (!initialMultiplePlaceCardAttempt || !playerGameView) {
-      return [];
-    }
-
-    const { TargetLaneIndex, TargetRowIndex } = initialMultiplePlaceCardAttempt;
-    const lane = playerGameView.Lanes[TargetLaneIndex];
-    const cards: Card[] = [];
-
-    if (playerGameView.IsHost) {
-      for (let i = 0; i < TargetRowIndex; i++) {
-        const row = lane.Rows[i];
-        const topCard = row[row.length - 1];
-        cards.push(topCard);
-      }
-    } else {
-      for (let i = 6; i > TargetRowIndex; i--) {
-        const row = lane.Rows[i];
-        const topCard = row[row.length - 1];
-        cards.push(topCard);
-      }
-    }
-
-    return cards;
   }
 }
