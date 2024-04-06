@@ -1,4 +1,4 @@
-import { DurationOption } from '@client/models';
+import { DurationOption } from '@shared/models';
 
 type DurationOptionMetadata = {
   durationOption: DurationOption;

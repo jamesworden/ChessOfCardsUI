@@ -1,4 +1,4 @@
-import { Card, PlaceCardAttempt, PlayerGameView } from '@client/models';
+import { Card, PlaceCardAttempt, PlayerGameView } from '@shared/models';
 
 export function getPreviouslyCapturedCards(
   initialMultiplePlaceCardAttempt: PlaceCardAttempt | null,

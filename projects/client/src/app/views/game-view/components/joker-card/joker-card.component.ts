@@ -1,8 +1,8 @@
 import { Component, Input, inject } from '@angular/core';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
-import { PlayerOrNone } from 'projects/client/src/app/shared/models/lib/player-or-none.model';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PlayerOrNone } from '@shared/models';
 
 @Component({
   selector: 'app-joker-card',

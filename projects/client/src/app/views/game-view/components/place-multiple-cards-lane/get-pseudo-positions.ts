@@ -1,5 +1,5 @@
-import { PlaceCardAttempt } from '@client/models';
-import { getDefaultBackgroundClasses } from '../../../../shared/logic/lib/get-background-class';
+import { getDefaultBackgroundClasses } from '@shared/logic';
+import { PlaceCardAttempt } from '@shared/models';
 
 export interface PseudoPosition {
   backgroundClass: string;

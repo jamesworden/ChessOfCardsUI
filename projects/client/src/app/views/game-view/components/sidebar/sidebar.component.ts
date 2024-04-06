@@ -13,7 +13,7 @@ import { ModalComponent } from '../modal/modal.component';
 import { Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PlayerGameView } from '@client/models';
+import { PlayerGameView } from '@shared/models';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toggleDarkMode } from 'projects/client/src/app/logic/toggle-dark-mode';

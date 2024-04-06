@@ -1,6 +1,5 @@
-import { Card, Lane } from '@client/models';
-import { getCardTiltDegrees } from '../../../../shared/logic/lib/get-card-tilt-degrees';
-import { getPositionBackgroundClass } from '../../../../shared/logic/lib/get-background-class';
+import { getCardTiltDegrees, getPositionBackgroundClass } from '@shared/logic';
+import { Card, Lane } from '@shared/models';
 
 export interface PositionDetails {
   topCard?: Card;

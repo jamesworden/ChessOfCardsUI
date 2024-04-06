@@ -21,14 +21,14 @@ import { environment } from '../../environments/environment';
 import { SetIsConnectedToServer } from '../actions/server.actions';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { isPlayersTurn } from '@client/logic';
 import {
   Card,
   DurationOption,
   Move,
   PendingGameView,
   PlayerGameView,
-} from '@client/models';
+} from '@shared/models';
+import { isPlayersTurn } from '@shared/logic';
 
 const { serverUrl } = environment;
 

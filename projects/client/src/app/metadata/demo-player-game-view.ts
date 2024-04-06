@@ -4,7 +4,7 @@ import {
   PlayerGameView,
   PlayerOrNone,
   Suit,
-} from '@client/models';
+} from '@shared/models';
 
 export const DEMO_PLAYER_GAME_VIEW: PlayerGameView = {
   DurationOption: DurationOption.FiveMinutes,

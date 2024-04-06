@@ -3,7 +3,7 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Card } from '@client/models';
+import { Card } from '@shared/models';
 
 @Component({
   selector: 'app-card',

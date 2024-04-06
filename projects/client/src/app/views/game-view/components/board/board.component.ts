@@ -3,7 +3,7 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { Z_INDEXES } from '../../z-indexes';
 import { DEFAULT_CARD_SIZE } from '../../constants';
 import { BehaviorSubject } from 'rxjs';
-import { PlaceCardAttempt, PlayerGameView } from '@client/models';
+import { PlaceCardAttempt, PlayerGameView } from '@shared/models';
 
 @Component({
   selector: 'app-board',

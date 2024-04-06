@@ -6,7 +6,7 @@ import {
   Move,
   DurationOption,
   PendingGameView,
-} from '@client/models';
+} from '@shared/models';
 
 export class AnimateGameView {
   static readonly type = '[GameState] Animate Game View';

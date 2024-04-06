@@ -4,19 +4,21 @@ import { GameState } from '../../../../state/game.state';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { cardExistsInArray } from '../../../../shared/logic/lib/card-exists-in-array';
-import { getIndexOfCardInArray } from '../../../../shared/logic/lib/get-index-of-card-in-array';
 import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
 } from '../../../../actions/game.actions';
-import { addCardToArray } from '../../../../shared/logic/lib/add-card-to-array';
-import { removeCardFromArray } from '../../../../shared/logic/lib/remove-card-from-array';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { Z_INDEXES } from '../../z-indexes';
 import { getPseudoPositions } from './get-pseudo-positions';
 import { getPreviouslyCapturedCards } from './get-previously-captured-cards';
-import { Card, Kind, PlaceCardAttempt, PlayerGameView } from '@client/models';
+import { Card, Kind, PlaceCardAttempt, PlayerGameView } from '@shared/models';
+import {
+  addCardToArray,
+  cardExistsInArray,
+  getIndexOfCardInArray,
+  removeCardFromArray,
+} from '@shared/logic';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards

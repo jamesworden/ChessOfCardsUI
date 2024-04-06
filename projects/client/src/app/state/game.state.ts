@@ -34,9 +34,9 @@ import {
   GameOverData,
   PendingGameView,
   PlaceCardAttempt,
-} from '@client/models';
+} from '@shared/models';
 import { WebsocketService } from '../services/websocket.service';
-import { isPlayersTurn } from '@client/logic';
+import { isPlayersTurn } from '@shared/logic';
 
 type GameStateModel = {
   playerGameView: PlayerGameView | null;

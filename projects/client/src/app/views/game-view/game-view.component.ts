@@ -27,21 +27,12 @@ import {
   UpdatePlayerGameView,
 } from 'projects/client/src/app/actions/game.actions';
 import { GameState } from '../../state/game.state';
-import { getReasonIfMoveInvalid } from '../../shared/logic/lib/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { addCardToArray } from '../../shared/logic/lib/add-card-to-array';
-import { moveCardToLane } from '../../shared/logic/lib/move-card-to-lane';
-import { removeCardFromArray } from '../../shared/logic/lib/remove-card-from-array';
-import { convertPlaceMultipleCardsToMove } from '../../shared/logic/lib/convert-place-multiple-cards-to-move';
-import { canPlaceMultipleCards } from '../../shared/logic/lib/can-place-multiple-cards';
 import { ResponsiveSizeService } from './services/responsive-size.service';
-import { getPossibleInitialPlaceCardAttempts } from '../../shared/logic/lib/get-possible-initial-place-card-attempts';
-import { isPlayersTurn } from '@client/logic';
 import { map, pairwise, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { getAnimatedCardEntities } from '../../shared/logic/lib/get-animated-card-entities';
 import { Router } from '@angular/router';
 import { cardRotationAnimation } from '../../animations/card-rotation.animation';
 import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
@@ -54,9 +45,20 @@ import {
   PlaceCardAttempt,
   PlayerGameView,
   PlayerOrNone,
-} from '@client/models';
+} from '@shared/models';
 import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
 import { MoveMadeDetails } from './models/move-made-details.model';
+import {
+  addCardToArray,
+  canPlaceMultipleCards,
+  convertPlaceMultipleCardsToMove,
+  getAnimatedCardEntities,
+  getPossibleInitialPlaceCardAttempts,
+  getReasonIfMoveInvalid,
+  isPlayersTurn,
+  moveCardToLane,
+  removeCardFromArray,
+} from '@shared/logic';
 
 @Component({
   selector: 'app-game-view',

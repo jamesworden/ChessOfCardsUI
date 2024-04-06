@@ -9,7 +9,7 @@ import {
   CheckHostForEmptyTimer,
 } from '../../../actions/game.actions';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PlayerGameView, SecondsRemaining, PlayerOrNone } from '@client/models';
+import { PlayerGameView, SecondsRemaining, PlayerOrNone } from '@shared/models';
 
 @Injectable({
   providedIn: 'root',

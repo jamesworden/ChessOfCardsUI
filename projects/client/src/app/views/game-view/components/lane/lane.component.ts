@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getPositionDetails } from './get-position-details';
-import { PlayerOrNone, Lane, PlaceCardAttempt } from '@client/models';
+import { PlayerOrNone, Lane, PlaceCardAttempt } from '@shared/models';
 
 @Component({
   selector: 'app-lane',
