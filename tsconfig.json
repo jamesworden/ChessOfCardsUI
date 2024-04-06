@@ -19,8 +19,8 @@
     "lib": ["es2018", "dom"],
     "useDefineForClassFields": false,
     "paths": {
-      "@client/logic": ["projects/client/src/app/shared/logic/index.ts"],
-      "@client/models": ["projects/client/src/app/shared/models/index.ts"]
+      "@client/logic": ["shared/logic/index.ts"],
+      "@client/models": ["shared/models/index.ts"]
     }
   },
   "angularCompilerOptions": {
