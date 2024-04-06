@@ -13,7 +13,6 @@ import {
 } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { FaceDownCardComponent } from './views/game-view/components/face-down-card/face-down-card.component';
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
 import { PlaceMultipleCardsLaneComponent } from './views/game-view/components/place-multiple-cards-lane/place-multiple-cards-lane.component';
 import { PlayerHandComponent } from './views/game-view/components/player-hand/player-hand.component';
@@ -37,7 +36,6 @@ import { GameModule } from '@shared/game';
     AppComponent,
     GameViewComponent,
     HomeViewComponent,
-    FaceDownCardComponent,
     ModalComponent,
     PlaceMultipleCardsLaneComponent,
     PlayerHandComponent,

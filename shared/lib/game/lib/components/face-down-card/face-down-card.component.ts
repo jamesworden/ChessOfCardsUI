@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ResponsiveSizeService } from '@shared/game';
 
 @Component({
-  selector: 'app-face-down-card',
+  selector: 'game-face-down-card',
   templateUrl: './face-down-card.component.html',
   styleUrls: ['./face-down-card.component.scss'],
 })
