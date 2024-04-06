@@ -1,6 +1,4 @@
-import { Card } from 'projects/client/src/app/models/card.model';
-import { PlaceCardAttempt } from 'projects/client/src/app/models/place-card-attempt.model';
-import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
+import { Card, PlaceCardAttempt, PlayerGameView } from '@client/models';
 
 export function getPreviouslyCapturedCards(
   initialMultiplePlaceCardAttempt: PlaceCardAttempt | null,

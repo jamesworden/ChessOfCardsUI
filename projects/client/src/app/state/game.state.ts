@@ -28,13 +28,15 @@ import {
   AnimateGameView,
   SetGameIsActive,
 } from '../actions/game.actions';
-import { Card } from '../models/card.model';
-import { GameOverData } from '../models/game-over-data.model';
-import { PendingGameView } from '../models/pending-game-view.model';
-import { PlaceCardAttempt } from '../models/place-card-attempt.model';
-import { PlayerGameView } from '../models/player-game-view.model';
+import {
+  Card,
+  PlayerGameView,
+  GameOverData,
+  PendingGameView,
+  PlaceCardAttempt,
+} from '@client/models';
 import { WebsocketService } from '../services/websocket.service';
-import { isPlayersTurn } from '../views/game-view/logic/is-players-turn';
+import { isPlayersTurn } from '@client/logic';
 
 type GameStateModel = {
   playerGameView: PlayerGameView | null;

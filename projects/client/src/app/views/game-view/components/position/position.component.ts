@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, inject, Output } from '@angular/core';
-import { PlaceCardAttempt } from '../../../../models/place-card-attempt.model';
+import { PlaceCardAttempt } from '@client/models';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';

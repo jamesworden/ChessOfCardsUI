@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Lane } from '../../../../models/lane.model';
-import { PlaceCardAttempt } from '../../../../models/place-card-attempt.model';
-import { PlayerOrNone } from '../../../../models/player-or-none.model';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getPositionDetails } from './get-position-details';
+import { PlayerOrNone, Lane, PlaceCardAttempt } from '@client/models';
 
 @Component({
   selector: 'app-lane',

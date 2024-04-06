@@ -3,24 +3,20 @@ import { Select, Store } from '@ngxs/store';
 import { GameState } from '../../../../state/game.state';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PlayerGameView } from '../../../../models/player-game-view.model';
-import { Card } from '../../../../models/card.model';
-import { PlaceCardAttempt } from '../../../../models/place-card-attempt.model';
 import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Kind } from '../../../../models/kind.model';
-import { cardExistsInArray } from '../../logic/card-exists-in-array';
-import { getIndexOfCardInArray } from '../../logic/get-index-of-card-in-array';
+import { cardExistsInArray } from '../../../../shared/logic/lib/card-exists-in-array';
+import { getIndexOfCardInArray } from '../../../../shared/logic/lib/get-index-of-card-in-array';
 import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
 } from '../../../../actions/game.actions';
-import { addCardToArray } from '../../logic/add-card-to-array';
-import { removeCardFromArray } from '../../logic/remove-card-from-array';
+import { addCardToArray } from '../../../../shared/logic/lib/add-card-to-array';
+import { removeCardFromArray } from '../../../../shared/logic/lib/remove-card-from-array';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { Z_INDEXES } from '../../z-indexes';
-import { getDefaultBackgroundClasses } from '../../logic/get-background-class';
 import { getPseudoPositions } from './get-pseudo-positions';
 import { getPreviouslyCapturedCards } from './get-previously-captured-cards';
+import { Card, Kind, PlaceCardAttempt, PlayerGameView } from '@client/models';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards

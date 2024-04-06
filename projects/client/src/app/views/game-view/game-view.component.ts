@@ -26,35 +26,37 @@ import {
   StartPlacingMultipleCards,
   UpdatePlayerGameView,
 } from 'projects/client/src/app/actions/game.actions';
-import { Card } from 'projects/client/src/app/models/card.model';
-import { Move } from 'projects/client/src/app/models/move.model';
-import { PlaceCardAttempt } from 'projects/client/src/app/models/place-card-attempt.model';
-import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
-import { PlayerGameView } from '../../models/player-game-view.model';
 import { GameState } from '../../state/game.state';
-import { getReasonIfMoveInvalid } from './logic/is-move-valid';
+import { getReasonIfMoveInvalid } from '../../shared/logic/lib/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Lane } from '../../models/lane.model';
-import { addCardToArray } from './logic/add-card-to-array';
-import { moveCardToLane } from './logic/move-card-to-lane';
-import { removeCardFromArray } from './logic/remove-card-from-array';
-import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-cards-to-move';
-import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
+import { addCardToArray } from '../../shared/logic/lib/add-card-to-array';
+import { moveCardToLane } from '../../shared/logic/lib/move-card-to-lane';
+import { removeCardFromArray } from '../../shared/logic/lib/remove-card-from-array';
+import { convertPlaceMultipleCardsToMove } from '../../shared/logic/lib/convert-place-multiple-cards-to-move';
+import { canPlaceMultipleCards } from '../../shared/logic/lib/can-place-multiple-cards';
 import { ResponsiveSizeService } from './services/responsive-size.service';
-import { GameOverData } from '../../models/game-over-data.model';
-import { getPossibleInitialPlaceCardAttempts } from './logic/get-possible-initial-place-card-attempts';
-import { isPlayersTurn } from './logic/is-players-turn';
+import { getPossibleInitialPlaceCardAttempts } from '../../shared/logic/lib/get-possible-initial-place-card-attempts';
+import { isPlayersTurn } from '@client/logic';
 import { map, pairwise, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
-import { CardMovement } from '../../models/card-movement.model';
-import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
-import { MoveMadeDetails } from './models/move-made-details.model';
+import { getAnimatedCardEntities } from '../../shared/logic/lib/get-animated-card-entities';
 import { Router } from '@angular/router';
 import { cardRotationAnimation } from '../../animations/card-rotation.animation';
 import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
+import {
+  Card,
+  CardMovement,
+  GameOverData,
+  Lane,
+  Move,
+  PlaceCardAttempt,
+  PlayerGameView,
+  PlayerOrNone,
+} from '@client/models';
+import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
+import { MoveMadeDetails } from './models/move-made-details.model';
 
 @Component({
   selector: 'app-game-view',

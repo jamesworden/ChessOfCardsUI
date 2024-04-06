@@ -8,7 +8,7 @@ import {
   inject,
   DestroyRef,
 } from '@angular/core';
-import { Card } from 'projects/client/src/app/models/card.model';
+import { Card } from '@client/models';
 import { Observable, timer, BehaviorSubject, of } from 'rxjs';
 import { GameState } from 'projects/client/src/app/state/game.state';
 import { Select, Store } from '@ngxs/store';

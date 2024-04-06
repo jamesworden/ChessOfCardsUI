@@ -1,9 +1,9 @@
 import { Component, Input, HostBinding, inject } from '@angular/core';
-import { Card } from '../../../../models/card.model';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Card } from '@client/models';
 
 @Component({
   selector: 'app-card',

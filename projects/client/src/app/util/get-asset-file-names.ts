@@ -1,4 +1,4 @@
-import { Card } from '../models/card.model';
+import { Card } from '@client/models';
 
 export function getCardImageFileName(card: Card) {
   const { Suit, Kind } = card;
