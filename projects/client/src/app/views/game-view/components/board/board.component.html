@@ -26,7 +26,7 @@
               [isHost]="playerGameView.IsHost"
             ></app-place-multiple-cards-lane>
           } @else {
-            <app-lane
+            <game-lane
               [lane]="lane"
               [laneIndex]="laneIndex"
               [isHost]="playerGameView.IsHost"
@@ -35,7 +35,7 @@
               [transparentTiles]="transparentTiles"
               [isPlayersTurn]="isPlayersTurn"
               (placeCardAttempted)="onPlaceCardAttempted($event)"
-            ></app-lane>
+            ></game-lane>
           }
         }
       </div>

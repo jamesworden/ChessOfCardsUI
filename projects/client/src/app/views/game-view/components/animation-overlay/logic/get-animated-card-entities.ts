@@ -261,8 +261,8 @@ function getAnimatedPositionFromCardPosition(
 ): AnimatedPosition {
   const { LaneIndex: laneIndex, RowIndex: rowIndex } = cardPosition;
 
-  const lane = document.getElementsByTagName('app-lane')[laneIndex];
-  const position = lane.getElementsByTagName('app-position')[rowIndex];
+  const lane = document.getElementsByTagName('game-lane')[laneIndex];
+  const position = lane.getElementsByTagName('game-position')[rowIndex];
 
   let { x, y } = position.getBoundingClientRect();
   y += window.scrollY;

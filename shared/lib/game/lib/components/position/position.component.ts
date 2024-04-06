@@ -8,10 +8,10 @@ import {
   guestLaneIndexesToRowIndexMarkers,
   hostLaneIndexesToRowIndexMarkers,
 } from './lane-indexes-to-row-index-markers';
-import { Z_INDEXES } from '../../z-indexes';
+import { Z_INDEXES } from '../../../../../../projects/client/src/app/views/game-view/z-indexes';
 
 @Component({
-  selector: 'app-position',
+  selector: 'game-position',
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.scss'],
 })

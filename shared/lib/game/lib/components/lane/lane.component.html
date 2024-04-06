@@ -4,7 +4,7 @@
     [ngClass]="{ 'flex-col': !isHost, 'flex-col-reverse': isHost }"
   >
     @for (position of positions$ | async; track i; let i = $index) {
-      <app-position
+      <game-position
         [transparentTile]="transparentTiles"
         [laneIndex]="laneIndex"
         [rowIndex]="position.rowIndex"
@@ -38,7 +38,7 @@
             ></app-joker-card>
           }
         }
-      </app-position>
+      </game-position>
     }
   </div>
 }

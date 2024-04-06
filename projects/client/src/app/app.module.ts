@@ -14,17 +14,14 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { FaceDownCardComponent } from './views/game-view/components/face-down-card/face-down-card.component';
-import { PositionComponent } from './views/game-view/components/position/position.component';
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
 import { PlaceMultipleCardsLaneComponent } from './views/game-view/components/place-multiple-cards-lane/place-multiple-cards-lane.component';
-import { LaneComponent } from './views/game-view/components/lane/lane.component';
 import { PlayerHandComponent } from './views/game-view/components/player-hand/player-hand.component';
 import { OpponentHandComponent } from './views/game-view/components/opponent-hand/opponent-hand.component';
 import { BoardComponent } from './views/game-view/components/board/board.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
 import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
 import { ServerState } from './state/server.state';
-import { JokerCardComponent } from './views/game-view/components/joker-card/joker-card.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -41,16 +38,13 @@ import { GameModule } from '@shared/game';
     GameViewComponent,
     HomeViewComponent,
     FaceDownCardComponent,
-    PositionComponent,
     ModalComponent,
     PlaceMultipleCardsLaneComponent,
-    LaneComponent,
     PlayerHandComponent,
     OpponentHandComponent,
     BoardComponent,
     SidebarComponent,
     SidebarItemComponent,
-    JokerCardComponent,
     AnimationOverlayComponent,
     FooterComponent,
     PlayerBannerComponent,

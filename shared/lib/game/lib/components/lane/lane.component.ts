@@ -5,7 +5,7 @@ import { getPositionDetails } from './get-position-details';
 import { PlayerOrNone, Lane, PlaceCardAttempt } from '@shared/models';
 
 @Component({
-  selector: 'app-lane',
+  selector: 'game-lane',
   templateUrl: './lane.component.html',
   styleUrls: ['./lane.component.scss'],
 })

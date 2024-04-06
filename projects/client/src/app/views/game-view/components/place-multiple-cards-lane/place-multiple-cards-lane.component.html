@@ -11,14 +11,14 @@
       }"
     >
       @for (position of pseudoPositions$ | async; track i; let i = $index) {
-        <app-position
+        <game-position
           [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
           [rowIndex]="position.rowIndex"
           [backgroundClass]="position.backgroundClass"
           [textClass]="position.textClass"
           [isHost]="(isHost$ | async) ?? false"
           [dragDropDisabled]="true"
-        ></app-position>
+        ></game-position>
       }
     </div>
 
