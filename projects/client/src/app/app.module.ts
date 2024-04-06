@@ -13,7 +13,6 @@ import {
 } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { CardComponent } from './views/game-view/components/card/card.component';
 import { FaceDownCardComponent } from './views/game-view/components/face-down-card/face-down-card.component';
 import { PositionComponent } from './views/game-view/components/position/position.component';
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
@@ -34,6 +33,7 @@ import { AnimationOverlayComponent } from './views/game-view/components/animatio
 import { NavbarState } from './state/navbar.state';
 import { FooterComponent } from './components/footer/footer.component';
 import { PlayerBannerComponent } from './views/game-view/components/player-banner/player-banner.component';
+import { GameModule } from '@shared/game';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,6 @@ import { PlayerBannerComponent } from './views/game-view/components/player-banne
     GameViewComponent,
     HomeViewComponent,
     FaceDownCardComponent,
-    CardComponent,
     PositionComponent,
     ModalComponent,
     PlaceMultipleCardsLaneComponent,
@@ -68,6 +67,7 @@ import { PlayerBannerComponent } from './views/game-view/components/player-banne
     BrowserAnimationsModule,
     MatIconModule,
     FormsModule,
+    GameModule,
   ],
   providers: [provideAnimations()],
   bootstrap: [AppComponent],

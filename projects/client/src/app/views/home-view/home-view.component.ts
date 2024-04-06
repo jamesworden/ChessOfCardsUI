@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, DestroyRef } from '@angular/core';
-import { ResponsiveSizeService } from '../game-view/services/responsive-size.service';
+import { ResponsiveSizeService } from '@shared/game';
 import { WebsocketService } from '../../services/websocket.service';
 import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

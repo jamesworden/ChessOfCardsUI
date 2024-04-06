@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { ResponsiveSizeService } from '@shared/game';
 
 @Component({
   selector: 'app-face-down-card',
@@ -7,7 +7,7 @@ import { ResponsiveSizeService } from '../../services/responsive-size.service';
   styleUrls: ['./face-down-card.component.scss'],
 })
 export class FaceDownCardComponent {
-  readonly #responsiveSizeService = inject(ResponsiveSizeService)
-  
+  readonly #responsiveSizeService = inject(ResponsiveSizeService);
+
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 }

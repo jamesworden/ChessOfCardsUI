@@ -8,7 +8,7 @@ import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
 } from '../../../../actions/game.actions';
-import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { ResponsiveSizeService } from '@shared/game';
 import { Z_INDEXES } from '../../z-indexes';
 import { getPseudoPositions } from './get-pseudo-positions';
 import { getPreviouslyCapturedCards } from './get-previously-captured-cards';

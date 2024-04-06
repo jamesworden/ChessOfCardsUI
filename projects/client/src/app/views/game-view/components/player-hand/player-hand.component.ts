@@ -13,7 +13,7 @@ import { Observable, timer, BehaviorSubject, of } from 'rxjs';
 import { GameState } from 'projects/client/src/app/state/game.state';
 import { Select, Store } from '@ngxs/store';
 import { switchMap, filter, delay } from 'rxjs/operators';
-import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { ResponsiveSizeService } from '@shared/game';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { bounceCardAnimation } from './bounce-cards.animation';
 

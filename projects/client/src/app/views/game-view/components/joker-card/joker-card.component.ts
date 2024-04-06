@@ -1,5 +1,5 @@
 import { Component, Input, inject } from '@angular/core';
-import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { ResponsiveSizeService } from '@shared/game';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PlayerOrNone } from '@shared/models';

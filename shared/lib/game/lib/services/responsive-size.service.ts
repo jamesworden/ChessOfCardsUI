@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { BehaviorSubject, fromEvent } from 'rxjs';
-import { DEFAULT_CARD_SIZE } from '../constants';
+import { DEFAULT_CARD_SIZE } from '../../../../../projects/client/src/app/views/game-view/constants';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const cardRatio = {

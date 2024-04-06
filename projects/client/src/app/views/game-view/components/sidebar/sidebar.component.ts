@@ -7,7 +7,7 @@ import {
   ResignGame,
 } from 'projects/client/src/app/actions/game.actions';
 import { GameState } from 'projects/client/src/app/state/game.state';
-import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { ResponsiveSizeService } from '@shared/game';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
 import { Observable } from 'rxjs';

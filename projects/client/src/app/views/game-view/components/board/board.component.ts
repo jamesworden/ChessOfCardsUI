@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { ResponsiveSizeService } from '@shared/game';
 import { Z_INDEXES } from '../../z-indexes';
 import { DEFAULT_CARD_SIZE } from '../../constants';
 import { BehaviorSubject } from 'rxjs';

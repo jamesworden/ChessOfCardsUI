@@ -30,7 +30,6 @@ import { GameState } from '../../state/game.state';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ResponsiveSizeService } from './services/responsive-size.service';
 import { map, pairwise, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Router } from '@angular/router';
@@ -59,6 +58,7 @@ import {
   moveCardToLane,
   removeCardFromArray,
 } from '@shared/logic';
+import { ResponsiveSizeService } from '@shared/game';
 
 @Component({
   selector: 'app-game-view',

@@ -1,7 +1,7 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, inject, Output } from '@angular/core';
 import { PlaceCardAttempt } from '@shared/models';
-import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { ResponsiveSizeService } from '@shared/game';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
