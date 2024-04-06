@@ -13,7 +13,7 @@
       isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
     "
     (cdkDropListDropped)="onCardDrop($event)"
-    (cdkDropListSorted)="resetBounceTimer()"
+    (cdkDropListSorted)="resetBounceTimerIfPlayersTurn()"
     cdkDropListData="player-hand"
     cdkDropListOrientation="horizontal"
     [ngStyle]="{

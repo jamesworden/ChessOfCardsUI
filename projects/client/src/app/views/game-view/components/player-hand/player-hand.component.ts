@@ -5,15 +5,14 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  OnChanges,
   inject,
   DestroyRef,
 } from '@angular/core';
 import { Card } from 'projects/client/src/app/models/card.model';
-import { Observable, timer, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, timer, BehaviorSubject, of } from 'rxjs';
 import { GameState } from 'projects/client/src/app/state/game.state';
-import { Select } from '@ngxs/store';
-import { takeUntil, repeatWhen } from 'rxjs/operators';
+import { Select, Store } from '@ngxs/store';
+import { switchMap, filter, delay } from 'rxjs/operators';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { bounceCardAnimation } from './bounce-cards.animation';
@@ -24,9 +23,10 @@ import { bounceCardAnimation } from './bounce-cards.animation';
   styleUrls: ['./player-hand.component.scss'],
   animations: [bounceCardAnimation],
 })
-export class PlayerHandComponent implements OnInit, OnChanges {
+export class PlayerHandComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #destroyRef = inject(DestroyRef);
+  readonly #store = inject(Store);
 
   @Input() isPlacingMultipleCards = false;
   @Input({ required: true }) isHost: boolean;
@@ -38,44 +38,59 @@ export class PlayerHandComponent implements OnInit, OnChanges {
   @Select(GameState.placeMultipleCardsHand)
   placeMultipleCardsHand$!: Observable<Card[] | null>;
 
+  @Select(GameState.isPlayersTurn)
+  isPlayersTurn$!: Observable<boolean>;
+
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly bouncingCards$ = new BehaviorSubject(false);
   readonly disabled$ = new BehaviorSubject(true);
-  readonly stopBounceTimer$ = new Subject();
-  readonly startBounceTimer$ = new Subject();
 
-  ngOnChanges() {
-    this.resetBounceTimer();
-  }
+  bounceTimer$ = new BehaviorSubject<Observable<number | null>>(of(null));
 
   ngOnInit() {
-    timer(10000, 5000)
+    this.bounceTimer$
       .pipe(
         takeUntilDestroyed(this.#destroyRef),
-        takeUntil(this.stopBounceTimer$),
-        repeatWhen(() => this.startBounceTimer$)
+        switchMap((timer) => timer),
+        filter((x) => typeof x === 'number')
       )
-      .subscribe(() => {
-        this.bouncingCards$.next(false);
+      .subscribe(() => this.brieflyApplyBounceClass());
 
-        setTimeout(() => {
-          this.bouncingCards$.next(true);
-        });
-      });
+    this.isPlayersTurn$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((isPlayersTurn) =>
+        isPlayersTurn ? this.startBounceTimer() : this.stopBounceTimer()
+      );
 
-    this.resetBounceTimer();
+    this.bouncingCards$
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+        filter((x) => x),
+        delay(1000)
+      )
+      .subscribe(() => this.bouncingCards$.next(false));
   }
 
   onCardDrop(event: CdkDragDrop<string>) {
     this.cardDropped.emit(event);
-    this.resetBounceTimer();
   }
 
-  resetBounceTimer() {
-    this.stopBounceTimer$.next();
-
-    if (!this.disabled) {
-      this.startBounceTimer$.next();
+  resetBounceTimerIfPlayersTurn() {
+    const isPlayersTurn = this.#store.selectSnapshot(GameState.isPlayersTurn);
+    if (isPlayersTurn) {
+      this.startBounceTimer();
     }
+  }
+
+  startBounceTimer() {
+    this.bounceTimer$.next(timer(10000, 5000));
+  }
+
+  stopBounceTimer() {
+    this.bounceTimer$.next(of(null));
+  }
+
+  brieflyApplyBounceClass() {
+    this.bouncingCards$.next(true);
   }
 }

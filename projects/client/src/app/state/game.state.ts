@@ -34,6 +34,7 @@ import { PendingGameView } from '../models/pending-game-view.model';
 import { PlaceCardAttempt } from '../models/place-card-attempt.model';
 import { PlayerGameView } from '../models/player-game-view.model';
 import { WebsocketService } from '../services/websocket.service';
+import { isPlayersTurn } from '../views/game-view/logic/is-players-turn';
 
 type GameStateModel = {
   playerGameView: PlayerGameView | null;
@@ -147,6 +148,11 @@ export class GameState {
   @Selector()
   static gameIsActive(state: GameStateModel) {
     return state.gameIsActive;
+  }
+
+  @Selector()
+  static isPlayersTurn(state: GameStateModel) {
+    return state.playerGameView ? isPlayersTurn(state.playerGameView) : false;
   }
 
   @Action(UpdatePlayerGameView)
