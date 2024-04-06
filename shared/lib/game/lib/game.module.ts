@@ -9,6 +9,7 @@ import { FaceDownCardComponent } from './components/face-down-card/face-down-car
 import { PlayerHandComponent } from './components/player-hand/player-hand.component';
 import { OpponentHandComponent } from './components/opponent-hand/opponent-hand.component';
 import { PlaceMultipleCardsLaneComponent } from './components/place-multiple-cards-lane/place-multiple-cards-lane.component';
+import { BoardComponent } from './components/board/board.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { PlaceMultipleCardsLaneComponent } from './components/place-multiple-car
     PlayerHandComponent,
     OpponentHandComponent,
     PlaceMultipleCardsLaneComponent,
+    BoardComponent,
   ],
   imports: [CommonModule, DragDropModule],
   exports: [
@@ -31,6 +33,7 @@ import { PlaceMultipleCardsLaneComponent } from './components/place-multiple-car
     PlayerHandComponent,
     OpponentHandComponent,
     PlaceMultipleCardsLaneComponent,
+    BoardComponent,
   ],
 })
 export class GameModule {}

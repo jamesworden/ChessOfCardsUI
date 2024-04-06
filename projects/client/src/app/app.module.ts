@@ -14,7 +14,6 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
-import { BoardComponent } from './views/game-view/components/board/board.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
 import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
 import { ServerState } from './state/server.state';
@@ -34,7 +33,6 @@ import { GameModule } from '@shared/game';
     GameViewComponent,
     HomeViewComponent,
     ModalComponent,
-    BoardComponent,
     SidebarComponent,
     SidebarItemComponent,
     AnimationOverlayComponent,

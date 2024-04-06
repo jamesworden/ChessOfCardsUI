@@ -24,7 +24,7 @@
         <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
         @if (latestGameViewSnapshot$ | async; as latestGameViewSnapshot) {
-          <app-board
+          <game-board
             [playerGameView]="latestGameViewSnapshot"
             [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
             [initialPlaceMultipleCardAttempt]="
@@ -32,7 +32,7 @@
             "
             [isPlayersTurn]="isPlayersTurn"
             (placeCardAttempted)="onPlaceCardAttempted($event)"
-          ></app-board>
+          ></game-board>
         }
 
         <game-player-hand

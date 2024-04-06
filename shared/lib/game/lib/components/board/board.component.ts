@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { ResponsiveSizeService } from '@shared/game';
-import { Z_INDEXES } from '../../z-indexes';
-import { DEFAULT_CARD_SIZE } from '../../constants';
 import { BehaviorSubject } from 'rxjs';
 import { PlaceCardAttempt, PlayerGameView } from '@shared/models';
+import { Z_INDEXES } from 'projects/client/src/app/views/game-view/z-indexes';
+import { DEFAULT_CARD_SIZE } from 'projects/client/src/app/views/game-view/constants';
 
 @Component({
-  selector: 'app-board',
+  selector: 'game-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
 })
