@@ -14,9 +14,6 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
-import { PlaceMultipleCardsLaneComponent } from './views/game-view/components/place-multiple-cards-lane/place-multiple-cards-lane.component';
-import { PlayerHandComponent } from './views/game-view/components/player-hand/player-hand.component';
-import { OpponentHandComponent } from './views/game-view/components/opponent-hand/opponent-hand.component';
 import { BoardComponent } from './views/game-view/components/board/board.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
 import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
@@ -37,9 +34,6 @@ import { GameModule } from '@shared/game';
     GameViewComponent,
     HomeViewComponent,
     ModalComponent,
-    PlaceMultipleCardsLaneComponent,
-    PlayerHandComponent,
-    OpponentHandComponent,
     BoardComponent,
     SidebarComponent,
     SidebarItemComponent,

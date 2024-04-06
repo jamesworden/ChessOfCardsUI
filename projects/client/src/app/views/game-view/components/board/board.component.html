@@ -22,9 +22,9 @@
           let laneIndex = $index
         ) {
           @if (initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex) {
-            <app-place-multiple-cards-lane
+            <game-place-multiple-cards-lane
               [isHost]="playerGameView.IsHost"
-            ></app-place-multiple-cards-lane>
+            ></game-place-multiple-cards-lane>
           } @else {
             <game-lane
               [lane]="lane"

@@ -1,15 +1,9 @@
 import { Component, inject, Input } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { GameState } from '../../../../state/game.state';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import {
-  SetPlaceMultipleCards,
-  SetPlaceMultipleCardsHand,
-} from '../../../../actions/game.actions';
 import { ResponsiveSizeService } from '@shared/game';
-import { Z_INDEXES } from '../../z-indexes';
 import { getPseudoPositions } from './get-pseudo-positions';
 import { getPreviouslyCapturedCards } from './get-previously-captured-cards';
 import { Card, Kind, PlaceCardAttempt, PlayerGameView } from '@shared/models';
@@ -19,6 +13,12 @@ import {
   getIndexOfCardInArray,
   removeCardFromArray,
 } from '@shared/logic';
+import { Z_INDEXES } from 'projects/client/src/app/views/game-view/z-indexes';
+import { GameState } from 'projects/client/src/app/state/game.state';
+import {
+  SetPlaceMultipleCards,
+  SetPlaceMultipleCardsHand,
+} from 'projects/client/src/app/actions/game.actions';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards
@@ -27,7 +27,7 @@ import {
 const MIN_CARD_HEIGHT_FACTOR = 5;
 
 @Component({
-  selector: 'app-place-multiple-cards-lane',
+  selector: 'game-place-multiple-cards-lane',
   templateUrl: './place-multiple-cards-lane.component.html',
   styleUrls: ['./place-multiple-cards-lane.component.scss'],
 })

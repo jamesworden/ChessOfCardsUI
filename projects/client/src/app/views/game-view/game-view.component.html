@@ -35,14 +35,14 @@
           ></app-board>
         }
 
-        <app-player-hand
+        <game-player-hand
           [isPlacingMultipleCards]="isPlacingMultipleCards"
           [isHost]="playerGameView.IsHost"
           [cards]="playerGameView.Hand.Cards"
           [cardSize]="(cardSize$ | async)!"
           [disabled]="!!(waitingForServer$ | async)"
           (cardDropped)="onPlayerHandCardDrop($event)"
-        ></app-player-hand>
+        ></game-player-hand>
 
         <app-player-banner
           [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
@@ -67,10 +67,10 @@
     !(hasPendingDrawOffer$ | async) &&
     !(possibleInitialPlaceCardAttempts.length === 0 && isPlayersTurn)
   ) {
-    <app-opponent-hand
+    <game-opponent-hand
       [cardSize]="(cardSize$ | async)!"
       [numCards]="(latestGameViewSnapshot$ | async)!.NumCardsInOpponentsHand"
-    ></app-opponent-hand>
+    ></game-opponent-hand>
   }
   @if (isPlacingMultipleCards$ | async) {
     <div

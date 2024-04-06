@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-opponent-hand',
+  selector: 'game-opponent-hand',
   templateUrl: './opponent-hand.component.html',
   styleUrls: ['./opponent-hand.component.scss'],
 })

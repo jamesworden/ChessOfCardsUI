@@ -18,7 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { bounceCardAnimation } from './bounce-cards.animation';
 
 @Component({
-  selector: 'app-player-hand',
+  selector: 'game-player-hand',
   templateUrl: './player-hand.component.html',
   styleUrls: ['./player-hand.component.scss'],
   animations: [bounceCardAnimation],

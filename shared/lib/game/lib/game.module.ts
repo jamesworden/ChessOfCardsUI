@@ -6,6 +6,9 @@ import { LaneComponent } from './components/lane/lane.component';
 import { PositionComponent } from './components/position/position.component';
 import { JokerCardComponent } from './components/joker-card/joker-card.component';
 import { FaceDownCardComponent } from './components/face-down-card/face-down-card.component';
+import { PlayerHandComponent } from './components/player-hand/player-hand.component';
+import { OpponentHandComponent } from './components/opponent-hand/opponent-hand.component';
+import { PlaceMultipleCardsLaneComponent } from './components/place-multiple-cards-lane/place-multiple-cards-lane.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +17,9 @@ import { FaceDownCardComponent } from './components/face-down-card/face-down-car
     PositionComponent,
     JokerCardComponent,
     FaceDownCardComponent,
+    PlayerHandComponent,
+    OpponentHandComponent,
+    PlaceMultipleCardsLaneComponent,
   ],
   imports: [CommonModule, DragDropModule],
   exports: [
@@ -22,6 +28,9 @@ import { FaceDownCardComponent } from './components/face-down-card/face-down-car
     LaneComponent,
     JokerCardComponent,
     FaceDownCardComponent,
+    PlayerHandComponent,
+    OpponentHandComponent,
+    PlaceMultipleCardsLaneComponent,
   ],
 })
 export class GameModule {}
