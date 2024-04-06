@@ -1,6 +1,6 @@
-import { GameStateBuilder } from 'projects/client/src/app/shared/logic/lib/is-move-valid/testing/game-state-builder';
-import { MoveBuilder } from 'projects/client/src/app/shared/logic/lib/is-move-valid/testing/move-builder';
-import { PlaceCardAttemptBuilder } from 'projects/client/src/app/shared/logic/lib/is-move-valid/testing/place-card-attempt-builder';
+import { GameStateBuilder } from '../testing/game-state-builder';
+import { MoveBuilder } from '../testing/move-builder';
+import { PlaceCardAttemptBuilder } from '../testing/place-card-attempt-builder';
 import { suitOrKindNotMatchLastCardPlayed } from './suit-or-kind-not-match-last-card-played';
 import { Card, Kind, PlayerOrNone, Suit } from '@client/models';
 

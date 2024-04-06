@@ -6,7 +6,8 @@
     "start:local": "ng serve LanesFrontend --configuration=local",
     "start:prod": "ng serve LanesFrontend --configuration=prod",
     "build:prod": "ng build LanesFrontend --configuration=prod",
-    "test": "ng test"
+    "test:lanes-frontend": "ng test --project=LanesFrontend",
+    "test:shared": "ng test --project=shared"
   },
   "private": true,
   "dependencies": {
