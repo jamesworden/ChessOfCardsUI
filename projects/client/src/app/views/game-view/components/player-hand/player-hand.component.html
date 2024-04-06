@@ -29,14 +29,14 @@
       track i;
       let i = $index
     ) {
-      <app-card
+      <game-card
         [card]="card"
         [playerCanDrag]="!disabled"
         class="transition"
         [ngStyle]="{
           opacity: disabled ? 0.5 : 1
         }"
-      ></app-card>
+      ></game-card>
     }
   </div>
 }

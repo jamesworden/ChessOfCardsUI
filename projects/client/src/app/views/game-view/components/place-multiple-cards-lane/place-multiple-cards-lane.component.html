@@ -40,11 +40,11 @@
       }"
     >
       @for (card of placeMultipleCards$ | async; track i; let i = $index) {
-        <app-card
+        <game-card
           [card]="card"
           [playerCanDrag]="true"
           [insideVerticalContainer]="true"
-        ></app-card>
+        ></game-card>
       }
     </div>
 
@@ -56,7 +56,7 @@
     >
       @for (card of previouslyCapturedCards$ | async; track i; let i = $index) {
         <div class="existing-card-position">
-          <app-card [card]="card" [playerCanDrag]="false"></app-card>
+          <game-card [card]="card" [playerCanDrag]="false"></game-card>
         </div>
       }
     </div>

@@ -11,7 +11,7 @@ export const bounceCardAnimation = trigger('bounceCards', [
   transition(
     'not-bouncing => bouncing',
     [
-      query('app-card', [
+      query('game-card', [
         style({ transform: 'none' }),
         stagger(150, [
           animate(

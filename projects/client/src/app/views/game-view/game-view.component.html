@@ -185,7 +185,7 @@
 <ng-template #cardMovementTemplate let-animatedEntity>
   @if (animatedEntity.context.Card) {
     @if (playerGameViewToAnimate$ | async; as playerGameViewToAnimate) {
-      <app-card
+      <game-card
         [card]="animatedEntity.context.Card"
         [@cardRotation]="{
           value:
@@ -199,7 +199,7 @@
             durationMs: animatedEntity.movement.durationMs
           }
         }"
-      ></app-card>
+      ></game-card>
     }
   } @else {
     <app-face-down-card></app-face-down-card>

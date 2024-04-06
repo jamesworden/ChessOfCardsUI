@@ -6,7 +6,7 @@ import { Card } from '@shared/models';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
 
 @Component({
-  selector: 'app-card',
+  selector: 'game-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
 })

@@ -15,12 +15,12 @@
         [hideMarker]="!!position.topCard"
       >
         @if (position.topCard) {
-          <app-card
+          <game-card
             [ngStyle]="{
               rotate: position.cardRotation + 'deg'
             }"
             [card]="position.topCard"
-          ></app-card>
+          ></game-card>
         }
         @if (position.rowIndex === 3) {
           @if (redJokerLaneIndex === laneIndex) {
