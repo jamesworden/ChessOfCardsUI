@@ -170,6 +170,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
         const modalRef = this.#matDialog.open(ModalComponent, {
           width: '250px',
+          maxHeight: '100dvh',
           data: { message: gameOverData.message },
         });
 
