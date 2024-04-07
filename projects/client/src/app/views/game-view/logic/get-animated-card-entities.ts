@@ -16,6 +16,17 @@ import {
   AnimationType,
 } from '@shared/animation-overlay';
 
+/**
+ * Many of the functions here contain `// y += window.scrollY`.
+ *
+ * When the displayed view has a fixed height, the body behind it can be scrollable.
+ * This means that animated entities y position is incorrectly offset, so these
+ * adjustments have been commented out.
+ *
+ * If we want to show animated entities on a view that doesn't have a fixed height,
+ * we should make a boolean parameter for that so they can be adjusted accordingly.
+ */
+
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],
   cardSize: number,
@@ -265,7 +276,7 @@ function getAnimatedPositionFromCardPosition(
   const position = lane.getElementsByTagName('game-position')[rowIndex];
 
   let { x, y } = position.getBoundingClientRect();
-  y += window.scrollY;
+  // y += window.scrollY;
 
   return { x, y };
 }
@@ -276,7 +287,7 @@ function getAnimatedPositionFromOpponentCardIndex(
 ) {
   const opponentHand = document.getElementById('opponent-hand')!;
   let { x, y } = opponentHand.getBoundingClientRect();
-  y += window.scrollY;
+  // y += window.scrollY;
   x += cardSize * guestCardIndex;
 
   return {
@@ -291,7 +302,7 @@ function getAnimatedPositionFromPlayerCardIndex(
 ) {
   const playerHand = document.getElementById('player-hand')!;
   let { x, y } = playerHand.getBoundingClientRect();
-  y += window.scrollY;
+  // y += window.scrollY;
   x += cardSize * guestCardIndex;
 
   return {
@@ -303,7 +314,7 @@ function getAnimatedPositionFromPlayerCardIndex(
 function getAnimatedPositionFromPlayerDeck() {
   const playerDeck = document.getElementsByTagName('game-face-down-card')[1];
   let { x, y } = playerDeck.getBoundingClientRect();
-  y += window.scrollY;
+  // y += window.scrollY;
 
   return {
     x,
@@ -314,7 +325,7 @@ function getAnimatedPositionFromPlayerDeck() {
 function getAnimatedPositionFromOpponentDeck() {
   const playerDeck = document.getElementsByTagName('game-face-down-card')[0];
   let { x, y } = playerDeck.getBoundingClientRect();
-  y += window.scrollY;
+  // y += window.scrollY;
 
   return {
     x,
