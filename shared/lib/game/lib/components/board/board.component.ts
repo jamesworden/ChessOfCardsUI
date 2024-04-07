@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { ResponsiveSizeService } from '@shared/game';
 import { BehaviorSubject } from 'rxjs';
 import { PlaceCardAttempt, PlayerGameView } from '@shared/models';
-import { DEFAULT_CARD_SIZE } from 'projects/client/src/app/views/game-view/constants';
 import { Z_INDEXES } from '@shared/constants';
 
 @Component({
@@ -14,7 +13,7 @@ export class BoardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   readonly Z_INDEXES = Z_INDEXES;
-  readonly defaultCardSize = DEFAULT_CARD_SIZE;
+  readonly defaultCardSize = 64;
 
   @Input({ required: true }) set playerGameView(
     playerGameView: PlayerGameView

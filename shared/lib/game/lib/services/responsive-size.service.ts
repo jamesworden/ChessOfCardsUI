@@ -1,6 +1,5 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { BehaviorSubject, fromEvent } from 'rxjs';
-import { DEFAULT_CARD_SIZE } from '../../../../../projects/client/src/app/views/game-view/constants';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const cardRatio = {
@@ -20,7 +19,7 @@ export class ResponsiveSizeService {
     new BehaviorSubject([window.innerWidth, window.innerHeight]);
   public readonly windowDimensions$ = this._windowDimensions$.asObservable();
 
-  private readonly _cardSize$ = new BehaviorSubject(DEFAULT_CARD_SIZE);
+  private readonly _cardSize$ = new BehaviorSubject(64);
   public readonly cardSize$ = this._cardSize$.asObservable();
 
   private readonly _windowResize$ = fromEvent(window, 'resize');
