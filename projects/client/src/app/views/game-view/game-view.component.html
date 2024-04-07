@@ -45,6 +45,8 @@
           [cards]="playerGameView.Hand.Cards"
           [cardSize]="(cardSize$ | async)!"
           [disabled]="!!(waitingForServer$ | async)"
+          [isPlayersTurn]="isPlayersTurn"
+          [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
           (cardDropped)="onPlayerHandCardDrop($event)"
         ></game-player-hand>
 

@@ -24,7 +24,7 @@
   >
     @for (
       card of isPlacingMultipleCards
-        ? (placeMultipleCardsHand$ | async) ?? []
+        ? (placeMultipleCardsHand$ | async)
         : cards;
       track i;
       let i = $index

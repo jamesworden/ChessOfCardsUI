@@ -33,17 +33,23 @@ export class PlayerHandComponent implements OnInit {
   @Input({ required: true }) cards: Card[];
   @Input({ required: true }) cardSize: number;
   @Input() disabled = true;
+
+  @Input({ required: true }) set placeMultipleCardsHand(
+    placeMultipleCardsHand: Card[] | null
+  ) {
+    this.placeMultipleCardsHand$.next(placeMultipleCardsHand);
+  }
+  @Input({ required: true }) set isPlayersTurn(isPlayersTurn: boolean) {
+    this.isPlayersTurn$.next(isPlayersTurn);
+  }
+
   @Output() cardDropped = new EventEmitter<CdkDragDrop<string>>();
-
-  @Select(GameState.placeMultipleCardsHand)
-  placeMultipleCardsHand$!: Observable<Card[] | null>;
-
-  @Select(GameState.isPlayersTurn)
-  isPlayersTurn$!: Observable<boolean>;
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly bouncingCards$ = new BehaviorSubject(false);
   readonly disabled$ = new BehaviorSubject(true);
+  readonly placeMultipleCardsHand$ = new BehaviorSubject<Card[] | null>(null);
+  readonly isPlayersTurn$ = new BehaviorSubject<boolean>(false);
 
   bounceTimer$ = new BehaviorSubject<Observable<number | null>>(of(null));
 
@@ -65,7 +71,7 @@ export class PlayerHandComponent implements OnInit {
     this.bouncingCards$
       .pipe(
         takeUntilDestroyed(this.#destroyRef),
-        filter((x) => x),
+        filter((bouncingCards) => bouncingCards),
         delay(1000)
       )
       .subscribe(() => this.bouncingCards$.next(false));
