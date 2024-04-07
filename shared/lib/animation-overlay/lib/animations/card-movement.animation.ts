@@ -10,10 +10,8 @@ import {
 export const cardMovementAnimation = trigger('cardMovement', [
   state(
     'todo',
-    // Off screen hack
     style({
-      top: '-200px',
-      left: '-200px',
+      display: 'none',
     })
   ),
   state(
@@ -21,6 +19,7 @@ export const cardMovementAnimation = trigger('cardMovement', [
     style({
       top: '{{ toY }}px',
       left: '{{ toX }}px',
+      display: 'visible',
     }),
     {
       params: {
@@ -32,6 +31,9 @@ export const cardMovementAnimation = trigger('cardMovement', [
   transition(
     '* => in-progress',
     [
+      style({
+        display: 'visible',
+      }),
       animate(
         '{{ durationMs }}ms ease',
         keyframes([
