@@ -7,7 +7,6 @@ import {
   inject,
   DestroyRef,
 } from '@angular/core';
-import { Z_INDEXES } from '../../z-indexes';
 import { AnimatedEntity } from './models/animated-entity.model';
 import { BehaviorSubject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,9 +16,10 @@ import { map } from 'rxjs/operators';
 import { cardMovementAnimation } from './animations/card-movement.animation';
 import { fadeOutAnimation } from './animations/fade-out.animation';
 import { fadeInAnimation } from './animations/fade-in.animation';
+import { Z_INDEXES } from '@shared/constants';
 
 @Component({
-  selector: 'app-animation-overlay',
+  selector: 'animation-overlay',
   templateUrl: './animation-overlay.component.html',
   styleUrl: './animation-overlay.component.scss',
   animations: [cardMovementAnimation, fadeOutAnimation, fadeInAnimation],

@@ -13,12 +13,12 @@ import {
   getIndexOfCardInArray,
   removeCardFromArray,
 } from '@shared/logic';
-import { Z_INDEXES } from 'projects/client/src/app/views/game-view/z-indexes';
 import { GameState } from 'projects/client/src/app/state/game.state';
 import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
 } from 'projects/client/src/app/actions/game.actions';
+import { Z_INDEXES } from '@shared/constants';
 
 /*
  * 4 times the height of the card as that's the most number of place multiple cards

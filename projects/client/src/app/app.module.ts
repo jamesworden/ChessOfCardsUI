@@ -21,11 +21,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { AnimationOverlayComponent } from './views/game-view/components/animation-overlay/animation-overlay.component';
 import { NavbarState } from './state/navbar.state';
 import { FooterComponent } from './components/footer/footer.component';
 import { PlayerBannerComponent } from './views/game-view/components/player-banner/player-banner.component';
 import { GameModule } from '@shared/game';
+import { AnimationOverlayModule } from '@shared/animation-overlay';
 
 @NgModule({
   declarations: [
@@ -35,7 +35,6 @@ import { GameModule } from '@shared/game';
     ModalComponent,
     SidebarComponent,
     SidebarItemComponent,
-    AnimationOverlayComponent,
     FooterComponent,
     PlayerBannerComponent,
   ],
@@ -52,6 +51,7 @@ import { GameModule } from '@shared/game';
     MatIconModule,
     FormsModule,
     GameModule,
+    AnimationOverlayModule,
   ],
   providers: [provideAnimations()],
   bootstrap: [AppComponent],

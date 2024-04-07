@@ -1,11 +1,11 @@
 <div class="h-100 flex justify-between w-full" [@fadeInOut]>
   <app-sidebar [isPlayersTurn]="isPlayersTurn"></app-sidebar>
 
-  <app-animation-overlay
+  <animation-overlay
     [animatedEntities]="(animatedCardEntities$ | async) ?? []"
     (finishedAnimations)="renderAnimatedGameView()"
     (startingAnimations)="checkToRemoveCardFromBoard($event)"
-  ></app-animation-overlay>
+  ></animation-overlay>
 
   <div
     class="flex justify-around w-full dark:bg-gray-800 bg-gray-300 transition"

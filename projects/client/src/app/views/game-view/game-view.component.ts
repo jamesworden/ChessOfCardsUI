@@ -45,13 +45,11 @@ import {
   PlayerGameView,
   PlayerOrNone,
 } from '@shared/models';
-import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
 import { MoveMadeDetails } from './models/move-made-details.model';
 import {
   addCardToArray,
   canPlaceMultipleCards,
   convertPlaceMultipleCardsToMove,
-  getAnimatedCardEntities,
   getPossibleInitialPlaceCardAttempts,
   getReasonIfMoveInvalid,
   isPlayersTurn,
@@ -59,6 +57,10 @@ import {
   removeCardFromArray,
 } from '@shared/logic';
 import { ResponsiveSizeService } from '@shared/game';
+import {
+  AnimatedEntity,
+  getAnimatedCardEntities,
+} from '@shared/animation-overlay';
 
 @Component({
   selector: 'app-game-view',

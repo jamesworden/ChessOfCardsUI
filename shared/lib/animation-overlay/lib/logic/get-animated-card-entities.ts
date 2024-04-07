@@ -1,5 +1,4 @@
 import { TemplateRef } from '@angular/core';
-import { getCardTiltDegrees } from '../../../../../../../../../shared/lib/logic/lib/get-card-tilt-degrees';
 import {
   PlayerGameView,
   PlayerOrNone,
@@ -7,7 +6,6 @@ import {
   CardStore,
   CardPosition,
 } from '@shared/models';
-import { MoveMadeDetails } from '../../../models/move-made-details.model';
 import {
   AnimatedEntity,
   AnimatedEntityStyles,
@@ -15,6 +13,8 @@ import {
 import { AnimationType } from '../models/animation-type.model';
 import { AnimatedMovement } from '../models/animated-movement.model';
 import { AnimatedPosition } from '../models/animated-position.model';
+import { MoveMadeDetails } from 'projects/client/src/app/views/game-view/models/move-made-details.model';
+import { getCardTiltDegrees } from '@shared/logic';
 
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],

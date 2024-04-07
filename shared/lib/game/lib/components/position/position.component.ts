@@ -8,7 +8,7 @@ import {
   guestLaneIndexesToRowIndexMarkers,
   hostLaneIndexesToRowIndexMarkers,
 } from './lane-indexes-to-row-index-markers';
-import { Z_INDEXES } from '../../../../../../projects/client/src/app/views/game-view/z-indexes';
+import { Z_INDEXES } from '@shared/constants';
 
 @Component({
   selector: 'game-position',
