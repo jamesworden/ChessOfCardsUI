@@ -57,10 +57,8 @@ import {
   removeCardFromArray,
 } from '@shared/logic';
 import { ResponsiveSizeService } from '@shared/game';
-import {
-  AnimatedEntity,
-  getAnimatedCardEntities,
-} from '@shared/animation-overlay';
+import { AnimatedEntity } from '@shared/animation-overlay';
+import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 
 @Component({
   selector: 'app-game-view',

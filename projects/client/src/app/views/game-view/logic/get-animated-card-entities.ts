@@ -6,15 +6,15 @@ import {
   CardStore,
   CardPosition,
 } from '@shared/models';
+import { getCardTiltDegrees } from '@shared/logic';
+import { MoveMadeDetails } from '../models/move-made-details.model';
 import {
   AnimatedEntity,
   AnimatedEntityStyles,
-} from '../models/animated-entity.model';
-import { AnimationType } from '../models/animation-type.model';
-import { AnimatedMovement } from '../models/animated-movement.model';
-import { AnimatedPosition } from '../models/animated-position.model';
-import { MoveMadeDetails } from 'projects/client/src/app/views/game-view/models/move-made-details.model';
-import { getCardTiltDegrees } from '@shared/logic';
+  AnimatedMovement,
+  AnimatedPosition,
+  AnimationType,
+} from '@shared/animation-overlay';
 
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],
