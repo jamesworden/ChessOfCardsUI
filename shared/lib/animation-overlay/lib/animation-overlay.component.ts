@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AnimationType } from './models/animation-type.model';
 import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
 import { map } from 'rxjs/operators';
-import { cardMovementAnimation } from './animations/card-movement.animation';
+import { movementAnimation } from './animations/card-movement.animation';
 import { fadeOutAnimation } from './animations/fade-out.animation';
 import { fadeInAnimation } from './animations/fade-in.animation';
 import { Z_INDEXES } from '@shared/constants';
@@ -22,7 +22,7 @@ import { Z_INDEXES } from '@shared/constants';
   selector: 'animation-overlay',
   templateUrl: './animation-overlay.component.html',
   styleUrl: './animation-overlay.component.scss',
-  animations: [cardMovementAnimation, fadeOutAnimation, fadeInAnimation],
+  animations: [movementAnimation, fadeOutAnimation, fadeInAnimation],
 })
 export class AnimationOverlayComponent implements OnInit {
   readonly Z_INDEXES = Z_INDEXES;

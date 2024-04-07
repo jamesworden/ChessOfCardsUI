@@ -1,5 +1,5 @@
 export enum AnimationType {
-  CardMovement,
+  Movement,
   FadeOut,
   FadeIn,
 }

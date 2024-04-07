@@ -7,7 +7,7 @@ import {
   trigger,
 } from '@angular/animations';
 
-export const cardMovementAnimation = trigger('cardMovement', [
+export const movementAnimation = trigger('movement', [
   state(
     'todo',
     style({

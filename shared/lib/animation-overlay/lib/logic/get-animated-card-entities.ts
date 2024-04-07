@@ -117,7 +117,7 @@ function getAnimatedEntity(
 
   let animationType = cardMovement.To.Destroyed
     ? AnimationType.FadeOut
-    : AnimationType.CardMovement;
+    : AnimationType.Movement;
 
   const wasDraggedFromPlayerHand =
     latestMoveMadeDetails?.wasDragged && isFromPlayerHand(cardMovement, isHost);

@@ -15,10 +15,10 @@
           entity.movement.durationMs > 0
         ) {
           @switch (entity.animationType) {
-            @case (AnimationType.CardMovement) {
+            @case (AnimationType.Movement) {
               <div
                 class="absolute"
-                [@cardMovement]="{
+                [@movement]="{
                   value:
                     entity.movement.sequence === (currentSequence$ | async)
                       ? 'in-progress'
