@@ -31,7 +31,11 @@
               initialPlaceMultipleCardAttempt$ | async
             "
             [isPlayersTurn]="isPlayersTurn"
+            [placeMultipleCards]="placeMultipleCards$ | async"
+            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
             (placeCardAttempted)="onPlaceCardAttempted($event)"
+            (setPlaceMultipleCards)="placedMultipleCards($event)"
+            (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
           ></game-board>
         }
 

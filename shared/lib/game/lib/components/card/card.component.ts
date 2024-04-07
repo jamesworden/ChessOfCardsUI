@@ -1,9 +1,9 @@
 import { Component, Input, HostBinding, inject } from '@angular/core';
-import { getCardImageFileName } from 'projects/client/src/app/util/get-asset-file-names';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Card } from '@shared/models';
 import { ResponsiveSizeService } from '../../services/responsive-size.service';
+import { getCardImageFileName } from './get-card-image-file-name';
 
 @Component({
   selector: 'game-card',

@@ -25,7 +25,7 @@ import {
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
   UpdatePlayerGameView,
-} from 'projects/client/src/app/actions/game.actions';
+} from '../../actions/game.actions';
 import { GameState } from '../../state/game.state';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
@@ -440,6 +440,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   denyDraw() {
     this.#store.dispatch(new DenyDrawOffer());
+  }
+
+  placedMultipleCards(cards: Card[]) {
+    this.#store.dispatch(new SetPlaceMultipleCards(cards));
+  }
+
+  placedMultipleCardsHand(cards: Card[]) {
+    this.#store.dispatch(new SetPlaceMultipleCardsHand(cards));
   }
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {

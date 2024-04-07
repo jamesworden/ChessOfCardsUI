@@ -1,6 +1,5 @@
-import { Component, inject, Input } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ResponsiveSizeService } from '@shared/game';
@@ -13,11 +12,6 @@ import {
   getIndexOfCardInArray,
   removeCardFromArray,
 } from '@shared/logic';
-import { GameState } from 'projects/client/src/app/state/game.state';
-import {
-  SetPlaceMultipleCards,
-  SetPlaceMultipleCardsHand,
-} from 'projects/client/src/app/actions/game.actions';
 import { Z_INDEXES } from '@shared/constants';
 
 /*
@@ -32,26 +26,44 @@ const MIN_CARD_HEIGHT_FACTOR = 5;
   styleUrls: ['./place-multiple-cards-lane.component.scss'],
 })
 export class PlaceMultipleCardsLaneComponent {
-  readonly #store = inject(Store);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   readonly MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
   readonly Z_INDEXES = Z_INDEXES;
 
-  @Select(GameState.playerGameView)
-  playerGameView$!: Observable<PlayerGameView | null>;
-
-  @Select(GameState.initialPlaceMultipleCardAttempt)
-  initialPlaceMultipleCardAttempt$!: Observable<PlaceCardAttempt | null>;
-
-  @Select(GameState.placeMultipleCards)
-  placeMultipleCards$!: Observable<Card[] | null>;
-
   @Input({ required: true }) isHost: boolean;
+  @Input({ required: true }) set playerGameView(
+    playerGameView: PlayerGameView | null
+  ) {
+    this.playerGameView$.next(playerGameView);
+  }
+  @Input({ required: true }) set initialPlaceMultipleCardAttempt(
+    initialPlaceMultipleCardAttempt: PlaceCardAttempt | null
+  ) {
+    this.initialPlaceMultipleCardAttempt$.next(initialPlaceMultipleCardAttempt);
+  }
+  @Input({ required: true }) set placeMultipleCards(
+    placeMultipleCards: Card[] | null
+  ) {
+    this.placeMultipleCards$.next(placeMultipleCards);
+  }
+  @Input({ required: true }) set placeMultipleCardsHand(
+    placeMultipleCardsHand: Card[] | null
+  ) {
+    this.placeMultipleCardsHand$.next(placeMultipleCardsHand);
+  }
+
+  @Output() setPlaceMultipleCards = new EventEmitter<Card[]>();
+  @Output() setPlaceMultipleCardsHand = new EventEmitter<Card[]>();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
   readonly isHost$ = new BehaviorSubject(false);
+  readonly playerGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
+  readonly initialPlaceMultipleCardAttempt$ =
+    new BehaviorSubject<PlaceCardAttempt | null>(null);
+  readonly placeMultipleCards$ = new BehaviorSubject<Card[] | null>(null);
+  readonly placeMultipleCardsHand$ = new BehaviorSubject<Card[] | null>(null);
 
   readonly previouslyCapturedCards$ = combineLatest([
     this.playerGameView$,
@@ -97,9 +109,7 @@ export class PlaceMultipleCardsLaneComponent {
     const { currentIndex: targetIndex, item } = event;
     const card = item.data;
 
-    const placeMultipleCards = this.#store.selectSnapshot(
-      GameState.placeMultipleCards
-    );
+    const placeMultipleCards = this.placeMultipleCards$.getValue();
 
     if (!placeMultipleCards) {
       return;
@@ -126,7 +136,7 @@ export class PlaceMultipleCardsLaneComponent {
     }
 
     moveItemInArray(placeMultipleCards, originalIndex, targetIndex);
-    this.#store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
+    this.setPlaceMultipleCards.emit(placeMultipleCards);
     return;
   }
 
@@ -137,9 +147,7 @@ export class PlaceMultipleCardsLaneComponent {
   ) {
     addCardToArray(card, placeMultipleCards, targetIndex);
 
-    let placeMultipleCardsHand = this.#store.selectSnapshot(
-      GameState.placeMultipleCardsHand
-    );
+    let placeMultipleCardsHand = this.placeMultipleCardsHand$.getValue();
 
     if (!placeMultipleCardsHand) {
       return;
@@ -147,7 +155,7 @@ export class PlaceMultipleCardsLaneComponent {
 
     removeCardFromArray(card, placeMultipleCardsHand);
 
-    this.#store.dispatch(new SetPlaceMultipleCards(placeMultipleCards));
-    this.#store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
+    this.setPlaceMultipleCards.emit(placeMultipleCards);
+    this.setPlaceMultipleCardsHand.emit(placeMultipleCardsHand);
   }
 }
