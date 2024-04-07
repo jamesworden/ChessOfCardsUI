@@ -16,11 +16,15 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "useDefineForClassFields": false
+    "lib": ["es2018", "dom"],
+    "useDefineForClassFields": false,
+    "paths": {
+      "@shared/logic": ["shared/lib/logic/index.ts"],
+      "@shared/models": ["shared/lib/models/index.ts"],
+      "@shared/game": ["shared/lib/game/index.ts"],
+      "@shared/animation-overlay": ["shared/lib/animation-overlay/index.ts"],
+      "@shared/constants": ["shared/lib/constants/index.ts"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

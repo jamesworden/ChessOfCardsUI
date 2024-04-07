@@ -1,11 +1,11 @@
 <div class="h-100 flex justify-between w-full" [@fadeInOut]>
   <app-sidebar [isPlayersTurn]="isPlayersTurn"></app-sidebar>
 
-  <app-animation-overlay
+  <animation-overlay
     [animatedEntities]="(animatedCardEntities$ | async) ?? []"
     (finishedAnimations)="renderAnimatedGameView()"
     (startingAnimations)="checkToRemoveCardFromBoard($event)"
-  ></app-animation-overlay>
+  ></animation-overlay>
 
   <div
     class="flex justify-around w-full dark:bg-gray-800 bg-gray-300 transition"
@@ -24,25 +24,31 @@
         <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
         @if (latestGameViewSnapshot$ | async; as latestGameViewSnapshot) {
-          <app-board
+          <game-board
             [playerGameView]="latestGameViewSnapshot"
             [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
             [initialPlaceMultipleCardAttempt]="
               initialPlaceMultipleCardAttempt$ | async
             "
             [isPlayersTurn]="isPlayersTurn"
+            [placeMultipleCards]="placeMultipleCards$ | async"
+            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
             (placeCardAttempted)="onPlaceCardAttempted($event)"
-          ></app-board>
+            (setPlaceMultipleCards)="placedMultipleCards($event)"
+            (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
+          ></game-board>
         }
 
-        <app-player-hand
+        <game-player-hand
           [isPlacingMultipleCards]="isPlacingMultipleCards"
           [isHost]="playerGameView.IsHost"
           [cards]="playerGameView.Hand.Cards"
           [cardSize]="(cardSize$ | async)!"
           [disabled]="!!(waitingForServer$ | async)"
+          [isPlayersTurn]="isPlayersTurn"
+          [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
           (cardDropped)="onPlayerHandCardDrop($event)"
-        ></app-player-hand>
+        ></game-player-hand>
 
         <app-player-banner
           [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
@@ -67,10 +73,10 @@
     !(hasPendingDrawOffer$ | async) &&
     !(possibleInitialPlaceCardAttempts.length === 0 && isPlayersTurn)
   ) {
-    <app-opponent-hand
+    <game-opponent-hand
       [cardSize]="(cardSize$ | async)!"
       [numCards]="(latestGameViewSnapshot$ | async)!.NumCardsInOpponentsHand"
-    ></app-opponent-hand>
+    ></game-opponent-hand>
   }
   @if (isPlacingMultipleCards$ | async) {
     <div
@@ -185,7 +191,7 @@
 <ng-template #cardMovementTemplate let-animatedEntity>
   @if (animatedEntity.context.Card) {
     @if (playerGameViewToAnimate$ | async; as playerGameViewToAnimate) {
-      <app-card
+      <game-card
         [card]="animatedEntity.context.Card"
         [@cardRotation]="{
           value:
@@ -199,9 +205,9 @@
             durationMs: animatedEntity.movement.durationMs
           }
         }"
-      ></app-card>
+      ></game-card>
     }
   } @else {
-    <app-face-down-card></app-face-down-card>
+    <game-face-down-card></game-face-down-card>
   }
 </ng-template>

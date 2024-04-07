@@ -25,36 +25,40 @@ import {
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
   UpdatePlayerGameView,
-} from 'projects/client/src/app/actions/game.actions';
-import { Card } from 'projects/client/src/app/models/card.model';
-import { Move } from 'projects/client/src/app/models/move.model';
-import { PlaceCardAttempt } from 'projects/client/src/app/models/place-card-attempt.model';
-import { PlayerOrNone } from 'projects/client/src/app/models/player-or-none.model';
-import { PlayerGameView } from '../../models/player-game-view.model';
+} from '../../actions/game.actions';
 import { GameState } from '../../state/game.state';
-import { getReasonIfMoveInvalid } from './logic/is-move-valid';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Lane } from '../../models/lane.model';
-import { addCardToArray } from './logic/add-card-to-array';
-import { moveCardToLane } from './logic/move-card-to-lane';
-import { removeCardFromArray } from './logic/remove-card-from-array';
-import { convertPlaceMultipleCardsToMove } from './logic/convert-place-multiple-cards-to-move';
-import { canPlaceMultipleCards } from './logic/can-place-multiple-cards';
-import { ResponsiveSizeService } from './services/responsive-size.service';
-import { GameOverData } from '../../models/game-over-data.model';
-import { getPossibleInitialPlaceCardAttempts } from './logic/get-possible-initial-place-card-attempts';
-import { isPlayersTurn } from './logic/is-players-turn';
 import { map, pairwise, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
-import { CardMovement } from '../../models/card-movement.model';
-import { AnimatedEntity } from './components/animation-overlay/models/animated-entity.model';
-import { MoveMadeDetails } from './models/move-made-details.model';
 import { Router } from '@angular/router';
 import { cardRotationAnimation } from '../../animations/card-rotation.animation';
 import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
+import {
+  Card,
+  CardMovement,
+  GameOverData,
+  Lane,
+  Move,
+  PlaceCardAttempt,
+  PlayerGameView,
+  PlayerOrNone,
+} from '@shared/models';
+import { MoveMadeDetails } from './models/move-made-details.model';
+import {
+  addCardToArray,
+  canPlaceMultipleCards,
+  convertPlaceMultipleCardsToMove,
+  getPossibleInitialPlaceCardAttempts,
+  getReasonIfMoveInvalid,
+  isPlayersTurn,
+  moveCardToLane,
+  removeCardFromArray,
+} from '@shared/logic';
+import { ResponsiveSizeService } from '@shared/game';
+import { AnimatedEntity } from '@shared/animation-overlay';
+import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 
 @Component({
   selector: 'app-game-view',
@@ -436,6 +440,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   denyDraw() {
     this.#store.dispatch(new DenyDrawOffer());
+  }
+
+  placedMultipleCards(cards: Card[]) {
+    this.#store.dispatch(new SetPlaceMultipleCards(cards));
+  }
+
+  placedMultipleCardsHand(cards: Card[]) {
+    this.#store.dispatch(new SetPlaceMultipleCardsHand(cards));
   }
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {

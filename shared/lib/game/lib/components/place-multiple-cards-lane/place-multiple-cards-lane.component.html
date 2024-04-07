@@ -1,0 +1,64 @@
+@if (
+  initialPlaceMultipleCardAttempt$ | async;
+  as initialPlaceMultipleCardAttempt
+) {
+  <div class="lane" *ngIf="playerGameView$ | async">
+    <!-- Pseudo-position background beneath actual card list -->
+    <div
+      class="absolute flex flex-col-reverse"
+      [ngStyle]="{
+        'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
+      }"
+    >
+      @for (position of pseudoPositions$ | async; track i; let i = $index) {
+        <game-position
+          [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
+          [rowIndex]="position.rowIndex"
+          [backgroundClass]="position.backgroundClass"
+          [textClass]="position.textClass"
+          [isHost]="(isHost$ | async) ?? false"
+          [dragDropDisabled]="true"
+        ></game-position>
+      }
+    </div>
+
+    <div
+      id="place-multiple-cards-list"
+      class="place-multiple-cards-list"
+      cdkDropList
+      cdkDropListData="place-multiple-cards-list"
+      cdkDropListConnectedTo="player-hand"
+      cdkDropListOrientation="vertical"
+      (cdkDropListDropped)="onCardPlaced($event)"
+      [cdkDropListEnterPredicate]="
+        getEnterPredicate(initialPlaceMultipleCardAttempt)
+      "
+      [ngStyle]="{
+        'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS,
+        'min-height': MIN_CARD_HEIGHT_FACTOR * (cardSize$ | async)! + 'px',
+        width: (cardSize$ | async)! + 'px'
+      }"
+    >
+      @for (card of placeMultipleCards$ | async; track i; let i = $index) {
+        <game-card
+          [card]="card"
+          [playerCanDrag]="true"
+          [insideVerticalContainer]="true"
+        ></game-card>
+      }
+    </div>
+
+    <div
+      class="existing-cards"
+      [ngStyle]="{
+        'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS
+      }"
+    >
+      @for (card of previouslyCapturedCards$ | async; track i; let i = $index) {
+        <div class="existing-card-position">
+          <game-card [card]="card" [playerCanDrag]="false"></game-card>
+        </div>
+      }
+    </div>
+  </div>
+}

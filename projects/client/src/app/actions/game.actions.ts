@@ -1,10 +1,12 @@
-import { Card } from '../models/card.model';
-import { DurationOption } from '../models/duration-option.model';
-import { GameOverData } from '../models/game-over-data.model';
-import { Move } from '../models/move.model';
-import { PendingGameView } from '../models/pending-game-view.model';
-import { PlaceCardAttempt } from '../models/place-card-attempt.model';
-import { PlayerGameView } from '../models/player-game-view.model';
+import {
+  PlayerGameView,
+  PlaceCardAttempt,
+  Card,
+  GameOverData,
+  Move,
+  DurationOption,
+  PendingGameView,
+} from '@shared/models';
 
 export class AnimateGameView {
   static readonly type = '[GameState] Animate Game View';

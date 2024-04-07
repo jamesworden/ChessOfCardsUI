@@ -1,17 +1,15 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { timer, BehaviorSubject, Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
-import { SecondsRemaining } from '../../../models/seconds-remaining.model';
 import { GameState } from '../../../state/game.state';
 import { Select, Store } from '@ngxs/store';
-import { PlayerGameView } from '../../../models/player-game-view.model';
 import { durationOptionsMetadata } from '../../../metadata/duration-options-metadata';
-import { PlayerOrNone } from '../../../models/player-or-none.model';
 import {
   CheckGuestForEmptyTimer,
   CheckHostForEmptyTimer,
 } from '../../../actions/game.actions';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PlayerGameView, SecondsRemaining, PlayerOrNone } from '@shared/models';
 
 @Injectable({
   providedIn: 'root',

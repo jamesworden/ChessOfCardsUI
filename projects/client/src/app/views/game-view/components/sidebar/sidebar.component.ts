@@ -5,18 +5,18 @@ import {
   OfferDraw,
   PassMove,
   ResignGame,
-} from 'projects/client/src/app/actions/game.actions';
-import { GameState } from 'projects/client/src/app/state/game.state';
-import { ResponsiveSizeService } from '../../services/responsive-size.service';
+} from '../../../../actions/game.actions';
+import { ResponsiveSizeService } from '@shared/game';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
 import { Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PlayerGameView } from 'projects/client/src/app/models/player-game-view.model';
+import { PlayerGameView } from '@shared/models';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { toggleDarkMode } from 'projects/client/src/app/logic/toggle-dark-mode';
+import { GameState } from '../../../../state/game.state';
+import { toggleDarkMode } from '../../../../logic/toggle-dark-mode';
 
 enum YesNoButtons {
   Yes = 'Yes',

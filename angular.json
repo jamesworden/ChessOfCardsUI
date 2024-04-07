@@ -105,6 +105,22 @@
           }
         }
       }
+    },
+    "shared": {
+      "root": "",
+      "sourceRoot": "shared",
+      "projectType": "library",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "shared/test.ts",
+            "tsConfig": "shared/tsconfig.spec.json",
+            "karmaConfig": "shared/karma.conf.js",
+            "polyfills": "shared/polyfills.ts"
+          }
+        }
+      }
     }
   }
 }

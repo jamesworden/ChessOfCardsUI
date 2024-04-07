@@ -17,15 +17,18 @@ import {
   AnimateGameView,
   SetGameIsActive,
 } from '../actions/game.actions';
-import { Card } from '../models/card.model';
-import { Move } from '../models/move.model';
-import { PlayerGameView } from '../models/player-game-view.model';
 import { environment } from '../../environments/environment';
 import { SetIsConnectedToServer } from '../actions/server.actions';
-import { DurationOption } from '../models/duration-option.model';
-import { PendingGameView } from '../models/pending-game-view.model';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  Card,
+  DurationOption,
+  Move,
+  PendingGameView,
+  PlayerGameView,
+} from '@shared/models';
+import { isPlayersTurn } from '@shared/logic';
 
 const { serverUrl } = environment;
 
@@ -115,11 +118,7 @@ export class WebsocketService {
       const playerGameView = this.parseAndUpdateGameView(stringifiedGameState);
       this.#router.navigate(['game']);
 
-      const isPlayersTurn =
-        (playerGameView.IsHost && playerGameView.IsHostPlayersTurn) ||
-        (!playerGameView.IsHost && !playerGameView.IsHostPlayersTurn);
-
-      const secondaryText = isPlayersTurn
+      const secondaryText = isPlayersTurn(playerGameView)
         ? "It's your turn!"
         : "It's your opponent's turn!";
 

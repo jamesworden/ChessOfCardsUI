@@ -1,0 +1,42 @@
+@if (cards) {
+  <div
+    [@bounceCards]="{
+      value: (bouncingCards$ | async) ? 'bouncing' : 'not-bouncing',
+      params: {
+        heightPx: cardSize / 5
+      }
+    }"
+    class="flex player-hand"
+    id="player-hand"
+    cdkDropList
+    [cdkDropListConnectedTo]="
+      isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
+    "
+    (cdkDropListDropped)="onCardDrop($event)"
+    (cdkDropListSorted)="resetBounceTimerIfPlayersTurn()"
+    cdkDropListData="player-hand"
+    cdkDropListOrientation="horizontal"
+    [ngStyle]="{
+      height: cardSize + 'px',
+      width: 5 * cardSize + 'px',
+      margin: 'auto'
+    }"
+  >
+    @for (
+      card of isPlacingMultipleCards
+        ? (placeMultipleCardsHand$ | async)
+        : cards;
+      track i;
+      let i = $index
+    ) {
+      <game-card
+        [card]="card"
+        [playerCanDrag]="!disabled"
+        class="transition"
+        [ngStyle]="{
+          opacity: disabled ? 0.5 : 1
+        }"
+      ></game-card>
+    }
+  </div>
+}

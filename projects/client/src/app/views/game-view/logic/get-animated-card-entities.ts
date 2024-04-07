@@ -1,18 +1,20 @@
-import { CardMovement } from '../../../models/card-movement.model';
-import { PlayerGameView } from '../../../models/player-game-view.model';
-import { AnimatedMovement } from '../components/animation-overlay/models/animated-movement.model';
-import { CardStore } from '../../../models/card-store.model';
-import { AnimatedPosition } from '../components/animation-overlay/models/animated-position.model';
-import { CardPosition } from '../../../models/card-position.model';
+import { TemplateRef } from '@angular/core';
+import {
+  PlayerGameView,
+  PlayerOrNone,
+  CardMovement,
+  CardStore,
+  CardPosition,
+} from '@shared/models';
+import { getCardTiltDegrees } from '@shared/logic';
+import { MoveMadeDetails } from '../models/move-made-details.model';
 import {
   AnimatedEntity,
   AnimatedEntityStyles,
-} from '../components/animation-overlay/models/animated-entity.model';
-import { TemplateRef } from '@angular/core';
-import { AnimationType } from '../components/animation-overlay/models/animation-type.model';
-import { MoveMadeDetails } from '../models/move-made-details.model';
-import { getCardTiltDegrees } from './get-card-tilt-degrees';
-import { PlayerOrNone } from '../../../models/player-or-none.model';
+  AnimatedMovement,
+  AnimatedPosition,
+  AnimationType,
+} from '@shared/animation-overlay';
 
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],
@@ -115,7 +117,7 @@ function getAnimatedEntity(
 
   let animationType = cardMovement.To.Destroyed
     ? AnimationType.FadeOut
-    : AnimationType.CardMovement;
+    : AnimationType.Movement;
 
   const wasDraggedFromPlayerHand =
     latestMoveMadeDetails?.wasDragged && isFromPlayerHand(cardMovement, isHost);
@@ -259,8 +261,8 @@ function getAnimatedPositionFromCardPosition(
 ): AnimatedPosition {
   const { LaneIndex: laneIndex, RowIndex: rowIndex } = cardPosition;
 
-  const lane = document.getElementsByTagName('app-lane')[laneIndex];
-  const position = lane.getElementsByTagName('app-position')[rowIndex];
+  const lane = document.getElementsByTagName('game-lane')[laneIndex];
+  const position = lane.getElementsByTagName('game-position')[rowIndex];
 
   let { x, y } = position.getBoundingClientRect();
   y += window.scrollY;
@@ -299,7 +301,7 @@ function getAnimatedPositionFromPlayerCardIndex(
 }
 
 function getAnimatedPositionFromPlayerDeck() {
-  const playerDeck = document.getElementsByTagName('app-face-down-card')[1];
+  const playerDeck = document.getElementsByTagName('game-face-down-card')[1];
   let { x, y } = playerDeck.getBoundingClientRect();
   y += window.scrollY;
 
@@ -310,7 +312,7 @@ function getAnimatedPositionFromPlayerDeck() {
 }
 
 function getAnimatedPositionFromOpponentDeck() {
-  const playerDeck = document.getElementsByTagName('app-face-down-card')[0];
+  const playerDeck = document.getElementsByTagName('game-face-down-card')[0];
   let { x, y } = playerDeck.getBoundingClientRect();
   y += window.scrollY;
 
