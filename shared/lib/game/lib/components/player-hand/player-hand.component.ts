@@ -10,8 +10,6 @@ import {
 } from '@angular/core';
 import { Card } from '@shared/models';
 import { Observable, timer, BehaviorSubject, of } from 'rxjs';
-import { GameState } from 'projects/client/src/app/state/game.state';
-import { Select, Store } from '@ngxs/store';
 import { switchMap, filter, delay } from 'rxjs/operators';
 import { ResponsiveSizeService } from '@shared/game';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -26,7 +24,6 @@ import { bounceCardAnimation } from './bounce-cards.animation';
 export class PlayerHandComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #destroyRef = inject(DestroyRef);
-  readonly #store = inject(Store);
 
   @Input() isPlacingMultipleCards = false;
   @Input({ required: true }) isHost: boolean;
@@ -82,7 +79,7 @@ export class PlayerHandComponent implements OnInit {
   }
 
   resetBounceTimerIfPlayersTurn() {
-    const isPlayersTurn = this.#store.selectSnapshot(GameState.isPlayersTurn);
+    const isPlayersTurn = this.isPlayersTurn$.getValue();
     if (isPlayersTurn) {
       this.startBounceTimer();
     }
