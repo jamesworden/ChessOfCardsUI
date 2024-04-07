@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AnimationType } from './models/animation-type.model';
 import { getSequencesToDelayMs } from './logic/get-sequences-to-delay-ms';
 import { map } from 'rxjs/operators';
-import { movementAnimation } from './animations/card-movement.animation';
+import { movementAnimation } from './animations/movement.animation';
 import { fadeOutAnimation } from './animations/fade-out.animation';
 import { fadeInAnimation } from './animations/fade-in.animation';
 import { Z_INDEXES } from '@shared/constants';
