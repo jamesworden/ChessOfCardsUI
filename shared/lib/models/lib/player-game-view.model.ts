@@ -17,4 +17,5 @@ export type PlayerGameView = {
   MovesMade: MoveMade[];
   DurationOption: DurationOption;
   GameEndedTimestampUTC?: string;
+  GameCode: string;
 };

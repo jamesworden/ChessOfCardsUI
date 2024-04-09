@@ -4,14 +4,16 @@
     width: '64px'
   }"
 >
-  <div class="flex flex-col justify-around text-center my-2">
-    <div class="text-gray-200 semibold text-center text-xs">Game Code:</div>
-    <div
-      class="text-gray-200 tracking-widest font-bold text-center text-md mt-1"
-    >
-      WXYZ
+  @if ((playerGameView$ | async)?.GameCode; as gameCode) {
+    <div class="flex flex-col justify-around text-center my-2">
+      <div class="text-gray-200 semibold text-center text-xs">Game Code:</div>
+      <div
+        class="text-gray-200 tracking-widest font-bold text-center text-md mt-1"
+      >
+        {{ gameCode }}
+      </div>
     </div>
-  </div>
+  }
 
   <div class="divider mx-2"></div>
 
