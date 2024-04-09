@@ -328,7 +328,7 @@ export class GameState {
 
   @Action(MakeMove)
   makeMove(ctx: StateContext<GameStateModel>, action: MakeMove) {
-    this.#websocketService.makeMove(action.move);
+    this.#websocketService.makeMove(action.move, action.rearrangedCardsInHand);
 
     ctx.patchState({
       waitingForServer: true,

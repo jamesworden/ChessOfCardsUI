@@ -431,7 +431,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
     }
 
-    this.#store.dispatch(new MakeMove(move));
+    const placeMultipleCardsHand =
+      this.#store.selectSnapshot(GameState.placeMultipleCardsHand) ?? undefined;
+    this.#store.dispatch(new MakeMove(move, placeMultipleCardsHand));
     this.#store.dispatch(new FinishPlacingMultipleCards(true));
   }
 
