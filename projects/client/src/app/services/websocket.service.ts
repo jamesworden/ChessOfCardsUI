@@ -169,9 +169,16 @@ export class WebsocketService {
     this.hubConnection.invoke('RearrangeHand', stringifiedCards);
   }
 
-  public makeMove(move: Move) {
+  public makeMove(move: Move, rearrangedCardsInHand?: Card[]) {
     const stringifiedMove = JSON.stringify(move);
-    this.hubConnection.invoke('MakeMove', stringifiedMove);
+    const stringifiedRearrangedCardsInHand = rearrangedCardsInHand
+      ? JSON.stringify(rearrangedCardsInHand)
+      : null;
+    this.hubConnection.invoke(
+      'MakeMove',
+      stringifiedMove,
+      stringifiedRearrangedCardsInHand
+    );
   }
 
   public passMove() {

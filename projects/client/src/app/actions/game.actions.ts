@@ -82,7 +82,10 @@ export class PassMove {
 
 export class MakeMove {
   static readonly type = '[GameState] Make Move';
-  constructor(public move: Move) {}
+  constructor(
+    public move: Move,
+    public rearrangedCardsInHand?: Card[]
+  ) {}
 }
 
 export class RearrangeHand {
