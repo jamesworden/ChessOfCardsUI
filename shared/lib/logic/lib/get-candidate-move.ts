@@ -1,10 +1,7 @@
 import { CandidateMove, Move } from '@shared/models';
 
-export function getCandidateMove(
-  candidateMoves: CandidateMove[][],
-  move: Move
-) {
-  return candidateMoves[candidateMoves.length - 1].find((candidateMove) => {
+export function getCandidateMove(move: Move, candidateMoves?: CandidateMove[]) {
+  return candidateMoves?.find((candidateMove) => {
     if (move.PlaceCardAttempts.length === 0) {
       return null;
     }

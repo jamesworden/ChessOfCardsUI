@@ -1,13 +1,15 @@
 import { CandidateMove } from '@shared/models';
 
 export function getPossibleInitialPlaceCardAttempts(
-  candidateMoves: CandidateMove[][]
+  candidateMoves?: CandidateMove[]
 ) {
-  return candidateMoves[candidateMoves.length - 1]
-    .filter((candidateMove) => {
-      const isInitialAttempt =
-        candidateMove.Move.PlaceCardAttempts.length === 1;
-      return isInitialAttempt && candidateMove.IsValid;
-    })
-    .map((candidateMove) => candidateMove.Move.PlaceCardAttempts[0]);
+  return (
+    candidateMoves
+      ?.filter((candidateMove) => {
+        const isInitialAttempt =
+          candidateMove.Move.PlaceCardAttempts.length === 1;
+        return isInitialAttempt && candidateMove.IsValid;
+      })
+      .map((candidateMove) => candidateMove.Move.PlaceCardAttempts[0]) ?? []
+  );
 }

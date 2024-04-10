@@ -279,7 +279,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     const invalidMoveMessage = isPlayersTurn(latestGameViewSnapshot)
-      ? getReasonIfMoveInvalid(latestGameViewSnapshot.CandidateMoves, move)
+      ? getReasonIfMoveInvalid(move, latestGameViewSnapshot.CandidateMoves)
       : "It's not your turn!";
 
     if (invalidMoveMessage) {
@@ -292,8 +292,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     canPlaceMultipleCards(
-      latestGameViewSnapshot.CandidateMoves,
-      placeCardAttempt
+      placeCardAttempt,
+      latestGameViewSnapshot.CandidateMoves
     )
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
       : this.makeValidatedMove(move, latestGameViewSnapshot.Lanes);
@@ -388,8 +388,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     );
 
     const invalidMoveMessage = getReasonIfMoveInvalid(
-      playerGameView.CandidateMoves,
-      move
+      move,
+      playerGameView.CandidateMoves
     );
 
     if (invalidMoveMessage) {

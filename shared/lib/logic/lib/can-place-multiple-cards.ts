@@ -2,10 +2,14 @@ import { CandidateMove, PlaceCardAttempt } from '@shared/models';
 
 // TODO: condense boolean logic once the backend properly calculates which place multiple cards are allowed.
 export function canPlaceMultipleCards(
-  candidateMoves: CandidateMove[][],
-  initialPlaceCardAttempt: PlaceCardAttempt
+  initialPlaceCardAttempt: PlaceCardAttempt,
+  candidateMoves?: CandidateMove[]
 ) {
-  return candidateMoves[candidateMoves.length - 1].some(({ Move, IsValid }) => {
+  if (!candidateMoves) {
+    return false;
+  }
+
+  return candidateMoves.some(({ Move, IsValid }) => {
     if (
       initialPlaceCardAttempt.Card.Kind !== Move.PlaceCardAttempts[0].Card.Kind
     ) {

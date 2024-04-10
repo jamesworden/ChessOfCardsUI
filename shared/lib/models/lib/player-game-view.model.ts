@@ -19,5 +19,5 @@ export type PlayerGameView = {
   DurationOption: DurationOption;
   GameEndedTimestampUTC?: string;
   GameCode: string;
-  CandidateMoves: CandidateMove[][];
+  CandidateMoves?: CandidateMove[];
 };
