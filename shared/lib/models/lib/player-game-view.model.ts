@@ -1,3 +1,4 @@
+import { CandidateMove } from './candidate-move.model';
 import { DurationOption } from './duration-option.model';
 import { Hand } from './hand.model';
 import { Lane } from './lane.model';
@@ -18,4 +19,5 @@ export type PlayerGameView = {
   DurationOption: DurationOption;
   GameEndedTimestampUTC?: string;
   GameCode: string;
+  CandidateMoves: CandidateMove[][];
 };

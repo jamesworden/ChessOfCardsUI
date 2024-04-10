@@ -20,7 +20,7 @@ import { opponentHasAdvantage } from './move-checks/opponent-has-advantage';
 import { playerHasAdvantage } from './move-checks/player-has-advantage';
 import { PlayerGameView, Move } from '@shared/models';
 
-export function getReasonIfMoveInvalid(
+export function getReasonIfMoveInvalidOld(
   gameState: PlayerGameView,
   move: Move
 ): string | null {

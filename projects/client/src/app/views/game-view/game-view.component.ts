@@ -188,7 +188,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           this.latestGameViewSnapshot$.next(playerGameView);
           this.isPlayersTurn = isPlayersTurn(playerGameView);
           this.possibleInitialPlaceCardAttempts =
-            getPossibleInitialPlaceCardAttempts(playerGameView);
+            getPossibleInitialPlaceCardAttempts(playerGameView.CandidateMoves);
         }
       });
     this.opponentPassedMove$
@@ -278,10 +278,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const invalidMoveMessage = getReasonIfMoveInvalid(
-      latestGameViewSnapshot,
-      move
-    );
+    const invalidMoveMessage = isPlayersTurn(latestGameViewSnapshot)
+      ? getReasonIfMoveInvalid(latestGameViewSnapshot.CandidateMoves, move)
+      : "It's not your turn!";
 
     if (invalidMoveMessage) {
       this.#snackBar.open(invalidMoveMessage, undefined, {
@@ -385,7 +384,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       playerGameView.IsHost
     );
 
-    const invalidMoveMessage = getReasonIfMoveInvalid(playerGameView, move);
+    const invalidMoveMessage = getReasonIfMoveInvalid(
+      playerGameView.CandidateMoves,
+      move
+    );
 
     if (invalidMoveMessage) {
       this.#snackBar.open(invalidMoveMessage, 'Out of order!', {
