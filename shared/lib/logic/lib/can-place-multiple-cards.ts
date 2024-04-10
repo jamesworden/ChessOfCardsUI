@@ -1,37 +1,22 @@
 import { CandidateMove, PlaceCardAttempt } from '@shared/models';
 
-// TODO: condense boolean logic once the backend properly calculates which place multiple cards are allowed.
 export function canPlaceMultipleCards(
   initialPlaceCardAttempt: PlaceCardAttempt,
   candidateMoves?: CandidateMove[]
 ) {
-  if (!candidateMoves) {
-    return false;
-  }
-
-  return candidateMoves.some(({ Move, IsValid }) => {
-    if (
-      initialPlaceCardAttempt.Card.Kind !== Move.PlaceCardAttempts[0].Card.Kind
-    ) {
-      return false;
-    }
-    if (
-      initialPlaceCardAttempt.Card.Suit !== Move.PlaceCardAttempts[0].Card.Suit
-    ) {
-      return false;
-    }
-    if (
-      initialPlaceCardAttempt.TargetLaneIndex !==
-      Move.PlaceCardAttempts[0].TargetLaneIndex
-    ) {
-      return false;
-    }
-    if (
-      initialPlaceCardAttempt.TargetRowIndex !==
-      Move.PlaceCardAttempts[0].TargetRowIndex
-    ) {
-      return false;
-    }
-    return Move.PlaceCardAttempts.length > 1 && IsValid;
-  });
+  return (
+    candidateMoves?.some(
+      (candidateMove) =>
+        initialPlaceCardAttempt.Card.Kind ===
+          candidateMove.Move.PlaceCardAttempts[0].Card.Kind &&
+        initialPlaceCardAttempt.Card.Suit ===
+          candidateMove.Move.PlaceCardAttempts[0].Card.Suit &&
+        initialPlaceCardAttempt.TargetLaneIndex ===
+          candidateMove.Move.PlaceCardAttempts[0].TargetLaneIndex &&
+        initialPlaceCardAttempt.TargetRowIndex ===
+          candidateMove.Move.PlaceCardAttempts[0].TargetRowIndex &&
+        candidateMove.Move.PlaceCardAttempts.length > 1 &&
+        candidateMove.IsValid
+    ) ?? false
+  );
 }
