@@ -291,7 +291,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    canPlaceMultipleCards(placeCardAttempt, latestGameViewSnapshot)
+    canPlaceMultipleCards(
+      latestGameViewSnapshot.CandidateMoves,
+      placeCardAttempt
+    )
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
       : this.makeValidatedMove(move, latestGameViewSnapshot.Lanes);
   }

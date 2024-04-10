@@ -7,7 +7,6 @@ export * from './lib/get-background-class';
 export * from './lib/get-card-tilt-degrees';
 export * from './lib/get-index-of-card-in-array';
 export * from './lib/get-possible-initial-place-card-attempts';
-export * from './lib/is-move-valid';
 export * from './lib/is-players-turn';
 export * from './lib/move-card-to-lane';
 export * from './lib/player-has-won-lane';

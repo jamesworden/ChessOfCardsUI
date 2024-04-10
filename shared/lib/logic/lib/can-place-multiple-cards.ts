@@ -1,35 +1,33 @@
-import { opponentCapturedAnyRowWithAce } from './is-move-valid/move-checks/opponent-captured-any-row-with-ace';
-import { Kind, PlaceCardAttempt, PlayerGameView } from '@shared/models';
+import { CandidateMove, PlaceCardAttempt } from '@shared/models';
 
-/**
- * @returns true if the first place card attempt is in a position where multiple
- * cards can be played after it, otherwise false.
- */
+// TODO: condense boolean logic once the backend properly calculates which place multiple cards are allowed.
 export function canPlaceMultipleCards(
-  firstPlaceCardAttempt: PlaceCardAttempt,
-  latestGameStateSnapshot: PlayerGameView
+  candidateMoves: CandidateMove[][],
+  initialPlaceCardAttempt: PlaceCardAttempt
 ) {
-  const { IsHost, Hand } = latestGameStateSnapshot;
-  const defendingAsHost = IsHost && firstPlaceCardAttempt.TargetRowIndex < 3;
-  const defendingAsGuest = !IsHost && firstPlaceCardAttempt.TargetRowIndex > 3;
-  const isDefensiveMove = defendingAsHost || defendingAsGuest;
-
-  const hasOtherPotentialPairCards = Hand.Cards.some((card) => {
-    const suitNotMatch = card.Suit != firstPlaceCardAttempt.Card.Suit;
-    const kindMatches = card.Kind === firstPlaceCardAttempt.Card.Kind;
-
-    return suitNotMatch && kindMatches;
+  return candidateMoves[candidateMoves.length - 1].some(({ Move, IsValid }) => {
+    if (
+      initialPlaceCardAttempt.Card.Kind !== Move.PlaceCardAttempts[0].Card.Kind
+    ) {
+      return false;
+    }
+    if (
+      initialPlaceCardAttempt.Card.Suit !== Move.PlaceCardAttempts[0].Card.Suit
+    ) {
+      return false;
+    }
+    if (
+      initialPlaceCardAttempt.TargetLaneIndex !==
+      Move.PlaceCardAttempts[0].TargetLaneIndex
+    ) {
+      return false;
+    }
+    if (
+      initialPlaceCardAttempt.TargetRowIndex !==
+      Move.PlaceCardAttempts[0].TargetRowIndex
+    ) {
+      return false;
+    }
+    return Move.PlaceCardAttempts.length > 1 && IsValid;
   });
-
-  const shouldPlaceMultipleCards =
-    isDefensiveMove && hasOtherPotentialPairCards;
-
-  if (
-    firstPlaceCardAttempt.Card.Kind === Kind.Ace &&
-    opponentCapturedAnyRowWithAce(latestGameStateSnapshot)
-  ) {
-    return false;
-  }
-
-  return shouldPlaceMultipleCards;
 }
