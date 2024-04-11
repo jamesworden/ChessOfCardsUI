@@ -20,4 +20,5 @@ export type PlayerGameView = {
   GameEndedTimestampUTC?: string;
   GameCode: string;
   CandidateMoves?: CandidateMove[];
+  HasEnded: boolean;
 };
