@@ -7,4 +7,5 @@ export type MoveMade = {
   Move: Move;
   TimestampUTC: string;
   CardMovements: CardMovement[][];
+  PassedMove: boolean;
 };
