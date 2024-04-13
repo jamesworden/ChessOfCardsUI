@@ -19,6 +19,7 @@
 
   <div>
     <app-sidebar-item
+      data-testid="pass-move-button"
       [disabled]="!!(waitingForServer$ | async)"
       [itemHeight]="64"
       [itemWidth]="64"
