@@ -96,6 +96,7 @@
 
       <div style="display: flex">
         <app-sidebar-item
+          data-testid="place-cards-button"
           [itemHeight]="(cardSize$ | async)!"
           [itemWidth]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
@@ -106,6 +107,7 @@
           (selected)="onConfirmButtonClicked()"
         ></app-sidebar-item>
         <app-sidebar-item
+          data-testid="cancel-place-cards-button"
           [itemHeight]="(cardSize$ | async)!"
           [itemWidth]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
