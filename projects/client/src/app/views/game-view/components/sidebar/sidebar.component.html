@@ -84,6 +84,7 @@
   @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
     <div class="game-stats">
       <div
+        data-testid="opponent-time"
         class="remaining-time"
         [ngClass]="{
           'is-not-counting-down': isPlayersTurn
@@ -100,6 +101,7 @@
         <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
       </div>
       <div
+        data-testid="player-time"
         class="remaining-time"
         [ngClass]="{
           'low-time-container': playerHasLowTime,
