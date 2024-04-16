@@ -106,7 +106,7 @@ export class SidebarComponent implements OnInit {
   attemptToOpenOfferDrawModel() {
     if (this.drawOfferSent) {
       this.#matSnackBar.open('You already offered a draw.', undefined, {
-        duration: 2000,
+        duration: 5000,
         verticalPosition: 'top',
       });
     } else if (this.hasPendingDrawOffer) {
@@ -114,7 +114,7 @@ export class SidebarComponent implements OnInit {
         'Your opponent already offered you a draw.',
         undefined,
         {
-          duration: 2000,
+          duration: 5000,
           verticalPosition: 'top',
         }
       );

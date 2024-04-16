@@ -196,7 +196,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe((opponentPassedMove) => {
         if (opponentPassedMove) {
           this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
-            duration: 2000,
+            duration: 5000,
             verticalPosition: 'top',
           });
         }
