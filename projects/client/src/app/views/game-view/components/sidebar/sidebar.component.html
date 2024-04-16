@@ -95,10 +95,14 @@
         </span>
       </div>
       <div class="deck-counts">
-        <div class="deck-count">{{ numCardsInOpponentDeck }}</div>
+        <div data-testid="opponent-deck-count" class="deck-count">
+          {{ numCardsInOpponentDeck }}
+        </div>
         <game-face-down-card></game-face-down-card>
         <game-face-down-card></game-face-down-card>
-        <div class="deck-count">{{ numCardsInPlayerDeck }}</div>
+        <div data-testid="player-deck-count" class="deck-count">
+          {{ numCardsInPlayerDeck }}
+        </div>
       </div>
       <div
         data-testid="player-time"
