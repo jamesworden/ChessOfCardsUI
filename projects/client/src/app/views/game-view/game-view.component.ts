@@ -283,7 +283,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
     if (invalidMoveMessage) {
       this.#snackBar.open(invalidMoveMessage, undefined, {
-        duration: 1500,
+        duration: 5000,
         verticalPosition: 'top',
       });
 
@@ -393,7 +393,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
     if (invalidMoveMessage) {
       this.#snackBar.open(invalidMoveMessage, 'Out of order!', {
-        duration: 1500,
+        duration: 5000,
         verticalPosition: 'top',
       });
 

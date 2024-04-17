@@ -148,7 +148,7 @@ export class SidebarComponent implements OnInit {
     this.#store.dispatch(new OfferDraw());
 
     this.#matSnackBar.open('Offered draw.', undefined, {
-      duration: 1500,
+      duration: 5000,
       verticalPosition: 'top',
     });
   }
@@ -158,7 +158,7 @@ export class SidebarComponent implements OnInit {
       this.openPassMoveModal();
     } else {
       this.#matSnackBar.open("It's not your turn!", undefined, {
-        duration: 1500,
+        duration: 5000,
         verticalPosition: 'top',
       });
     }
@@ -189,7 +189,7 @@ export class SidebarComponent implements OnInit {
     this.#store.dispatch(new PassMove());
 
     this.#matSnackBar.open('Move passed.', undefined, {
-      duration: 1500,
+      duration: 5000,
       verticalPosition: 'top',
     });
   }
