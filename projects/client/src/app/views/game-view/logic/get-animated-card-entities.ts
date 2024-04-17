@@ -161,7 +161,7 @@ function getAnimatedEntity(
         )
       : 0;
 
-  const afterRotation =
+  let afterRotation =
     cardMovement.Card &&
     typeof cardMovement.To.CardPosition?.RowIndex === 'number'
       ? getCardTiltDegrees(
@@ -174,6 +174,10 @@ function getAnimatedEntity(
             : PlayerOrNone.None
         )
       : 0;
+
+  if (cardMovement.To.Destroyed) {
+    afterRotation = beforeRotation;
+  }
 
   const styles: AnimatedEntityStyles = {
     before: {

@@ -36,14 +36,17 @@
                 }"
                 [@rotation]="{
                   value:
-                    entity.styles?.before?.rotate ===
-                    entity.styles?.after?.rotate
-                      ? 'not-rotating'
-                      : 'rotating',
+                    entity.movement.sequence === (currentSequence$ | async) &&
+                    entity.styles?.before?.rotate !==
+                      entity.styles?.after?.rotate &&
+                    (appliedRotation$ | async)
+                      ? 'rotating'
+                      : 'not-rotating',
                   params: {
                     fromRotate: entity.styles?.before?.rotate ?? '0deg',
                     toRotate: entity.styles?.after?.rotate ?? '0deg',
-                    durationMs: entity.movement.durationMs
+                    durationMs:
+                      entity.movement.durationMs - APPLY_ROTATION_DELAY
                   }
                 }"
               >
@@ -56,12 +59,7 @@
               </div>
             }
             @case (AnimationType.FadeOut) {
-              <!-- For whatever reason, the rotation and fade out animations don't place nicely together. -->
               <div
-                [ngStyle]="{
-                  transform:
-                    'rotate(' + (entity.styles?.before?.rotate ?? '0deg') + ')'
-                }"
                 class="absolute"
                 [@fadeOut]="{
                   value:
@@ -75,6 +73,21 @@
                     x: entity.movement.from?.x,
                     y: entity.movement.from?.y,
                     durationMs: entity.movement.durationMs
+                  }
+                }"
+                [@rotation]="{
+                  value:
+                    entity.movement.sequence === (currentSequence$ | async) &&
+                    entity.styles?.before?.rotate !==
+                      entity.styles?.after?.rotate &&
+                    (appliedRotation$ | async)
+                      ? 'rotating'
+                      : 'not-rotating',
+                  params: {
+                    fromRotate: entity.styles?.before?.rotate ?? '0deg',
+                    toRotate: entity.styles?.after?.rotate ?? '0deg',
+                    durationMs:
+                      entity.movement.durationMs - APPLY_ROTATION_DELAY
                   }
                 }"
               >
@@ -100,19 +113,23 @@
                   params: {
                     x: entity.movement.to?.x,
                     y: entity.movement.to?.y,
-                    durationMs: entity.movement.durationMs
+                    durationMs:
+                      entity.movement.durationMs - APPLY_ROTATION_DELAY
                   }
                 }"
                 [@rotation]="{
                   value:
-                    entity.styles?.before?.rotate ===
-                    entity.styles?.after?.rotate
-                      ? 'not-rotating'
-                      : 'rotating',
+                    entity.movement.sequence === (currentSequence$ | async) &&
+                    entity.styles?.before?.rotate !==
+                      entity.styles?.after?.rotate &&
+                    (appliedRotation$ | async)
+                      ? 'rotating'
+                      : 'not-rotating',
                   params: {
                     fromRotate: entity.styles?.before?.rotate ?? '0deg',
                     toRotate: entity.styles?.after?.rotate ?? '0deg',
-                    durationMs: entity.movement.durationMs
+                    durationMs:
+                      entity.movement.durationMs - APPLY_ROTATION_DELAY
                   }
                 }"
               >
