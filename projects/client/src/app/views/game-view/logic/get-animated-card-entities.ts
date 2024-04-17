@@ -154,7 +154,7 @@ function getAnimatedEntity(
           cardMovement.Card,
           cardMovement.From.CardPosition?.RowIndex,
           isHost,
-          cardMovement.From.CardPosition?.LaneIndex
+          typeof cardMovement.From.CardPosition?.LaneIndex === 'number'
             ? prevView.Lanes[cardMovement.From.CardPosition?.LaneIndex]
                 .LaneAdvantage
             : PlayerOrNone.None
@@ -168,7 +168,7 @@ function getAnimatedEntity(
           cardMovement.Card,
           cardMovement.To.CardPosition?.RowIndex,
           isHost,
-          cardMovement.To.CardPosition?.LaneIndex
+          typeof cardMovement.To.CardPosition?.LaneIndex === 'number'
             ? currView.Lanes[cardMovement.To.CardPosition?.LaneIndex]
                 .LaneAdvantage
             : PlayerOrNone.None
