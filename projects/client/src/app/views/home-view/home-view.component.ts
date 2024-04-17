@@ -14,9 +14,9 @@ import {
 import { GameState } from '../../state/game.state';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { toggleDarkMode } from '../../logic/toggle-dark-mode';
+import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
   selector: 'app-home-view',

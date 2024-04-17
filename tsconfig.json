@@ -23,7 +23,8 @@
       "@shared/models": ["shared/lib/models/index.ts"],
       "@shared/game": ["shared/lib/game/index.ts"],
       "@shared/animation-overlay": ["shared/lib/animation-overlay/index.ts"],
-      "@shared/constants": ["shared/lib/constants/index.ts"]
+      "@shared/constants": ["shared/lib/constants/index.ts"],
+      "@shared/animations": ["shared/lib/animations/index.ts"]
     }
   },
   "angularCompilerOptions": {

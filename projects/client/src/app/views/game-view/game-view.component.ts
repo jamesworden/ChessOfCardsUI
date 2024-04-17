@@ -33,7 +33,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, pairwise, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Router } from '@angular/router';
-import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 import {
   Card,
   CardMovement,
@@ -58,6 +57,7 @@ import {
 import { ResponsiveSizeService } from '@shared/game';
 import { AnimatedEntity } from '@shared/animation-overlay';
 import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
+import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
   selector: 'app-game-view',

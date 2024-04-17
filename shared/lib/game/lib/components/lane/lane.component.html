@@ -25,6 +25,7 @@
         @if (position.rowIndex === 3) {
           @if (redJokerLaneIndex === laneIndex) {
             <game-joker-card
+              [@fadeInOut]
               [isRedJoker]="true"
               [wonBy]="lane.WonBy"
               [isHost]="isHost"
@@ -32,6 +33,7 @@
           }
           @if (blackJokerLaneIndex === laneIndex) {
             <game-joker-card
+              [@fadeInOut]
               [isRedJoker]="false"
               [wonBy]="lane.WonBy"
               [isHost]="isHost"
