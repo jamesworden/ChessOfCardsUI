@@ -196,21 +196,7 @@
 <ng-template #cardMovementTemplate let-animatedEntity>
   @if (animatedEntity.context.Card) {
     @if (playerGameViewToAnimate$ | async; as playerGameViewToAnimate) {
-      <game-card
-        [card]="animatedEntity.context.Card"
-        [@cardRotation]="{
-          value:
-            (animatedEntity.styles?.before.rotate ?? 0) ===
-            (animatedEntity.styles?.after.rotate ?? 0)
-              ? 'not-rotating'
-              : 'rotating',
-          params: {
-            fromRotate: animatedEntity.styles?.before.rotate ?? '0deg',
-            toRotate: animatedEntity.styles?.after.rotate ?? '0deg',
-            durationMs: animatedEntity.movement.durationMs
-          }
-        }"
-      ></game-card>
+      <game-card [card]="animatedEntity.context.Card"></game-card>
     }
   } @else {
     <game-face-down-card></game-face-down-card>

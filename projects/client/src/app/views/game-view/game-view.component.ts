@@ -33,7 +33,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, pairwise, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Router } from '@angular/router';
-import { cardRotationAnimation } from '../../animations/card-rotation.animation';
 import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 import {
   Card,
@@ -64,7 +63,7 @@ import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
   styleUrls: ['./game-view.component.scss'],
-  animations: [cardRotationAnimation, fadeInOutAnimation],
+  animations: [fadeInOutAnimation],
 })
 export class GameViewComponent implements OnInit, AfterViewInit {
   readonly PlayerOrNone = PlayerOrNone;

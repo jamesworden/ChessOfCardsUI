@@ -17,12 +17,18 @@ import { movementAnimation } from './animations/movement.animation';
 import { fadeOutAnimation } from './animations/fade-out.animation';
 import { fadeInAnimation } from './animations/fade-in.animation';
 import { Z_INDEXES } from '@shared/constants';
+import { rotationAnimation } from './animations/rotation.animation';
 
 @Component({
   selector: 'animation-overlay',
   templateUrl: './animation-overlay.component.html',
   styleUrl: './animation-overlay.component.scss',
-  animations: [movementAnimation, fadeOutAnimation, fadeInAnimation],
+  animations: [
+    movementAnimation,
+    fadeOutAnimation,
+    fadeInAnimation,
+    rotationAnimation,
+  ],
 })
 export class AnimationOverlayComponent implements OnInit {
   readonly Z_INDEXES = Z_INDEXES;

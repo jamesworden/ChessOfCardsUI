@@ -34,6 +34,18 @@
                     durationMs: entity.movement.durationMs
                   }
                 }"
+                [@rotation]="{
+                  value:
+                    entity.styles?.before?.rotate ===
+                    entity.styles?.after?.rotate
+                      ? 'not-rotating'
+                      : 'rotating',
+                  params: {
+                    fromRotate: entity.styles?.before?.rotate ?? '0deg',
+                    toRotate: entity.styles?.after?.rotate ?? '0deg',
+                    durationMs: entity.movement.durationMs
+                  }
+                }"
               >
                 <ng-container
                   *ngTemplateOutlet="
@@ -44,7 +56,12 @@
               </div>
             }
             @case (AnimationType.FadeOut) {
+              <!-- For whatever reason, the rotation and fade out animations don't place nicely together. -->
               <div
+                [ngStyle]="{
+                  transform:
+                    'rotate(' + (entity.styles?.before?.rotate ?? '0deg') + ')'
+                }"
                 class="absolute"
                 [@fadeOut]="{
                   value:
@@ -83,6 +100,18 @@
                   params: {
                     x: entity.movement.to?.x,
                     y: entity.movement.to?.y,
+                    durationMs: entity.movement.durationMs
+                  }
+                }"
+                [@rotation]="{
+                  value:
+                    entity.styles?.before?.rotate ===
+                    entity.styles?.after?.rotate
+                      ? 'not-rotating'
+                      : 'rotating',
+                  params: {
+                    fromRotate: entity.styles?.before?.rotate ?? '0deg',
+                    toRotate: entity.styles?.after?.rotate ?? '0deg',
                     durationMs: entity.movement.durationMs
                   }
                 }"
