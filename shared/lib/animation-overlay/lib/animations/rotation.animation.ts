@@ -21,6 +21,11 @@ export const rotationAnimation = trigger('rotation', [
       toRotate: '0deg',
     },
   }),
+  state('rotated', style({ transform: 'rotate({{ toRotate }})' }), {
+    params: {
+      toRotate: '0deg',
+    },
+  }),
   transition(
     'not-rotating => rotating, void => rotating',
     animate('{{ durationMs }}ms ease-out'),
