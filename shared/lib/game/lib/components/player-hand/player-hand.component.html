@@ -23,7 +23,7 @@
     }"
   >
     @for (
-      card of isPlacingMultipleCards
+      card of (isPlacingMultipleCards$ | async)
         ? (placeMultipleCardsHand$ | async)
         : cards;
       track i;
