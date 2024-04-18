@@ -98,8 +98,12 @@
         <div data-testid="opponent-deck-count" class="deck-count">
           {{ numCardsInOpponentDeck }}
         </div>
-        <game-face-down-card></game-face-down-card>
-        <game-face-down-card></game-face-down-card>
+        <div class="flex justify-around">
+          <game-face-down-card></game-face-down-card>
+        </div>
+        <div class="flex justify-around">
+          <game-face-down-card></game-face-down-card>
+        </div>
         <div data-testid="player-deck-count" class="deck-count">
           {{ numCardsInPlayerDeck }}
         </div>
