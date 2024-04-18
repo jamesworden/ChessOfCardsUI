@@ -6,7 +6,9 @@
 >
   @if ((playerGameView$ | async)?.GameCode; as gameCode) {
     <div class="flex flex-col justify-around text-center my-2">
-      <div class="text-gray-200 semibold text-center text-xs">Game Code:</div>
+      <div class="text-gray-400 semibold text-center text-md h-sm-hidden">
+        Game Code
+      </div>
       <div
         class="text-gray-200 tracking-widest font-bold text-center text-md mt-1"
       >
@@ -101,7 +103,7 @@
         <div class="flex justify-around">
           <game-face-down-card></game-face-down-card>
         </div>
-        <div class="flex justify-around">
+        <div class="h-sm-hidden flex justify-around">
           <game-face-down-card></game-face-down-card>
         </div>
         <div data-testid="player-deck-count" class="deck-count">
