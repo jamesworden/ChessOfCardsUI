@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
-import { SidebarItemComponent } from './views/game-view/components/sidebar/sidebar-item/sidebar-item.component';
 import { ServerState } from './state/server.state';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -26,6 +25,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { PlayerBannerComponent } from './views/game-view/components/player-banner/player-banner.component';
 import { GameModule } from '@shared/game';
 import { AnimationOverlayModule } from '@shared/animation-overlay';
+import { IconButtonComponent } from './components/icon-button/icon-button.component';
 
 @NgModule({
   declarations: [
@@ -34,9 +34,9 @@ import { AnimationOverlayModule } from '@shared/animation-overlay';
     HomeViewComponent,
     ModalComponent,
     SidebarComponent,
-    SidebarItemComponent,
     FooterComponent,
     PlayerBannerComponent,
+    IconButtonComponent,
   ],
   imports: [
     BrowserModule,

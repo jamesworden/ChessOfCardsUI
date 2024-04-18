@@ -18,7 +18,7 @@
   <div class="divider mx-2"></div>
 
   <div>
-    <app-sidebar-item
+    <app-icon-button
       data-testid="pass-move-button"
       [disabled]="!!(waitingForServer$ | async)"
       [itemHeight]="64"
@@ -27,8 +27,8 @@
       tooltip="Pass move"
       materialSymbol="waving_hand"
       (selected)="attemptToOpenPassMoveModal()"
-    ></app-sidebar-item>
-    <app-sidebar-item
+    ></app-icon-button>
+    <app-icon-button
       [disabled]="!!(waitingForServer$ | async)"
       [itemHeight]="64"
       [itemWidth]="64"
@@ -36,8 +36,8 @@
       tooltip="Offer draw"
       materialSymbol="handshake"
       (selected)="attemptToOpenOfferDrawModel()"
-    ></app-sidebar-item>
-    <app-sidebar-item
+    ></app-icon-button>
+    <app-icon-button
       [disabled]="!!(waitingForServer$ | async)"
       [itemHeight]="64"
       [itemWidth]="64"
@@ -45,8 +45,8 @@
       tooltip="Resign"
       materialSymbol="flag"
       (selected)="openResignModal()"
-    ></app-sidebar-item>
-    <app-sidebar-item
+    ></app-icon-button>
+    <app-icon-button
       class="flex dark:hidden"
       [disabled]="!!(waitingForServer$ | async)"
       [itemHeight]="64"
@@ -55,8 +55,8 @@
       tooltip="Dark Mode"
       materialSymbol="dark_mode"
       (selected)="toggleDarkMode()"
-    ></app-sidebar-item>
-    <app-sidebar-item
+    ></app-icon-button>
+    <app-icon-button
       class="hidden dark:flex"
       [disabled]="!!(waitingForServer$ | async)"
       [itemHeight]="64"
@@ -65,9 +65,9 @@
       tooltip="Light Mode"
       materialSymbol="light_mode"
       (selected)="toggleDarkMode()"
-    ></app-sidebar-item>
+    ></app-icon-button>
     <!-- TODO: Build report bug -->
-    <!-- <app-sidebar-item
+    <!-- <app-icon-button
       [disabled]="true"
       [itemHeight]="64"
       [itemWidth]="64"
@@ -75,7 +75,7 @@
       tooltip="Report Bug"
       materialSymbol="bug_report"
       (selected)="reportBug()"
-    ></app-sidebar-item> -->
+    ></app-icon-button> -->
   </div>
 
   @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
