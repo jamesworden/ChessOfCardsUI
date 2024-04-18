@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Card } from '@shared/models';
 import { Observable, timer, BehaviorSubject, of, combineLatest } from 'rxjs';
-import { switchMap, filter, delay } from 'rxjs/operators';
+import { switchMap, filter, delay, map } from 'rxjs/operators';
 import { ResponsiveSizeService } from '@shared/game';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { bounceCardAnimation } from './bounce-cards.animation';
@@ -25,9 +25,7 @@ export class PlayerHandComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #destroyRef = inject(DestroyRef);
 
-  @Input() isPlacingMultipleCards = false;
   @Input({ required: true }) isHost: boolean;
-  @Input({ required: true }) cards: Card[];
   @Input({ required: true }) cardSize: number;
   @Input() disabled = true;
 
@@ -42,17 +40,38 @@ export class PlayerHandComponent implements OnInit {
   @Input({ required: true }) set isGameActive(isGameActive: boolean) {
     this.isGameActive$.next(isGameActive);
   }
+  @Input({ required: true }) set cards(cards: Card[]) {
+    this.cards$.next(cards);
+  }
+  @Input({ required: true }) set isPlacingMultipleCards(
+    isPlacingMultipleCards: boolean
+  ) {
+    this.isPlacingMultipleCards$.next(isPlacingMultipleCards);
+  }
 
   @Output() cardDropped = new EventEmitter<CdkDragDrop<string>>();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly bouncingCards$ = new BehaviorSubject(false);
   readonly disabled$ = new BehaviorSubject(true);
-  readonly placeMultipleCardsHand$ = new BehaviorSubject<Card[] | null>(null);
   readonly isPlayersTurn$ = new BehaviorSubject<boolean>(false);
   readonly isGameActive$ = new BehaviorSubject<boolean>(false);
+  readonly cards$ = new BehaviorSubject<Card[]>([]);
+  readonly placeMultipleCardsHand$ = new BehaviorSubject<Card[] | null>(null);
+  readonly isPlacingMultipleCards$ = new BehaviorSubject<boolean>(false);
+  readonly bounceTimer$ = new BehaviorSubject<Observable<number | null>>(
+    of(null)
+  );
 
-  bounceTimer$ = new BehaviorSubject<Observable<number | null>>(of(null));
+  readonly allCards$ = combineLatest([
+    this.cards$,
+    this.placeMultipleCardsHand$,
+    this.isPlacingMultipleCards$,
+  ]).pipe(
+    map(([cards, placeMultipleCardsHand, isPlacingMultipleCards]) =>
+      isPlacingMultipleCards ? placeMultipleCardsHand : cards
+    )
+  );
 
   ngOnInit() {
     this.bounceTimer$
@@ -63,10 +82,10 @@ export class PlayerHandComponent implements OnInit {
       )
       .subscribe(() => this.brieflyApplyBounceClass());
 
-    combineLatest([this.isPlayersTurn$, this.isGameActive$])
+    combineLatest([this.isPlayersTurn$, this.isGameActive$, this.allCards$])
       .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe(([isPlayersTurn, isGameActive]) =>
-        isPlayersTurn && isGameActive
+      .subscribe(([isPlayersTurn, isGameActive, allCards]) =>
+        isPlayersTurn && isGameActive && allCards && allCards.length > 0
           ? this.startBounceTimer()
           : this.stopBounceTimer()
       );

@@ -1,4 +1,4 @@
-@if (cards) {
+@if (cards$ | async; as cards) {
   <div
     [@bounceCards]="{
       value: (bouncingCards$ | async) ? 'bouncing' : 'not-bouncing',
