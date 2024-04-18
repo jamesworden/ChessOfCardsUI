@@ -104,7 +104,7 @@
           matTooltip="Confirm"
           matTooltipPosition="below"
           materialSymbol="check"
-          (selected)="onConfirmButtonClicked()"
+          (selected)="confirmPlaceMultipleCards()"
         ></app-icon-button>
         <app-icon-button
           data-testid="cancel-place-cards-button"
@@ -115,7 +115,7 @@
           matTooltip="Cancel"
           matTooltipPosition="below"
           materialSymbol="close"
-          (selected)="onCancelButtonClicked()"
+          (selected)="cancelPlaceMultipleCards()"
         ></app-icon-button>
       </div>
     </div>

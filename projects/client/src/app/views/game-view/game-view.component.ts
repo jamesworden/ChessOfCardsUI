@@ -7,6 +7,7 @@ import {
   ViewChild,
   AfterViewInit,
   DestroyRef,
+  HostListener,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -211,6 +212,13 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.cardMovementTemplate$.next(this.cardMovementTemplate);
   }
 
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey() {
+    if (this.isPlacingMultipleCards) {
+      this.cancelPlaceMultipleCards();
+    }
+  }
+
   renderAnimatedGameView() {
     const view = this.#store.selectSnapshot(GameState.playerGameViewToAnimate);
 
@@ -319,7 +327,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       : this.rearrangeHand(event.previousIndex, event.currentIndex);
   }
 
-  onCancelButtonClicked() {
+  cancelPlaceMultipleCards() {
     const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
@@ -352,7 +360,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.#store.dispatch(new FinishPlacingMultipleCards(false));
   }
 
-  onConfirmButtonClicked() {
+  confirmPlaceMultipleCards() {
     const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
