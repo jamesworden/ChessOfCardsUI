@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { toggleDarkMode } from '../../logic/toggle-dark-mode';
 import { fadeInOutAnimation } from '@shared/animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home-view',
@@ -31,6 +32,7 @@ export class HomeViewComponent implements OnInit {
   readonly #store = inject(Store);
   readonly #router = inject(Router);
   readonly #clipboard = inject(Clipboard);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   @Select(ServerState.isConnectedToServer)
   isConnectedToServer$: Observable<boolean>;
@@ -99,6 +101,10 @@ export class HomeViewComponent implements OnInit {
 
   copyToClipboard(text: string) {
     this.#clipboard.copy(text);
+    this.#matSnackBar.open('Copied to clipboard.', text, {
+      duration: 5000,
+      verticalPosition: 'bottom',
+    });
   }
 
   toggleDarkMode() {
