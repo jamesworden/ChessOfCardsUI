@@ -109,6 +109,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @Select(GameState.playerGameViewToAnimate)
   playerGameViewToAnimate$!: Observable<PlayerGameView>;
 
+  @Select(GameState.gameIsActive)
+  gameIsActive$!: Observable<boolean>;
+
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
 

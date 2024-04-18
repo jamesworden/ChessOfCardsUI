@@ -50,6 +50,7 @@
           [disabled]="!!(waitingForServer$ | async)"
           [isPlayersTurn]="isPlayersTurn"
           [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+          [isGameActive]="(gameIsActive$ | async) ?? false"
           (cardDropped)="onPlayerHandCardDrop($event)"
         ></game-player-hand>
 

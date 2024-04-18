@@ -9,7 +9,7 @@ import {
   DestroyRef,
 } from '@angular/core';
 import { Card } from '@shared/models';
-import { Observable, timer, BehaviorSubject, of } from 'rxjs';
+import { Observable, timer, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { switchMap, filter, delay } from 'rxjs/operators';
 import { ResponsiveSizeService } from '@shared/game';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -39,6 +39,9 @@ export class PlayerHandComponent implements OnInit {
   @Input({ required: true }) set isPlayersTurn(isPlayersTurn: boolean) {
     this.isPlayersTurn$.next(isPlayersTurn);
   }
+  @Input({ required: true }) set isGameActive(isGameActive: boolean) {
+    this.isGameActive$.next(isGameActive);
+  }
 
   @Output() cardDropped = new EventEmitter<CdkDragDrop<string>>();
 
@@ -47,6 +50,7 @@ export class PlayerHandComponent implements OnInit {
   readonly disabled$ = new BehaviorSubject(true);
   readonly placeMultipleCardsHand$ = new BehaviorSubject<Card[] | null>(null);
   readonly isPlayersTurn$ = new BehaviorSubject<boolean>(false);
+  readonly isGameActive$ = new BehaviorSubject<boolean>(false);
 
   bounceTimer$ = new BehaviorSubject<Observable<number | null>>(of(null));
 
@@ -59,10 +63,12 @@ export class PlayerHandComponent implements OnInit {
       )
       .subscribe(() => this.brieflyApplyBounceClass());
 
-    this.isPlayersTurn$
+    combineLatest([this.isPlayersTurn$, this.isGameActive$])
       .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe((isPlayersTurn) =>
-        isPlayersTurn ? this.startBounceTimer() : this.stopBounceTimer()
+      .subscribe(([isPlayersTurn, isGameActive]) =>
+        isPlayersTurn && isGameActive
+          ? this.startBounceTimer()
+          : this.stopBounceTimer()
       );
 
     this.bouncingCards$
