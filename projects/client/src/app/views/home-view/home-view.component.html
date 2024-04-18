@@ -44,7 +44,7 @@
 
       <section class="flex">
         <div class="flex-1 hidden md:block"></div>
-        <div class="flex-1 py-12 flex flex-col">
+        <div class="flex-1 py-20 flex flex-col">
           <h1 data-testid="title" class="font-bold text-4xl">Chess of Cards</h1>
           <p class="mb-4">Fast paced, two player strategy game</p>
           <div>
@@ -97,9 +97,9 @@
           <div class="flex flex-col md:flex-row gap-y-8">
             <div class="flex-1 flex flex-col">
               <p>Send this game code to your opponent:</p>
-              <div class="mt-4">
+              <div class="mt-2">
                 <div
-                  class="py-2 px-4 bg-gray-300 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl uppercase min-w-24 flex gap-x-1 w-36"
+                  class="rounded-sm py-2 px-4 bg-gray-300 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl uppercase min-w-24 flex gap-x-1 w-36"
                   [ngClass]="{
                     'border-red-700': !isConnectedToServer
                   }"
@@ -119,6 +119,28 @@
                   }
                 </div>
               </div>
+
+              <div class="mt-4">
+                <h4>Duration</h4>
+
+                <div class="mt-2 flex gap-x-4">
+                  @for (
+                    button of durationButtons;
+                    track button.durationOption
+                  ) {
+                    <button
+                      class="py-1 px-4 bg-gray-300 dark:bg-gray-700 rounded-sm transition border"
+                      [ngClass]="{
+                        'border-gray-500 dark:border-gray-300 font-semibold':
+                          button.isSelected
+                      }"
+                      (click)="selectDurationOption(button.durationOption)"
+                    >
+                      {{ button.label }}
+                    </button>
+                  }
+                </div>
+              </div>
             </div>
             <div class="flex-1 flex flex-col">
               <p>Or enter your opponent's game code here:</p>
@@ -129,10 +151,10 @@
                 </p>
               }
 
-              <div class="mt-4">
+              <div class="mt-2">
                 <input
                   data-testid="join-game-input"
-                  class="py-2 px-4 bg-gray-300 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl w-36 outline-none uppercase"
+                  class="rounded-sm py-2 px-4 bg-gray-300 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl w-36 outline-none uppercase"
                   [ngClass]="{
                     'border-red-700':
                       (gameCodeIsInvalid$ | async) || !isConnectedToServer

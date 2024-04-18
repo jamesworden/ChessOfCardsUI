@@ -18,6 +18,13 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { toggleDarkMode } from '../../logic/toggle-dark-mode';
 import { fadeInOutAnimation } from '@shared/animations';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DurationOption } from '@shared/models';
+
+interface DurationButton {
+  label: string;
+  durationOption: DurationOption;
+  isSelected: boolean;
+}
 
 @Component({
   selector: 'app-home-view',
@@ -45,6 +52,24 @@ export class HomeViewComponent implements OnInit {
   readonly gameCode$ = this.#store
     .select(GameState.pendingGameView)
     .pipe(map((pendingGameView) => pendingGameView?.GameCode));
+
+  readonly durationButtons: DurationButton[] = [
+    {
+      durationOption: DurationOption.FiveMinutes,
+      isSelected: true,
+      label: '5 min',
+    },
+    {
+      durationOption: DurationOption.ThreeMinutes,
+      isSelected: false,
+      label: '3 min',
+    },
+    {
+      durationOption: DurationOption.OneMinute,
+      isSelected: false,
+      label: '1 min',
+    },
+  ];
 
   gameCodeInput = '';
   isConnectedToServer = false;
@@ -109,5 +134,14 @@ export class HomeViewComponent implements OnInit {
 
   toggleDarkMode() {
     toggleDarkMode();
+  }
+
+  selectDurationOption(durationOption: DurationOption) {
+    this.#websocketService.selectDurationOption(durationOption);
+
+    this.durationButtons.forEach((durationButton) => {
+      durationButton.isSelected =
+        durationButton.durationOption === durationOption;
+    });
   }
 }
