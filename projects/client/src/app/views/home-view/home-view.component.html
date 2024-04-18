@@ -131,8 +131,10 @@
                     <button
                       class="py-1 px-4 bg-gray-300 dark:bg-gray-700 rounded-sm transition border"
                       [ngClass]="{
-                        'border-gray-500 dark:border-gray-300 font-semibold':
-                          button.isSelected
+                        'border-gray-500 dark:border-gray-100 font-semibold':
+                          button.isSelected,
+                        'dark:border-gray-400 dark:text-gray-300':
+                          !button.isSelected
                       }"
                       (click)="selectDurationOption(button.durationOption)"
                     >
