@@ -11,6 +11,8 @@
         [backgroundClass]="position.backgroundClass"
         [textClass]="position.textClass"
         [isHost]="isHost"
+        [isValidMove]="validMoveRowIndexes?.has(position.rowIndex) ?? false"
+        [isMakingMove]="isMakingMove"
         (placeCardAttempted)="onPlaceCardAttempted($event)"
         [hideMarker]="!!position.topCard"
       >

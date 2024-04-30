@@ -1,4 +1,11 @@
-import { Component, Input, HostBinding, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  HostBinding,
+  inject,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Card } from '@shared/models';
@@ -28,6 +35,9 @@ export class CardComponent {
   @Input() playerCanDrag = false;
   @Input() insideVerticalContainer = false;
 
+  @Output() dragStarted = new EventEmitter<void>();
+  @Output() dragEnded = new EventEmitter<void>();
+
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly card$ = new BehaviorSubject<Card | null>(null);
   readonly imageFileName$ = this.card$.pipe(
@@ -44,4 +54,12 @@ export class CardComponent {
       );
     })
   );
+
+  onDragStarted() {
+    this.dragStarted.emit();
+  }
+
+  onDragEnded() {
+    this.dragEnded.emit();
+  }
 }

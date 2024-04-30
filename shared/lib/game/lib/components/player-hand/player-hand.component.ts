@@ -28,7 +28,6 @@ export class PlayerHandComponent implements OnInit {
   @Input({ required: true }) isHost: boolean;
   @Input({ required: true }) cardSize: number;
   @Input() disabled = true;
-
   @Input({ required: true }) set placeMultipleCardsHand(
     placeMultipleCardsHand: Card[] | null
   ) {
@@ -50,6 +49,8 @@ export class PlayerHandComponent implements OnInit {
   }
 
   @Output() cardDropped = new EventEmitter<CdkDragDrop<string>>();
+  @Output() cardDragStarted = new EventEmitter<Card>();
+  @Output() cardDragEnded = new EventEmitter<Card>();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly bouncingCards$ = new BehaviorSubject(false);
@@ -120,5 +121,13 @@ export class PlayerHandComponent implements OnInit {
 
   brieflyApplyBounceClass() {
     this.bouncingCards$.next(true);
+  }
+
+  onDragStarted(card: Card) {
+    this.cardDragStarted.emit(card);
+  }
+
+  onDragEnded(card: Card) {
+    this.cardDragEnded.emit(card);
   }
 }

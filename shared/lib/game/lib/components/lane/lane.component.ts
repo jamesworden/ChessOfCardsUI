@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getPositionDetails } from './get-position-details';
-import { PlayerOrNone, Lane, PlaceCardAttempt } from '@shared/models';
+import { PlayerOrNone, Lane, PlaceCardAttempt, Card } from '@shared/models';
 import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
@@ -19,6 +19,8 @@ export class LaneComponent {
   @Input() redJokerLaneIndex?: number;
   @Input() blackJokerLaneIndex?: number;
   @Input() transparentTiles = false;
+  @Input() validMoveRowIndexes: Set<number> | null = null;
+  @Input() isMakingMove: Card | null = null;
   @Input() set isPlayersTurn(isPlayersTurn: boolean) {
     this.isPlayersTurn$.next(isPlayersTurn);
   }
@@ -32,7 +34,7 @@ export class LaneComponent {
   readonly lane$ = new BehaviorSubject<Lane | null>(null);
   readonly isPlayersTurn$ = new BehaviorSubject(false);
 
-  positions$ = combineLatest([this.lane$, this.isPlayersTurn$]).pipe(
+  readonly positions$ = combineLatest([this.lane$, this.isPlayersTurn$]).pipe(
     map(([lane, isPlayersTurn]) =>
       lane
         ? lane?.Rows.map((row, rowIndex) =>

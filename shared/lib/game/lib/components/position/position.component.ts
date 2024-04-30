@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, inject, Output } from '@angular/core';
-import { PlaceCardAttempt } from '@shared/models';
+import { Card, PlaceCardAttempt } from '@shared/models';
 import { ResponsiveSizeService } from '@shared/game';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,11 +9,13 @@ import {
   hostLaneIndexesToRowIndexMarkers,
 } from './lane-indexes-to-row-index-markers';
 import { Z_INDEXES } from '@shared/constants';
+import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
   selector: 'game-position',
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.scss'],
+  animations: [fadeInOutAnimation],
 })
 export class PositionComponent {
   readonly Z_INDEXES = Z_INDEXES;
@@ -25,6 +27,8 @@ export class PositionComponent {
   @Input() textClass = '';
   @Input() transparentTile = false;
   @Input() hideMarker = false;
+  @Input() isValidMove = false;
+  @Input() isMakingMove: Card | null = null;
   @Input({ required: true }) set isHost(isHost: boolean) {
     this.isHost$.next(isHost);
   }

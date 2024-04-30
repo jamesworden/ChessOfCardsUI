@@ -36,6 +36,7 @@
             [isPlayersTurn]="isPlayersTurn"
             [placeMultipleCards]="placeMultipleCards$ | async"
             [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+            [isMakingMove]="isMakingMove$ | async"
             (placeCardAttempted)="onPlaceCardAttempted($event)"
             (setPlaceMultipleCards)="placedMultipleCards($event)"
             (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
@@ -52,6 +53,8 @@
           [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
           [isGameActive]="(gameIsActive$ | async) ?? false"
           (cardDropped)="onPlayerHandCardDrop($event)"
+          (cardDragStarted)="setIsMakingMove($event)"
+          (cardDragEnded)="setIsNotMakingMove()"
         ></game-player-hand>
 
         <app-player-banner

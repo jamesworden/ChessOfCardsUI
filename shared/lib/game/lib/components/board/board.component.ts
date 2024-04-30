@@ -1,7 +1,13 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { ResponsiveSizeService } from '@shared/game';
-import { BehaviorSubject } from 'rxjs';
-import { Card, PlaceCardAttempt, PlayerGameView } from '@shared/models';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import {
+  Card,
+  PlaceCardAttempt,
+  PlayerGameView,
+  CardPosition,
+} from '@shared/models';
 import { Z_INDEXES } from '@shared/constants';
 
 @Component({
@@ -28,6 +34,9 @@ export class BoardComponent {
   @Input() isPlacingMultipleCards: boolean | null;
   @Input() transparentTiles = false;
   @Input({ required: true }) isPlayersTurn = false;
+  @Input() set isMakingMove(isMakingMove: Card | null) {
+    this.isMakingMove$.next(isMakingMove);
+  }
   @Input({ required: true }) set placeMultipleCards(
     placeMultipleCards: Card[] | null
   ) {
@@ -49,6 +58,44 @@ export class BoardComponent {
   readonly playerGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
   readonly placeMultipleCards$ = new BehaviorSubject<Card[] | null>(null);
   readonly placeMultipleCardsHand$ = new BehaviorSubject<Card[] | null>(null);
+  readonly isMakingMove$ = new BehaviorSubject<Card | null>(null);
+
+  readonly positionsWithValidMoves$: Observable<CardPosition[]> = combineLatest(
+    [this.playerGameView$, this.isMakingMove$]
+  ).pipe(
+    map(
+      ([playerGameView, isMakingMove]) =>
+        playerGameView?.CandidateMoves?.filter(
+          (candidateMove) =>
+            candidateMove.Move.PlaceCardAttempts.length === 1 &&
+            candidateMove.IsValid &&
+            candidateMove.Move.PlaceCardAttempts[0].Card.Kind ===
+              isMakingMove?.Kind &&
+            candidateMove.Move.PlaceCardAttempts[0].Card.Suit ===
+              isMakingMove?.Suit
+        ).map((candidateMove) => ({
+          RowIndex: candidateMove.Move.PlaceCardAttempts[0].TargetRowIndex,
+          LaneIndex: candidateMove.Move.PlaceCardAttempts[0].TargetLaneIndex,
+        })) ?? []
+    )
+  );
+
+  readonly laneIndexesToValidMoveRowIndexes$ =
+    this.positionsWithValidMoves$.pipe(
+      map((positionsWithValidMoves) => {
+        const laneIndexesToValidMoveRowIndexes = new Map<number, Set<number>>();
+
+        for (const { LaneIndex, RowIndex } of positionsWithValidMoves) {
+          const existingPositions =
+            laneIndexesToValidMoveRowIndexes.get(LaneIndex) ??
+            new Set<number>();
+          existingPositions.add(RowIndex);
+          laneIndexesToValidMoveRowIndexes.set(LaneIndex, existingPositions);
+        }
+
+        return laneIndexesToValidMoveRowIndexes;
+      })
+    );
 
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
     this.placeCardAttempted.emit(placeCardAttempt);

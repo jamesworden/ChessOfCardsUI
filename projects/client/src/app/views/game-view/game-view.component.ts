@@ -155,6 +155,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly latestGameViewSnapshot$ = new BehaviorSubject<PlayerGameView | null>(
     null
   );
+  readonly isMakingMove$ = new BehaviorSubject<Card | null>(null);
 
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
@@ -592,6 +593,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
     this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
     this.#store.dispatch(new MakeMove(move));
+  }
+
+  setIsMakingMove(card: Card) {
+    this.isMakingMove$.next(card);
+  }
+
+  setIsNotMakingMove() {
+    this.isMakingMove$.next(null);
   }
 
   passMove() {

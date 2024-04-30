@@ -30,6 +30,9 @@
               [initialPlaceMultipleCardAttempt]="
                 initialPlaceMultipleCardAttempt
               "
+              [isMakingMove]="
+                isPlacingMultipleCards ? (isMakingMove$ | async) : null
+              "
               (setPlaceMultipleCards)="placedMultipleCards($event)"
               (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
             ></game-place-multiple-cards-lane>
@@ -42,6 +45,13 @@
               [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
               [transparentTiles]="transparentTiles"
               [isPlayersTurn]="isPlayersTurn"
+              [validMoveRowIndexes]="
+                (laneIndexesToValidMoveRowIndexes$ | async)?.get(laneIndex) ??
+                null
+              "
+              [isMakingMove]="
+                isPlacingMultipleCards ? null : (isMakingMove$ | async)
+              "
               (placeCardAttempted)="onPlaceCardAttempted($event)"
             ></game-lane>
           }

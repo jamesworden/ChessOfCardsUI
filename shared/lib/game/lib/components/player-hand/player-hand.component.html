@@ -36,6 +36,8 @@
         [ngStyle]="{
           opacity: disabled ? 0.5 : 1
         }"
+        (dragEnded)="onDragEnded(card)"
+        (dragStarted)="onDragStarted(card)"
       ></game-card>
     }
   </div>

@@ -4,6 +4,8 @@
   [cdkDragDisabled]="!playerCanDrag"
   cdkDragBoundary=".game"
   [cdkDragData]="card$ | async"
+  (cdkDragStarted)="onDragStarted()"
+  (cdkDragEnded)="onDragEnded()"
   src="../../../../assets/images/{{ imageFileName$ | async }}"
   [ngStyle]="cardStyles$ | async"
 />

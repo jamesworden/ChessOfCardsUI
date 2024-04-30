@@ -18,6 +18,13 @@
           [textClass]="position.textClass"
           [isHost]="(isHost$ | async) ?? false"
           [dragDropDisabled]="true"
+          [isMakingMove]="isMakingMove"
+          [isValidMove]="
+            ((placeMultipleCards$ | async)?.length ?? 0) +
+              ((previouslyCapturedCards$ | async)?.length ?? 0) ===
+              i &&
+            initialPlaceMultipleCardAttempt.Card.Kind === isMakingMove?.Kind
+          "
         ></game-position>
       }
     </div>
