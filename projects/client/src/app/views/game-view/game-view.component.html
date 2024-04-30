@@ -28,6 +28,7 @@
 
         @if (latestGameViewSnapshot$ | async; as latestGameViewSnapshot) {
           <game-board
+            #board
             [playerGameView]="latestGameViewSnapshot"
             [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
             [initialPlaceMultipleCardAttempt]="
@@ -40,10 +41,15 @@
             (placeCardAttempted)="onPlaceCardAttempted($event)"
             (setPlaceMultipleCards)="placedMultipleCards($event)"
             (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
+            (positionClicked)="onPositionClicked($event)"
+            (placeMultipleCardsListClicked)="
+              moveSelectedCardToPlaceMultipleList()
+            "
           ></game-board>
         }
 
         <game-player-hand
+          #playerHand
           [isPlacingMultipleCards]="isPlacingMultipleCards"
           [isHost]="playerGameView.IsHost"
           [cards]="playerGameView.Hand.Cards"
@@ -55,9 +61,11 @@
           [initialPlaceMultipleCardsAttempt]="
             initialPlaceMultipleCardAttempt$ | async
           "
+          [isMakingMove]="isMakingMove$ | async"
           (cardDropped)="onPlayerHandCardDrop($event)"
-          (cardDragStarted)="setIsMakingMove($event)"
-          (cardDragEnded)="setIsNotMakingMove()"
+          (cardDragStarted)="onCardDragStarted($event)"
+          (cardDragEnded)="onCardDragEnded()"
+          (cardClicked)="onCardClicked($event)"
         ></game-player-hand>
 
         <app-player-banner

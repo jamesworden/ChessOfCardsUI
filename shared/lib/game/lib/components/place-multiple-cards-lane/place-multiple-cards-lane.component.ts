@@ -56,6 +56,7 @@ export class PlaceMultipleCardsLaneComponent {
 
   @Output() setPlaceMultipleCards = new EventEmitter<Card[]>();
   @Output() setPlaceMultipleCardsHand = new EventEmitter<Card[]>();
+  @Output() listClicked: EventEmitter<void> = new EventEmitter();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
@@ -158,5 +159,9 @@ export class PlaceMultipleCardsLaneComponent {
 
     this.setPlaceMultipleCards.emit(placeMultipleCards);
     this.setPlaceMultipleCardsHand.emit(placeMultipleCardsHand);
+  }
+
+  onListClicked() {
+    this.listClicked.emit();
   }
 }

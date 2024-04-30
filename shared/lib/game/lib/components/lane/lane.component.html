@@ -15,6 +15,7 @@
         [isMakingMove]="isMakingMove"
         (placeCardAttempted)="onPlaceCardAttempted($event)"
         [hideMarker]="!!position.topCard"
+        (clicked)="onPositionClicked(position)"
       >
         @if (position.topCard) {
           <game-card

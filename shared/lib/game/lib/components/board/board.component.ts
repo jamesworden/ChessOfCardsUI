@@ -52,6 +52,8 @@ export class BoardComponent {
     new EventEmitter();
   @Output() setPlaceMultipleCards = new EventEmitter<Card[]>();
   @Output() setPlaceMultipleCardsHand = new EventEmitter<Card[]>();
+  @Output() positionClicked = new EventEmitter<CardPosition>();
+  @Output() placeMultipleCardsListClicked = new EventEmitter<void>();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
@@ -107,5 +109,16 @@ export class BoardComponent {
 
   placedMultipleCardsHand(cards: Card[]) {
     this.setPlaceMultipleCardsHand.emit(cards);
+  }
+
+  onPositionClicked(laneIndex: number, rowIndex: number) {
+    this.positionClicked.emit({
+      LaneIndex: laneIndex,
+      RowIndex: rowIndex,
+    });
+  }
+
+  onPlaceMultipleCardsListClicked() {
+    this.placeMultipleCardsListClicked.emit();
   }
 }

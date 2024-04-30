@@ -39,8 +39,12 @@
             (initialPlaceMultipleCardsAttempt$ | async)?.Card?.Kind !==
               card.Kind)
         "
+        [selected]="
+          isMakingMove?.Suit === card.Suit && isMakingMove?.Kind === card.Kind
+        "
         (dragEnded)="onDragEnded(card)"
         (dragStarted)="onDragStarted(card)"
+        (clicked)="selectCard(card)"
       ></game-card>
     }
   </div>

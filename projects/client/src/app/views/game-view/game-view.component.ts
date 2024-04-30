@@ -1,4 +1,9 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import {
   Component,
   OnInit,
@@ -10,8 +15,8 @@ import {
   HostListener,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, withLatestFrom, filter } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
@@ -37,6 +42,7 @@ import { Router } from '@angular/router';
 import {
   Card,
   CardMovement,
+  CardPosition,
   GameOverData,
   Lane,
   Move,
@@ -59,6 +65,8 @@ import { ResponsiveSizeService } from '@shared/game';
 import { AnimatedEntity } from '@shared/animation-overlay';
 import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 import { fadeInOutAnimation } from '@shared/animations';
+import { BoardComponent } from 'shared/lib/game/lib/components/board/board.component';
+import { PlayerHandComponent } from 'shared/lib/game/lib/components/player-hand/player-hand.component';
 
 @Component({
   selector: 'app-game-view',
@@ -78,6 +86,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
+
+  @ViewChild('board', { read: BoardComponent })
+  board: BoardComponent;
+
+  @ViewChild('playerHand', { read: PlayerHandComponent })
+  playerHand: PlayerHandComponent;
 
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
@@ -112,6 +126,13 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @Select(GameState.gameIsActive)
   gameIsActive$!: Observable<boolean>;
 
+  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly latestGameViewSnapshot$ = new BehaviorSubject<PlayerGameView | null>(
+    null
+  );
+  readonly isMakingMove$ = new BehaviorSubject<Card | null>(null);
+  readonly positionClicked$ = new Subject<CardPosition>();
+
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
 
@@ -120,7 +141,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     pairwise()
   );
 
-  // TODO: Use different control mechanism when click to move has been implemented.
   private readonly latestMoveMadeDetails$ =
     new BehaviorSubject<MoveMadeDetails | null>({
       wasDragged: true,
@@ -151,11 +171,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       )
     );
 
-  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
-  readonly latestGameViewSnapshot$ = new BehaviorSubject<PlayerGameView | null>(
-    null
+  readonly lastIsMakingMove$ = this.isMakingMove$.pipe(
+    filter((isMakingMove) => !!isMakingMove)
   );
-  readonly isMakingMove$ = new BehaviorSubject<Card | null>(null);
 
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
@@ -210,6 +228,22 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe((isPlacingMultipleCards) => {
         this.isPlacingMultipleCards = isPlacingMultipleCards;
       });
+    combineLatest([this.positionClicked$])
+      .pipe(
+        withLatestFrom(this.lastIsMakingMove$),
+        takeUntilDestroyed(this.#destroyRef)
+      )
+      .subscribe(([[position], isMakingMove]) => {
+        if (!isMakingMove) {
+          return;
+        }
+        const placeCardAttempt: PlaceCardAttempt = {
+          Card: isMakingMove,
+          TargetLaneIndex: position.LaneIndex,
+          TargetRowIndex: position.RowIndex,
+        };
+        this.onPlaceCardAttempted(placeCardAttempt);
+      });
   }
 
   ngAfterViewInit() {
@@ -220,6 +254,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   handleEscapeKey() {
     if (this.isPlacingMultipleCards) {
       this.cancelPlaceMultipleCards();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: Event) {
+    const clickedOnCard = (event.target as HTMLElement).closest('.card');
+    if (!clickedOnCard) {
+      this.unselectCard();
     }
   }
 
@@ -595,15 +637,84 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.#store.dispatch(new MakeMove(move));
   }
 
-  setIsMakingMove(card: Card) {
-    this.isMakingMove$.next(card);
-  }
-
-  setIsNotMakingMove() {
-    this.isMakingMove$.next(null);
-  }
-
   passMove() {
     this.#store.dispatch(new PassMove());
+  }
+
+  onCardDragStarted(card: Card) {
+    this.selectCard(card);
+  }
+
+  onCardDragEnded() {
+    this.unselectCard();
+  }
+
+  onCardClicked(card: Card) {
+    const currentIsMakingMove = this.isMakingMove$.getValue();
+    const matchingKind = card.Kind === currentIsMakingMove?.Kind;
+    const matchingSuit = card.Suit === currentIsMakingMove?.Suit;
+    matchingKind && matchingSuit ? this.unselectCard() : this.selectCard(card);
+  }
+
+  selectCard(card: Card) {
+    this.isMakingMove$.next(card);
+    this.latestMoveMadeDetails$.next({
+      wasDragged: false,
+    });
+  }
+
+  unselectCard() {
+    this.isMakingMove$.next(null);
+    this.latestMoveMadeDetails$.next({
+      wasDragged: false,
+    });
+  }
+
+  onPositionClicked(position: CardPosition) {
+    this.positionClicked$.next(position);
+  }
+
+  moveSelectedCardToPlaceMultipleList() {
+    const selectedCard = this.isMakingMove$.getValue();
+    if (!selectedCard) {
+      return;
+    }
+
+    const placeMultipleCardsHand = this.#store.selectSnapshot(
+      GameState.placeMultipleCardsHand
+    );
+    if (!placeMultipleCardsHand) {
+      return;
+    }
+
+    let currentIndexInHand: number | null = null;
+    for (let i = 0; i < placeMultipleCardsHand.length; i++) {
+      const card = placeMultipleCardsHand[i];
+      if (card.Kind === selectedCard.Kind && card.Suit === selectedCard?.Suit) {
+        currentIndexInHand = i;
+      }
+    }
+    if (currentIndexInHand === null) {
+      return;
+    }
+
+    const placeMultipleCards = this.#store.selectSnapshot(
+      GameState.placeMultipleCards
+    );
+    if (!placeMultipleCards) {
+      return;
+    }
+
+    transferArrayItem(
+      placeMultipleCardsHand,
+      placeMultipleCards,
+      currentIndexInHand,
+      0
+    );
+
+    this.#store.dispatch([
+      new SetPlaceMultipleCards(placeMultipleCards),
+      new SetPlaceMultipleCardsHand(placeMultipleCardsHand),
+    ]);
   }
 }

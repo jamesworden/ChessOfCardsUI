@@ -35,9 +35,11 @@ export class CardComponent {
   @Input() playerCanDrag = false;
   @Input() insideVerticalContainer = false;
   @Input() disabled = false;
+  @Input() selected = false;
 
   @Output() dragStarted = new EventEmitter<void>();
   @Output() dragEnded = new EventEmitter<void>();
+  @Output() clicked = new EventEmitter<void>();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly card$ = new BehaviorSubject<Card | null>(null);
@@ -64,5 +66,9 @@ export class CardComponent {
 
   onDragEnded() {
     this.dragEnded.emit();
+  }
+
+  onClick() {
+    this.clicked.emit();
   }
 }

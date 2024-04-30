@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getPositionDetails } from './get-position-details';
+import { PositionDetails, getPositionDetails } from './get-position-details';
 import { PlayerOrNone, Lane, PlaceCardAttempt, Card } from '@shared/models';
 import { fadeInOutAnimation } from '@shared/animations';
 
@@ -30,6 +30,7 @@ export class LaneComponent {
 
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
+  @Output() rowIndexClicked: EventEmitter<number> = new EventEmitter();
 
   readonly lane$ = new BehaviorSubject<Lane | null>(null);
   readonly isPlayersTurn$ = new BehaviorSubject(false);
@@ -53,5 +54,9 @@ export class LaneComponent {
 
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
     this.placeCardAttempted.emit(placeCardAttempt);
+  }
+
+  onPositionClicked(position: PositionDetails) {
+    this.rowIndexClicked.emit(position.rowIndex);
   }
 }

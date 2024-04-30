@@ -23,6 +23,7 @@
         ) {
           @if (initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex) {
             <game-place-multiple-cards-lane
+              #placeMultipleCardsLane
               [isHost]="playerGameView.IsHost"
               [playerGameView]="playerGameView"
               [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
@@ -35,6 +36,7 @@
               "
               (setPlaceMultipleCards)="placedMultipleCards($event)"
               (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
+              (listClicked)="onPlaceMultipleCardsListClicked()"
             ></game-place-multiple-cards-lane>
           } @else {
             <game-lane
@@ -53,6 +55,7 @@
                 isPlacingMultipleCards ? null : (isMakingMove$ | async)
               "
               (placeCardAttempted)="onPlaceCardAttempted($event)"
+              (rowIndexClicked)="onPositionClicked(laneIndex, $event)"
             ></game-lane>
           }
         }

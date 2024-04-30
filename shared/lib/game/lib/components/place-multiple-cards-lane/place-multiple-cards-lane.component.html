@@ -45,6 +45,7 @@
         'min-height': MIN_CARD_HEIGHT_FACTOR * (cardSize$ | async)! + 'px',
         width: (cardSize$ | async)! + 'px'
       }"
+      (click)="onListClicked()"
     >
       @for (card of placeMultipleCards$ | async; track i; let i = $index) {
         <game-card

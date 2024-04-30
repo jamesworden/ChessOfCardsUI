@@ -41,6 +41,7 @@ export class PositionComponent {
 
   @Output() placeCardAttempted: EventEmitter<PlaceCardAttempt> =
     new EventEmitter();
+  @Output() clicked: EventEmitter<void> = new EventEmitter();
 
   readonly isHost$ = new BehaviorSubject(false);
   readonly laneIndex$ = new BehaviorSubject(0);
@@ -71,5 +72,9 @@ export class PositionComponent {
     };
 
     this.placeCardAttempted.emit(placeCardAttempt);
+  }
+
+  onClick() {
+    this.clicked.emit();
   }
 }
