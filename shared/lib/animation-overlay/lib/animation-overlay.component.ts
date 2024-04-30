@@ -17,16 +17,23 @@ import { movementAnimation } from './animations/movement.animation';
 import { fadeOutAnimation } from './animations/fade-out.animation';
 import { fadeInAnimation } from './animations/fade-in.animation';
 import { Z_INDEXES } from '@shared/constants';
+import { rotationAnimation } from './animations/rotation.animation';
 
 @Component({
   selector: 'animation-overlay',
   templateUrl: './animation-overlay.component.html',
   styleUrl: './animation-overlay.component.scss',
-  animations: [movementAnimation, fadeOutAnimation, fadeInAnimation],
+  animations: [
+    movementAnimation,
+    fadeOutAnimation,
+    fadeInAnimation,
+    rotationAnimation,
+  ],
 })
 export class AnimationOverlayComponent implements OnInit {
   readonly Z_INDEXES = Z_INDEXES;
   readonly AnimationType = AnimationType;
+  readonly APPLY_ROTATION_DELAY = 50;
 
   readonly #destroyRef = inject(DestroyRef);
 
@@ -39,6 +46,7 @@ export class AnimationOverlayComponent implements OnInit {
   @Output() finishedAnimations = new EventEmitter();
   @Output() startingAnimations = new EventEmitter<AnimatedEntity<unknown>[]>();
 
+  readonly appliedRotation$ = new BehaviorSubject<boolean>(false);
   readonly animatedEntities$ = new BehaviorSubject<AnimatedEntity<unknown>[]>(
     []
   );
@@ -101,7 +109,17 @@ export class AnimationOverlayComponent implements OnInit {
     const correctedDelayMs = delay - 25;
 
     setTimeout(() => {
+      this.appliedRotation$.next(false);
       this.updateCurrentSequence(sequencesWithDelays, initialIndex + 1);
     }, correctedDelayMs);
+
+    /**
+     * If the entity initially renders in as being 'rotated', the animation never happens.
+     * We must start it out as 'not-rotated' and set it to 'rotated' after a small delay
+     * to trigger the animation.
+     */
+    setTimeout(() => {
+      this.appliedRotation$.next(true);
+    }, this.APPLY_ROTATION_DELAY);
   }
 }

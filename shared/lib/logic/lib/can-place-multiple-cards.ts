@@ -1,35 +1,22 @@
-import { opponentCapturedAnyRowWithAce } from './is-move-valid/move-checks/opponent-captured-any-row-with-ace';
-import { Kind, PlaceCardAttempt, PlayerGameView } from '@shared/models';
+import { CandidateMove, PlaceCardAttempt } from '@shared/models';
 
-/**
- * @returns true if the first place card attempt is in a position where multiple
- * cards can be played after it, otherwise false.
- */
 export function canPlaceMultipleCards(
-  firstPlaceCardAttempt: PlaceCardAttempt,
-  latestGameStateSnapshot: PlayerGameView
+  initialPlaceCardAttempt: PlaceCardAttempt,
+  candidateMoves?: CandidateMove[]
 ) {
-  const { IsHost, Hand } = latestGameStateSnapshot;
-  const defendingAsHost = IsHost && firstPlaceCardAttempt.TargetRowIndex < 3;
-  const defendingAsGuest = !IsHost && firstPlaceCardAttempt.TargetRowIndex > 3;
-  const isDefensiveMove = defendingAsHost || defendingAsGuest;
-
-  const hasOtherPotentialPairCards = Hand.Cards.some((card) => {
-    const suitNotMatch = card.Suit != firstPlaceCardAttempt.Card.Suit;
-    const kindMatches = card.Kind === firstPlaceCardAttempt.Card.Kind;
-
-    return suitNotMatch && kindMatches;
-  });
-
-  const shouldPlaceMultipleCards =
-    isDefensiveMove && hasOtherPotentialPairCards;
-
-  if (
-    firstPlaceCardAttempt.Card.Kind === Kind.Ace &&
-    opponentCapturedAnyRowWithAce(latestGameStateSnapshot)
-  ) {
-    return false;
-  }
-
-  return shouldPlaceMultipleCards;
+  return (
+    candidateMoves?.some(
+      (candidateMove) =>
+        initialPlaceCardAttempt.Card.Kind ===
+          candidateMove.Move.PlaceCardAttempts[0].Card.Kind &&
+        initialPlaceCardAttempt.Card.Suit ===
+          candidateMove.Move.PlaceCardAttempts[0].Card.Suit &&
+        initialPlaceCardAttempt.TargetLaneIndex ===
+          candidateMove.Move.PlaceCardAttempts[0].TargetLaneIndex &&
+        initialPlaceCardAttempt.TargetRowIndex ===
+          candidateMove.Move.PlaceCardAttempts[0].TargetRowIndex &&
+        candidateMove.Move.PlaceCardAttempts.length > 1 &&
+        candidateMove.IsValid
+    ) ?? false
+  );
 }

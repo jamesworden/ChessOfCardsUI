@@ -294,6 +294,7 @@ export class GameState {
     ctx.patchState({
       gameOverData: action.gameOverData,
       waitingForServer: false,
+      gameIsActive: false,
     });
   }
 

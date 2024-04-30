@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { PlayerOrNone } from '@shared/models';
 
 @Component({
-  selector: 'app-joker-card',
+  selector: 'game-joker-card',
   templateUrl: './joker-card.component.html',
   styleUrls: ['./joker-card.component.scss'],
 })

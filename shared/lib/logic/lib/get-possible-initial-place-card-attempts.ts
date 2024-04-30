@@ -1,44 +1,15 @@
-import { Move, PlayerGameView, PlaceCardAttempt } from '@shared/models';
-import { getReasonIfMoveInvalid } from './is-move-valid';
+import { CandidateMove } from '@shared/models';
 
 export function getPossibleInitialPlaceCardAttempts(
-  playerGameView: PlayerGameView
+  candidateMoves?: CandidateMove[]
 ) {
-  const allInitialMoves = getAllInitialMoves(playerGameView);
-  const possibleInitialMoves = allInitialMoves.filter(
-    (move) => !getReasonIfMoveInvalid(playerGameView, move)
+  return (
+    candidateMoves
+      ?.filter((candidateMove) => {
+        const isInitialAttempt =
+          candidateMove.Move.PlaceCardAttempts.length === 1;
+        return isInitialAttempt && candidateMove.IsValid;
+      })
+      .map((candidateMove) => candidateMove.Move.PlaceCardAttempts[0]) ?? []
   );
-
-  const possibleInitialPlaceCardAttempts: PlaceCardAttempt[] = [];
-
-  for (const move of possibleInitialMoves) {
-    const attempt = move.PlaceCardAttempts[0];
-    if (attempt) {
-      possibleInitialPlaceCardAttempts.push(attempt);
-    }
-  }
-
-  return possibleInitialPlaceCardAttempts;
-}
-
-function getAllInitialMoves(playerGameView: PlayerGameView) {
-  const allInitialMoves: Move[] = [];
-
-  for (const card of playerGameView.Hand.Cards) {
-    for (let targetRowIndex = 0; targetRowIndex < 7; targetRowIndex++) {
-      for (let targetLaneIndex = 0; targetLaneIndex < 5; targetLaneIndex++) {
-        allInitialMoves.push({
-          PlaceCardAttempts: [
-            {
-              Card: card,
-              TargetLaneIndex: targetLaneIndex,
-              TargetRowIndex: targetRowIndex,
-            },
-          ],
-        });
-      }
-    }
-  }
-
-  return allInitialMoves;
 }

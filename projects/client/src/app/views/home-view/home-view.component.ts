@@ -14,9 +14,17 @@ import {
 import { GameState } from '../../state/game.state';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { toggleDarkMode } from '../../logic/toggle-dark-mode';
+import { fadeInOutAnimation } from '@shared/animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DurationOption } from '@shared/models';
+
+interface DurationButton {
+  label: string;
+  durationOption: DurationOption;
+  isSelected: boolean;
+}
 
 @Component({
   selector: 'app-home-view',
@@ -31,6 +39,7 @@ export class HomeViewComponent implements OnInit {
   readonly #store = inject(Store);
   readonly #router = inject(Router);
   readonly #clipboard = inject(Clipboard);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   @Select(ServerState.isConnectedToServer)
   isConnectedToServer$: Observable<boolean>;
@@ -43,6 +52,24 @@ export class HomeViewComponent implements OnInit {
   readonly gameCode$ = this.#store
     .select(GameState.pendingGameView)
     .pipe(map((pendingGameView) => pendingGameView?.GameCode));
+
+  readonly durationButtons: DurationButton[] = [
+    {
+      durationOption: DurationOption.FiveMinutes,
+      isSelected: true,
+      label: '5 min',
+    },
+    {
+      durationOption: DurationOption.ThreeMinutes,
+      isSelected: false,
+      label: '3 min',
+    },
+    {
+      durationOption: DurationOption.OneMinute,
+      isSelected: false,
+      label: '1 min',
+    },
+  ];
 
   gameCodeInput = '';
   isConnectedToServer = false;
@@ -99,9 +126,22 @@ export class HomeViewComponent implements OnInit {
 
   copyToClipboard(text: string) {
     this.#clipboard.copy(text);
+    this.#matSnackBar.open('Copied to clipboard.', text, {
+      duration: 5000,
+      verticalPosition: 'bottom',
+    });
   }
 
   toggleDarkMode() {
     toggleDarkMode();
+  }
+
+  selectDurationOption(durationOption: DurationOption) {
+    this.#websocketService.selectDurationOption(durationOption);
+
+    this.durationButtons.forEach((durationButton) => {
+      durationButton.isSelected =
+        durationButton.durationOption === durationOption;
+    });
   }
 }

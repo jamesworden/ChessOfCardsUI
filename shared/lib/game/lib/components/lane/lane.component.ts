@@ -3,11 +3,13 @@ import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getPositionDetails } from './get-position-details';
 import { PlayerOrNone, Lane, PlaceCardAttempt } from '@shared/models';
+import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
   selector: 'game-lane',
   templateUrl: './lane.component.html',
   styleUrls: ['./lane.component.scss'],
+  animations: [fadeInOutAnimation],
 })
 export class LaneComponent {
   readonly PlayerOrNone = PlayerOrNone;

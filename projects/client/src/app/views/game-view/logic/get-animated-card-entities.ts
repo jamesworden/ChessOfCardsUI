@@ -154,26 +154,30 @@ function getAnimatedEntity(
           cardMovement.Card,
           cardMovement.From.CardPosition?.RowIndex,
           isHost,
-          cardMovement.From.CardPosition?.LaneIndex
+          typeof cardMovement.From.CardPosition?.LaneIndex === 'number'
             ? prevView.Lanes[cardMovement.From.CardPosition?.LaneIndex]
                 .LaneAdvantage
             : PlayerOrNone.None
         )
       : 0;
 
-  const afterRotation =
+  let afterRotation =
     cardMovement.Card &&
     typeof cardMovement.To.CardPosition?.RowIndex === 'number'
       ? getCardTiltDegrees(
           cardMovement.Card,
           cardMovement.To.CardPosition?.RowIndex,
           isHost,
-          cardMovement.To.CardPosition?.LaneIndex
+          typeof cardMovement.To.CardPosition?.LaneIndex === 'number'
             ? currView.Lanes[cardMovement.To.CardPosition?.LaneIndex]
                 .LaneAdvantage
             : PlayerOrNone.None
         )
       : 0;
+
+  if (cardMovement.To.Destroyed) {
+    afterRotation = beforeRotation;
+  }
 
   const styles: AnimatedEntityStyles = {
     before: {

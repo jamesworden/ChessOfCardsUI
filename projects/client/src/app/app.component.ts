@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { NavbarState } from './state/navbar.state';
-import { fadeInOutAnimation } from './animations/fade-in-out.animation';
+import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
   selector: 'app-root',

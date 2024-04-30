@@ -50,6 +50,7 @@
           [disabled]="!!(waitingForServer$ | async)"
           [isPlayersTurn]="isPlayersTurn"
           [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+          [isGameActive]="(gameIsActive$ | async) ?? false"
           (cardDropped)="onPlayerHandCardDrop($event)"
         ></game-player-hand>
 
@@ -95,7 +96,8 @@
       </div>
 
       <div style="display: flex">
-        <app-sidebar-item
+        <app-icon-button
+          data-testid="place-cards-button"
           [itemHeight]="(cardSize$ | async)!"
           [itemWidth]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
@@ -103,9 +105,10 @@
           matTooltip="Confirm"
           matTooltipPosition="below"
           materialSymbol="check"
-          (selected)="onConfirmButtonClicked()"
-        ></app-sidebar-item>
-        <app-sidebar-item
+          (selected)="confirmPlaceMultipleCards()"
+        ></app-icon-button>
+        <app-icon-button
+          data-testid="cancel-place-cards-button"
           [itemHeight]="(cardSize$ | async)!"
           [itemWidth]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
@@ -113,8 +116,8 @@
           matTooltip="Cancel"
           matTooltipPosition="below"
           materialSymbol="close"
-          (selected)="onCancelButtonClicked()"
-        ></app-sidebar-item>
+          (selected)="cancelPlaceMultipleCards()"
+        ></app-icon-button>
       </div>
     </div>
   }
@@ -132,7 +135,7 @@
       </div>
 
       <div style="display: flex">
-        <app-sidebar-item
+        <app-icon-button
           [itemWidth]="(cardSize$ | async)!"
           [itemHeight]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
@@ -141,8 +144,8 @@
           matTooltipPosition="below"
           materialSymbol="check"
           (selected)="acceptDraw()"
-        ></app-sidebar-item>
-        <app-sidebar-item
+        ></app-icon-button>
+        <app-icon-button
           [itemHeight]="(cardSize$ | async)!"
           [itemWidth]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
@@ -151,7 +154,7 @@
           matTooltipPosition="below"
           materialSymbol="close"
           (selected)="denyDraw()"
-        ></app-sidebar-item>
+        ></app-icon-button>
       </div>
     </div>
   }
@@ -176,7 +179,7 @@
       </div>
 
       <div style="display: flex">
-        <app-sidebar-item
+        <app-icon-button
           [itemWidth]="(cardSize$ | async)!"
           [itemHeight]="(cardSize$ | async)!"
           [iconSize]="(cardSize$ | async)! / 2"
@@ -185,7 +188,7 @@
           matTooltipPosition="below"
           materialSymbol="check"
           (selected)="passMove()"
-        ></app-sidebar-item>
+        ></app-icon-button>
       </div>
     </div>
   }
@@ -194,21 +197,7 @@
 <ng-template #cardMovementTemplate let-animatedEntity>
   @if (animatedEntity.context.Card) {
     @if (playerGameViewToAnimate$ | async; as playerGameViewToAnimate) {
-      <game-card
-        [card]="animatedEntity.context.Card"
-        [@cardRotation]="{
-          value:
-            (animatedEntity.styles?.before.rotate ?? 0) ===
-            (animatedEntity.styles?.after.rotate ?? 0)
-              ? 'not-rotating'
-              : 'rotating',
-          params: {
-            fromRotate: animatedEntity.styles?.before.rotate ?? '0deg',
-            toRotate: animatedEntity.styles?.after.rotate ?? '0deg',
-            durationMs: animatedEntity.movement.durationMs
-          }
-        }"
-      ></game-card>
+      <game-card [card]="animatedEntity.context.Card"></game-card>
     }
   } @else {
     <game-face-down-card></game-face-down-card>

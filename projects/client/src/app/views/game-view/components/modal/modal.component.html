@@ -5,7 +5,11 @@
   @if (data.buttons && data.buttons.length > 0) {
     <div class="flex gap-x-4">
       @for (button of data.buttons; track i; let i = $index) {
-        <button mat-raised-button (click)="onButtonClicked(button)">
+        <button
+          data-testid="modal-button"
+          mat-raised-button
+          (click)="onButtonClicked(button)"
+        >
           {{ button }}
         </button>
       }

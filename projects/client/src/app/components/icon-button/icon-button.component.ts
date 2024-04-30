@@ -10,11 +10,11 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-sidebar-item',
-  templateUrl: './sidebar-item.component.html',
-  styleUrls: ['./sidebar-item.component.scss'],
+  selector: 'app-icon-button',
+  templateUrl: './icon-button.component.html',
+  styleUrls: ['./icon-button.component.scss'],
 })
-export class SidebarItemComponent implements AfterViewInit {
+export class IconButtonComponent implements AfterViewInit {
   readonly #focusMonitor = inject(FocusMonitor);
   readonly #snackBar = inject(MatSnackBar);
 
@@ -45,7 +45,7 @@ export class SidebarItemComponent implements AfterViewInit {
   }
 
   /**
-   * When the sidebar button triggers the modal, it remains highlighted after the
+   * When the button triggers the modal, it remains highlighted after the
    * modal is closed. This hack prevents that from happening.
    */
   removeButtonHighlightBug() {

@@ -34,6 +34,23 @@
                     durationMs: entity.movement.durationMs
                   }
                 }"
+                [@rotation]="{
+                  value:
+                    entity.movement.sequence === (currentSequence$ | async) &&
+                    entity.styles?.before?.rotate !==
+                      entity.styles?.after?.rotate &&
+                    (appliedRotation$ | async)
+                      ? 'rotating'
+                      : entity.movement.sequence < (currentSequence$ | async)!
+                        ? 'rotated'
+                        : 'not-rotating',
+                  params: {
+                    fromRotate: entity.styles?.before?.rotate ?? '0deg',
+                    toRotate: entity.styles?.after?.rotate ?? '0deg',
+                    durationMs:
+                      entity.movement.durationMs - APPLY_ROTATION_DELAY
+                  }
+                }"
               >
                 <ng-container
                   *ngTemplateOutlet="
@@ -60,6 +77,23 @@
                     durationMs: entity.movement.durationMs
                   }
                 }"
+                [@rotation]="{
+                  value:
+                    entity.movement.sequence === (currentSequence$ | async) &&
+                    entity.styles?.before?.rotate !==
+                      entity.styles?.after?.rotate &&
+                    (appliedRotation$ | async)
+                      ? 'rotating'
+                      : entity.movement.sequence < (currentSequence$ | async)!
+                        ? 'rotated'
+                        : 'not-rotating',
+                  params: {
+                    fromRotate: entity.styles?.before?.rotate ?? '0deg',
+                    toRotate: entity.styles?.after?.rotate ?? '0deg',
+                    durationMs:
+                      entity.movement.durationMs - APPLY_ROTATION_DELAY
+                  }
+                }"
               >
                 <ng-container
                   *ngTemplateOutlet="
@@ -83,7 +117,25 @@
                   params: {
                     x: entity.movement.to?.x,
                     y: entity.movement.to?.y,
-                    durationMs: entity.movement.durationMs
+                    durationMs:
+                      entity.movement.durationMs - APPLY_ROTATION_DELAY
+                  }
+                }"
+                [@rotation]="{
+                  value:
+                    entity.movement.sequence === (currentSequence$ | async) &&
+                    entity.styles?.before?.rotate !==
+                      entity.styles?.after?.rotate &&
+                    (appliedRotation$ | async)
+                      ? 'rotating'
+                      : entity.movement.sequence < (currentSequence$ | async)!
+                        ? 'rotated'
+                        : 'not-rotating',
+                  params: {
+                    fromRotate: entity.styles?.before?.rotate ?? '0deg',
+                    toRotate: entity.styles?.after?.rotate ?? '0deg',
+                    durationMs:
+                      entity.movement.durationMs - APPLY_ROTATION_DELAY
                   }
                 }"
               >

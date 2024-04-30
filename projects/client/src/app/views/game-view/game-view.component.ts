@@ -7,6 +7,7 @@ import {
   ViewChild,
   AfterViewInit,
   DestroyRef,
+  HostListener,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -33,8 +34,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, pairwise, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Router } from '@angular/router';
-import { cardRotationAnimation } from '../../animations/card-rotation.animation';
-import { fadeInOutAnimation } from '../../animations/fade-in-out.animation';
 import {
   Card,
   CardMovement,
@@ -59,12 +58,13 @@ import {
 import { ResponsiveSizeService } from '@shared/game';
 import { AnimatedEntity } from '@shared/animation-overlay';
 import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
+import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
   selector: 'app-game-view',
   templateUrl: './game-view.component.html',
   styleUrls: ['./game-view.component.scss'],
-  animations: [cardRotationAnimation, fadeInOutAnimation],
+  animations: [fadeInOutAnimation],
 })
 export class GameViewComponent implements OnInit, AfterViewInit {
   readonly PlayerOrNone = PlayerOrNone;
@@ -108,6 +108,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @Select(GameState.playerGameViewToAnimate)
   playerGameViewToAnimate$!: Observable<PlayerGameView>;
+
+  @Select(GameState.gameIsActive)
+  gameIsActive$!: Observable<boolean>;
 
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
@@ -188,7 +191,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           this.latestGameViewSnapshot$.next(playerGameView);
           this.isPlayersTurn = isPlayersTurn(playerGameView);
           this.possibleInitialPlaceCardAttempts =
-            getPossibleInitialPlaceCardAttempts(playerGameView);
+            getPossibleInitialPlaceCardAttempts(playerGameView.CandidateMoves);
         }
       });
     this.opponentPassedMove$
@@ -196,7 +199,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe((opponentPassedMove) => {
         if (opponentPassedMove) {
           this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
-            duration: 2000,
+            duration: 5000,
             verticalPosition: 'top',
           });
         }
@@ -210,6 +213,13 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.cardMovementTemplate$.next(this.cardMovementTemplate);
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey() {
+    if (this.isPlacingMultipleCards) {
+      this.cancelPlaceMultipleCards();
+    }
   }
 
   renderAnimatedGameView() {
@@ -278,21 +288,23 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const invalidMoveMessage = getReasonIfMoveInvalid(
-      latestGameViewSnapshot,
-      move
-    );
+    const invalidMoveMessage = isPlayersTurn(latestGameViewSnapshot)
+      ? getReasonIfMoveInvalid(move, latestGameViewSnapshot.CandidateMoves)
+      : "It's not your turn!";
 
     if (invalidMoveMessage) {
       this.#snackBar.open(invalidMoveMessage, undefined, {
-        duration: 1500,
+        duration: 5000,
         verticalPosition: 'top',
       });
 
       return;
     }
 
-    canPlaceMultipleCards(placeCardAttempt, latestGameViewSnapshot)
+    canPlaceMultipleCards(
+      placeCardAttempt,
+      latestGameViewSnapshot.CandidateMoves
+    )
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
       : this.makeValidatedMove(move, latestGameViewSnapshot.Lanes);
   }
@@ -318,7 +330,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       : this.rearrangeHand(event.previousIndex, event.currentIndex);
   }
 
-  onCancelButtonClicked() {
+  cancelPlaceMultipleCards() {
     const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
@@ -351,7 +363,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.#store.dispatch(new FinishPlacingMultipleCards(false));
   }
 
-  onConfirmButtonClicked() {
+  confirmPlaceMultipleCards() {
     const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
@@ -385,11 +397,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       playerGameView.IsHost
     );
 
-    const invalidMoveMessage = getReasonIfMoveInvalid(playerGameView, move);
+    const invalidMoveMessage = getReasonIfMoveInvalid(
+      move,
+      playerGameView.CandidateMoves
+    );
 
     if (invalidMoveMessage) {
       this.#snackBar.open(invalidMoveMessage, 'Out of order!', {
-        duration: 1500,
+        duration: 5000,
         verticalPosition: 'top',
       });
 
