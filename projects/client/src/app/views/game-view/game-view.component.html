@@ -52,6 +52,9 @@
           [isPlayersTurn]="isPlayersTurn"
           [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
           [isGameActive]="(gameIsActive$ | async) ?? false"
+          [initialPlaceMultipleCardsAttempt]="
+            initialPlaceMultipleCardAttempt$ | async
+          "
           (cardDropped)="onPlayerHandCardDrop($event)"
           (cardDragStarted)="setIsMakingMove($event)"
           (cardDragEnded)="setIsNotMakingMove()"

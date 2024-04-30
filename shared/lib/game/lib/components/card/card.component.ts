@@ -34,15 +34,18 @@ export class CardComponent {
   }
   @Input() playerCanDrag = false;
   @Input() insideVerticalContainer = false;
+  @Input() disabled = false;
 
   @Output() dragStarted = new EventEmitter<void>();
   @Output() dragEnded = new EventEmitter<void>();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly card$ = new BehaviorSubject<Card | null>(null);
+
   readonly imageFileName$ = this.card$.pipe(
     map((card) => (card ? getCardImageFileName(card) : ''))
   );
+
   readonly cardStyles$ = combineLatest([this.card$, this.cardSize$]).pipe(
     map(([card, cardSize]) => {
       return Object.assign(

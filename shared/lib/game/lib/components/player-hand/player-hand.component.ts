@@ -8,7 +8,7 @@ import {
   inject,
   DestroyRef,
 } from '@angular/core';
-import { Card } from '@shared/models';
+import { Card, PlaceCardAttempt } from '@shared/models';
 import { Observable, timer, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { switchMap, filter, delay, map } from 'rxjs/operators';
 import { ResponsiveSizeService } from '@shared/game';
@@ -47,6 +47,13 @@ export class PlayerHandComponent implements OnInit {
   ) {
     this.isPlacingMultipleCards$.next(isPlacingMultipleCards);
   }
+  @Input({ required: true }) set initialPlaceMultipleCardsAttempt(
+    initialPlaceMultipleCardsAttempt: PlaceCardAttempt | null
+  ) {
+    this.initialPlaceMultipleCardsAttempt$.next(
+      initialPlaceMultipleCardsAttempt
+    );
+  }
 
   @Output() cardDropped = new EventEmitter<CdkDragDrop<string>>();
   @Output() cardDragStarted = new EventEmitter<Card>();
@@ -63,6 +70,8 @@ export class PlayerHandComponent implements OnInit {
   readonly bounceTimer$ = new BehaviorSubject<Observable<number | null>>(
     of(null)
   );
+  readonly initialPlaceMultipleCardsAttempt$ =
+    new BehaviorSubject<PlaceCardAttempt | null>(null);
 
   readonly allCards$ = combineLatest([
     this.cards$,

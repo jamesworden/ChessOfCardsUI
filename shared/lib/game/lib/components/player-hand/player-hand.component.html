@@ -33,9 +33,12 @@
         [card]="card"
         [playerCanDrag]="!disabled"
         class="transition"
-        [ngStyle]="{
-          opacity: disabled ? 0.5 : 1
-        }"
+        [disabled]="
+          disabled ||
+          (((isPlacingMultipleCards$ | async) ?? false) &&
+            (initialPlaceMultipleCardsAttempt$ | async)?.Card?.Kind !==
+              card.Kind)
+        "
         (dragEnded)="onDragEnded(card)"
         (dragStarted)="onDragStarted(card)"
       ></game-card>

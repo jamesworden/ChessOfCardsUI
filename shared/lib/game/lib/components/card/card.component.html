@@ -1,5 +1,8 @@
 <img
   class="card z-5 select-none"
+  [ngClass]="{
+    'opacity-50': disabled
+  }"
   cdkDrag
   [cdkDragDisabled]="!playerCanDrag"
   cdkDragBoundary=".game"
