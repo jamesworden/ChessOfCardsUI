@@ -172,10 +172,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       tap(() => this.latestMoveMadeDetails$.next(null))
     );
 
-  readonly lastIsMakingMove$ = this.isMakingMove$.pipe(
-    filter((isMakingMove) => !!isMakingMove)
-  );
-
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   possibleInitialPlaceCardAttempts: PlaceCardAttempt[] = [];
@@ -231,7 +227,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       });
     combineLatest([this.positionClicked$])
       .pipe(
-        withLatestFrom(this.lastIsMakingMove$),
+        withLatestFrom(this.isMakingMove$),
         takeUntilDestroyed(this.#destroyRef)
       )
       .subscribe(([[position], isMakingMove]) => {
