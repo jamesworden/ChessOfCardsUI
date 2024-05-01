@@ -9,7 +9,8 @@ export function getToPlaceMultipleLaneEntities(
   cardsInHand: Card[],
   isHost: boolean,
   template: TemplateRef<CardMovement> | null,
-  cardSize: number
+  cardSize: number,
+  wasDragged = false
 ): AnimatedEntity<CardMovement>[] {
   return placeCardAttempts
     .map(
@@ -20,7 +21,8 @@ export function getToPlaceMultipleLaneEntities(
           isHost,
           i,
           template,
-          cardSize
+          cardSize,
+          wasDragged
         ) as AnimatedEntity<CardMovement>
     )
     .filter((animatedEntity) => !!animatedEntity);
@@ -33,6 +35,7 @@ function getAnimatedEntity(
   sequence: number,
   template: TemplateRef<CardMovement> | null,
   cardSize: number,
+  wasDragged: boolean,
   durationMs = 500
 ): AnimatedEntity<CardMovement> | null {
   if (!template) {
@@ -69,6 +72,10 @@ function getAnimatedEntity(
     },
     Card: placeCardAttempt.Card,
   };
+
+  if (wasDragged) {
+    durationMs = 0;
+  }
 
   const movement = getAnimatedMovement(
     cardMovement,

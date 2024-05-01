@@ -651,7 +651,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       cardsFromHand,
       latestGameViewSnapshot.IsHost,
       this.cardMovementTemplate,
-      this.cardSize
+      this.cardSize,
+      this.latestMoveMadeDetails$.getValue()?.wasDragged ?? false
     );
 
     this.toPlaceMultipleLaneEntities$.next(entities);
