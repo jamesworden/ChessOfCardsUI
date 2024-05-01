@@ -47,6 +47,9 @@
         'min-height': MIN_CARD_HEIGHT_FACTOR * (cardSize$ | async)! + 'px',
         width: (cardSize$ | async)! + 'px'
       }"
+      [ngClass]="{
+        'cursor-pointer': selectedCard
+      }"
       (click)="onListClicked()"
     >
       @for (card of placeMultipleCards$ | async; track i; let i = $index) {
