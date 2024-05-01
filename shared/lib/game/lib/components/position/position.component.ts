@@ -28,7 +28,7 @@ export class PositionComponent {
   @Input() transparentTile = false;
   @Input() hideMarker = false;
   @Input() isValidMove = false;
-  @Input() isMakingMove: Card | null = null;
+  @Input() selectedCard: Card | null = null;
   @Input({ required: true }) set isHost(isHost: boolean) {
     this.isHost$.next(isHost);
   }

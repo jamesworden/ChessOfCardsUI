@@ -40,7 +40,7 @@
               card.Kind)
         "
         [selected]="
-          isMakingMove?.Suit === card.Suit && isMakingMove?.Kind === card.Kind
+          selectedCard?.Suit === card.Suit && selectedCard?.Kind === card.Kind
         "
         (dragEnded)="onDragEnded(card)"
         (dragStarted)="onDragStarted(card)"

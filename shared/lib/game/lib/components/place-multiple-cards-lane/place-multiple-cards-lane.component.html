@@ -18,12 +18,12 @@
           [textClass]="position.textClass"
           [isHost]="(isHost$ | async) ?? false"
           [dragDropDisabled]="true"
-          [isMakingMove]="isMakingMove"
+          [selectedCard]="selectedCard"
           [isValidMove]="
             ((placeMultipleCards$ | async)?.length ?? 0) +
               ((previouslyCapturedCards$ | async)?.length ?? 0) ===
               i &&
-            initialPlaceMultipleCardAttempt.Card.Kind === isMakingMove?.Kind
+            initialPlaceMultipleCardAttempt.Card.Kind === selectedCard?.Kind
           "
         ></game-position>
       }

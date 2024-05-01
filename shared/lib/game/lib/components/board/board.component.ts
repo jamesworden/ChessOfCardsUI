@@ -34,8 +34,8 @@ export class BoardComponent {
   @Input() isPlacingMultipleCards: boolean | null;
   @Input() transparentTiles = false;
   @Input({ required: true }) isPlayersTurn = false;
-  @Input() set isMakingMove(isMakingMove: Card | null) {
-    this.isMakingMove$.next(isMakingMove);
+  @Input() set selectedCard(selectedCard: Card | null) {
+    this.selectedCard$.next(selectedCard);
   }
   @Input({ required: true }) set placeMultipleCards(
     placeMultipleCards: Card[] | null
@@ -60,21 +60,21 @@ export class BoardComponent {
   readonly playerGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
   readonly placeMultipleCards$ = new BehaviorSubject<Card[] | null>(null);
   readonly placeMultipleCardsHand$ = new BehaviorSubject<Card[] | null>(null);
-  readonly isMakingMove$ = new BehaviorSubject<Card | null>(null);
+  readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
 
   readonly positionsWithValidMoves$: Observable<CardPosition[]> = combineLatest(
-    [this.playerGameView$, this.isMakingMove$]
+    [this.playerGameView$, this.selectedCard$]
   ).pipe(
     map(
-      ([playerGameView, isMakingMove]) =>
+      ([playerGameView, selectedCard]) =>
         playerGameView?.CandidateMoves?.filter(
           (candidateMove) =>
             candidateMove.Move.PlaceCardAttempts.length === 1 &&
             candidateMove.IsValid &&
             candidateMove.Move.PlaceCardAttempts[0].Card.Kind ===
-              isMakingMove?.Kind &&
+              selectedCard?.Kind &&
             candidateMove.Move.PlaceCardAttempts[0].Card.Suit ===
-              isMakingMove?.Suit
+              selectedCard?.Suit
         ).map((candidateMove) => ({
           RowIndex: candidateMove.Move.PlaceCardAttempts[0].TargetRowIndex,
           LaneIndex: candidateMove.Move.PlaceCardAttempts[0].TargetLaneIndex,

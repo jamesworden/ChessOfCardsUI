@@ -2,7 +2,8 @@
   class="card z-5 select-none transition-colors"
   [ngClass]="{
     'opacity-50': disabled,
-    'bg-yellow-200 rounded-sm': selected
+    'bg-yellow-200 rounded-md': selected,
+    'cursor-pointer': playerCanDrag
   }"
   cdkDrag
   [cdkDragDisabled]="!playerCanDrag"

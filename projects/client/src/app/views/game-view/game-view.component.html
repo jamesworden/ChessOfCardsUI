@@ -37,7 +37,7 @@
             [isPlayersTurn]="isPlayersTurn"
             [placeMultipleCards]="placeMultipleCards$ | async"
             [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
-            [isMakingMove]="isMakingMove$ | async"
+            [selectedCard]="selectedCard$ | async"
             (placeCardAttempted)="onPlaceCardAttempted($event)"
             (setPlaceMultipleCards)="placedMultipleCards($event)"
             (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
@@ -61,7 +61,7 @@
           [initialPlaceMultipleCardsAttempt]="
             initialPlaceMultipleCardAttempt$ | async
           "
-          [isMakingMove]="isMakingMove$ | async"
+          [selectedCard]="selectedCard$ | async"
           (cardDropped)="onPlayerHandCardDrop($event)"
           (cardDragStarted)="onCardDragStarted($event)"
           (cardDragEnded)="onCardDragEnded()"

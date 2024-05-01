@@ -20,7 +20,7 @@ export class LaneComponent {
   @Input() blackJokerLaneIndex?: number;
   @Input() transparentTiles = false;
   @Input() validMoveRowIndexes: Set<number> | null = null;
-  @Input() isMakingMove: Card | null = null;
+  @Input() selectedCard: Card | null = null;
   @Input() set isPlayersTurn(isPlayersTurn: boolean) {
     this.isPlayersTurn$.next(isPlayersTurn);
   }

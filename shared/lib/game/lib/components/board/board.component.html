@@ -31,8 +31,8 @@
               [initialPlaceMultipleCardAttempt]="
                 initialPlaceMultipleCardAttempt
               "
-              [isMakingMove]="
-                isPlacingMultipleCards ? (isMakingMove$ | async) : null
+              [selectedCard]="
+                isPlacingMultipleCards ? (selectedCard$ | async) : null
               "
               (setPlaceMultipleCards)="placedMultipleCards($event)"
               (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
@@ -51,8 +51,8 @@
                 (laneIndexesToValidMoveRowIndexes$ | async)?.get(laneIndex) ??
                 null
               "
-              [isMakingMove]="
-                isPlacingMultipleCards ? null : (isMakingMove$ | async)
+              [selectedCard]="
+                isPlacingMultipleCards ? null : (selectedCard$ | async)
               "
               (placeCardAttempted)="onPlaceCardAttempted($event)"
               (rowIndexClicked)="onPositionClicked(laneIndex, $event)"

@@ -28,7 +28,7 @@ export class PlayerHandComponent implements OnInit {
   @Input({ required: true }) isHost: boolean;
   @Input({ required: true }) cardSize: number;
   @Input() disabled = true;
-  @Input() isMakingMove: Card | null = null;
+  @Input() selectedCard: Card | null = null;
   @Input({ required: true }) set placeMultipleCardsHand(
     placeMultipleCardsHand: Card[] | null
   ) {

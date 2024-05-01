@@ -32,7 +32,7 @@ export class PlaceMultipleCardsLaneComponent {
   readonly Z_INDEXES = Z_INDEXES;
 
   @Input({ required: true }) isHost: boolean;
-  @Input() isMakingMove: Card | null = null;
+  @Input() selectedCard: Card | null = null;
   @Input({ required: true }) set playerGameView(
     playerGameView: PlayerGameView | null
   ) {

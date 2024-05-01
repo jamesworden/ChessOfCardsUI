@@ -36,6 +36,11 @@ html {
 .card.cdk-drag-placeholder {
   opacity: 0;
   transition: ease-in-out 0.2s;
+  background-color: transparent !important;
+}
+
+.card.cdk-drag-preview {
+  background-color: transparent !important;
 }
 
 .card.cdk-drag-animating {

@@ -134,7 +134,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly latestGameViewSnapshot$ = new BehaviorSubject<PlayerGameView | null>(
     null
   );
-  readonly isMakingMove$ = new BehaviorSubject<Card | null>(null);
+  readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
   readonly positionClicked$ = new Subject<CardPosition>();
 
   private readonly cardMovementTemplate$ =
@@ -227,20 +227,18 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       });
     combineLatest([this.positionClicked$])
       .pipe(
-        withLatestFrom(this.isMakingMove$),
+        withLatestFrom(this.selectedCard$),
         takeUntilDestroyed(this.#destroyRef)
       )
-      .subscribe(([[position], isMakingMove]) => {
-        if (!isMakingMove) {
-          return;
-        }
-        const placeCardAttempt: PlaceCardAttempt = {
-          Card: isMakingMove,
-          TargetLaneIndex: position.LaneIndex,
-          TargetRowIndex: position.RowIndex,
-        };
-        this.onPlaceCardAttempted(placeCardAttempt);
-      });
+      .subscribe(
+        ([[position], selectedCard]) =>
+          selectedCard &&
+          this.onPlaceCardAttempted({
+            Card: selectedCard,
+            TargetLaneIndex: position.LaneIndex,
+            TargetRowIndex: position.RowIndex,
+          })
+      );
   }
 
   ngAfterViewInit() {
@@ -258,7 +256,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   onClick(event: Event) {
     const clickedOnCard = (event.target as HTMLElement).closest('.card');
     if (!clickedOnCard) {
-      this.isMakingMove$.next(null);
+      this.selectedCard$.next(null);
     }
   }
 
@@ -646,28 +644,28 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   onCardDragStarted(card: Card) {
-    this.isMakingMove$.next(card);
+    this.selectedCard$.next(card);
     this.updateLatestMoveDetails({
       wasDragged: true,
     });
   }
 
   onCardDragEnded() {
-    this.isMakingMove$.next(null);
+    this.selectedCard$.next(null);
   }
 
   onCardClicked(card: Card) {
-    const currentIsMakingMove = this.isMakingMove$.getValue();
-    const matchingKind = card.Kind === currentIsMakingMove?.Kind;
-    const matchingSuit = card.Suit === currentIsMakingMove?.Suit;
+    const selectedCard = this.selectedCard$.getValue();
+    const matchingKind = card.Kind === selectedCard?.Kind;
+    const matchingSuit = card.Suit === selectedCard?.Suit;
 
     this.updateLatestMoveDetails({
       wasDragged: false,
     });
 
     matchingKind && matchingSuit
-      ? this.isMakingMove$.next(null)
-      : this.isMakingMove$.next(card);
+      ? this.selectedCard$.next(null)
+      : this.selectedCard$.next(card);
   }
 
   onPositionClicked(position: CardPosition) {
@@ -675,7 +673,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   moveSelectedCardToPlaceMultipleList() {
-    const selectedCard = this.isMakingMove$.getValue();
+    const selectedCard = this.selectedCard$.getValue();
     if (!selectedCard) {
       return;
     }
