@@ -803,6 +803,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     );
 
     this.toPlaceMultipleLaneEntities$.next(entities);
+    this.selectedCard$.next(null);
   }
 
   updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
