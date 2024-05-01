@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { withLatestFrom, filter, tap } from 'rxjs/operators';
+import { withLatestFrom, tap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
@@ -53,6 +53,7 @@ import { MoveMadeDetails } from './models/move-made-details.model';
 import {
   addCardToArray,
   canPlaceMultipleCards,
+  cardEqualsCard,
   convertPlaceMultipleCardsToMove,
   getPossibleInitialPlaceCardAttempts,
   getReasonIfMoveInvalid,
@@ -64,8 +65,7 @@ import { ResponsiveSizeService } from '@shared/game';
 import { AnimatedEntity } from '@shared/animation-overlay';
 import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 import { fadeInOutAnimation } from '@shared/animations';
-import { BoardComponent } from 'shared/lib/game/lib/components/board/board.component';
-import { PlayerHandComponent } from 'shared/lib/game/lib/components/player-hand/player-hand.component';
+import { getToPlaceMultipleLaneEntities } from './logic/get-to-place-multiple-lane-entities';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -90,12 +90,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
-
-  @ViewChild('board', { read: BoardComponent })
-  board: BoardComponent;
-
-  @ViewChild('playerHand', { read: PlayerHandComponent })
-  playerHand: PlayerHandComponent;
 
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView | null>;
@@ -136,6 +130,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   );
   readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
   readonly positionClicked$ = new Subject<CardPosition>();
+  readonly toPlaceMultipleLaneEntities$ = new Subject<
+    AnimatedEntity<CardMovement>[]
+  >();
 
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
@@ -175,6 +172,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   possibleInitialPlaceCardAttempts: PlaceCardAttempt[] = [];
+  cardSize = 64;
 
   ngOnInit() {
     if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
@@ -239,6 +237,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
             TargetRowIndex: position.RowIndex,
           })
       );
+    this.cardSize$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((cardSize) => (this.cardSize = cardSize));
   }
 
   ngAfterViewInit() {
@@ -268,9 +269,40 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
   }
 
+  checkToRemoveCardFromPlaceMultipleHand(
+    animatedEntities: AnimatedEntity<unknown>[]
+  ) {
+    let latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
+    const cardMovementEntities =
+      animatedEntities as AnimatedEntity<CardMovement>[];
+    const hand =
+      this.#store.selectSnapshot(GameState.placeMultipleCardsHand) ?? [];
+
+    for (const card of hand) {
+      if (
+        cardMovementEntities.some(
+          (entity) =>
+            entity.context.Card &&
+            cardEqualsCard(card, entity.context.Card) &&
+            ((latestGameViewSnapshot?.IsHost &&
+              entity.context.From.HostHandCardIndex !== null) ||
+              (!latestGameViewSnapshot?.IsHost &&
+                entity.context.From.GuestHandCardIndex !== null))
+        )
+      ) {
+        removeCardFromArray(card, hand);
+      }
+    }
+
+    this.#store.dispatch(new SetPlaceMultipleCardsHand(hand));
+  }
+
   checkToRemoveCardFromBoard(animatedEntities: AnimatedEntity<unknown>[]) {
     let latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
-
     if (!latestGameViewSnapshot) {
       return;
     }
@@ -609,12 +641,40 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     const cardsFromHand = [...latestGameViewSnapshot.Hand.Cards];
-    removeCardFromArray(placeCardAttempt.Card, cardsFromHand);
-    this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
 
     this.#store.dispatch(
-      new StartPlacingMultipleCards(placeCardAttempt, cardsFromHand)
+      new StartPlacingMultipleCards(cardsFromHand, placeCardAttempt)
     );
+
+    const entities = getToPlaceMultipleLaneEntities(
+      [placeCardAttempt],
+      cardsFromHand,
+      latestGameViewSnapshot.IsHost,
+      this.cardMovementTemplate,
+      this.cardSize
+    );
+
+    this.toPlaceMultipleLaneEntities$.next(entities);
+  }
+
+  addCardToPlaceMultipleCardsLane(animatedEntities: AnimatedEntity<unknown>[]) {
+    const cardMovementEntities =
+      animatedEntities as AnimatedEntity<CardMovement>[];
+
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
+    const cardsToAdd = cardMovementEntities
+      .map((entity) => entity.context.Card as Card)
+      .filter((card) => card);
+
+    const cardsFromHand = [...latestGameViewSnapshot.Hand.Cards];
+    cardsToAdd.forEach((card) => removeCardFromArray(card, cardsFromHand));
+    this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
+
+    this.#store.dispatch(new SetPlaceMultipleCards(cardsToAdd));
   }
 
   private makeValidatedMove(move: Move, lanes: Lane[]) {

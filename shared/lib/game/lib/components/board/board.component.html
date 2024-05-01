@@ -3,7 +3,14 @@
     <div class="flex">
       @if (initialPlaceMultipleCardAttempt) {
         <div
-          class="absolute bg-black opacity-80 overflow-hidden"
+          [@fadeInOut]="{
+            value: '',
+            params: {
+              endOpacity: '.8',
+              duration: 150
+            }
+          }"
+          class="absolute bg-black overflow-hidden opacity-80"
           [ngStyle]="{
             'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_OVERLAY,
             height: (cardSize$ | async)! * 7 + 'px',

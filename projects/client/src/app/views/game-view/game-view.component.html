@@ -10,6 +10,18 @@
     (startingAnimations)="checkToRemoveCardFromBoard($event)"
   ></animation-overlay>
 
+  <animation-overlay
+    [animatedEntities]="(toPlaceMultipleLaneEntities$ | async) ?? []"
+    (finishedAnimations)="addCardToPlaceMultipleCardsLane($event)"
+    (startingAnimations)="checkToRemoveCardFromPlaceMultipleHand($event)"
+  ></animation-overlay>
+
+  <!-- <animation-overlay
+    [animatedEntities]="(animatedCardEntities$ | async) ?? []"
+    (finishedAnimations)="renderAnimatedGameView()"
+    (startingAnimations)="checkToRemoveCardFromBoard($event)"
+  ></animation-overlay> -->
+
   <div
     class="flex justify-around w-full dark:bg-gray-800 bg-gray-300 transition"
   >

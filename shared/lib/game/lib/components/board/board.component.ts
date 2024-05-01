@@ -9,11 +9,13 @@ import {
   CardPosition,
 } from '@shared/models';
 import { Z_INDEXES } from '@shared/constants';
+import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
   selector: 'game-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
+  animations: [fadeInOutAnimation],
 })
 export class BoardComponent {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
