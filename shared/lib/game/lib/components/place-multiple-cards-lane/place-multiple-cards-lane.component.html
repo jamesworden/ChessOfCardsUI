@@ -4,8 +4,10 @@
 ) {
   <div class="lane" *ngIf="playerGameView$ | async">
     <!-- Pseudo-position background beneath actual card list -->
+    <!-- Dynamic flex direction matters for card animations -->
     <div
-      class="absolute flex flex-col-reverse"
+      class="absolute flex"
+      [ngClass]="{ 'flex-col': !isHost, 'flex-col-reverse': isHost }"
       [ngStyle]="{
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
       }"
@@ -22,7 +24,7 @@
           [isValidMove]="
             ((placeMultipleCards$ | async)?.length ?? 0) +
               ((previouslyCapturedCards$ | async)?.length ?? 0) ===
-              i &&
+              (isHost ? i : 6 - i) &&
             initialPlaceMultipleCardAttempt.Card.Kind === selectedCard?.Kind
           "
         ></game-position>

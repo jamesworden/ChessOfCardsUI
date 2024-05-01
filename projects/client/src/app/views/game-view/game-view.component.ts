@@ -670,11 +670,20 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .map((entity) => entity.context.Card as Card)
       .filter((card) => card);
 
-    const cardsFromHand = [...latestGameViewSnapshot.Hand.Cards];
+    const cardsFromHand = this.#store.selectSnapshot(
+      GameState.isPlacingMultipleCards
+    )
+      ? this.#store.selectSnapshot(GameState.placeMultipleCardsHand) ?? []
+      : [...latestGameViewSnapshot.Hand.Cards];
+
     cardsToAdd.forEach((card) => removeCardFromArray(card, cardsFromHand));
     this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
 
-    this.#store.dispatch(new SetPlaceMultipleCards(cardsToAdd));
+    const initialCards =
+      this.#store.selectSnapshot(GameState.placeMultipleCards) ?? [];
+    const updatedPlaceMultipleCards = cardsToAdd.concat(initialCards);
+
+    this.#store.dispatch(new SetPlaceMultipleCards(updatedPlaceMultipleCards));
   }
 
   private makeValidatedMove(move: Move, lanes: Lane[]) {
@@ -733,47 +742,52 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   moveSelectedCardToPlaceMultipleList() {
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
     const selectedCard = this.selectedCard$.getValue();
     if (!selectedCard) {
       return;
     }
 
-    const placeMultipleCardsHand = this.#store.selectSnapshot(
-      GameState.placeMultipleCardsHand
+    const initialPlaceCardAttempt = this.#store.selectSnapshot(
+      GameState.initialPlaceMultipleCardAttempt
     );
-    if (!placeMultipleCardsHand) {
-      return;
-    }
-
-    let currentIndexInHand: number | null = null;
-    for (let i = 0; i < placeMultipleCardsHand.length; i++) {
-      const card = placeMultipleCardsHand[i];
-      if (card.Kind === selectedCard.Kind && card.Suit === selectedCard?.Suit) {
-        currentIndexInHand = i;
-      }
-    }
-    if (currentIndexInHand === null) {
+    if (initialPlaceCardAttempt === null) {
       return;
     }
 
     const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
-    if (!placeMultipleCards) {
+    if (placeMultipleCards === null) {
       return;
     }
 
-    transferArrayItem(
-      placeMultipleCardsHand,
-      placeMultipleCards,
-      currentIndexInHand,
-      0
+    let TargetRowIndex = latestGameViewSnapshot.IsHost
+      ? initialPlaceCardAttempt.TargetRowIndex + placeMultipleCards.length
+      : initialPlaceCardAttempt.TargetRowIndex - placeMultipleCards.length;
+
+    const placeCardAttempt: PlaceCardAttempt = {
+      Card: selectedCard,
+      TargetLaneIndex: initialPlaceCardAttempt.TargetLaneIndex,
+      TargetRowIndex,
+    };
+
+    const cardsFromHand =
+      this.#store.selectSnapshot(GameState.placeMultipleCardsHand) ?? [];
+
+    const entities = getToPlaceMultipleLaneEntities(
+      [placeCardAttempt],
+      cardsFromHand,
+      latestGameViewSnapshot.IsHost,
+      this.cardMovementTemplate,
+      this.cardSize
     );
 
-    this.#store.dispatch([
-      new SetPlaceMultipleCards(placeMultipleCards),
-      new SetPlaceMultipleCardsHand(placeMultipleCardsHand),
-    ]);
+    this.toPlaceMultipleLaneEntities$.next(entities);
   }
 
   updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

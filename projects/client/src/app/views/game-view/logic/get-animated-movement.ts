@@ -80,7 +80,9 @@ function getAnimatedPositionFromCardPosition(
 ): AnimatedPosition {
   const { LaneIndex: laneIndex, RowIndex: rowIndex } = cardPosition;
 
-  const lane = document.getElementsByTagName('game-lane')[laneIndex];
+  const lane = document.getElementsByClassName('lane-animation-target')[
+    laneIndex
+  ];
   const position = lane.getElementsByTagName('game-position')[rowIndex];
 
   let { x, y } = position.getBoundingClientRect();

@@ -30,6 +30,7 @@
         ) {
           @if (initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex) {
             <game-place-multiple-cards-lane
+              class="lane-animation-target"
               #placeMultipleCardsLane
               [isHost]="playerGameView.IsHost"
               [playerGameView]="playerGameView"
@@ -47,6 +48,7 @@
             ></game-place-multiple-cards-lane>
           } @else {
             <game-lane
+              class="lane-animation-target"
               [lane]="lane"
               [laneIndex]="laneIndex"
               [isHost]="playerGameView.IsHost"
