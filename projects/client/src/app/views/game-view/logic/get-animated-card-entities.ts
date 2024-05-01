@@ -6,7 +6,7 @@ import {
   CardStore,
   CardPosition,
 } from '@shared/models';
-import { getCardTiltDegrees } from '@shared/logic';
+import { getCardTiltDegrees, isPlayersTurn } from '@shared/logic';
 import { MoveMadeDetails } from '../models/move-made-details.model';
 import {
   AnimatedEntity,
@@ -131,7 +131,9 @@ function getAnimatedEntity(
     : AnimationType.Movement;
 
   const wasDraggedFromPlayerHand =
-    latestMoveMadeDetails?.wasDragged && isFromPlayerHand(cardMovement, isHost);
+    (latestMoveMadeDetails?.wasDragged ||
+      latestMoveMadeDetails?.wasPlacingMultipleCards) &&
+    isFromPlayerHand(cardMovement, isHost);
 
   if (wasDraggedFromPlayerHand) {
     const toGuestSideAndIsHost =

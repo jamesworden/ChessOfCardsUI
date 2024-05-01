@@ -1,5 +1,4 @@
 import {
-  CdkDrag,
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
@@ -16,7 +15,7 @@ import {
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, withLatestFrom, filter } from 'rxjs/operators';
+import { withLatestFrom, filter, tap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
@@ -67,6 +66,11 @@ import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 import { fadeInOutAnimation } from '@shared/animations';
 import { BoardComponent } from 'shared/lib/game/lib/components/board/board.component';
 import { PlayerHandComponent } from 'shared/lib/game/lib/components/player-hand/player-hand.component';
+
+const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
+  wasDragged: false,
+  wasPlacingMultipleCards: false,
+};
 
 @Component({
   selector: 'app-game-view',
@@ -142,23 +146,19 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   );
 
   private readonly latestMoveMadeDetails$ =
-    new BehaviorSubject<MoveMadeDetails | null>({
-      wasDragged: true,
-    });
+    new BehaviorSubject<MoveMadeDetails | null>(null);
 
   readonly animatedCardEntities$: Observable<AnimatedEntity<CardMovement>[]> =
-    combineLatest([
-      this.prevAndCurrGameViews$,
-      this.cardMovementTemplate$,
-    ]).pipe(
-      distinctUntilChanged(),
+    this.prevAndCurrGameViews$.pipe(
       withLatestFrom(
+        this.cardMovementTemplate$,
         this.#responsiveSizeService.cardSize$,
         this.latestMoveMadeDetails$
       ),
       map(
         ([
-          [prevAndCurrGameViews, cardMovementTemplate],
+          prevAndCurrGameViews,
+          cardMovementTemplate,
           cardSize,
           latestMoveMadeDetails,
         ]) =>
@@ -168,7 +168,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
             cardMovementTemplate,
             latestMoveMadeDetails
           )
-      )
+      ),
+      tap(() => this.latestMoveMadeDetails$.next(null))
     );
 
   readonly lastIsMakingMove$ = this.isMakingMove$.pipe(
@@ -261,7 +262,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   onClick(event: Event) {
     const clickedOnCard = (event.target as HTMLElement).closest('.card');
     if (!clickedOnCard) {
-      this.unselectCard();
+      this.isMakingMove$.next(null);
     }
   }
 
@@ -489,6 +490,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
     }
 
+    this.updateLatestMoveDetails({
+      wasPlacingMultipleCards: true,
+    });
+
     const placeMultipleCardsHand =
       this.#store.selectSnapshot(GameState.placeMultipleCardsHand) ?? undefined;
     this.#store.dispatch(new MakeMove(move, placeMultipleCardsHand));
@@ -625,7 +630,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     for (const placeCardAttempt of move.PlaceCardAttempts) {
-      moveCardToLane(placeCardAttempt, lanes);
+      if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
+        moveCardToLane(placeCardAttempt, lanes);
+      }
+
       removeCardFromArray(
         placeCardAttempt.Card,
         latestGameViewSnapshot.Hand.Cards
@@ -642,32 +650,28 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   onCardDragStarted(card: Card) {
-    this.selectCard(card);
+    this.isMakingMove$.next(card);
+    this.updateLatestMoveDetails({
+      wasDragged: true,
+    });
   }
 
   onCardDragEnded() {
-    this.unselectCard();
+    this.isMakingMove$.next(null);
   }
 
   onCardClicked(card: Card) {
     const currentIsMakingMove = this.isMakingMove$.getValue();
     const matchingKind = card.Kind === currentIsMakingMove?.Kind;
     const matchingSuit = card.Suit === currentIsMakingMove?.Suit;
-    matchingKind && matchingSuit ? this.unselectCard() : this.selectCard(card);
-  }
 
-  selectCard(card: Card) {
-    this.isMakingMove$.next(card);
-    this.latestMoveMadeDetails$.next({
+    this.updateLatestMoveDetails({
       wasDragged: false,
     });
-  }
 
-  unselectCard() {
-    this.isMakingMove$.next(null);
-    this.latestMoveMadeDetails$.next({
-      wasDragged: false,
-    });
+    matchingKind && matchingSuit
+      ? this.isMakingMove$.next(null)
+      : this.isMakingMove$.next(card);
   }
 
   onPositionClicked(position: CardPosition) {
@@ -716,5 +720,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       new SetPlaceMultipleCards(placeMultipleCards),
       new SetPlaceMultipleCardsHand(placeMultipleCardsHand),
     ]);
+  }
+
+  updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
+    const existingDetails =
+      this.latestMoveMadeDetails$.getValue() ?? DEFAULT_LATEST_MOVE_DETAILS;
+    this.latestMoveMadeDetails$.next({
+      ...existingDetails,
+      ...updatedDetails,
+    });
   }
 }
