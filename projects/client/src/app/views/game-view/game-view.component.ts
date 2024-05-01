@@ -640,22 +640,36 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const cardsFromHand = [...latestGameViewSnapshot.Hand.Cards];
+    const initialPlaceMultipleCardsHand = [
+      ...latestGameViewSnapshot.Hand.Cards,
+    ];
+
+    const cardWasDragged = this.latestMoveMadeDetails$.getValue()?.wasDragged;
+    if (cardWasDragged) {
+      removeCardFromArray(placeCardAttempt.Card, initialPlaceMultipleCardsHand);
+    }
 
     this.#store.dispatch(
-      new StartPlacingMultipleCards(cardsFromHand, placeCardAttempt)
+      new StartPlacingMultipleCards(
+        initialPlaceMultipleCardsHand,
+        placeCardAttempt
+      )
     );
 
-    const entities = getToPlaceMultipleLaneEntities(
-      [placeCardAttempt],
-      cardsFromHand,
-      latestGameViewSnapshot.IsHost,
-      this.cardMovementTemplate,
-      this.cardSize,
-      this.latestMoveMadeDetails$.getValue()?.wasDragged ?? false
-    );
+    if (!cardWasDragged) {
+      this.toPlaceMultipleLaneEntities$.next(
+        getToPlaceMultipleLaneEntities(
+          [placeCardAttempt],
+          initialPlaceMultipleCardsHand,
+          latestGameViewSnapshot.IsHost,
+          this.cardMovementTemplate,
+          this.cardSize
+        )
+      );
+      return;
+    }
 
-    this.toPlaceMultipleLaneEntities$.next(entities);
+    this.#store.dispatch(new SetPlaceMultipleCards([placeCardAttempt.Card]));
   }
 
   addCardToPlaceMultipleCardsLane(animatedEntities: AnimatedEntity<unknown>[]) {
