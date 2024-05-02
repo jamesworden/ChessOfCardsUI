@@ -34,6 +34,13 @@ export class PlayerHandComponent implements OnInit {
   @Input() disabled = true;
   @Input() fadeAllCards = false;
   @Input() unfadedKind: Kind | null = null;
+  @Input() suitAndKindHasValidMove: {
+    [suit: string]:
+      | {
+          [kind: string]: boolean;
+        }
+      | undefined;
+  } = {};
   @Input({ required: true }) set placeMultipleCardsHand(
     placeMultipleCardsHand: Card[] | null
   ) {

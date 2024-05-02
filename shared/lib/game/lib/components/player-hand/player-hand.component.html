@@ -32,7 +32,10 @@
         [playerCanDrag]="!disabled"
         class="transition"
         [disabled]="
-          disabled || (unfadedKind && unfadedKind !== card.Kind) || fadeAllCards
+          disabled ||
+          fadeAllCards ||
+          (!!unfadedKind && unfadedKind !== card.Kind) ||
+          (!suitAndKindHasValidMove[card.Suit]?.[card.Kind] && !unfadedKind)
         "
         [selected]="
           (selectedCard$ | async)?.Suit === card.Suit &&

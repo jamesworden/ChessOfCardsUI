@@ -41,11 +41,13 @@ import {
   CardMovement,
   CardPosition,
   GameOverData,
+  Kind,
   Lane,
   Move,
   PlaceCardAttempt,
   PlayerGameView,
   PlayerOrNone,
+  Suit,
 } from '@shared/models';
 import { MoveMadeDetails } from './models/move-made-details.model';
 import {
@@ -170,6 +172,40 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       ),
       tap(() => this.latestMoveMadeDetails$.next(null))
     );
+
+  readonly suitAndKindHasValidMove$: Observable<{
+    [suit: string]: {
+      [kind: string]: boolean;
+    };
+  }> = this.playerGameView$.pipe(
+    map((playerGameView) => {
+      const suitAndKindHasValidMove: {
+        [suit: string]: {
+          [kind: string]: boolean;
+        };
+      } = {};
+
+      const cardsInHand = playerGameView?.Hand?.Cards ?? [];
+
+      const cardsWithValidMoves = cardsInHand.filter(
+        (card) =>
+          playerGameView?.CandidateMoves?.some((candidateMove) => {
+            const candidateCard = candidateMove.Move.PlaceCardAttempts[0].Card;
+            const isSameCard = cardEqualsCard(candidateCard, card);
+            return isSameCard && candidateMove.IsValid;
+          }) ?? false
+      );
+
+      for (const card of cardsWithValidMoves) {
+        if (!suitAndKindHasValidMove[card.Suit]) {
+          suitAndKindHasValidMove[card.Suit] = {};
+        }
+        suitAndKindHasValidMove[card.Suit][card.Kind] = true;
+      }
+
+      return suitAndKindHasValidMove;
+    })
+  );
 
   isPlayersTurn = false;
   isPlacingMultipleCards = false;

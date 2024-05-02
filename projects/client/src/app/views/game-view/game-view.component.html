@@ -85,6 +85,7 @@
             isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
           "
           [fadeAllCards]="!isPlayersTurn"
+          [suitAndKindHasValidMove]="(suitAndKindHasValidMove$ | async) ?? {}"
           (cardDropped)="onPlayerHandCardDrop($event)"
           (cardDragStarted)="onCardDragStarted($event)"
           (cardDragEnded)="onCardDragEnded()"
