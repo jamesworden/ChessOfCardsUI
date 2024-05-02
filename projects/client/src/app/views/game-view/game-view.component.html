@@ -106,15 +106,22 @@
     }
   </div>
 
-  <div class="flex m-8 rounded-md overflow-hidden flex-grow max-w-lg shadow-lg">
+  <div
+    class="m-8 rounded-md overflow-hidden flex-grow max-w-3xl hidden lg:flex shadow-lg"
+  >
     <card-stack
-      class="hidden md:block"
       [position]="selectedPosition$ | async"
       [cardStack]="cardStack$ | async"
     ></card-stack>
 
-    <statistics-panel class="hidden md:block"></statistics-panel>
+    <statistics-panel></statistics-panel>
   </div>
+
+  <card-stack
+    class="hidden md:block lg:hidden m-8 rounded-md overflow-hidden shadow-lg"
+    [position]="selectedPosition$ | async"
+    [cardStack]="cardStack$ | async"
+  ></card-stack>
 
   <!-- flex placeholder div -->
   <div></div>
