@@ -1,4 +1,5 @@
 import { CardPosition } from '@shared/models';
+import { getLaneLetter } from './get-lane-letter';
 
 export function getPositionNotation(cardPosition: CardPosition | null) {
   if (!cardPosition) {
@@ -7,22 +8,5 @@ export function getPositionNotation(cardPosition: CardPosition | null) {
 
   const laneLetter = getLaneLetter(cardPosition.LaneIndex);
 
-  return `${laneLetter}${cardPosition.RowIndex}`;
-}
-
-function getLaneLetter(laneIndex: number): string {
-  switch (laneIndex) {
-    case 0:
-      return 'a';
-    case 1:
-      return 'b';
-    case 2:
-      return 'c';
-    case 3:
-      return 'd';
-    case 4:
-      return 'e';
-    default:
-      return '';
-  }
+  return `${laneLetter}${cardPosition.RowIndex + 1}`;
 }

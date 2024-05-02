@@ -24,7 +24,9 @@
   <div class="flex-grow">
     @switch (currentPanelView) {
       @case (StatisticsPanelView.Moves) {
-        <statistics-moves-pane></statistics-moves-pane>
+        <statistics-moves-pane
+          [moveNotations]="(moveNotationsPlayerMade$ | async) ?? []"
+        ></statistics-moves-pane>
       }
     }
   </div>

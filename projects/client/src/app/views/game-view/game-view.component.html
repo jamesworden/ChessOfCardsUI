@@ -114,7 +114,10 @@
       [cardStack]="cardStack$ | async"
     ></card-stack>
 
-    <statistics-panel></statistics-panel>
+    <statistics-panel
+      [movesMade]="(playerGameView$ | async)?.MovesMade ?? []"
+      [isHost]="(playerGameView$ | async)?.IsHost ?? false"
+    ></statistics-panel>
   </div>
 
   <card-stack
