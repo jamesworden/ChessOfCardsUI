@@ -3,22 +3,20 @@
     [@bounceCards]="{
       value: (bouncingCards$ | async) ? 'bouncing' : 'not-bouncing',
       params: {
-        heightPx: cardSize / 5
+        heightPx: cardSize / RELATIVE_BOUNCE_FACTOR
       }
     }"
     class="flex player-hand"
     id="player-hand"
     cdkDropList
-    [cdkDropListConnectedTo]="
-      isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
-    "
+    [cdkDropListConnectedTo]="connectedToDropList"
     (cdkDropListDropped)="onCardDrop($event)"
     (cdkDropListSorted)="resetBounceTimerIfPlayersTurn()"
     cdkDropListData="player-hand"
     cdkDropListOrientation="horizontal"
     [ngStyle]="{
       height: cardSize + 'px',
-      width: 5 * cardSize + 'px',
+      width: NUM_MAX_CARDS_IN_HAND * cardSize + 'px',
       margin: 'auto'
     }"
   >
@@ -34,11 +32,7 @@
         [playerCanDrag]="!disabled"
         class="transition"
         [disabled]="
-          disabled ||
-          (((isPlacingMultipleCards$ | async) ?? false) &&
-            (initialPlaceMultipleCardsAttempt$ | async)?.Card?.Kind !==
-              card.Kind) ||
-          !(isPlayersTurn$ | async)
+          disabled || (unfadedKind && unfadedKind !== card.Kind) || fadeAllCards
         "
         [selected]="
           selectedCard?.Suit === card.Suit && selectedCard?.Kind === card.Kind

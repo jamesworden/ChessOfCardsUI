@@ -78,6 +78,13 @@
             initialPlaceMultipleCardAttempt$ | async
           "
           [selectedCard]="selectedCard$ | async"
+          [unfadedKind]="
+            (initialPlaceMultipleCardAttempt$ | async)?.Card?.Kind ?? null
+          "
+          [connectedToDropList]="
+            isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
+          "
+          [fadeAllCards]="!isPlayersTurn"
           (cardDropped)="onPlayerHandCardDrop($event)"
           (cardDragStarted)="onCardDragStarted($event)"
           (cardDragEnded)="onCardDragEnded()"

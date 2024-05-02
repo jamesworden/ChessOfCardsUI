@@ -8,7 +8,7 @@ import {
   inject,
   DestroyRef,
 } from '@angular/core';
-import { Card, PlaceCardAttempt } from '@shared/models';
+import { Card, Kind, PlaceCardAttempt } from '@shared/models';
 import { Observable, timer, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { switchMap, filter, delay, map } from 'rxjs/operators';
 import { ResponsiveSizeService } from '@shared/game';
@@ -25,10 +25,16 @@ export class PlayerHandComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #destroyRef = inject(DestroyRef);
 
+  readonly RELATIVE_BOUNCE_FACTOR = 5;
+  readonly NUM_MAX_CARDS_IN_HAND = 5;
+
+  @Input() connectedToDropList = 'position';
   @Input({ required: true }) isHost: boolean;
   @Input({ required: true }) cardSize: number;
   @Input() disabled = true;
   @Input() selectedCard: Card | null = null;
+  @Input() fadeAllCards = false;
+  @Input() unfadedKind: Kind | null = null;
   @Input({ required: true }) set placeMultipleCardsHand(
     placeMultipleCardsHand: Card[] | null
   ) {
