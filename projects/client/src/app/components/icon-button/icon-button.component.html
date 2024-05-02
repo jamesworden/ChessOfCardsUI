@@ -1,29 +1,31 @@
-<li
-  class="sidebar-item"
-  (click)="onClick()"
-  [ngStyle]="{
-    height: itemHeight + 'px',
-    width: itemWidth ? itemWidth + 'px' : '100%'
-  }"
-  [matTooltip]="tooltip"
-  matTooltipPosition="right"
->
-  <button
-    class="sidebar-button"
-    mat-button
+<div class="flex justify-around">
+  <li
+    class="sidebar-item"
+    (click)="onClick()"
     [ngStyle]="{
-      height: itemHeight + 'px'
+      height: itemHeight + 'px',
+      width: itemWidth ? itemWidth + 'px' : '100%'
     }"
+    [matTooltip]="tooltip"
+    matTooltipPosition="right"
   >
-    <span
-      class="material-symbols-outlined sidebar-icon"
+    <button
+      class="sidebar-button"
+      mat-button
       [ngStyle]="{
-        'font-size': iconSize + 'px',
-        height: iconSize + 'px',
-        color: iconColor,
-        opacity: disabled ? 0.5 : 1
+        height: itemHeight + 'px'
       }"
-      >{{ materialSymbol }}</span
     >
-  </button>
-</li>
+      <span
+        class="material-symbols-outlined sidebar-icon"
+        [ngStyle]="{
+          'font-size': iconSize + 'px',
+          height: iconSize + 'px',
+          color: iconColor,
+          opacity: disabled ? 0.5 : 1
+        }"
+        >{{ materialSymbol }}</span
+      >
+    </button>
+  </li>
+</div>

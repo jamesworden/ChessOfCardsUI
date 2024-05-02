@@ -16,7 +16,7 @@
 ></animation-overlay>
 
 <div
-  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full dark:bg-gray-800 bg-gray-300 transition"
+  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full dark:bg-gray-700 bg-gray-300 transition"
   [@fadeInOut]
 >
   <app-sidebar
@@ -106,7 +106,7 @@
     }
   </div>
 
-  <div class="flex m-8 rounded-md overflow-hidden flex-grow max-w-lg">
+  <div class="flex m-8 rounded-md overflow-hidden flex-grow max-w-lg shadow-lg">
     <card-stack
       class="hidden md:block"
       [position]="selectedPosition$ | async"
