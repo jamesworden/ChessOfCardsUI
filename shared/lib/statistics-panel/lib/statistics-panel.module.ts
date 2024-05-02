@@ -3,9 +3,14 @@ import { CommonModule } from '@angular/common';
 import { StatisticsPanelComponent } from './components/statistics-panel/statistics-panel.component';
 import { CardStackComponent } from './components/card-stack/card-stack.component';
 import { GameModule } from '@shared/game';
+import { StatisticsMovesPaneComponent } from './components/statistics-moves-pane/statistics-moves-pane.component';
 
 @NgModule({
-  declarations: [StatisticsPanelComponent, CardStackComponent],
+  declarations: [
+    StatisticsPanelComponent,
+    CardStackComponent,
+    StatisticsMovesPaneComponent,
+  ],
   imports: [CommonModule, GameModule],
   exports: [StatisticsPanelComponent, CardStackComponent],
 })
