@@ -32,7 +32,6 @@ export class PlayerHandComponent implements OnInit {
   @Input({ required: true }) isHost: boolean;
   @Input({ required: true }) cardSize: number;
   @Input() disabled = true;
-  @Input() selectedCard: Card | null = null;
   @Input() fadeAllCards = false;
   @Input() unfadedKind: Kind | null = null;
   @Input({ required: true }) set placeMultipleCardsHand(
@@ -61,6 +60,9 @@ export class PlayerHandComponent implements OnInit {
       initialPlaceMultipleCardsAttempt
     );
   }
+  @Input() set selectedCard(selectedCard: Card | null) {
+    this.selectedCard$.next(selectedCard);
+  }
 
   @Output() cardDropped = new EventEmitter<CdkDragDrop<string>>();
   @Output() cardDragStarted = new EventEmitter<Card>();
@@ -80,6 +82,7 @@ export class PlayerHandComponent implements OnInit {
   );
   readonly initialPlaceMultipleCardsAttempt$ =
     new BehaviorSubject<PlaceCardAttempt | null>(null);
+  readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
 
   readonly allCards$ = combineLatest([
     this.cards$,
@@ -100,7 +103,12 @@ export class PlayerHandComponent implements OnInit {
       )
       .subscribe(() => this.brieflyApplyBounceClass());
 
-    combineLatest([this.isPlayersTurn$, this.isGameActive$, this.allCards$])
+    combineLatest([
+      this.isPlayersTurn$,
+      this.isGameActive$,
+      this.allCards$,
+      this.selectedCard$,
+    ])
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(([isPlayersTurn, isGameActive, allCards]) =>
         isPlayersTurn && isGameActive && allCards && allCards.length > 0

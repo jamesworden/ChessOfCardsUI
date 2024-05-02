@@ -35,7 +35,8 @@
           disabled || (unfadedKind && unfadedKind !== card.Kind) || fadeAllCards
         "
         [selected]="
-          selectedCard?.Suit === card.Suit && selectedCard?.Kind === card.Kind
+          (selectedCard$ | async)?.Suit === card.Suit &&
+          (selectedCard$ | async)?.Kind === card.Kind
         "
         (dragEnded)="onDragEnded(card)"
         (dragStarted)="onDragStarted(card)"
