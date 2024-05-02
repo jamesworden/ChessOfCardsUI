@@ -882,9 +882,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   private removeCardFromRelevantPositions(
     laneIndex: number,
     cardEntity: AnimatedEntity<CardMovement>,
-    gameViewSnapshot: PlayerGameView
+    gameView: PlayerGameView
   ) {
-    const lane = gameViewSnapshot.Lanes[laneIndex];
+    const lane = gameView.Lanes[laneIndex];
 
     for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
       const { CardPosition } = cardEntity.context.From;
@@ -895,20 +895,20 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         lane.Rows[rowIndex] = [];
       }
     }
-    return gameViewSnapshot;
+    return gameView;
   }
 
   private removeCardFromOpponentHand(
     cardEntity: AnimatedEntity<CardMovement>,
-    gameViewSnapshot: PlayerGameView
+    gameView: PlayerGameView
   ) {
     const opponentHandCardIndex = this.latestGameViewSnapshot$.getValue()
       ?.IsHost
       ? cardEntity.context.From?.GuestHandCardIndex
       : cardEntity.context.From?.HostHandCardIndex;
     if (opponentHandCardIndex !== null && opponentHandCardIndex !== undefined) {
-      gameViewSnapshot.NumCardsInOpponentsHand--;
+      gameView.NumCardsInOpponentsHand--;
     }
-    return gameViewSnapshot;
+    return gameView;
   }
 }
