@@ -63,6 +63,7 @@
               [selectedCard]="
                 isPlacingMultipleCards ? null : (selectedCard$ | async)
               "
+              [selectedPosition]="selectedPosition"
               (placeCardAttempted)="onPlaceCardAttempted($event)"
               (rowIndexClicked)="onPositionClicked(laneIndex, $event)"
             ></game-lane>

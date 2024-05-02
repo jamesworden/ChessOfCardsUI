@@ -13,6 +13,7 @@
         [isHost]="isHost"
         [isValidMove]="validMoveRowIndexes?.has(position.rowIndex) ?? false"
         [selectedCard]="selectedCard"
+        [isSelected]="position.isSelected"
         (placeCardAttempted)="onPlaceCardAttempted($event)"
         [hideMarker]="!!position.topCard"
         (clicked)="onPositionClicked(position)"

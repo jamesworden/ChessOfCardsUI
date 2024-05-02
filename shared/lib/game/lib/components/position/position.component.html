@@ -2,7 +2,7 @@
   #position
   id="position"
   [class]="
-    'position transition' +
+    'cursor-pointer position transition' +
     ' ' +
     (transparentTile ? 'bg-transparent' : backgroundClass)
   "
@@ -17,9 +17,6 @@
     'z-index': Z_INDEXES.POSITION_CONTENT
   }"
   (click)="onClick()"
-  [ngClass]="{
-    'cursor-pointer': selectedCard
-  }"
 >
   <div class="h-0 w-0 relative">
     <div

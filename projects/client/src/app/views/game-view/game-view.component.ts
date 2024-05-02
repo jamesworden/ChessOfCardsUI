@@ -68,6 +68,7 @@ import {
   SuitAndKindHasValidMove,
   suitAndKindHasValidMove,
 } from './logic/suit-and-kind-has-valid-move';
+import { getCardStack } from './logic/get-card-stack';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -138,6 +139,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly fromPlaceMultipleLaneEntities$ = new Subject<
     AnimatedEntity<CardMovement>[]
   >();
+  readonly selectedPosition$ = new BehaviorSubject<CardPosition | null>(null);
 
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
@@ -177,6 +179,15 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly suitAndKindHasValidMove$: Observable<SuitAndKindHasValidMove> =
     this.playerGameView$.pipe(map(suitAndKindHasValidMove));
 
+  readonly cardStack$ = combineLatest([
+    this.playerGameView$,
+    this.selectedPosition$,
+  ]).pipe(
+    map(([playerGameView, selectedPosition]) =>
+      getCardStack(playerGameView, selectedPosition)
+    )
+  );
+
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   cardSize = 64;
@@ -207,20 +218,34 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         (isPlacingMultipleCards) =>
           (this.isPlacingMultipleCards = isPlacingMultipleCards)
       );
-    combineLatest([this.positionClicked$])
+    this.positionClicked$
       .pipe(
-        withLatestFrom(this.selectedCard$),
+        withLatestFrom(this.selectedCard$, this.selectedPosition$),
         takeUntilDestroyed(this.#destroyRef)
       )
-      .subscribe(
-        ([[position], selectedCard]) =>
-          selectedCard &&
+      .subscribe(([position, selectedCard, selectedPosition]) => {
+        if (selectedCard) {
           this.attemptToPlaceCard({
             Card: selectedCard,
             TargetLaneIndex: position.LaneIndex,
             TargetRowIndex: position.RowIndex,
-          })
-      );
+          });
+          this.selectedPosition$.next(null);
+          return;
+        }
+
+        if (
+          selectedPosition &&
+          selectedPosition.LaneIndex === position.LaneIndex &&
+          selectedPosition.RowIndex === position.RowIndex
+        ) {
+          this.selectedPosition$.next(null);
+          return;
+        }
+
+        this.selectedPosition$.next(position);
+        this.selectedCard$.next(null);
+      });
     this.cardSize$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((cardSize) => (this.cardSize = cardSize));
@@ -231,6 +256,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           this.cancelPlaceMultipleCards();
         }
       });
+    this.selectedCard$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(
+        (selectedCard) => selectedCard && this.selectedPosition$.next(null)
+      );
   }
 
   ngAfterViewInit() {

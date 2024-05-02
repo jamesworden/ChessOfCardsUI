@@ -24,7 +24,8 @@
       "@shared/game": ["shared/lib/game/index.ts"],
       "@shared/animation-overlay": ["shared/lib/animation-overlay/index.ts"],
       "@shared/constants": ["shared/lib/constants/index.ts"],
-      "@shared/animations": ["shared/lib/animations/index.ts"]
+      "@shared/animations": ["shared/lib/animations/index.ts"],
+      "@shared/statistics-panel": ["shared/lib/statistics-panel/index.ts"]
     }
   },
   "angularCompilerOptions": {

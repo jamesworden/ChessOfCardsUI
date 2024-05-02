@@ -2,7 +2,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PositionDetails, getPositionDetails } from './get-position-details';
-import { PlayerOrNone, Lane, PlaceCardAttempt, Card } from '@shared/models';
+import {
+  PlayerOrNone,
+  Lane,
+  PlaceCardAttempt,
+  Card,
+  CardPosition,
+} from '@shared/models';
 import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
@@ -21,6 +27,9 @@ export class LaneComponent {
   @Input() transparentTiles = false;
   @Input() validMoveRowIndexes: Set<number> | null = null;
   @Input() selectedCard: Card | null = null;
+  @Input() set selectedPosition(selectedPosition: CardPosition | null) {
+    this.selectedPosition$.next(selectedPosition);
+  }
   @Input() set isPlayersTurn(isPlayersTurn: boolean) {
     this.isPlayersTurn$.next(isPlayersTurn);
   }
@@ -34,9 +43,14 @@ export class LaneComponent {
 
   readonly lane$ = new BehaviorSubject<Lane | null>(null);
   readonly isPlayersTurn$ = new BehaviorSubject(false);
+  readonly selectedPosition$ = new BehaviorSubject<CardPosition | null>(null);
 
-  readonly positions$ = combineLatest([this.lane$, this.isPlayersTurn$]).pipe(
-    map(([lane, isPlayersTurn]) =>
+  readonly positions$ = combineLatest([
+    this.lane$,
+    this.isPlayersTurn$,
+    this.selectedPosition$,
+  ]).pipe(
+    map(([lane, isPlayersTurn, selectedPosition]) =>
       lane
         ? lane?.Rows.map((row, rowIndex) =>
             getPositionDetails(
@@ -45,7 +59,8 @@ export class LaneComponent {
               this.isHost,
               isPlayersTurn,
               rowIndex,
-              this.laneIndex
+              this.laneIndex,
+              selectedPosition
             )
           )
         : []

@@ -7,6 +7,7 @@ export function getPositionBackgroundClass(
   rowIndex: number,
   isHost: boolean,
   isPlayersTurn: boolean,
+  isSelected: boolean,
   topCard?: Card
 ) {
   const isLastCardPlayed =
@@ -27,13 +28,19 @@ export function getPositionBackgroundClass(
       isPlayersTurn
     );
   }
-  const { laneColor } = getLaneBackgroundClass(lane, isHost, isPlayersTurn);
-  const positionClass =
-    lane.WonBy === PlayerOrNone.None ? backgroundClass : laneColor;
 
   if (lane.WonBy !== PlayerOrNone.None) {
     textClass = 'lanes-text-lightgreen';
   }
+
+  if (isSelected && lane.WonBy === PlayerOrNone.None) {
+    backgroundClass = 'bg-yellow-200';
+    textClass = 'lanes-text-green';
+  }
+
+  const { laneColor } = getLaneBackgroundClass(lane, isHost, isPlayersTurn);
+  const positionClass =
+    lane.WonBy === PlayerOrNone.None ? backgroundClass : laneColor;
 
   return {
     positionClass,

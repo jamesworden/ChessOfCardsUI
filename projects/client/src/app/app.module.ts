@@ -26,6 +26,7 @@ import { PlayerBannerComponent } from './views/game-view/components/player-banne
 import { GameModule } from '@shared/game';
 import { AnimationOverlayModule } from '@shared/animation-overlay';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
+import { StatisticsPanelModule } from '@shared/statistics-panel';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { IconButtonComponent } from './components/icon-button/icon-button.compon
     FormsModule,
     GameModule,
     AnimationOverlayModule,
+    StatisticsPanelModule,
   ],
   providers: [provideAnimations()],
   bootstrap: [AppComponent],

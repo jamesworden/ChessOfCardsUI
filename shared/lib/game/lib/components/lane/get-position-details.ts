@@ -1,5 +1,5 @@
 import { getCardTiltDegrees, getPositionBackgroundClass } from '@shared/logic';
-import { Card, Lane } from '@shared/models';
+import { Card, CardPosition, Lane } from '@shared/models';
 
 export interface PositionDetails {
   topCard?: Card;
@@ -7,6 +7,7 @@ export interface PositionDetails {
   backgroundClass: string;
   cardRotation: number;
   textClass: string;
+  isSelected: boolean;
 }
 
 export function getPositionDetails(
@@ -15,9 +16,14 @@ export function getPositionDetails(
   isHost: boolean,
   isPlayersTurn: boolean,
   rowIndex: number,
-  laneIndex: number
+  laneIndex: number,
+  selectedPosition: CardPosition | null
 ) {
   const topCard = row[row.length - 1];
+
+  const isSelected =
+    selectedPosition?.LaneIndex === laneIndex &&
+    selectedPosition?.RowIndex === rowIndex;
 
   const { positionClass, textClass } = getPositionBackgroundClass(
     lane,
@@ -25,6 +31,7 @@ export function getPositionDetails(
     rowIndex,
     isHost,
     isPlayersTurn,
+    isSelected,
     topCard
   );
 
@@ -38,6 +45,7 @@ export function getPositionDetails(
     topCard,
     cardRotation,
     textClass,
+    isSelected,
   };
 
   return position;

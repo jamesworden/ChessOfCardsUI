@@ -1,5 +1,22 @@
+<animation-overlay
+  [animatedEntities]="(gameStateEntities$ | async) ?? []"
+  (finishedAnimations)="renderAnimatedGameView()"
+  (startingAnimations)="removeCardsFromBoardAndOpponentHand($event)"
+></animation-overlay>
+
+<animation-overlay
+  [animatedEntities]="(toPlaceMultipleLaneEntities$ | async) ?? []"
+  (finishedAnimations)="addCardToPlaceMultipleCardsLane($event)"
+  (startingAnimations)="removeCardsFromPlaceMultipleHand($event)"
+></animation-overlay>
+
+<animation-overlay
+  [animatedEntities]="(fromPlaceMultipleLaneEntities$ | async) ?? []"
+  (finishedAnimations)="addCardsToHandFromPlaceMultipleLane($event)"
+></animation-overlay>
+
 <div
-  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full"
+  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full dark:bg-gray-800 bg-gray-300 transition"
   [@fadeInOut]
 >
   <app-sidebar
@@ -9,28 +26,12 @@
     (resigned)="resign()"
   ></app-sidebar>
 
-  <animation-overlay
-    [animatedEntities]="(gameStateEntities$ | async) ?? []"
-    (finishedAnimations)="renderAnimatedGameView()"
-    (startingAnimations)="removeCardsFromBoardAndOpponentHand($event)"
-  ></animation-overlay>
-
-  <animation-overlay
-    [animatedEntities]="(toPlaceMultipleLaneEntities$ | async) ?? []"
-    (finishedAnimations)="addCardToPlaceMultipleCardsLane($event)"
-    (startingAnimations)="removeCardsFromPlaceMultipleHand($event)"
-  ></animation-overlay>
-
-  <animation-overlay
-    [animatedEntities]="(fromPlaceMultipleLaneEntities$ | async) ?? []"
-    (finishedAnimations)="addCardsToHandFromPlaceMultipleLane($event)"
-  ></animation-overlay>
-
-  <div
-    class="flex justify-around w-full dark:bg-gray-800 bg-gray-300 transition"
-  >
+  <div class="flex justify-around">
     @if (playerGameView$ | async; as playerGameView) {
-      <div class="game flex flex-col justify-between h-full" cdkDropListGroup>
+      <div
+        class="game flex flex-col justify-between h-full pl-8"
+        cdkDropListGroup
+      >
         <app-player-banner
           [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
           class="rounded-b-md transition"
@@ -54,6 +55,7 @@
             [placeMultipleCards]="placeMultipleCards$ | async"
             [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
             [selectedCard]="selectedCard$ | async"
+            [selectedPosition]="selectedPosition$ | async"
             (placeCardAttempted)="attemptToPlaceCard($event)"
             (setPlaceMultipleCards)="placedMultipleCards($event)"
             (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
@@ -104,9 +106,18 @@
     }
   </div>
 
-  <div>
-    <!-- Empty div on mobile, stats panel on desktop. -->
+  <div class="flex m-8 rounded-md overflow-hidden flex-grow max-w-lg">
+    <card-stack
+      class="hidden md:block"
+      [position]="selectedPosition$ | async"
+      [cardStack]="cardStack$ | async"
+    ></card-stack>
+
+    <statistics-panel class="hidden md:block"></statistics-panel>
   </div>
+
+  <!-- flex placeholder div -->
+  <div></div>
 </div>
 
 <ng-template #opponentHandToolbar>

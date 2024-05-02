@@ -36,6 +36,7 @@ export class BoardComponent {
   @Input() isPlacingMultipleCards: boolean | null;
   @Input() transparentTiles = false;
   @Input({ required: true }) isPlayersTurn = false;
+  @Input() selectedPosition: CardPosition | null = null;
   @Input() set selectedCard(selectedCard: Card | null) {
     this.selectedCard$.next(selectedCard);
   }
