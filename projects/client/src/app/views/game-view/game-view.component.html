@@ -2,7 +2,12 @@
   class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full"
   [@fadeInOut]
 >
-  <app-sidebar [isPlayersTurn]="isPlayersTurn"></app-sidebar>
+  <app-sidebar
+    [isPlayersTurn]="isPlayersTurn"
+    (drawOffered)="offerDraw()"
+    (passedMove)="passMove()"
+    (resigned)="resign()"
+  ></app-sidebar>
 
   <animation-overlay
     [animatedEntities]="(animatedCardEntities$ | async) ?? []"
@@ -179,40 +184,6 @@
           matTooltipPosition="below"
           materialSymbol="close"
           (selected)="denyDraw()"
-        ></app-icon-button>
-      </div>
-    </div>
-  }
-  @if (
-    possibleInitialPlaceCardAttempts.length === 0 &&
-    isPlayersTurn &&
-    !(isPlacingMultipleCards$ | async) &&
-    !(hasPendingDrawOffer$ | async)
-  ) {
-    <div
-      class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
-    >
-      <div
-        class="button-question text-gray-800"
-        [ngStyle]="{
-          'min-width': (cardSize$ | async)! + 'px'
-        }"
-      >
-        <span class="text-left"
-          >You have no available moves.<br />Would you like to pass?</span
-        >
-      </div>
-
-      <div style="display: flex">
-        <app-icon-button
-          [itemWidth]="(cardSize$ | async)!"
-          [itemHeight]="(cardSize$ | async)!"
-          [iconSize]="(cardSize$ | async)! / 2"
-          iconColor="#33312e"
-          matTooltip="Pass"
-          matTooltipPosition="below"
-          materialSymbol="check"
-          (selected)="passMove()"
         ></app-icon-button>
       </div>
     </div>

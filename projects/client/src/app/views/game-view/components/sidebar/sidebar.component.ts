@@ -1,11 +1,14 @@
-import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Select, Store } from '@ngxs/store';
 import {
-  OfferDraw,
-  PassMove,
-  ResignGame,
-} from '../../../../actions/game.actions';
+  Component,
+  DestroyRef,
+  Input,
+  OnInit,
+  inject,
+  EventEmitter,
+  Output,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Select } from '@ngxs/store';
 import { ResponsiveSizeService } from '@shared/game';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
@@ -31,12 +34,15 @@ enum YesNoButtons {
 export class SidebarComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #matDialog = inject(MatDialog);
-  readonly #store = inject(Store);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #remainingTimeService = inject(RemainingTimeService);
   readonly #destroyRef = inject(DestroyRef);
 
   @Input({ required: true }) isPlayersTurn = false;
+
+  @Output() drawOffered = new EventEmitter<void>();
+  @Output() passedMove = new EventEmitter<void>();
+  @Output() resigned = new EventEmitter<void>();
 
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;
@@ -145,12 +151,7 @@ export class SidebarComponent implements OnInit {
   }
 
   offerDraw() {
-    this.#store.dispatch(new OfferDraw());
-
-    this.#matSnackBar.open('Offered draw.', undefined, {
-      duration: 5000,
-      verticalPosition: 'top',
-    });
+    this.drawOffered.emit();
   }
 
   attemptToOpenPassMoveModal() {
@@ -186,12 +187,7 @@ export class SidebarComponent implements OnInit {
   }
 
   passMove() {
-    this.#store.dispatch(new PassMove());
-
-    this.#matSnackBar.open('Move passed.', undefined, {
-      duration: 5000,
-      verticalPosition: 'top',
-    });
+    this.passedMove.emit();
   }
 
   openResignModal() {
@@ -216,7 +212,7 @@ export class SidebarComponent implements OnInit {
   }
 
   resign() {
-    this.#store.dispatch(new ResignGame());
+    this.resigned.emit();
   }
 
   toggleDarkMode() {

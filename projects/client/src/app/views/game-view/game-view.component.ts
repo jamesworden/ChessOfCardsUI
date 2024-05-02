@@ -1,8 +1,4 @@
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   Component,
   OnInit,
@@ -22,10 +18,12 @@ import {
   DenyDrawOffer,
   FinishPlacingMultipleCards,
   MakeMove,
+  OfferDraw,
   PassMove,
   RearrangeHand,
   ResetGameData,
   ResetPendingGameView,
+  ResignGame,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -84,7 +82,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
-  readonly #snackBar = inject(MatSnackBar);
+  readonly #matSnackBar = inject(MatSnackBar);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #router = inject(Router);
   readonly #destroyRef = inject(DestroyRef);
@@ -216,7 +214,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((opponentPassedMove) => {
         if (opponentPassedMove) {
-          this.#snackBar.open('Opponent passed their move.', 'Your turn!', {
+          this.#matSnackBar.open('Opponent passed their move.', 'Your turn!', {
             duration: 5000,
             verticalPosition: 'top',
           });
@@ -244,6 +242,13 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.cardSize$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((cardSize) => (this.cardSize = cardSize));
+    this.gameIsActive$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((gameIsActive) => {
+        if (!gameIsActive) {
+          this.cancelPlaceMultipleCards();
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -367,7 +372,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       : "It's not your turn!";
 
     if (invalidMoveMessage) {
-      this.#snackBar.open(invalidMoveMessage, undefined, {
+      this.#matSnackBar.open(invalidMoveMessage, undefined, {
         duration: 5000,
         verticalPosition: 'top',
       });
@@ -413,7 +418,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
-    if (placeMultipleCards == null) {
+    if (placeMultipleCards === null) {
       return;
     }
 
@@ -520,7 +525,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     );
 
     if (invalidMoveMessage) {
-      this.#snackBar.open(invalidMoveMessage, 'Out of order!', {
+      this.#matSnackBar.open(invalidMoveMessage, 'Out of order!', {
         duration: 5000,
         verticalPosition: 'top',
       });
@@ -771,7 +776,27 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   passMove() {
+    this.cancelPlaceMultipleCards();
     this.#store.dispatch(new PassMove());
+
+    this.#matSnackBar.open('Move passed.', undefined, {
+      duration: 5000,
+      verticalPosition: 'top',
+    });
+  }
+
+  offerDraw() {
+    this.#store.dispatch(new OfferDraw());
+
+    this.#matSnackBar.open('Offered draw.', undefined, {
+      duration: 5000,
+      verticalPosition: 'top',
+    });
+  }
+
+  resign() {
+    this.cancelPlaceMultipleCards();
+    this.#store.dispatch(new ResignGame());
   }
 
   onCardDragStarted(card: Card) {
