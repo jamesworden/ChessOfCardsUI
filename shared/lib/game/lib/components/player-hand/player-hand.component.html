@@ -37,7 +37,8 @@
           disabled ||
           (((isPlacingMultipleCards$ | async) ?? false) &&
             (initialPlaceMultipleCardsAttempt$ | async)?.Card?.Kind !==
-              card.Kind)
+              card.Kind) ||
+          !(isPlayersTurn$ | async)
         "
         [selected]="
           selectedCard?.Suit === card.Suit && selectedCard?.Kind === card.Kind
