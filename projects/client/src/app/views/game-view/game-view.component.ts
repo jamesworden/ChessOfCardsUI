@@ -732,7 +732,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
-
     if (placeMultipleCards === null) {
       return;
     }
@@ -743,7 +742,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const placeMultipleCardsHand = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
-
     if (placeMultipleCardsHand === null) {
       return;
     }
@@ -754,13 +752,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const cardsAfterSwitch = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
-
     if (cardsAfterSwitch === null) {
       return;
     }
 
     const isLastPlaceMultipleCard = cardsAfterSwitch.length < 1;
-
     if (!isLastPlaceMultipleCard) {
       return;
     }
@@ -768,7 +764,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const handAfterSwitch = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
-
     if (handAfterSwitch === null) {
       return;
     }
