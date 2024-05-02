@@ -625,7 +625,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.updateLatestMoveDetails({
       wasDragged: false,
     });
-
     matchingKind && matchingSuit
       ? this.selectedCard$.next(null)
       : this.selectedCard$.next(card);
@@ -699,13 +698,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     if (!latestGameViewSnapshot) {
       return;
     }
-
     moveItemInArray(
       latestGameViewSnapshot.Hand.Cards,
       previousIndex,
       targetIndex
     );
-
     this.latestGameViewSnapshot$.next(latestGameViewSnapshot);
     this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
     this.#store.dispatch(new RearrangeHand(latestGameViewSnapshot.Hand.Cards));
@@ -718,13 +715,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const placeMultipleCardsHand = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
-
     if (placeMultipleCardsHand === null) {
       return;
     }
-
     moveItemInArray(placeMultipleCardsHand, previousIndex, targetIndex);
-
     this.#store.dispatch(new SetPlaceMultipleCardsHand(placeMultipleCardsHand));
   }
 
