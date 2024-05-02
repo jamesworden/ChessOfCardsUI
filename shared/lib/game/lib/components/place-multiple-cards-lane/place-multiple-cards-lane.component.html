@@ -7,7 +7,10 @@
     <!-- Dynamic flex direction matters for card animations -->
     <div
       class="absolute flex"
-      [ngClass]="{ 'flex-col': !isHost, 'flex-col-reverse': isHost }"
+      [ngClass]="{
+        'flex-col': !(isHost$ | async),
+        'flex-col-reverse': (isHost$ | async)
+      }"
       [ngStyle]="{
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
       }"
@@ -15,7 +18,9 @@
       @for (position of pseudoPositions$ | async; track i; let i = $index) {
         <game-position
           [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
-          [rowIndex]="position.rowIndex"
+          [rowIndex]="
+            (isHost$ | async) ? position.rowIndex : 6 - position.rowIndex
+          "
           [backgroundClass]="position.backgroundClass"
           [textClass]="position.textClass"
           [isHost]="(isHost$ | async) ?? false"
@@ -24,7 +29,7 @@
           [isValidMove]="
             ((placeMultipleCards$ | async)?.length ?? 0) +
               ((previouslyCapturedCards$ | async)?.length ?? 0) ===
-              (isHost ? i : 6 - i) &&
+              ((isHost$ | async) ? i : 6 - i) &&
             initialPlaceMultipleCardAttempt.Card.Kind === selectedCard?.Kind
           "
         ></game-position>
