@@ -14,6 +14,7 @@ import { switchMap, filter, delay, map } from 'rxjs/operators';
 import { ResponsiveSizeService } from '@shared/game';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { bounceCardAnimation } from './bounce-cards.animation';
+import { SuitAndKindHasValidMove } from 'projects/client/src/app/views/game-view/logic/suit-and-kind-has-valid-move';
 
 @Component({
   selector: 'game-player-hand',
@@ -34,13 +35,7 @@ export class PlayerHandComponent implements OnInit {
   @Input() disabled = true;
   @Input() fadeAllCards = false;
   @Input() unfadedKind: Kind | null = null;
-  @Input() suitAndKindHasValidMove: {
-    [suit: string]:
-      | {
-          [kind: string]: boolean;
-        }
-      | undefined;
-  } = {};
+  @Input() suitAndKindHasValidMove: SuitAndKindHasValidMove = {};
   @Input({ required: true }) set placeMultipleCardsHand(
     placeMultipleCardsHand: Card[] | null
   ) {
