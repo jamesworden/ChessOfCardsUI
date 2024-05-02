@@ -66,6 +66,7 @@ import { AnimatedEntity } from '@shared/animation-overlay';
 import { getAnimatedCardEntities } from './logic/get-animated-card-entities';
 import { fadeInOutAnimation } from '@shared/animations';
 import { getToPlaceMultipleLaneEntities } from './logic/get-to-place-multiple-lane-entities';
+import { getFromPlaceMultipleLaneEntities } from './logic/get-from-place-multiple-lane-entities';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -131,6 +132,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
   readonly positionClicked$ = new Subject<CardPosition>();
   readonly toPlaceMultipleLaneEntities$ = new Subject<
+    AnimatedEntity<CardMovement>[]
+  >();
+  readonly fromPlaceMultipleLaneEntities$ = new Subject<
     AnimatedEntity<CardMovement>[]
   >();
 
@@ -401,10 +405,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   cancelPlaceMultipleCards() {
+    const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
+    if (!latestGameViewSnapshot) {
+      return;
+    }
+
     const placeMultipleCards = this.#store.selectSnapshot(
       GameState.placeMultipleCards
     );
-
     if (placeMultipleCards == null) {
       return;
     }
@@ -412,25 +420,64 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const placeMultipleCardsHand = this.#store.selectSnapshot(
       GameState.placeMultipleCardsHand
     );
-
     if (placeMultipleCardsHand === null) {
       return;
     }
 
-    const combinedCards = placeMultipleCardsHand.concat(
-      placeMultipleCards.reverse()
+    const initialPlaceMultipleCardAttempt = this.#store.selectSnapshot(
+      GameState.initialPlaceMultipleCardAttempt
+    );
+    if (!initialPlaceMultipleCardAttempt) {
+      return;
+    }
+
+    latestGameViewSnapshot.Hand.Cards = placeMultipleCardsHand;
+    this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
+    this.#store.dispatch(new FinishPlacingMultipleCards(false));
+
+    const isHost = latestGameViewSnapshot.IsHost;
+    const cardsToAddBackToHand = placeMultipleCards.reverse();
+    const placeCardAttempts: PlaceCardAttempt[] = cardsToAddBackToHand.map(
+      (card, relativeRowIndex) => {
+        const initialRowIndex = initialPlaceMultipleCardAttempt.TargetRowIndex;
+        const TargetRowIndex = isHost
+          ? initialRowIndex + relativeRowIndex
+          : initialRowIndex - relativeRowIndex;
+
+        return {
+          Card: card,
+          TargetLaneIndex: initialPlaceMultipleCardAttempt.TargetLaneIndex,
+          TargetRowIndex,
+        };
+      }
     );
 
+    this.fromPlaceMultipleLaneEntities$.next(
+      getFromPlaceMultipleLaneEntities(
+        placeCardAttempts,
+        isHost,
+        this.cardMovementTemplate,
+        this.cardSize,
+        placeMultipleCardsHand
+      )
+    );
+  }
+
+  addCardsBackToHand(animatedEntites: AnimatedEntity<unknown>[]) {
     const latestGameViewSnapshot = this.latestGameViewSnapshot$.getValue();
     if (!latestGameViewSnapshot) {
       return;
     }
 
+    const cardEntities = animatedEntites as AnimatedEntity<CardMovement>[];
+    const cardsToAdd = cardEntities
+      .map((entity) => entity.context.Card as Card)
+      .filter((card) => card);
+    const combinedCards = latestGameViewSnapshot.Hand.Cards.concat(cardsToAdd);
     latestGameViewSnapshot.Hand.Cards = combinedCards;
-    this.latestGameViewSnapshot$.next({ ...latestGameViewSnapshot });
+
     this.#store.dispatch(new UpdatePlayerGameView(latestGameViewSnapshot));
     this.#store.dispatch(new RearrangeHand(combinedCards));
-    this.#store.dispatch(new FinishPlacingMultipleCards(false));
   }
 
   confirmPlaceMultipleCards() {
@@ -814,4 +861,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       ...updatedDetails,
     });
   }
+
+  addCardsToHand() {}
 }
