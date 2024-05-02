@@ -12,18 +12,18 @@
   <animation-overlay
     [animatedEntities]="(gameStateEntities$ | async) ?? []"
     (finishedAnimations)="renderAnimatedGameView()"
-    (startingAnimations)="checkToRemoveCardFromBoard($event)"
+    (startingAnimations)="removeCardsFromBoardAndOpponentHand($event)"
   ></animation-overlay>
 
   <animation-overlay
     [animatedEntities]="(toPlaceMultipleLaneEntities$ | async) ?? []"
     (finishedAnimations)="addCardToPlaceMultipleCardsLane($event)"
-    (startingAnimations)="checkToRemoveCardFromPlaceMultipleHand($event)"
+    (startingAnimations)="removeCardsFromPlaceMultipleHand($event)"
   ></animation-overlay>
 
   <animation-overlay
     [animatedEntities]="(fromPlaceMultipleLaneEntities$ | async) ?? []"
-    (finishedAnimations)="addCardsBackToHand($event)"
+    (finishedAnimations)="addCardsToHandFromPlaceMultipleLane($event)"
   ></animation-overlay>
 
   <div
@@ -54,7 +54,7 @@
             [placeMultipleCards]="placeMultipleCards$ | async"
             [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
             [selectedCard]="selectedCard$ | async"
-            (placeCardAttempted)="onPlaceCardAttempted($event)"
+            (placeCardAttempted)="attemptToPlaceCard($event)"
             (setPlaceMultipleCards)="placedMultipleCards($event)"
             (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
             (positionClicked)="onPositionClicked($event)"
@@ -110,11 +110,7 @@
 </div>
 
 <ng-template #opponentHandToolbar>
-  @if (
-    !(isPlacingMultipleCards$ | async) &&
-    !(hasPendingDrawOffer$ | async) &&
-    !(possibleInitialPlaceCardAttempts.length === 0 && isPlayersTurn)
-  ) {
+  @if (!(isPlacingMultipleCards$ | async) && !(hasPendingDrawOffer$ | async)) {
     <game-opponent-hand
       [cardSize]="(cardSize$ | async)!"
       [numCards]="(latestGameViewSnapshot$ | async)!.NumCardsInOpponentsHand"
