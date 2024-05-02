@@ -147,7 +147,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   private readonly latestMoveMadeDetails$ =
     new BehaviorSubject<MoveMadeDetails | null>(null);
 
-  readonly animatedCardEntities$: Observable<AnimatedEntity<CardMovement>[]> =
+  readonly gameStateEntities$: Observable<AnimatedEntity<CardMovement>[]> =
     this.prevAndCurrGameViews$.pipe(
       withLatestFrom(
         this.cardMovementTemplate$,

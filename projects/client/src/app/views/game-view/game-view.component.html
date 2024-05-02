@@ -10,7 +10,7 @@
   ></app-sidebar>
 
   <animation-overlay
-    [animatedEntities]="(animatedCardEntities$ | async) ?? []"
+    [animatedEntities]="(gameStateEntities$ | async) ?? []"
     (finishedAnimations)="renderAnimatedGameView()"
     (startingAnimations)="checkToRemoveCardFromBoard($event)"
   ></animation-overlay>
