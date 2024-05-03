@@ -5,4 +5,5 @@ export type CardMovement = {
   From: CardStore;
   To: CardStore;
   Card?: Card;
+  Notation?: string;
 };

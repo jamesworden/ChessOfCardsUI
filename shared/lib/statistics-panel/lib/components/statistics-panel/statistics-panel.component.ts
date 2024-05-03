@@ -32,11 +32,8 @@ export class StatisticsPanelComponent {
   readonly movesMade$ = new BehaviorSubject<MoveMade[]>([]);
   readonly isHost$ = new BehaviorSubject<boolean>(false);
 
-  readonly moveNotationsPlayerMade$ = combineLatest([
-    this.movesMade$,
-    this.isHost$,
-  ]).pipe(
-    map(([movesMade, isHost]) => getMoveNotationsPlayerMade(movesMade, isHost))
+  readonly moveNotationsPlayerMade$ = this.movesMade$.pipe(
+    map(getMoveNotationsPlayerMade)
   );
 
   currentPanelView: StatisticsPanelView = StatisticsPanelView.Moves;
