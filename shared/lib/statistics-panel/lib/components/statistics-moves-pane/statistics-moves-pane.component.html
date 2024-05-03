@@ -1,11 +1,15 @@
 <div class="flex px-2 gap-y-2 flex-col">
   @for (moveNotation of moveNotations; track i; let i = $index) {
     <div class="flex gap-x-2">
-      <div class="flex flex-col justify-around">
-        <span class="material-symbols-outlined px-2 select-none"> person </span>
-      </div>
+      @if (moveNotation.displayMoveNumber) {
+        <div class="flex flex-col justify-around">
+          <span class="material-symbols-outlined px-2 select-none">
+            person
+          </span>
+        </div>
+      }
 
-      <div>{{ moveNotation.moveIndex + 1 }}</div>
+      <div>{{ moveNotation.displayMoveNumber }}</div>
 
       @for (notationGroup of moveNotation.notations; track i; let i = $index) {
         <div class="my-2 mx-4 bg-gray-600 flex justify-around gap-x-4">
