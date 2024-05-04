@@ -63,8 +63,8 @@ html {
   color: #eeeed2;
 }
 
-@media (max-height: 600px) {
+@media (max-height: 650px) {
   .h-sm-hidden {
-    display: none;
+    display: none !important;
   }
 }

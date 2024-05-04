@@ -1,7 +1,9 @@
 <div
-  class="bg-gray-600 dark:bg-gray-800 text-white w-full h-full flex flex-col transition"
+  class="bg-gray-600 dark:bg-gray-800 text-white w-full h-full flex flex-col transition overflow-auto"
 >
-  <div class="flex justify-around w-full pb-8">
+  <div
+    class="flex justify-around w-full mb-8 sticky top-0 bg-gray-600 dark:bg-gray-800 shadow-lg"
+  >
     @for (pane of panes; track i; let i = $index) {
       <statistics-pane-nav-button
         [iconClass]="pane.iconClass"
