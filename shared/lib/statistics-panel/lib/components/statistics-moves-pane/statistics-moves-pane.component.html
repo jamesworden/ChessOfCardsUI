@@ -1,29 +1,41 @@
-<div class="flex px-2 gap-y-4 flex-col">
-  @for (moveNotation of moveNotations; track i; let i = $index) {
-    <div class="flex gap-x-2">
-      <div class="flex flex-col justify-start">
-        <span class="material-symbols-outlined px-2 select-none"> person </span>
-      </div>
+<div class="h-full flex flex-col justify-between">
+  <div class="flex px-2 gap-y-4 flex-col pt-4">
+    @for (moveNotation of moveNotations; track i; let i = $index) {
+      <div class="flex gap-x-2">
+        <div class="flex flex-col justify-start">
+          <span class="material-symbols-outlined px-2 select-none">
+            person
+          </span>
+        </div>
 
-      <div class="w-4">{{ i + 1 }}.</div>
+        <div class="w-4">{{ i + 1 }}.</div>
 
-      <div class="ml-4 flex flex-col gap-y-2">
-        @for (
-          notationGroup of moveNotation.notations;
-          track i;
-          let i = $index
-        ) {
-          <div class="flex gap-x-4">
-            @for (notation of notationGroup; track i; let i = $index) {
-              <div
-                class="mx-2 px-1 bg-gray-500 dark:bg-gray-600 flex justify-around w-16 rounded-sm"
-              >
-                {{ notation }}
-              </div>
-            }
-          </div>
-        }
+        <div class="ml-4 flex flex-col gap-y-2">
+          @for (
+            notationGroup of moveNotation.notations;
+            track i;
+            let i = $index
+          ) {
+            <div class="flex gap-x-4">
+              @for (notation of notationGroup; track i; let i = $index) {
+                <div
+                  class="mx-2 px-1 bg-gray-500 dark:bg-gray-600 flex justify-around w-16 rounded-sm"
+                >
+                  {{ notation }}
+                </div>
+              }
+            </div>
+          }
+        </div>
       </div>
-    </div>
-  }
+    }
+  </div>
 </div>
+
+<nav class="sticky bottom-0 w-full bg-gray-800 text-white py-4 px-6">
+  <div class="container mx-auto">
+    <div class="flex-grow mr-4 ml-2">
+      <previous-next-selector></previous-next-selector>
+    </div>
+  </div>
+</nav>
