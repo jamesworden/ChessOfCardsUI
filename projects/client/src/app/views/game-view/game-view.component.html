@@ -21,6 +21,8 @@
 >
   <app-sidebar
     [isPlayersTurn]="isPlayersTurn"
+    [selectedPosition]="selectedPosition$ | async"
+    [cardStack]="cardStack$ | async"
     (drawOffered)="offerDraw()"
     (passedMove)="passMove()"
     (resigned)="resign()"
@@ -109,22 +111,26 @@
   <div
     class="m-8 rounded-md overflow-hidden flex-grow max-w-3xl hidden lg:flex shadow-lg"
   >
-    <card-stack
-      [position]="selectedPosition$ | async"
-      [cardStack]="cardStack$ | async"
-    ></card-stack>
+    <div class="flex flex-col">
+      <statistics-pane-nav-button
+        iconClass="material-symbols-outlined"
+        iconString="playing_cards"
+        title="Stack"
+        [isActive]="true"
+      ></statistics-pane-nav-button>
+      <card-stack
+        class="h-full"
+        [position]="selectedPosition$ | async"
+        [cardStack]="cardStack$ | async"
+        [cardSize]="(cardSize$ | async) ?? 64"
+      ></card-stack>
+    </div>
 
     <statistics-panel
       [movesMade]="(playerGameView$ | async)?.MovesMade ?? []"
       [isHost]="(playerGameView$ | async)?.IsHost ?? false"
     ></statistics-panel>
   </div>
-
-  <card-stack
-    class="hidden md:block lg:hidden m-8 rounded-md overflow-hidden shadow-lg"
-    [position]="selectedPosition$ | async"
-    [cardStack]="cardStack$ | async"
-  ></card-stack>
 
   <!-- flex placeholder div -->
   <div></div>

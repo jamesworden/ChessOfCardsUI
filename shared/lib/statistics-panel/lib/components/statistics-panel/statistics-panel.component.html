@@ -1,5 +1,5 @@
 <div
-  class="bg-gray-600 dark:bg-gray-800 text-white w-full h-full flex flex-col"
+  class="bg-gray-600 dark:bg-gray-800 text-white w-full h-full flex flex-col transition"
 >
   <div class="flex justify-around w-full pb-8">
     @for (pane of panes; track i; let i = $index) {
@@ -7,6 +7,7 @@
         [iconClass]="pane.iconClass"
         [iconString]="pane.iconString"
         [title]="pane.title"
+        [isActive]="true"
       ></statistics-pane-nav-button>
     }
   </div>

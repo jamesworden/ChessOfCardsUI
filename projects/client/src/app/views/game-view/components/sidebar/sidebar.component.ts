@@ -12,10 +12,10 @@ import { Select } from '@ngxs/store';
 import { ResponsiveSizeService } from '@shared/game';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PlayerGameView } from '@shared/models';
+import { Card, CardPosition, PlayerGameView } from '@shared/models';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GameState } from '../../../../state/game.state';
@@ -39,6 +39,8 @@ export class SidebarComponent implements OnInit {
   readonly #destroyRef = inject(DestroyRef);
 
   @Input({ required: true }) isPlayersTurn = false;
+  @Input() cardStack: Card[] | null = [];
+  @Input() selectedPosition: CardPosition | null = null;
 
   @Output() drawOffered = new EventEmitter<void>();
   @Output() passedMove = new EventEmitter<void>();
@@ -57,6 +59,7 @@ export class SidebarComponent implements OnInit {
   waitingForServer$!: Observable<boolean>;
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly isShowingCardStack$ = new BehaviorSubject<boolean>(false);
 
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
@@ -221,6 +224,10 @@ export class SidebarComponent implements OnInit {
 
   reportBug() {
     // TODO
+  }
+
+  toggleCardStack() {
+    this.isShowingCardStack$.next(!this.isShowingCardStack$.getValue());
   }
 
   private secondsToRemainingTimeString(seconds: number) {

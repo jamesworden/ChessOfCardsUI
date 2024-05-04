@@ -9,4 +9,5 @@ export class StatisticsPaneNavButtonComponent {
   @Input({ required: true }) iconClass: string;
   @Input({ required: true }) iconString: string;
   @Input({ required: true }) title: string;
+  @Input({ required: true }) isActive: boolean;
 }

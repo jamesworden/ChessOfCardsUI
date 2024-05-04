@@ -5,6 +5,7 @@ import { CardStackComponent } from './components/card-stack/card-stack.component
 import { GameModule } from '@shared/game';
 import { StatisticsMovesPaneComponent } from './components/statistics-moves-pane/statistics-moves-pane.component';
 import { StatisticsPaneNavButtonComponent } from './components/statistics-pane-nav-button/statistics-pane-nav-button.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,11 @@ import { StatisticsPaneNavButtonComponent } from './components/statistics-pane-n
     StatisticsMovesPaneComponent,
     StatisticsPaneNavButtonComponent,
   ],
-  imports: [CommonModule, GameModule],
-  exports: [StatisticsPanelComponent, CardStackComponent],
+  imports: [CommonModule, GameModule, MatTooltipModule],
+  exports: [
+    StatisticsPanelComponent,
+    CardStackComponent,
+    StatisticsPaneNavButtonComponent,
+  ],
 })
 export class StatisticsPanelModule {}

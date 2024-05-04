@@ -244,6 +244,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         }
 
         this.selectedPosition$.next(position);
+        console.log(position);
         this.selectedCard$.next(null);
       });
     this.cardSize$
