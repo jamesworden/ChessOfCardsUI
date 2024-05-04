@@ -1,25 +1,27 @@
-<div class="flex px-2 gap-y-2 flex-col">
+<div class="flex px-2 gap-y-4 flex-col">
   @for (moveNotation of moveNotations; track i; let i = $index) {
     <div class="flex gap-x-2">
-      @if (moveNotation.displayMoveNumber) {
-        <div class="flex flex-col justify-around">
-          <span class="material-symbols-outlined px-2 select-none">
-            person
-          </span>
-        </div>
-      }
+      <div class="flex flex-col justify-start">
+        <span class="material-symbols-outlined px-2 select-none"> person </span>
+      </div>
 
-      @if (moveNotation.displayMoveNumber) {
-        <div>{{ moveNotation.displayMoveNumber }}.</div>
-      }
+      <div>{{ i + 1 }}.</div>
 
-      @for (notationGroup of moveNotation.notations; track i; let i = $index) {
-        <div class="my-2 mx-4 bg-gray-600 flex justify-around gap-x-4">
-          @for (notation of notationGroup; track i; let i = $index) {
-            <span>{{ notation }}</span>
-          }
-        </div>
-      }
+      <div class="ml-4 flex flex-col gap-y-2">
+        @for (
+          notationGroup of moveNotation.notations;
+          track i;
+          let i = $index
+        ) {
+          <div class="flex gap-x-4">
+            @for (notation of notationGroup; track i; let i = $index) {
+              <div class="mx-2 px-1 bg-gray-600 flex justify-around">
+                {{ notation }}
+              </div>
+            }
+          </div>
+        }
+      </div>
     </div>
   }
 </div>

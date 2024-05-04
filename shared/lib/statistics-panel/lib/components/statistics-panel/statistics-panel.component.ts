@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MoveMade } from '@shared/models';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { getMoveNotationsPlayerMade } from '@shared/logic';
+import { BehaviorSubject } from 'rxjs';
+import { getMoveNotations } from '@shared/logic';
 import { map } from 'rxjs/operators';
 
 enum StatisticsPanelView {
@@ -33,7 +33,7 @@ export class StatisticsPanelComponent {
   readonly isHost$ = new BehaviorSubject<boolean>(false);
 
   readonly moveNotationsPlayerMade$ = this.movesMade$.pipe(
-    map(getMoveNotationsPlayerMade)
+    map(getMoveNotations)
   );
 
   currentPanelView: StatisticsPanelView = StatisticsPanelView.Moves;
