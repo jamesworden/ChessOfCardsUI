@@ -1,23 +1,13 @@
 <div
   class="bg-gray-600 dark:bg-gray-800 text-white w-full h-full flex flex-col"
 >
-  <div class="flex w-full pb-4">
+  <div class="flex justify-around w-full pb-4">
     @for (pane of panes; track i; let i = $index) {
-      <div
-        class="py-4 flex justify-around text-white flex-1 cursor-pointer hover:bg-gray-400 dark:hover:bg-gray-800 transition"
-      >
-        <div class="flex flex-col gap-y-2" role="button">
-          <div class="flex justify-around">
-            <span [class]="pane.iconClass" style="font-size: 36px">
-              {{ pane.iconString }}
-            </span>
-          </div>
-
-          <div class="flex justify-around">
-            <span>{{ pane.title }}</span>
-          </div>
-        </div>
-      </div>
+      <statistics-pane-nav-button
+        [iconClass]="pane.iconClass"
+        [iconString]="pane.iconString"
+        [title]="pane.title"
+      ></statistics-pane-nav-button>
     }
   </div>
 

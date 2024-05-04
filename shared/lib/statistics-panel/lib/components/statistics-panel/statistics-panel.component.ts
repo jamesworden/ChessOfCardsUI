@@ -3,16 +3,8 @@ import { MoveMade } from '@shared/models';
 import { BehaviorSubject } from 'rxjs';
 import { getMoveNotations } from '@shared/logic';
 import { map } from 'rxjs/operators';
-
-enum StatisticsPanelView {
-  Moves = 'moves',
-}
-
-interface Pane {
-  iconClass: string;
-  iconString: string;
-  title: string;
-}
+import { StatisticsPanelView } from '../../models/statistics-panel-view';
+import { StatisticsPane } from '../../models/statistics-pane';
 
 @Component({
   selector: 'statistics-panel',
@@ -38,7 +30,7 @@ export class StatisticsPanelComponent {
 
   currentPanelView: StatisticsPanelView = StatisticsPanelView.Moves;
 
-  readonly panes: Pane[] = [
+  readonly panes: StatisticsPane[] = [
     {
       iconClass: 'material-symbols-outlined',
       iconString: 'replay',
