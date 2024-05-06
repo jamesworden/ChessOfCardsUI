@@ -5,11 +5,11 @@
         (click)="selectMoveNotation(i)"
         class="flex gap-x-2 px-2 py-4 transition bg-gray-600 dark:bg-gray-800 cursor-pointer"
         [ngClass]="{
-          'bg-sky-900':
+          'bg-sky-900 dark:bg-sky-900':
             (selectedMoveNotationIndex$ | async) === i &&
             ((moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
               (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)),
-          'bg-rose-900':
+          'bg-rose-900 dark:bg-rose-900':
             (selectedMoveNotationIndex$ | async) === i &&
             !(
               (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
