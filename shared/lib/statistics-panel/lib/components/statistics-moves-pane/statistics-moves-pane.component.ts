@@ -28,4 +28,28 @@ export class StatisticsMovesPaneComponent {
   selectMoveNotation(moveSelectedIndex: number) {
     this.moveNotationSelected.emit(moveSelectedIndex);
   }
+
+  selectFirst() {
+    this.moveNotationSelected.emit(0);
+  }
+
+  selectPrevious() {
+    const current = this.selectedMoveNotationIndex$.getValue();
+    if (!current) {
+      return;
+    }
+    this.moveNotationSelected.emit(current - 1);
+  }
+
+  selectNext() {
+    const current = this.selectedMoveNotationIndex$.getValue();
+    if (current === null || current === this.moveNotations.length - 1) {
+      return;
+    }
+    this.moveNotationSelected.emit(current + 1);
+  }
+
+  selectLast() {
+    this.moveNotationSelected.emit(this.moveNotations.length - 1);
+  }
 }

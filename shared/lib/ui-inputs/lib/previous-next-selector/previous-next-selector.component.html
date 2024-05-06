@@ -1,6 +1,7 @@
 <div class="flex gap-x-4">
   <button
     class="px-2 bg-gray-500 dark:bg-gray-600 rounded-sm hover:bg-gray-400 hover:dark:bg-gray-500 transition flex-1"
+    (click)="selectFirst()"
   >
     <div class="flex flex-col justify-around">
       <span class="material-symbols-outlined" style="font-size: 42px"
@@ -11,6 +12,7 @@
 
   <button
     class="px-2 bg-gray-500 dark:bg-gray-600 rounded-sm hover:bg-gray-400 hover:dark:bg-gray-500 transition flex-2"
+    (click)="selectPrevious()"
   >
     <div class="flex flex-col justify-around">
       <span class="material-symbols-outlined" style="font-size: 42px">
@@ -21,6 +23,7 @@
 
   <button
     class="px-2 bg-gray-500 dark:bg-gray-600 rounded-sm hover:bg-gray-400 hover:dark:bg-gray-500 transition flex-2"
+    (click)="selectNext()"
   >
     <div class="flex flex-col justify-around">
       <span class="material-symbols-outlined" style="font-size: 42px">
@@ -31,6 +34,7 @@
 
   <button
     class="px-2 bg-gray-500 dark:bg-gray-600 rounded-sm hover:bg-gray-400 hover:dark:bg-gray-50 transition flex-1"
+    (click)="selectLast()"
   >
     <div class="flex flex-col justify-around">
       <span class="material-symbols-outlined" style="font-size: 42px"

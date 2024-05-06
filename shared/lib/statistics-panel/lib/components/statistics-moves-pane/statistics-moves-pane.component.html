@@ -52,7 +52,12 @@
 >
   <div class="container mx-auto">
     <div class="flex-grow mr-4 ml-2">
-      <previous-next-selector></previous-next-selector>
+      <previous-next-selector
+        (firstSelected)="selectFirst()"
+        (previousSelected)="selectPrevious()"
+        (nextSelected)="selectNext()"
+        (lastSelected)="selectLast()"
+      ></previous-next-selector>
     </div>
   </div>
 </nav>
