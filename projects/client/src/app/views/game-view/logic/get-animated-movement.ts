@@ -122,19 +122,34 @@ function getAnimatedPositionFromPlayerCardIndex(
 }
 
 function getAnimatedPositionFromPlayerDeck() {
-  const playerDeck = document.getElementsByTagName('game-face-down-card')[1];
-  let { x, y } = playerDeck.getBoundingClientRect();
-  // y += window.scrollY;
+  const sidebar = document.getElementsByTagName('app-sidebar')[0];
+  const faceDownCards = sidebar.getElementsByTagName('game-face-down-card');
+
+  // Starting with the last face down card in the sidebar, return the first card
+  // dimensions that aren't hidden (or has height or width).
+  for (let i = faceDownCards.length - 1; i >= 0; i--) {
+    const faceDownCard = faceDownCards[i];
+    const clientRect = faceDownCard?.getBoundingClientRect();
+
+    if (clientRect.width > 0 && clientRect.height > 0) {
+      // y += window.scrollY;
+      return {
+        x: clientRect.x,
+        y: clientRect.y,
+      };
+    }
+  }
 
   return {
-    x,
-    y,
+    x: 0,
+    y: 0,
   };
 }
 
 function getAnimatedPositionFromOpponentDeck() {
-  const playerDeck = document.getElementsByTagName('game-face-down-card')[0];
-  let { x, y } = playerDeck.getBoundingClientRect();
+  const sidebar = document.getElementsByTagName('app-sidebar')[0];
+  const playerDeck = sidebar.getElementsByTagName('game-face-down-card')[0];
+  let { x, y } = playerDeck?.getBoundingClientRect();
   // y += window.scrollY;
 
   return {
