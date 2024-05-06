@@ -129,8 +129,10 @@
     </div>
 
     <statistics-panel
-      [movesMade]="(playerGameView$ | async)?.MovesMade ?? []"
+      [moveNotations]="(moveNotations$ | async) ?? []"
       [isHost]="(playerGameView$ | async)?.IsHost ?? false"
+      [selectedMoveNotationIndex]="selectedMoveNotationIndex$ | async"
+      (moveNotationSelected)="selectMoveNotation($event)"
     ></statistics-panel>
   </div>
 

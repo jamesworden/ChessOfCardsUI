@@ -19,7 +19,10 @@
     @switch (currentPanelView) {
       @case (StatisticsPanelView.Moves) {
         <statistics-moves-pane
-          [moveNotations]="(moveNotationsPlayerMade$ | async) ?? []"
+          [isHost]="(isHost$ | async) ?? false"
+          [moveNotations]="moveNotations"
+          [selectedMoveNotationIndex]="selectedMoveNotationIndex"
+          (moveNotationSelected)="selectMoveNotation($event)"
         ></statistics-moves-pane>
       }
     }

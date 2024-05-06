@@ -1,7 +1,22 @@
-<div class="h-full flex flex-col justify-between">
-  <div class="flex px-2 gap-y-4 flex-col pt-4">
+<div class="h-full flex flex-col justify-between mb-2">
+  <div class="flex flex-col">
     @for (moveNotation of moveNotations; track i; let i = $index) {
-      <div class="flex gap-x-2">
+      <div
+        (click)="selectMoveNotation(i)"
+        class="flex gap-x-2 px-2 py-4 transition bg-gray-600 dark:bg-gray-800 cursor-pointer"
+        [ngClass]="{
+          'bg-sky-900':
+            (selectedMoveNotationIndex$ | async) === i &&
+            ((moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
+              (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)),
+          'bg-rose-900':
+            (selectedMoveNotationIndex$ | async) === i &&
+            !(
+              (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
+              (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)
+            )
+        }"
+      >
         <div class="flex flex-col justify-start">
           <span class="material-symbols-outlined px-2 select-none">
             person

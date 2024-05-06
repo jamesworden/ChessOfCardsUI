@@ -1,8 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MoveMade } from '@shared/models';
 import { BehaviorSubject } from 'rxjs';
-import { getMoveNotations } from '@shared/logic';
-import { map } from 'rxjs/operators';
+import { MoveNotation } from '@shared/logic';
 import { StatisticsPanelView } from '../../models/statistics-panel-view';
 import { StatisticsPane } from '../../models/statistics-pane';
 
@@ -14,19 +13,16 @@ import { StatisticsPane } from '../../models/statistics-pane';
 export class StatisticsPanelComponent {
   readonly StatisticsPanelView = StatisticsPanelView;
 
-  @Input({ required: true }) set movesMade(movesMade: MoveMade[]) {
-    this.movesMade$.next(movesMade);
-  }
+  @Input({ required: true }) moveNotations: MoveNotation[] = [];
+  @Input({ required: true }) selectedMoveNotationIndex: number | null = null;
   @Input({ required: true }) set isHost(isHost: boolean) {
     this.isHost$.next(isHost);
   }
 
+  @Output() moveNotationSelected = new EventEmitter<number>();
+
   readonly movesMade$ = new BehaviorSubject<MoveMade[]>([]);
   readonly isHost$ = new BehaviorSubject<boolean>(false);
-
-  readonly moveNotationsPlayerMade$ = this.movesMade$.pipe(
-    map(getMoveNotations)
-  );
 
   currentPanelView: StatisticsPanelView = StatisticsPanelView.Moves;
 
@@ -37,4 +33,8 @@ export class StatisticsPanelComponent {
       title: 'Moves',
     },
   ];
+
+  selectMoveNotation(moveSelectedIndex: number) {
+    this.moveNotationSelected.emit(moveSelectedIndex);
+  }
 }

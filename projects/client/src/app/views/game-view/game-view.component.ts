@@ -53,6 +53,7 @@ import {
   canPlaceMultipleCards,
   cardEqualsCard,
   convertPlaceMultipleCardsToMove,
+  getMoveNotations,
   getReasonIfMoveInvalid,
   isPlayersTurn,
   moveCardToLane,
@@ -140,6 +141,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     AnimatedEntity<CardMovement>[]
   >();
   readonly selectedPosition$ = new BehaviorSubject<CardPosition | null>(null);
+  readonly selectedMoveNotationIndex$ = new BehaviorSubject<number | null>(
+    null
+  );
 
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
@@ -148,6 +152,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     startWith(null),
     pairwise()
   );
+
+  readonly movesMade$ = this.playerGameView$.pipe(
+    map((playerGameView) => playerGameView?.MovesMade ?? [])
+  );
+
+  readonly moveNotations$ = this.movesMade$.pipe(map(getMoveNotations));
 
   private readonly latestMoveMadeDetails$ =
     new BehaviorSubject<MoveMadeDetails | null>(null);
@@ -262,6 +272,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe(
         (selectedCard) => selectedCard && this.selectedPosition$.next(null)
       );
+    this.moveNotations$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((moveNotations) => {
+        this.selectedMoveNotationIndex$.next(moveNotations.length - 1);
+      });
   }
 
   ngAfterViewInit() {
@@ -713,6 +728,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
     this.toPlaceMultipleLaneEntities$.next(entities);
     this.selectedCard$.next(null);
+  }
+
+  selectMoveNotation(moveNotationIndex: number) {
+    this.selectedMoveNotationIndex$.next(moveNotationIndex);
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
