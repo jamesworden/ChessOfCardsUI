@@ -260,8 +260,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         }
 
         this.selectedPosition$.next(position);
-        console.log(position);
-        this.selectedCard$.next(null);
+        if (this.selectedCard$.getValue()) {
+          this.selectedCard$.next(null);
+        }
       });
     this.cardSize$
       .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -300,7 +301,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       )
       .subscribe(
         ([selectedMoveNotationIndex, moveNotationIndexesToPastGameStates]) => {
-          // Other Sub: On drag or card selection, reset this value to latest
           const moveNotationIndexes = Object.keys(
             moveNotationIndexesToPastGameStates
           ).map((key) => parseInt(key));
@@ -316,6 +316,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           }
         }
       );
+    this.selectedCard$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(() => this.selectLastMoveNotation());
   }
 
   ngAfterViewInit() {
@@ -332,7 +335,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
     const clickedOnCard = (event.target as HTMLElement).closest('.card');
-    if (!clickedOnCard) {
+    if (!clickedOnCard && this.selectedCard$.getValue()) {
       this.selectedCard$.next(null);
     }
   }
@@ -696,6 +699,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.updateLatestMoveDetails({
       wasDragged: true,
     });
+    this.selectLastMoveNotation();
   }
 
   onCardDragEnded() {
@@ -988,5 +992,13 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       gameView.NumCardsInOpponentsHand--;
     }
     return gameView;
+  }
+
+  private selectLastMoveNotation() {
+    const moveNotationIndexes = Object.keys(
+      this.moveNotationIndexesToPastGameStates$.getValue()
+    ).map((idx) => parseInt(idx));
+    const lastMoveNotationIndex = Math.max(...moveNotationIndexes);
+    this.selectedMoveNotationIndex$.next(lastMoveNotationIndex);
   }
 }
