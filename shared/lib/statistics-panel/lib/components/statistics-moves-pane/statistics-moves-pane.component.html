@@ -1,50 +1,74 @@
 <div class="h-full flex flex-col justify-between mb-2">
-  <div class="flex flex-col">
-    @for (moveNotation of moveNotations; track i; let i = $index) {
-      <div
-        (click)="selectMoveNotation(i)"
-        class="flex gap-x-2 px-2 py-4 transition bg-gray-600 dark:bg-gray-800 cursor-pointer"
-        [ngClass]="{
-          'bg-sky-900 dark:bg-sky-900':
-            (selectedMoveNotationIndex$ | async) === i &&
-            ((moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
-              (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)),
-          'bg-rose-900 dark:bg-rose-900':
-            (selectedMoveNotationIndex$ | async) === i &&
-            !(
-              (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
-              (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)
-            )
-        }"
-      >
-        <div class="flex flex-col justify-start">
-          <span class="material-symbols-outlined px-2 select-none">
-            person
-          </span>
+  @if (moveNotations.length > 0) {
+    <div class="flex flex-col">
+      @for (moveNotation of moveNotations; track i; let i = $index) {
+        <div
+          (click)="selectMoveNotation(i)"
+          class="flex gap-x-2 px-2 py-4 transition bg-gray-600 dark:bg-gray-800 cursor-pointer"
+          [ngClass]="{
+            'bg-sky-900 dark:bg-sky-900':
+              (selectedMoveNotationIndex$ | async) === i &&
+              ((moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
+                (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)),
+            'bg-rose-900 dark:bg-rose-900':
+              (selectedMoveNotationIndex$ | async) === i &&
+              !(
+                (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
+                (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)
+              )
+          }"
+        >
+          <div class="flex flex-col justify-start">
+            <span class="material-symbols-outlined px-2 select-none">
+              person
+            </span>
+          </div>
+
+          <div class="w-4">{{ i + 1 }}.</div>
+
+          <div class="ml-4 flex flex-col gap-y-2">
+            @for (
+              notationGroup of moveNotation.notations;
+              track i;
+              let i = $index
+            ) {
+              <div class="flex gap-x-4">
+                @for (notation of notationGroup; track i; let i = $index) {
+                  <div
+                    class="mx-2 px-1 bg-gray-500 dark:bg-gray-600 flex justify-around w-16 rounded-sm"
+                  >
+                    {{ notation }}
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="flex flex-col justify-around h-full">
+      <div class="flex flex-col gap-y-4">
+        <div class="flex justify-around">
+          <div class="p-2 rounded-full bg-gray-500 dark:bg-gray-700">
+            <span
+              class="material-symbols-outlined text-gray-600 text:bg-gray-800"
+              style="font-size: 96px"
+            >
+              replay
+            </span>
+          </div>
         </div>
 
-        <div class="w-4">{{ i + 1 }}.</div>
-
-        <div class="ml-4 flex flex-col gap-y-2">
-          @for (
-            notationGroup of moveNotation.notations;
-            track i;
-            let i = $index
-          ) {
-            <div class="flex gap-x-4">
-              @for (notation of notationGroup; track i; let i = $index) {
-                <div
-                  class="mx-2 px-1 bg-gray-500 dark:bg-gray-600 flex justify-around w-16 rounded-sm"
-                >
-                  {{ notation }}
-                </div>
-              }
-            </div>
-          }
+        <div class="flex justify-around">
+          <div class="text-center max-w-xs">
+            <h2 class="text-3xl mb-4">No moves made!</h2>
+            <p>Once a player makes a move, they will appear here.</p>
+          </div>
         </div>
       </div>
-    }
-  </div>
+    </div>
+  }
 </div>
 
 <nav
