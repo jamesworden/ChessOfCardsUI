@@ -149,7 +149,15 @@ function getAnimatedPositionFromPlayerDeck() {
 function getAnimatedPositionFromOpponentDeck() {
   const sidebar = document.getElementsByTagName('app-sidebar')[0];
   const playerDeck = sidebar.getElementsByTagName('game-face-down-card')[0];
-  let { x, y } = playerDeck?.getBoundingClientRect();
+
+  if (!playerDeck) {
+    return {
+      x: 0,
+      y: 0,
+    };
+  }
+
+  let { x, y } = playerDeck.getBoundingClientRect();
   // y += window.scrollY;
 
   return {
