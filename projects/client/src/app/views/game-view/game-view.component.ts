@@ -144,6 +144,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly selectedMoveNotationIndex$ = new BehaviorSubject<number | null>(
     null
   );
+  readonly visiblePastGameState$ = new BehaviorSubject<PlayerGameView | null>(
+    null
+  );
+  readonly moveNotationIndexesToPastGameStates$ = new BehaviorSubject<{
+    [moveNotationIndex: number]: PlayerGameView;
+  }>({});
 
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
@@ -273,10 +279,43 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         (selectedCard) => selectedCard && this.selectedPosition$.next(null)
       );
     this.moveNotations$
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe((moveNotations) => {
-        this.selectedMoveNotationIndex$.next(moveNotations.length - 1);
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+        withLatestFrom(this.playerGameView$)
+      )
+      .subscribe(([moveNotations, playerGameView]) => {
+        const latestMoveNotationIndex = moveNotations.length - 1;
+        this.selectedMoveNotationIndex$.next(latestMoveNotationIndex);
+
+        if (playerGameView) {
+          const map = this.moveNotationIndexesToPastGameStates$.getValue();
+          map[latestMoveNotationIndex] = playerGameView;
+          this.moveNotationIndexesToPastGameStates$.next(map);
+        }
       });
+    this.selectedMoveNotationIndex$
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+        withLatestFrom(this.moveNotationIndexesToPastGameStates$)
+      )
+      .subscribe(
+        ([selectedMoveNotationIndex, moveNotationIndexesToPastGameStates]) => {
+          // Other Sub: On drag or card selection, reset this value to latest
+          const moveNotationIndexes = Object.keys(
+            moveNotationIndexesToPastGameStates
+          ).map((key) => parseInt(key));
+          const lastMoveNotationIndex = Math.max(...moveNotationIndexes);
+          const isLastMoveNotation =
+            lastMoveNotationIndex === selectedMoveNotationIndex;
+          if (selectedMoveNotationIndex !== null) {
+            this.visiblePastGameState$.next(
+              isLastMoveNotation
+                ? null
+                : moveNotationIndexesToPastGameStates[selectedMoveNotationIndex]
+            );
+          }
+        }
+      );
   }
 
   ngAfterViewInit() {

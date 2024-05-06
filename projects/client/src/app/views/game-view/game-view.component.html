@@ -45,7 +45,10 @@
 
         <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
 
-        @if (latestGameViewSnapshot$ | async; as latestGameViewSnapshot) {
+        @if (
+          (visiblePastGameState$ | async) ?? (latestGameViewSnapshot$ | async);
+          as latestGameViewSnapshot
+        ) {
           <game-board
             #board
             [playerGameView]="latestGameViewSnapshot"
