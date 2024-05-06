@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Component({
   selector: 'previous-next-selector',
@@ -10,6 +10,16 @@ export class PreviousNextSelectorComponent {
   @Output() previousSelected = new EventEmitter();
   @Output() nextSelected = new EventEmitter();
   @Output() lastSelected = new EventEmitter();
+
+  @HostListener('document:keydown.arrowup')
+  handleUpArrow() {
+    this.selectPrevious();
+  }
+
+  @HostListener('document:keydown.arrowdown')
+  handleDownArrow() {
+    this.selectNext();
+  }
 
   selectFirst() {
     this.firstSelected.emit();
