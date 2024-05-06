@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'statistics-pane-nav-button',
@@ -10,4 +10,11 @@ export class StatisticsPaneNavButtonComponent {
   @Input({ required: true }) iconString: string;
   @Input({ required: true }) title: string;
   @Input({ required: true }) isActive: boolean;
+  @Input({ required: true }) clickable: boolean;
+
+  @Output() clicked = new EventEmitter<void>();
+
+  onClick() {
+    this.clickable && this.clicked.emit();
+  }
 }
