@@ -293,6 +293,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         this.selectedMoveNotationIndex$.next(latestMoveNotationIndex);
 
         const map = this.moveNotationIndexesToPastGameStates$.getValue();
+        // Without cloning deep, past game views will get overwritten in this map.
         map[latestMoveNotationIndex] = JSON.parse(
           JSON.stringify(playerGameView)
         ) as PlayerGameView;
