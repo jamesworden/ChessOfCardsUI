@@ -285,14 +285,18 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         withLatestFrom(this.playerGameView$)
       )
       .subscribe(([moveNotations, playerGameView]) => {
+        if (moveNotations.length === 0 || !playerGameView) {
+          return;
+        }
+
         const latestMoveNotationIndex = moveNotations.length - 1;
         this.selectedMoveNotationIndex$.next(latestMoveNotationIndex);
 
-        if (playerGameView) {
-          const map = this.moveNotationIndexesToPastGameStates$.getValue();
-          map[latestMoveNotationIndex] = playerGameView;
-          this.moveNotationIndexesToPastGameStates$.next(map);
-        }
+        const map = this.moveNotationIndexesToPastGameStates$.getValue();
+        map[latestMoveNotationIndex] = JSON.parse(
+          JSON.stringify(playerGameView)
+        ) as PlayerGameView;
+        this.moveNotationIndexesToPastGameStates$.next(map);
       });
     this.selectedMoveNotationIndex$
       .pipe(
@@ -304,6 +308,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           const moveNotationIndexes = Object.keys(
             moveNotationIndexesToPastGameStates
           ).map((key) => parseInt(key));
+          if (moveNotationIndexes.length === 0) {
+            return;
+          }
+
           const lastMoveNotationIndex = Math.max(...moveNotationIndexes);
           const isLastMoveNotation =
             lastMoveNotationIndex === selectedMoveNotationIndex;
@@ -321,6 +329,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe(
         (selectedCard) => selectedCard && this.selectLastMoveNotation()
       );
+  }
+
+  constructor() {
+    this.visiblePastGameState$.subscribe((x) => {
+      console.log(x);
+    });
   }
 
   ngAfterViewInit() {
