@@ -1,6 +1,9 @@
-<div class="h-full flex flex-col justify-between mb-2 overflow-auto">
+<div
+  #scrollContainer
+  class="h-full flex flex-col justify-between mb-2 overflow-auto"
+>
   @if (moveNotations.length > 0) {
-    <div #scrollContainer class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col">
       @for (
         moveNotation of moveNotations;
         track moveNotationIndex;

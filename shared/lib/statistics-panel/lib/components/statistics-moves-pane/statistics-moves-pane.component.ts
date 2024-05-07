@@ -45,10 +45,13 @@ export class StatisticsMovesPaneComponent implements OnInit {
     this.selectedMoveNotationIndex$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(() => {
-        if (this.scrollContainer) {
-          this.scrollContainer.nativeElement.scrollTop =
-            this.scrollContainer.nativeElement.scrollHeight;
-        }
+        setTimeout(() => {
+          const container = this.scrollContainer.nativeElement;
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: 'smooth',
+          });
+        });
       });
   }
 
