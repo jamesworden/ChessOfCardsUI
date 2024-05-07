@@ -198,9 +198,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly cardStack$ = combineLatest([
     this.playerGameView$,
     this.selectedPosition$,
+    this.visiblePastGameState$,
   ]).pipe(
-    map(([playerGameView, selectedPosition]) =>
-      getCardStack(playerGameView, selectedPosition)
+    map(([playerGameView, selectedPosition, visiblePastGameState]) =>
+      getCardStack(visiblePastGameState ?? playerGameView, selectedPosition)
     )
   );
 
