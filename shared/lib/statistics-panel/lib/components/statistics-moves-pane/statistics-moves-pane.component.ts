@@ -4,7 +4,6 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewChild,
   inject,
@@ -19,11 +18,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './statistics-moves-pane.component.html',
   styleUrl: './statistics-moves-pane.component.scss',
 })
-export class StatisticsMovesPaneComponent implements OnInit {
+export class StatisticsMovesPaneComponent {
   readonly #destroyRef = inject(DestroyRef);
 
   @Input({ required: true }) isHost: boolean;
-  @Input() moveNotations: MoveNotation[] = [];
+  @Input() set moveNotations(moveNotations: MoveNotation[]) {
+    this.moveNotations$.next(moveNotations);
+  }
   @Input() set selectedMoveNotationIndex(
     selectedMoveNotationIndex: number | null
   ) {
@@ -37,6 +38,7 @@ export class StatisticsMovesPaneComponent implements OnInit {
 
   readonly PlayerOrNone = PlayerOrNone;
 
+  readonly moveNotations$ = new BehaviorSubject<MoveNotation[]>([]);
   readonly selectedMoveNotationIndex$ = new BehaviorSubject<number | null>(
     null
   );
@@ -44,14 +46,12 @@ export class StatisticsMovesPaneComponent implements OnInit {
   ngOnInit() {
     this.selectedMoveNotationIndex$
       .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe(() => {
-        setTimeout(() => {
-          const container = this.scrollContainer.nativeElement;
-          container.scrollTo({
-            top: container.scrollHeight,
-            behavior: 'smooth',
-          });
-        });
+      .subscribe((selectedMoveNotationIndex) => {
+        if (selectedMoveNotationIndex !== null) {
+          setTimeout(() =>
+            this.scrollMoveNotationIntoView(selectedMoveNotationIndex)
+          );
+        }
       });
   }
 
@@ -73,13 +73,41 @@ export class StatisticsMovesPaneComponent implements OnInit {
 
   selectNext() {
     const current = this.selectedMoveNotationIndex$.getValue();
-    if (current === null || current === this.moveNotations.length - 1) {
+    if (
+      current === null ||
+      current === this.moveNotations$.getValue().length - 1
+    ) {
       return;
     }
     this.moveNotationSelected.emit(current + 1);
   }
 
   selectLast() {
-    this.moveNotationSelected.emit(this.moveNotations.length - 1);
+    this.moveNotationSelected.emit(this.moveNotations$.getValue().length - 1);
+  }
+
+  scrollToBottom() {
+    const container = this.scrollContainer?.nativeElement;
+    if (container) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }
+
+  scrollMoveNotationIntoView(moveNotationIndex: number) {
+    const scrollContainer = this.scrollContainer.nativeElement as HTMLElement;
+    if (!scrollContainer) {
+      return;
+    }
+
+    const rows = scrollContainer.getElementsByClassName('move-notation-row');
+    const row = rows[moveNotationIndex];
+    if (!row) {
+      return;
+    }
+
+    row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 }
