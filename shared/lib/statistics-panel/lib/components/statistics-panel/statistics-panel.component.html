@@ -15,10 +15,11 @@
     }
   </div>
 
-  <div class="flex-grow max-h-100 overflow-auto">
+  <div class="flex overflow-hidden h-full">
     @switch (currentPanelView) {
       @case (StatisticsPanelView.Moves) {
         <statistics-moves-pane
+          class="flex-1"
           [isHost]="(isHost$ | async) ?? false"
           [moveNotations]="moveNotations"
           [selectedMoveNotationIndex]="selectedMoveNotationIndex"

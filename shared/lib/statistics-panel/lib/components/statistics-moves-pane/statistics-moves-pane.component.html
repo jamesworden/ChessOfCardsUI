@@ -1,17 +1,21 @@
-<div class="h-full flex flex-col justify-between mb-2">
+<div class="h-full flex flex-col justify-between mb-2 overflow-auto">
   @if (moveNotations.length > 0) {
-    <div class="flex flex-col">
-      @for (moveNotation of moveNotations; track i; let i = $index) {
+    <div #scrollContainer class="flex-1 flex flex-col">
+      @for (
+        moveNotation of moveNotations;
+        track moveNotationIndex;
+        let moveNotationIndex = $index
+      ) {
         <div
-          (click)="selectMoveNotation(i)"
+          (click)="selectMoveNotation(moveNotationIndex)"
           class="flex gap-x-2 px-2 py-4 transition bg-gray-600 dark:bg-gray-800 cursor-pointer"
           [ngClass]="{
             'bg-sky-900 dark:bg-sky-900':
-              (selectedMoveNotationIndex$ | async) === i &&
+              (selectedMoveNotationIndex$ | async) === moveNotationIndex &&
               ((moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
                 (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)),
             'bg-rose-900 dark:bg-rose-900':
-              (selectedMoveNotationIndex$ | async) === i &&
+              (selectedMoveNotationIndex$ | async) === moveNotationIndex &&
               !(
                 (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
                 (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)
@@ -81,7 +85,7 @@
 </div>
 
 <nav
-  class="sticky bottom-0 w-full bg-gray-600 dark:bg-gray-800 transition text-white py-4 px-6"
+  class="w-full bg-gray-600 dark:bg-gray-800 transition text-white py-4 px-6"
 >
   <div class="container mx-auto">
     <div class="flex-grow mr-4 ml-2">

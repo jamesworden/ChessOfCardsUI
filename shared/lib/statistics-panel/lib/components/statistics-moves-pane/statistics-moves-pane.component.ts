@@ -1,14 +1,27 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { MoveNotation } from '@shared/logic';
 import { PlayerOrNone } from '@shared/models';
 import { BehaviorSubject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'statistics-moves-pane',
   templateUrl: './statistics-moves-pane.component.html',
   styleUrl: './statistics-moves-pane.component.scss',
 })
-export class StatisticsMovesPaneComponent {
+export class StatisticsMovesPaneComponent implements OnInit {
+  readonly #destroyRef = inject(DestroyRef);
+
   @Input({ required: true }) isHost: boolean;
   @Input() moveNotations: MoveNotation[] = [];
   @Input() set selectedMoveNotationIndex(
@@ -19,11 +32,25 @@ export class StatisticsMovesPaneComponent {
 
   @Output() moveNotationSelected = new EventEmitter<number>();
 
+  @ViewChild('scrollContainer', { static: true })
+  scrollContainer!: ElementRef;
+
   readonly PlayerOrNone = PlayerOrNone;
 
   readonly selectedMoveNotationIndex$ = new BehaviorSubject<number | null>(
     null
   );
+
+  ngOnInit() {
+    this.selectedMoveNotationIndex$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(() => {
+        if (this.scrollContainer) {
+          this.scrollContainer.nativeElement.scrollTop =
+            this.scrollContainer.nativeElement.scrollHeight;
+        }
+      });
+  }
 
   selectMoveNotation(moveSelectedIndex: number) {
     this.moveNotationSelected.emit(moveSelectedIndex);
