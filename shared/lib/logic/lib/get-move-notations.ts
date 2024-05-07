@@ -3,6 +3,7 @@ import { MoveMade, PlayerOrNone } from '@shared/models';
 export interface MoveNotation {
   playedBy: PlayerOrNone;
   notations: string[][];
+  displayIndex: number | null;
 }
 
 export function getMoveNotations(movesMade: MoveMade[]) {
@@ -13,17 +14,20 @@ export function getMoveNotations(movesMade: MoveMade[]) {
   }
 
   let latestPlayedBy: PlayerOrNone | undefined = undefined;
+  let latestIndex = 0;
 
   for (const moveMade of movesMade) {
-    const treatAsApartOfLastMove = moveMade.PlayedBy === latestPlayedBy;
-    if (treatAsApartOfLastMove) {
-      moveNotations[moveNotations.length - 1].notations.push([]);
-    } else {
-      moveNotations.push({
-        notations: [],
-        playedBy: moveMade.PlayedBy,
-      });
+    let displayIndex: number | null = null;
+    if (moveMade.PlayedBy !== latestPlayedBy) {
+      latestIndex++;
+      displayIndex = latestIndex;
     }
+
+    moveNotations.push({
+      notations: [],
+      playedBy: moveMade.PlayedBy,
+      displayIndex,
+    });
 
     moveNotations[moveNotations.length - 1].notations.push(
       getNotationGroup(moveMade)
