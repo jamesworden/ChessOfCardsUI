@@ -8,13 +8,13 @@
       ) {
         <div
           (click)="selectMoveNotation(moveNotationIndex)"
-          class="flex gap-x-2 px-2 py-4 transition bg-gray-600 dark:bg-gray-800 cursor-pointer"
+          class="flex gap-x-2 px-2 py-4 transition bg-gray-600 dark:bg-gray-800 hover:bg-gray-500 hover:dark:bg-gray-700 cursor-pointer"
           [ngClass]="{
-            'bg-sky-900 dark:bg-sky-900':
+            'bg-sky-900 dark:bg-sky-900 hover:bg-sky-700 dark:hover:bg-sky-700':
               (selectedMoveNotationIndex$ | async) === moveNotationIndex &&
               ((moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
                 (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)),
-            'bg-rose-900 dark:bg-rose-900':
+            'bg-rose-900 dark:bg-rose-900 hover:bg-rose-700 dark:hover:bg-rose-700':
               (selectedMoveNotationIndex$ | async) === moveNotationIndex &&
               !(
                 (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
