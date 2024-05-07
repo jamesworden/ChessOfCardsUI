@@ -93,17 +93,35 @@
   }
 </div>
 
-<nav
-  class="w-full bg-gray-600 dark:bg-gray-800 transition text-white py-4 px-6"
->
-  <div class="container mx-auto">
-    <div class="flex-grow mr-4 ml-2">
-      <previous-next-selector
-        (firstSelected)="selectFirst()"
-        (previousSelected)="selectPrevious()"
-        (nextSelected)="selectNext()"
-        (lastSelected)="selectLast()"
-      ></previous-next-selector>
+@if (moveNotations$ | async; as moveNotations) {
+  <nav
+    class="w-full bg-gray-600 dark:bg-gray-800 transition text-white py-4 px-6"
+  >
+    <div class="container mx-auto">
+      <div class="flex-grow mr-4 ml-2">
+        <previous-next-selector
+          (firstSelected)="selectFirst()"
+          (previousSelected)="selectPrevious()"
+          (nextSelected)="selectNext()"
+          (lastSelected)="selectLast()"
+          [selectFirstDisabled]="
+            moveNotations.length === 0 ||
+            (selectedMoveNotationIndex$ | async) === 0
+          "
+          [selectPrevDisabled]="
+            moveNotations.length === 0 ||
+            (selectedMoveNotationIndex$ | async) === 0
+          "
+          [selectNextDisabled]="
+            moveNotations.length === 0 ||
+            (selectedMoveNotationIndex$ | async) === moveNotations.length - 1
+          "
+          [selectLastDisabled]="
+            moveNotations.length === 0 ||
+            (selectedMoveNotationIndex$ | async) === moveNotations.length - 1
+          "
+        ></previous-next-selector>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+}

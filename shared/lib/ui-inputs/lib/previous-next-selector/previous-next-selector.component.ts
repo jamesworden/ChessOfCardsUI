@@ -1,4 +1,10 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Output,
+  Input,
+} from '@angular/core';
 
 @Component({
   selector: 'previous-next-selector',
@@ -6,6 +12,11 @@ import { Component, EventEmitter, HostListener, Output } from '@angular/core';
   styleUrl: './previous-next-selector.component.scss',
 })
 export class PreviousNextSelectorComponent {
+  @Input() selectFirstDisabled = false;
+  @Input() selectPrevDisabled = false;
+  @Input() selectNextDisabled = false;
+  @Input() selectLastDisabled = false;
+
   @Output() firstSelected = new EventEmitter();
   @Output() previousSelected = new EventEmitter();
   @Output() nextSelected = new EventEmitter();
