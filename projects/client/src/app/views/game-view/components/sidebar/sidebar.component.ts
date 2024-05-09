@@ -41,10 +41,14 @@ export class SidebarComponent implements OnInit {
   @Input({ required: true }) isPlayersTurn = false;
   @Input() cardStack: Card[] | null = [];
   @Input() selectedPosition: CardPosition | null = null;
+  @Input() set isShowingMovesPanel(isShowingMovesPanel: boolean) {
+    this.isShowingMovesPanel$.next(isShowingMovesPanel);
+  }
 
   @Output() drawOffered = new EventEmitter<void>();
   @Output() passedMove = new EventEmitter<void>();
   @Output() resigned = new EventEmitter<void>();
+  @Output() movesPanelToggled = new EventEmitter<void>();
 
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;
@@ -60,6 +64,7 @@ export class SidebarComponent implements OnInit {
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly isShowingCardStack$ = new BehaviorSubject<boolean>(false);
+  readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);
 
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
@@ -222,8 +227,8 @@ export class SidebarComponent implements OnInit {
     toggleDarkMode();
   }
 
-  reportBug() {
-    // TODO
+  toggleMovesPanel() {
+    this.movesPanelToggled.emit();
   }
 
   toggleCardStack() {

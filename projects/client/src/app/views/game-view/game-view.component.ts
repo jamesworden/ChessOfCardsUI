@@ -70,6 +70,7 @@ import {
   suitAndKindHasValidMove,
 } from './logic/suit-and-kind-has-valid-move';
 import { getCardStack } from './logic/get-card-stack';
+import { Z_INDEXES } from '@shared/constants';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -150,7 +151,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly moveNotationIndexesToPastGameStates$ = new BehaviorSubject<{
     [moveNotationIndex: number]: PlayerGameView;
   }>({});
-
+  readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
 
@@ -204,6 +205,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       getCardStack(visiblePastGameState ?? playerGameView, selectedPosition)
     )
   );
+
+  readonly Z_INDEXES = Z_INDEXES;
 
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
@@ -793,6 +796,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   selectMoveNotation(moveNotationIndex: number) {
     this.selectedMoveNotationIndex$.next(moveNotationIndex);
+  }
+
+  toggleMovesPanel() {
+    this.isShowingMovesPanel$.next(!this.isShowingMovesPanel$.getValue());
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

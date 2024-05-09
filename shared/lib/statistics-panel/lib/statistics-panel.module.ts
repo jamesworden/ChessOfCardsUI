@@ -20,6 +20,7 @@ import { UiInputsModule } from '@shared/ui-inputs';
     StatisticsPanelComponent,
     CardStackComponent,
     StatisticsPaneNavButtonComponent,
+    StatisticsMovesPaneComponent,
   ],
 })
 export class StatisticsPanelModule {}

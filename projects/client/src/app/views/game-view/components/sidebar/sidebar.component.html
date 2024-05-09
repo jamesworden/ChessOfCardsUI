@@ -19,11 +19,19 @@
   <div class="divider mx-2"></div>
 
   <div
-    class="px-1 pt-2"
+    class="px-1 pt-2 flex flex-col gap-y-2"
     [ngClass]="{
       'lg:hidden': !(isShowingCardStack$ | async)
     }"
   >
+    <app-icon-button
+      [itemHeight]="48"
+      [itemWidth]="48"
+      [iconSize]="32"
+      [tooltip]="(isShowingMovesPanel$ | async) ? 'Hide Moves' : 'Show Moves'"
+      materialSymbol="replay"
+      (selected)="toggleMovesPanel()"
+    ></app-icon-button>
     <app-icon-button
       [itemHeight]="48"
       [itemWidth]="48"
@@ -89,16 +97,6 @@
         materialSymbol="light_mode"
         (selected)="toggleDarkMode()"
       ></app-icon-button>
-      <!-- TODO: Build report bug -->
-      <!-- <app-icon-button
-        [disabled]="true"
-        [itemHeight]="48"
-        [itemWidth]="48"
-        [iconSize]="32"
-        tooltip="Report Bug"
-        materialSymbol="bug_report"
-        (selected)="reportBug()"
-      ></app-icon-button> -->
     </div>
 
     @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {

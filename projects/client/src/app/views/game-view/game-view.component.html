@@ -26,6 +26,7 @@
     (drawOffered)="offerDraw()"
     (passedMove)="passMove()"
     (resigned)="resign()"
+    (movesPanelToggled)="toggleMovesPanel()"
   ></app-sidebar>
 
   <div class="flex justify-around">
@@ -140,6 +141,25 @@
 
   <!-- flex placeholder div -->
   <div></div>
+
+  @if (isShowingMovesPanel$ | async) {
+    <div
+      class="absolute bottom-0 left-20 right-0 h-48 flex justify-around bg-gray-600 dark:bg-gray-800 transition"
+      [ngStyle]="{
+        'z-index': Z_INDEXES.MOVES_PANEL
+      }"
+    >
+      <div resizable class="flex-1 flex flex-col h-48">
+        <statistics-moves-pane
+          class="flex-1 h-48"
+          [moveNotations]="(moveNotations$ | async) ?? []"
+          [isHost]="(playerGameView$ | async)?.IsHost ?? false"
+          [selectedMoveNotationIndex]="selectedMoveNotationIndex$ | async"
+          (moveNotationSelected)="selectMoveNotation($event)"
+        ></statistics-moves-pane>
+      </div>
+    </div>
+  }
 </div>
 
 <ng-template #opponentHandToolbar>
