@@ -19,14 +19,14 @@
   <div class="divider mx-2"></div>
 
   <div
-    class="px-1"
+    class="px-1 pt-2"
     [ngClass]="{
       'lg:hidden': !(isShowingCardStack$ | async)
     }"
   >
     <app-icon-button
-      [itemHeight]="64"
-      [itemWidth]="64"
+      [itemHeight]="48"
+      [itemWidth]="48"
       [iconSize]="32"
       [tooltip]="(isShowingCardStack$ | async) ? 'Hide Stack' : 'Show Stack'"
       materialSymbol="playing_cards"
@@ -39,15 +39,15 @@
       class="h-full pb-4"
       [cardStack]="cardStack"
       [position]="selectedPosition"
-      [cardSize]="(cardSize$ | async) ?? 64"
+      [cardSize]="(cardSize$ | async) ?? 48"
     ></card-stack>
   } @else {
-    <div class="px-1">
+    <div class="px-1 flex flex-col gap-y-2 py-2">
       <app-icon-button
         data-testid="pass-move-button"
         [disabled]="!!(waitingForServer$ | async)"
-        [itemHeight]="64"
-        [itemWidth]="64"
+        [itemHeight]="48"
+        [itemWidth]="48"
         [iconSize]="32"
         tooltip="Pass move"
         materialSymbol="waving_hand"
@@ -55,8 +55,8 @@
       ></app-icon-button>
       <app-icon-button
         [disabled]="!!(waitingForServer$ | async)"
-        [itemHeight]="64"
-        [itemWidth]="64"
+        [itemHeight]="48"
+        [itemWidth]="48"
         [iconSize]="32"
         tooltip="Offer draw"
         materialSymbol="handshake"
@@ -64,8 +64,8 @@
       ></app-icon-button>
       <app-icon-button
         [disabled]="!!(waitingForServer$ | async)"
-        [itemHeight]="64"
-        [itemWidth]="64"
+        [itemHeight]="48"
+        [itemWidth]="48"
         [iconSize]="32"
         tooltip="Resign"
         materialSymbol="flag"
@@ -73,8 +73,8 @@
       ></app-icon-button>
       <app-icon-button
         class="block dark:hidden"
-        [itemHeight]="64"
-        [itemWidth]="64"
+        [itemHeight]="48"
+        [itemWidth]="48"
         [iconSize]="32"
         tooltip="Dark Mode"
         materialSymbol="dark_mode"
@@ -82,8 +82,8 @@
       ></app-icon-button>
       <app-icon-button
         class="hidden dark:block"
-        [itemHeight]="64"
-        [itemWidth]="64"
+        [itemHeight]="48"
+        [itemWidth]="48"
         [iconSize]="32"
         tooltip="Light Mode"
         materialSymbol="light_mode"
@@ -92,8 +92,8 @@
       <!-- TODO: Build report bug -->
       <!-- <app-icon-button
         [disabled]="true"
-        [itemHeight]="64"
-        [itemWidth]="64"
+        [itemHeight]="48"
+        [itemWidth]="48"
         [iconSize]="32"
         tooltip="Report Bug"
         materialSymbol="bug_report"

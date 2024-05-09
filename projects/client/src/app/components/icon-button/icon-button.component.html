@@ -1,31 +1,24 @@
 <div class="flex justify-around">
-  <li
-    class="sidebar-item"
-    (click)="onClick()"
+  <button
+    class="flex flex-col justify-around"
+    mat-button
     [ngStyle]="{
       height: itemHeight + 'px',
       width: itemWidth ? itemWidth + 'px' : '100%'
     }"
     [matTooltip]="tooltip"
     matTooltipPosition="right"
+    (click)="onClick()"
   >
-    <button
-      class="sidebar-button"
-      mat-button
+    <span
+      class="material-symbols-outlined w-full"
       [ngStyle]="{
-        height: itemHeight + 'px'
+        'font-size': iconSize + 'px',
+        height: iconSize + 'px',
+        color: iconColor,
+        opacity: disabled ? 0.5 : 1
       }"
+      >{{ materialSymbol }}</span
     >
-      <span
-        class="material-symbols-outlined sidebar-icon"
-        [ngStyle]="{
-          'font-size': iconSize + 'px',
-          height: iconSize + 'px',
-          color: iconColor,
-          opacity: disabled ? 0.5 : 1
-        }"
-        >{{ materialSymbol }}</span
-      >
-    </button>
-  </li>
+  </button>
 </div>
