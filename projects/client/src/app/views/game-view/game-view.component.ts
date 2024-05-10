@@ -71,11 +71,7 @@ import {
 } from './logic/suit-and-kind-has-valid-move';
 import { getCardStack } from './logic/get-card-stack';
 import { BREAKPOINTS, Z_INDEXES } from '@shared/constants';
-
-enum GameViewTab {
-  Moves = 'moves',
-  Board = 'board',
-}
+import { GameViewTab } from './models/game-view-tab';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -819,17 +815,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.selectedMoveNotationIndex$.next(moveNotationIndex);
   }
 
-  /**
-   * TODO: Convert to having a dynamic parameter passed in with the type of tab.
-   */
-  toggleMovesPanel() {
-    const selectedTab = this.selectedGameViewTab$.getValue();
-    if (selectedTab === GameViewTab.Moves) {
-      this.visiblePastGameState$.next(null);
-    }
-    this.selectedGameViewTab$.next(
-      selectedTab === GameViewTab.Moves ? GameViewTab.Board : GameViewTab.Moves
-    );
+  selectGameViewTab(gameViewTab: GameViewTab) {
+    this.visiblePastGameState$.next(null);
+    this.selectedGameViewTab$.next(gameViewTab);
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

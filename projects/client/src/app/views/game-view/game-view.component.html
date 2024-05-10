@@ -26,16 +26,25 @@
     (drawOffered)="offerDraw()"
     (passedMove)="passMove()"
     (resigned)="resign()"
-    (movesPanelToggled)="toggleMovesPanel()"
   ></app-sidebar>
 
-  @if ((selectedGameViewTab$ | async) === GameViewTab.Board) {
-    <ng-container [ngTemplateOutlet]="boardView"></ng-container>
-  }
+  <div class="flex flex-col flex-1">
+    <app-game-view-navbar
+      class="flex lg:hidden"
+      [selectedTab]="(selectedGameViewTab$ | async) ?? GameViewTab.Board"
+      (tabSelected)="selectGameViewTab($event)"
+    ></app-game-view-navbar>
 
-  @if ((selectedGameViewTab$ | async) === GameViewTab.Moves) {
-    <ng-container [ngTemplateOutlet]="movesView"></ng-container>
-  }
+    <div class="flex-1">
+      @if ((selectedGameViewTab$ | async) === GameViewTab.Board) {
+        <ng-container [ngTemplateOutlet]="boardView"></ng-container>
+      }
+
+      @if ((selectedGameViewTab$ | async) === GameViewTab.Moves) {
+        <ng-container [ngTemplateOutlet]="movesView"></ng-container>
+      }
+    </div>
+  </div>
 
   <!-- flex placeholder div -->
   <div></div>
@@ -52,21 +61,25 @@
 </ng-template>
 
 <ng-template #boardView>
-  <div class="flex justify-around w-full">
+  <div class="flex justify-around w-full h-full">
     <div class="flex justify-around">
       @if (playerGameView$ | async; as playerGameView) {
         <div
           class="game flex flex-col justify-between h-full lg:pl-8"
           cdkDropListGroup
         >
-          <app-player-banner
-            [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
-            class="rounded-b-md transition"
-            [ngClass]="{
-              'bg-rose-700': !isPlayersTurn,
-              'bg-rose-900': isPlayersTurn
-            }"
-          ></app-player-banner>
+          <div>
+            <app-player-banner
+              [username]="
+                playerGameView.IsHost ? 'Guest Player' : 'Host Player'
+              "
+              class="rounded-b-md transition h-sm-hidden"
+              [ngClass]="{
+                'bg-rose-700': !isPlayersTurn,
+                'bg-rose-900': isPlayersTurn
+              }"
+            ></app-player-banner>
+          </div>
 
           <app-opponent-hand-toolbar
             [numCardsInOpponentsHand]="playerGameView.NumCardsInOpponentsHand"
@@ -136,14 +149,18 @@
             (cardClicked)="onCardClicked($event)"
           ></game-player-hand>
 
-          <app-player-banner
-            [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
-            class="rounded-t-md transition"
-            [ngClass]="{
-              'bg-sky-700': isPlayersTurn,
-              'bg-sky-900': !isPlayersTurn
-            }"
-          ></app-player-banner>
+          <div>
+            <app-player-banner
+              [username]="
+                playerGameView.IsHost ? 'Host Player' : 'Guest Player'
+              "
+              class="rounded-t-md transition h-sm-hidden"
+              [ngClass]="{
+                'bg-sky-700': isPlayersTurn,
+                'bg-sky-900': !isPlayersTurn
+              }"
+            ></app-player-banner>
+          </div>
         </div>
       }
     </div>
@@ -155,7 +172,7 @@
 </ng-template>
 
 <ng-template #movesView>
-  <div class="flex flex-col justify-between w-full">
+  <div class="flex flex-col justify-between flex-1 h-full">
     @if (playerGameView$ | async; as playerGameView) {
       @if (
         (visiblePastGameState$ | async) ?? (latestGameViewSnapshot$ | async);
@@ -185,13 +202,13 @@
   <div
     resizable
     [minHeightPx]="((cardSize$ | async) ?? 64) * 2"
-    [startHeightPx]="((cardSize$ | async) ?? 64) * 3"
-    class="flex justify-around flex-col bg-gray-600 dark:bg-gray-800 transition"
+    [startHeightPx]="((cardSize$ | async) ?? 64) * 2"
+    class="flex justify-around flex-col bg-gray-600 dark:bg-gray-800 transition sticky bottom-0"
     [ngStyle]="{
       'z-index': Z_INDEXES.MOVES_PANEL
     }"
   >
-    <div #grabber class="w-full flex justify-around cursor-row-resize py-1">
+    <div #grabber class="flex justify-around cursor-row-resize py-1">
       <div class="bg-gray-200 w-24 h-1 rounded-lg"></div>
     </div>
 

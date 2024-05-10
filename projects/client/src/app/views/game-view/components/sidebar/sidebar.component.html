@@ -28,14 +28,6 @@
       [itemHeight]="48"
       [itemWidth]="48"
       [iconSize]="32"
-      [tooltip]="(isShowingMovesPanel$ | async) ? 'Hide Moves' : 'Show Moves'"
-      materialSymbol="replay"
-      (selected)="toggleMovesPanel()"
-    ></app-icon-button>
-    <app-icon-button
-      [itemHeight]="48"
-      [itemWidth]="48"
-      [iconSize]="32"
       [tooltip]="(isShowingCardStack$ | async) ? 'Hide Stack' : 'Show Stack'"
       materialSymbol="playing_cards"
       (selected)="toggleCardStack()"

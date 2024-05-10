@@ -1,0 +1,18 @@
+<div class="flex w-full">
+  <app-game-view-navbar-button
+    [clickable]="true"
+    iconClass="material-symbols-outlined"
+    iconString="grid_view"
+    [isActive]="selectedTab === GameViewTab.Board"
+    title="Board"
+    (clicked)="selectGameViewTab(GameViewTab.Board)"
+  ></app-game-view-navbar-button>
+  <app-game-view-navbar-button
+    [clickable]="true"
+    iconClass="material-symbols-outlined"
+    iconString="replay"
+    [isActive]="selectedTab === GameViewTab.Moves"
+    title="Moves"
+    (clicked)="selectGameViewTab(GameViewTab.Moves)"
+  ></app-game-view-navbar-button>
+</div>

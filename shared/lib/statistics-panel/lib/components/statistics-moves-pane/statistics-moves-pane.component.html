@@ -12,7 +12,7 @@
         ) {
           <div
             (click)="selectMoveNotation(moveNotationIndex)"
-            class="move-notation-row flex gap-x-2 px-2 py-4 transition bg-gray-600 dark:bg-gray-800 hover:bg-gray-500 hover:dark:bg-gray-700 cursor-pointer"
+            class="move-notation-row flex gap-x-2 px-2 py-2 md:py-4 transition bg-gray-600 dark:bg-gray-800 hover:bg-gray-500 hover:dark:bg-gray-700 cursor-pointer"
             [ngClass]="{
               'bg-sky-900 dark:bg-sky-900 hover:bg-sky-800 dark:hover:bg-sky-800':
                 (selectedMoveNotationIndex$ | async) === moveNotationIndex &&
@@ -94,8 +94,8 @@
 </div>
 
 @if (moveNotations$ | async; as moveNotations) {
-  <nav class="w-full transition text-white py-4 px-6 flex">
-    <div class="flex-grow mx-4">
+  <nav class="w-full transition text-white py-4 md:px-6 flex">
+    <div class="flex-grow mx-2 md:mx-4">
       <previous-next-selector
         (firstSelected)="selectFirst()"
         (previousSelected)="selectPrevious()"
