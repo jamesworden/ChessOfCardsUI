@@ -29,146 +29,16 @@
     (movesPanelToggled)="toggleMovesPanel()"
   ></app-sidebar>
 
-  <div class="flex justify-around">
-    @if (playerGameView$ | async; as playerGameView) {
-      <div
-        class="game flex flex-col justify-between h-full lg:pl-8"
-        cdkDropListGroup
-      >
-        <app-player-banner
-          [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
-          class="rounded-b-md transition"
-          [ngClass]="{
-            'bg-rose-700': !isPlayersTurn,
-            'bg-rose-900': isPlayersTurn
-          }"
-        ></app-player-banner>
+  @if ((selectedGameViewTab$ | async) === GameViewTab.Board) {
+    <ng-container [ngTemplateOutlet]="boardView"></ng-container>
+  }
 
-        <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
-
-        @if (
-          (visiblePastGameState$ | async) ?? (latestGameViewSnapshot$ | async);
-          as latestGameViewSnapshot
-        ) {
-          <game-board
-            #board
-            [playerGameView]="latestGameViewSnapshot"
-            [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
-            [initialPlaceMultipleCardAttempt]="
-              initialPlaceMultipleCardAttempt$ | async
-            "
-            [isPlayersTurn]="isPlayersTurn"
-            [placeMultipleCards]="placeMultipleCards$ | async"
-            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
-            [selectedCard]="selectedCard$ | async"
-            [selectedPosition]="selectedPosition$ | async"
-            (placeCardAttempted)="attemptToPlaceCard($event)"
-            (setPlaceMultipleCards)="placedMultipleCards($event)"
-            (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
-            (positionClicked)="onPositionClicked($event)"
-            (placeMultipleCardsListClicked)="
-              moveSelectedCardToPlaceMultipleList()
-            "
-          ></game-board>
-        }
-
-        <game-player-hand
-          #playerHand
-          [isPlacingMultipleCards]="isPlacingMultipleCards"
-          [isHost]="playerGameView.IsHost"
-          [cards]="playerGameView.Hand.Cards"
-          [cardSize]="(cardSize$ | async)!"
-          [disabled]="!!(waitingForServer$ | async)"
-          [isPlayersTurn]="isPlayersTurn"
-          [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
-          [isGameActive]="(gameIsActive$ | async) ?? false"
-          [initialPlaceMultipleCardsAttempt]="
-            initialPlaceMultipleCardAttempt$ | async
-          "
-          [selectedCard]="selectedCard$ | async"
-          [unfadedKind]="
-            (initialPlaceMultipleCardAttempt$ | async)?.Card?.Kind ?? null
-          "
-          [connectedToDropList]="
-            isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
-          "
-          [fadeAllCards]="!isPlayersTurn"
-          [suitAndKindHasValidMove]="(suitAndKindHasValidMove$ | async) ?? {}"
-          (cardDropped)="onPlayerHandCardDrop($event)"
-          (cardDragStarted)="onCardDragStarted($event)"
-          (cardDragEnded)="onCardDragEnded()"
-          (cardClicked)="onCardClicked($event)"
-        ></game-player-hand>
-
-        <app-player-banner
-          [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
-          class="rounded-t-md transition"
-          [ngClass]="{
-            'bg-sky-700': isPlayersTurn,
-            'bg-sky-900': !isPlayersTurn
-          }"
-        ></app-player-banner>
-      </div>
-    }
-  </div>
-
-  @if (isShowingStatisticsPanel$ | async) {
-    <div
-      class="m-8 rounded-md overflow-hidden flex-grow max-w-3xl shadow-lg flex"
-    >
-      <div class="flex flex-col bg-gray-600 dark:bg-gray-800 transition">
-        <statistics-pane-nav-button
-          iconClass="material-symbols-outlined"
-          iconString="playing_cards"
-          title="Stack"
-          [isActive]="true"
-          [clickable]="false"
-        ></statistics-pane-nav-button>
-        <card-stack
-          class="h-full pb-4"
-          [position]="selectedPosition$ | async"
-          [cardStack]="cardStack$ | async"
-          [cardSize]="(cardSize$ | async) ?? 64"
-        ></card-stack>
-      </div>
-
-      <statistics-panel
-        [moveNotations]="(moveNotations$ | async) ?? []"
-        [isHost]="(playerGameView$ | async)?.IsHost ?? false"
-        [selectedMoveNotationIndex]="selectedMoveNotationIndex$ | async"
-        (moveNotationSelected)="selectMoveNotation($event)"
-      ></statistics-panel>
-    </div>
+  @if ((selectedGameViewTab$ | async) === GameViewTab.Moves) {
+    <ng-container [ngTemplateOutlet]="movesView"></ng-container>
   }
 
   <!-- flex placeholder div -->
   <div></div>
-
-  @if (isShowingMovesPanel$ | async) {
-    <div
-      resizable
-      [minHeightPx]="(cardSize$ | async) ?? 64"
-      [startHeightPx]="((cardSize$ | async) ?? 64) * 3"
-      class="absolute bottom-0 left-20 right-0 flex justify-around flex-col bg-gray-600 dark:bg-gray-800 transition rounded-t-lg"
-      [ngStyle]="{
-        'z-index': Z_INDEXES.MOVES_PANEL
-      }"
-    >
-      <div #grabber class="w-full flex justify-around cursor-row-resize py-1">
-        <div class="bg-gray-200 w-24 h-1 rounded-lg"></div>
-      </div>
-
-      <div class="flex-1 flex flex-col h-full">
-        <statistics-moves-pane
-          class="flex-1"
-          [moveNotations]="(moveNotations$ | async) ?? []"
-          [isHost]="(playerGameView$ | async)?.IsHost ?? false"
-          [selectedMoveNotationIndex]="selectedMoveNotationIndex$ | async"
-          (moveNotationSelected)="selectMoveNotation($event)"
-        ></statistics-moves-pane>
-      </div>
-    </div>
-  }
 </div>
 
 <ng-template #opponentHandToolbar>
@@ -264,4 +134,178 @@
   } @else {
     <game-face-down-card></game-face-down-card>
   }
+</ng-template>
+
+<ng-template #boardView>
+  <div class="flex justify-around w-full">
+    <div class="flex justify-around">
+      @if (playerGameView$ | async; as playerGameView) {
+        <div
+          class="game flex flex-col justify-between h-full lg:pl-8"
+          cdkDropListGroup
+        >
+          <app-player-banner
+            [username]="playerGameView.IsHost ? 'Guest Player' : 'Host Player'"
+            class="rounded-b-md transition"
+            [ngClass]="{
+              'bg-rose-700': !isPlayersTurn,
+              'bg-rose-900': isPlayersTurn
+            }"
+          ></app-player-banner>
+
+          <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
+
+          @if (
+            (visiblePastGameState$ | async) ??
+              (latestGameViewSnapshot$ | async);
+            as latestGameViewSnapshot
+          ) {
+            <game-board
+              #board
+              [playerGameView]="latestGameViewSnapshot"
+              [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
+              [initialPlaceMultipleCardAttempt]="
+                initialPlaceMultipleCardAttempt$ | async
+              "
+              [isPlayersTurn]="isPlayersTurn"
+              [placeMultipleCards]="placeMultipleCards$ | async"
+              [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+              [selectedCard]="selectedCard$ | async"
+              [selectedPosition]="selectedPosition$ | async"
+              (placeCardAttempted)="attemptToPlaceCard($event)"
+              (setPlaceMultipleCards)="placedMultipleCards($event)"
+              (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
+              (positionClicked)="onPositionClicked($event)"
+              (placeMultipleCardsListClicked)="
+                moveSelectedCardToPlaceMultipleList()
+              "
+            ></game-board>
+          }
+
+          <game-player-hand
+            #playerHand
+            [isPlacingMultipleCards]="isPlacingMultipleCards"
+            [isHost]="playerGameView.IsHost"
+            [cards]="playerGameView.Hand.Cards"
+            [cardSize]="(cardSize$ | async)!"
+            [disabled]="!!(waitingForServer$ | async)"
+            [isPlayersTurn]="isPlayersTurn"
+            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+            [isGameActive]="(gameIsActive$ | async) ?? false"
+            [initialPlaceMultipleCardsAttempt]="
+              initialPlaceMultipleCardAttempt$ | async
+            "
+            [selectedCard]="selectedCard$ | async"
+            [unfadedKind]="
+              (initialPlaceMultipleCardAttempt$ | async)?.Card?.Kind ?? null
+            "
+            [connectedToDropList]="
+              isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
+            "
+            [fadeAllCards]="!isPlayersTurn"
+            [suitAndKindHasValidMove]="(suitAndKindHasValidMove$ | async) ?? {}"
+            (cardDropped)="onPlayerHandCardDrop($event)"
+            (cardDragStarted)="onCardDragStarted($event)"
+            (cardDragEnded)="onCardDragEnded()"
+            (cardClicked)="onCardClicked($event)"
+          ></game-player-hand>
+
+          <app-player-banner
+            [username]="playerGameView.IsHost ? 'Host Player' : 'Guest Player'"
+            class="rounded-t-md transition"
+            [ngClass]="{
+              'bg-sky-700': isPlayersTurn,
+              'bg-sky-900': !isPlayersTurn
+            }"
+          ></app-player-banner>
+        </div>
+      }
+    </div>
+
+    @if (isShowingStatisticsPanel$ | async) {
+      <ng-container [ngTemplateOutlet]="statisticsPanel"></ng-container>
+    }
+  </div>
+</ng-template>
+
+<ng-template #movesView>
+  <div class="flex flex-col justify-between w-full">
+    @if (playerGameView$ | async; as playerGameView) {
+      @if (
+        (visiblePastGameState$ | async) ?? (latestGameViewSnapshot$ | async);
+        as gameView
+      ) {
+        <div class="flex-1 flex flex-col justify-around">
+          <game-board
+            #board
+            class="py-2"
+            [playerGameView]="gameView"
+            [isPlayersTurn]="isPlayersTurn"
+            [placeMultipleCards]="placeMultipleCards$ | async"
+            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+            [selectedCard]="selectedCard$ | async"
+            [selectedPosition]="selectedPosition$ | async"
+            (positionClicked)="onPositionClicked($event)"
+          ></game-board>
+        </div>
+      }
+    }
+
+    <ng-container [ngTemplateOutlet]="movesPanel"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #movesPanel>
+  <div
+    resizable
+    [minHeightPx]="((cardSize$ | async) ?? 64) * 2"
+    [startHeightPx]="((cardSize$ | async) ?? 64) * 3"
+    class="flex justify-around flex-col bg-gray-600 dark:bg-gray-800 transition"
+    [ngStyle]="{
+      'z-index': Z_INDEXES.MOVES_PANEL
+    }"
+  >
+    <div #grabber class="w-full flex justify-around cursor-row-resize py-1">
+      <div class="bg-gray-200 w-24 h-1 rounded-lg"></div>
+    </div>
+
+    <div class="flex-1 flex flex-col h-full">
+      <statistics-moves-pane
+        class="flex-1"
+        [moveNotations]="(moveNotations$ | async) ?? []"
+        [isHost]="(playerGameView$ | async)?.IsHost ?? false"
+        [selectedMoveNotationIndex]="selectedMoveNotationIndex$ | async"
+        (moveNotationSelected)="selectMoveNotation($event)"
+      ></statistics-moves-pane>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #statisticsPanel>
+  <div
+    class="m-8 rounded-md overflow-hidden flex-grow max-w-3xl shadow-lg flex"
+  >
+    <div class="flex flex-col bg-gray-600 dark:bg-gray-800 transition">
+      <statistics-pane-nav-button
+        iconClass="material-symbols-outlined"
+        iconString="playing_cards"
+        title="Stack"
+        [isActive]="true"
+        [clickable]="false"
+      ></statistics-pane-nav-button>
+      <card-stack
+        class="h-full pb-4"
+        [position]="selectedPosition$ | async"
+        [cardStack]="cardStack$ | async"
+        [cardSize]="(cardSize$ | async) ?? 64"
+      ></card-stack>
+    </div>
+
+    <statistics-panel
+      [moveNotations]="(moveNotations$ | async) ?? []"
+      [isHost]="(playerGameView$ | async)?.IsHost ?? false"
+      [selectedMoveNotationIndex]="selectedMoveNotationIndex$ | async"
+      (moveNotationSelected)="selectMoveNotation($event)"
+    ></statistics-panel>
+  </div>
 </ng-template>

@@ -1,6 +1,6 @@
-<div class="flex justify-around relative rounded-md overflow-hidden shadow-lg">
+<div class="flex justify-around relative">
   @if (playerGameView$ | async; as playerGameView) {
-    <div class="flex">
+    <div class="flex shadow-lg rounded-md overflow-hidden">
       @if (initialPlaceMultipleCardAttempt) {
         <div
           [@fadeInOut]="{

@@ -72,6 +72,11 @@ import {
 import { getCardStack } from './logic/get-card-stack';
 import { BREAKPOINTS, Z_INDEXES } from '@shared/constants';
 
+enum GameViewTab {
+  Moves = 'moves',
+  Board = 'board',
+}
+
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
   wasPlacingMultipleCards: false,
@@ -151,7 +156,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly moveNotationIndexesToPastGameStates$ = new BehaviorSubject<{
     [moveNotationIndex: number]: PlayerGameView;
   }>({});
-  readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);
+  readonly selectedGameViewTab$ = new BehaviorSubject<GameViewTab>(
+    GameViewTab.Board
+  );
   readonly isShowingStatisticsPanel$ = new BehaviorSubject<boolean>(false);
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
@@ -208,6 +215,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   );
 
   readonly Z_INDEXES = Z_INDEXES;
+  readonly GameViewTab = GameViewTab;
 
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
@@ -360,8 +368,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   onResize() {
     if (window.innerWidth >= BREAKPOINTS.LG) {
-      if (this.isShowingMovesPanel$.getValue()) {
-        this.isShowingMovesPanel$.next(false);
+      if (this.selectedGameViewTab$.getValue() !== GameViewTab.Board) {
+        this.selectedGameViewTab$.next(GameViewTab.Board);
       }
 
       this.isShowingStatisticsPanel$.next(true);
@@ -811,8 +819,17 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.selectedMoveNotationIndex$.next(moveNotationIndex);
   }
 
+  /**
+   * TODO: Convert to having a dynamic parameter passed in with the type of tab.
+   */
   toggleMovesPanel() {
-    this.isShowingMovesPanel$.next(!this.isShowingMovesPanel$.getValue());
+    const selectedTab = this.selectedGameViewTab$.getValue();
+    if (selectedTab === GameViewTab.Moves) {
+      this.visiblePastGameState$.next(null);
+    }
+    this.selectedGameViewTab$.next(
+      selectedTab === GameViewTab.Moves ? GameViewTab.Board : GameViewTab.Moves
+    );
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
