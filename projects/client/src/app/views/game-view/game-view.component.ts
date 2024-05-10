@@ -377,7 +377,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (window.innerWidth >= BREAKPOINTS.MD) {
+    if (window.innerWidth >= BREAKPOINTS.SM) {
       this.isShowingStatisticsPanel$.next(false);
     }
   }
