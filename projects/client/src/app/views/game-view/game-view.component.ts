@@ -70,7 +70,7 @@ import {
   suitAndKindHasValidMove,
 } from './logic/suit-and-kind-has-valid-move';
 import { getCardStack } from './logic/get-card-stack';
-import { Z_INDEXES } from '@shared/constants';
+import { BREAKPOINTS, Z_INDEXES } from '@shared/constants';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -358,6 +358,15 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const clickedOnCard = (event.target as HTMLElement).closest('.card');
     if (!clickedOnCard && this.selectedCard$.getValue()) {
       this.selectedCard$.next(null);
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    if (window.innerWidth >= BREAKPOINTS.LG) {
+      if (this.isShowingMovesPanel$.getValue()) {
+        this.isShowingMovesPanel$.next(false);
+      }
     }
   }
 
