@@ -1,0 +1,82 @@
+@if (!isPlacingMultipleCards && !hasPendingDrawOffer) {
+  <game-opponent-hand
+    [cardSize]="(cardSize$ | async)!"
+    [numCards]="numCardsInOpponentsHand"
+  ></game-opponent-hand>
+}
+@if (isPlacingMultipleCards) {
+  <div
+    class="rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
+  >
+    <div
+      class="text-gray-800 px-2 font-semibold text-center flex flex-col justify-around"
+      [ngStyle]="{
+        'min-width': cardSize + 'px'
+      }"
+    >
+      <span class="text-left">Place<br />Cards?</span>
+    </div>
+
+    <div style="display: flex">
+      <app-icon-button
+        data-testid="place-cards-button"
+        [itemHeight]="cardSize"
+        [itemWidth]="cardSize"
+        [iconSize]="cardSize / 2"
+        iconColor="#33312e"
+        matTooltip="Confirm"
+        matTooltipPosition="below"
+        materialSymbol="check"
+        (selected)="confirmPlaceMultipleCards()"
+      ></app-icon-button>
+      <app-icon-button
+        data-testid="cancel-place-cards-button"
+        [itemHeight]="cardSize"
+        [itemWidth]="cardSize"
+        [iconSize]="cardSize / 2"
+        iconColor="#33312e"
+        matTooltip="Cancel"
+        matTooltipPosition="below"
+        materialSymbol="close"
+        (selected)="cancelPlaceMultipleCards()"
+      ></app-icon-button>
+    </div>
+  </div>
+}
+@if (!isPlacingMultipleCards && hasPendingDrawOffer) {
+  <div
+    class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
+  >
+    <div
+      class="text-gray-800 px-2 font-semibold text-center flex flex-col justify-around"
+      [ngStyle]="{
+        'min-width': cardSize + 'px'
+      }"
+    >
+      <span class="text-left">Accept<br />Draw?</span>
+    </div>
+
+    <div style="display: flex">
+      <app-icon-button
+        [itemWidth]="cardSize"
+        [itemHeight]="cardSize"
+        [iconSize]="cardSize / 2"
+        iconColor="#33312e"
+        matTooltip="Accept draw"
+        matTooltipPosition="below"
+        materialSymbol="check"
+        (selected)="acceptDraw()"
+      ></app-icon-button>
+      <app-icon-button
+        [itemHeight]="cardSize"
+        [itemWidth]="cardSize"
+        [iconSize]="cardSize / 2"
+        iconColor="#33312e"
+        matTooltip="Deny draw"
+        matTooltipPosition="below"
+        materialSymbol="close"
+        (selected)="denyDraw()"
+      ></app-icon-button>
+    </div>
+  </div>
+}

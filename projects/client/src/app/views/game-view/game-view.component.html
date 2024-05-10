@@ -41,91 +41,6 @@
   <div></div>
 </div>
 
-<ng-template #opponentHandToolbar>
-  @if (!(isPlacingMultipleCards$ | async) && !(hasPendingDrawOffer$ | async)) {
-    <game-opponent-hand
-      [cardSize]="(cardSize$ | async)!"
-      [numCards]="(latestGameViewSnapshot$ | async)!.NumCardsInOpponentsHand"
-    ></game-opponent-hand>
-  }
-  @if (isPlacingMultipleCards$ | async) {
-    <div
-      class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
-    >
-      <div
-        class="button-question text-gray-800"
-        [ngStyle]="{
-          'min-width': (cardSize$ | async)! + 'px'
-        }"
-      >
-        <span class="text-left">Place<br />Cards?</span>
-      </div>
-
-      <div style="display: flex">
-        <app-icon-button
-          data-testid="place-cards-button"
-          [itemHeight]="(cardSize$ | async)!"
-          [itemWidth]="(cardSize$ | async)!"
-          [iconSize]="(cardSize$ | async)! / 2"
-          iconColor="#33312e"
-          matTooltip="Confirm"
-          matTooltipPosition="below"
-          materialSymbol="check"
-          (selected)="confirmPlaceMultipleCards()"
-        ></app-icon-button>
-        <app-icon-button
-          data-testid="cancel-place-cards-button"
-          [itemHeight]="(cardSize$ | async)!"
-          [itemWidth]="(cardSize$ | async)!"
-          [iconSize]="(cardSize$ | async)! / 2"
-          iconColor="#33312e"
-          matTooltip="Cancel"
-          matTooltipPosition="below"
-          materialSymbol="close"
-          (selected)="cancelPlaceMultipleCards()"
-        ></app-icon-button>
-      </div>
-    </div>
-  }
-  @if (!(isPlacingMultipleCards$ | async) && (hasPendingDrawOffer$ | async)) {
-    <div
-      class="buttons-container rounded-md bg-gray-200 flex justify-between overflow-hidden shadow-md"
-    >
-      <div
-        class="button-question text-gray-800"
-        [ngStyle]="{
-          'min-width': (cardSize$ | async)! + 'px'
-        }"
-      >
-        <span class="text-left">Accept<br />Draw?</span>
-      </div>
-
-      <div style="display: flex">
-        <app-icon-button
-          [itemWidth]="(cardSize$ | async)!"
-          [itemHeight]="(cardSize$ | async)!"
-          [iconSize]="(cardSize$ | async)! / 2"
-          iconColor="#33312e"
-          matTooltip="Accept draw"
-          matTooltipPosition="below"
-          materialSymbol="check"
-          (selected)="acceptDraw()"
-        ></app-icon-button>
-        <app-icon-button
-          [itemHeight]="(cardSize$ | async)!"
-          [itemWidth]="(cardSize$ | async)!"
-          [iconSize]="(cardSize$ | async)! / 2"
-          iconColor="#33312e"
-          matTooltip="Deny draw"
-          matTooltipPosition="below"
-          materialSymbol="close"
-          (selected)="denyDraw()"
-        ></app-icon-button>
-      </div>
-    </div>
-  }
-</ng-template>
-
 <ng-template #cardMovementTemplate let-animatedEntity>
   @if (animatedEntity.context.Card) {
     @if (playerGameViewToAnimate$ | async; as playerGameViewToAnimate) {
@@ -153,7 +68,18 @@
             }"
           ></app-player-banner>
 
-          <ng-container [ngTemplateOutlet]="opponentHandToolbar"></ng-container>
+          <app-opponent-hand-toolbar
+            [numCardsInOpponentsHand]="playerGameView.NumCardsInOpponentsHand"
+            [cardSize]="(cardSize$ | async) ?? 64"
+            [hasPendingDrawOffer]="(hasPendingDrawOffer$ | async) ?? false"
+            [isPlacingMultipleCards]="
+              (isPlacingMultipleCards$ | async) ?? false
+            "
+            (drawDenied)="denyDraw()"
+            (drawAccepted)="acceptDraw()"
+            (placeMultipleCardsConfirmed)="confirmPlaceMultipleCards()"
+            (placeMultipleCardsCanceled)="cancelPlaceMultipleCards()"
+          ></app-opponent-hand-toolbar>
 
           @if (
             (visiblePastGameState$ | async) ??

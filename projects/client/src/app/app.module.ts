@@ -28,6 +28,7 @@ import { AnimationOverlayModule } from '@shared/animation-overlay';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
 import { StatisticsPanelModule } from '@shared/statistics-panel';
 import { UiInputsModule } from '@shared/ui-inputs';
+import { OpponentHandToolbarComponent } from './views/game-view/components/opponent-hand-toolbar/opponent-hand-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { UiInputsModule } from '@shared/ui-inputs';
     FooterComponent,
     PlayerBannerComponent,
     IconButtonComponent,
+    OpponentHandToolbarComponent,
   ],
   imports: [
     BrowserModule,
