@@ -27,6 +27,7 @@ import { GameModule } from '@shared/game';
 import { AnimationOverlayModule } from '@shared/animation-overlay';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
 import { StatisticsPanelModule } from '@shared/statistics-panel';
+import { UiInputsModule } from '@shared/ui-inputs';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { StatisticsPanelModule } from '@shared/statistics-panel';
     GameModule,
     AnimationOverlayModule,
     StatisticsPanelModule,
+    UiInputsModule,
   ],
   providers: [provideAnimations()],
   bootstrap: [AppComponent],
