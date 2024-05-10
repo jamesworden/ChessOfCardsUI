@@ -5,7 +5,7 @@
     [disabled]="selectFirstDisabled"
     [ngClass]="{
       'opacity-50': selectFirstDisabled,
-      'hover:bg-gray-600 hover:dark:bg-gray-700': !selectFirstDisabled
+      'hover:bg-gray-500 hover:dark:bg-gray-700': !selectFirstDisabled
     }"
   >
     <div class="flex flex-col justify-around">
@@ -21,7 +21,7 @@
     [disabled]="selectPrevDisabled"
     [ngClass]="{
       'opacity-50': selectPrevDisabled,
-      'hover:bg-gray-600 hover:dark:bg-gray-700': !selectPrevDisabled
+      'hover:bg-gray-500 hover:dark:bg-gray-700': !selectPrevDisabled
     }"
   >
     <div class="flex flex-col justify-around">
@@ -37,7 +37,7 @@
     (click)="selectNext()"
     [ngClass]="{
       'opacity-50': selectNextDisabled,
-      'hover:bg-gray-600 hover:dark:bg-gray-700': !selectNextDisabled
+      'hover:bg-gray-500 hover:dark:bg-gray-700': !selectNextDisabled
     }"
   >
     <div class="flex flex-col justify-around">
@@ -53,7 +53,7 @@
     (click)="selectLast()"
     [ngClass]="{
       'opacity-50': selectLastDisabled,
-      'hover:bg-gray-600 hover:dark:bg-gray-700': !selectLastDisabled
+      'hover:bg-gray-500 hover:dark:bg-gray-700': !selectLastDisabled
     }"
   >
     <div class="flex flex-col justify-around">

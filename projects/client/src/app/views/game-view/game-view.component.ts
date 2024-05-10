@@ -152,6 +152,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     [moveNotationIndex: number]: PlayerGameView;
   }>({});
   readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);
+  readonly isShowingStatisticsPanel$ = new BehaviorSubject<boolean>(false);
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
 
@@ -214,6 +215,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.navigateHomeIfGameInactive();
+    this.onResize();
 
     this.gameOverData$
       .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -336,12 +338,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       );
   }
 
-  constructor() {
-    this.visiblePastGameState$.subscribe((x) => {
-      console.log(x);
-    });
-  }
-
   ngAfterViewInit() {
     this.cardMovementTemplate$.next(this.cardMovementTemplate);
   }
@@ -367,6 +363,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       if (this.isShowingMovesPanel$.getValue()) {
         this.isShowingMovesPanel$.next(false);
       }
+
+      this.isShowingStatisticsPanel$.next(true);
+
+      return;
+    }
+
+    if (window.innerWidth >= BREAKPOINTS.MD) {
+      this.isShowingStatisticsPanel$.next(false);
     }
   }
 
