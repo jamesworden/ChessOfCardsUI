@@ -29,20 +29,34 @@
     </div>
   }
 
-  @if (cardStack && cardStack.length > 0) {
-    <div
-      class="flex-1 flex flex-col-reverse py-4 overflow-auto"
-      [ngStyle]="{
-        'min-width': cardSize + 'px'
-      }"
-    >
+  <div
+    class="flex-1 flex flex-col-reverse py-4 overflow-auto"
+    [ngStyle]="{
+      'min-width': cardSize + 'px'
+    }"
+  >
+    @if (cardStack && cardStack.length > 0) {
       @for (card of cardStack; track i; let i = $index) {
         <div class="flex flex-row justify-around mt-2">
           <game-card [card]="card"></game-card>
         </div>
       }
-    </div>
-  }
+    }
+
+    @if (position$ | async; as position) {
+      @if (
+        position.RowIndex === 3 &&
+        (redJokerLaneIndex === position.LaneIndex ||
+          blackJokerLaneIndex === position.LaneIndex)
+      ) {
+        <div class="flex flex-row justify-around mt-2">
+          <game-joker-card
+            [isRedJoker]="redJokerLaneIndex === position.LaneIndex"
+          ></game-joker-card>
+        </div>
+      }
+    }
+  </div>
 
   @if (positionNotation$ | async; as positionNotation) {
     <div></div>

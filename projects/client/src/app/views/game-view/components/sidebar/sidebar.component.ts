@@ -41,6 +41,8 @@ export class SidebarComponent implements OnInit {
   @Input({ required: true }) isPlayersTurn = false;
   @Input() cardStack: Card[] | null = [];
   @Input() selectedPosition: CardPosition | null = null;
+  @Input() redJokerLaneIndex: number | null = null;
+  @Input() blackJokerLaneIndex: number | null = null;
   @Input() set isShowingMovesPanel(isShowingMovesPanel: boolean) {
     this.isShowingMovesPanel$.next(isShowingMovesPanel);
   }

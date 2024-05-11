@@ -15,10 +15,10 @@ export class JokerCardComponent {
   @Input({ required: true }) set isRedJoker(isRedJoker: boolean) {
     this.isRedJoker$.next(isRedJoker);
   }
-  @Input({ required: true }) set isHost(isHost: boolean) {
+  @Input() set isHost(isHost: boolean) {
     this.isHost$.next(isHost);
   }
-  @Input({ required: true }) set wonBy(wonBy: PlayerOrNone) {
+  @Input() set wonBy(wonBy: PlayerOrNone) {
     this.wonBy$.next(wonBy);
   }
 
@@ -36,6 +36,10 @@ export class JokerCardComponent {
 
   readonly tiltDegrees$ = combineLatest([this.isHost$, this.wonBy$]).pipe(
     map(([isHost, wonBy]) => {
+      if (wonBy === PlayerOrNone.None) {
+        return 0;
+      }
+
       const isHostAndHostWon = isHost && wonBy === PlayerOrNone.Host;
       const isGuestAndGuestWon = !isHost && wonBy === PlayerOrNone.Guest;
       const playerWonLane = isHostAndHostWon || isGuestAndGuestWon;

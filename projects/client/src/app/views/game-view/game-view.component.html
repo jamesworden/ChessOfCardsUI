@@ -23,6 +23,8 @@
     [isPlayersTurn]="isPlayersTurn"
     [selectedPosition]="selectedPosition$ | async"
     [cardStack]="cardStack$ | async"
+    [redJokerLaneIndex]="(redJokerLaneIndex$ | async) ?? null"
+    [blackJokerLaneIndex]="(blackJokerLaneIndex$ | async) ?? null"
     (drawOffered)="offerDraw()"
     (passedMove)="passMove()"
     (resigned)="resign()"
@@ -245,6 +247,8 @@
         [position]="selectedPosition$ | async"
         [cardStack]="cardStack$ | async"
         [cardSize]="(cardSize$ | async) ?? 64"
+        [redJokerLaneIndex]="(redJokerLaneIndex$ | async) ?? null"
+        [blackJokerLaneIndex]="(blackJokerLaneIndex$ | async) ?? null"
       ></card-stack>
     </div>
 

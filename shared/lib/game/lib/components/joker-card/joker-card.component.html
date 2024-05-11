@@ -2,7 +2,7 @@
   class="card"
   src="../../../../assets/images/{{ imageFileName$ | async }}"
   [ngStyle]="{
-    rotate: (tiltDegrees$ | async) + 'deg',
+    rotate: ((tiltDegrees$ | async) ?? 0) + 'deg',
     height: (cardSize$ | async) + 'px',
     width: (cardSize$ | async) + 'px'
   }"

@@ -210,6 +210,26 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     )
   );
 
+  readonly redJokerLaneIndex$ = combineLatest([
+    this.visiblePastGameState$,
+    this.latestGameViewSnapshot$,
+  ]).pipe(
+    map(([visiblePastGameState, latestGameViewSnapshot]) => {
+      const gameView = visiblePastGameState ?? latestGameViewSnapshot;
+      return gameView?.RedJokerLaneIndex;
+    })
+  );
+
+  readonly blackJokerLaneIndex$ = combineLatest([
+    this.visiblePastGameState$,
+    this.latestGameViewSnapshot$,
+  ]).pipe(
+    map(([visiblePastGameState, latestGameViewSnapshot]) => {
+      const gameView = visiblePastGameState ?? latestGameViewSnapshot;
+      return gameView?.BlackJokerLaneIndex;
+    })
+  );
+
   readonly Z_INDEXES = Z_INDEXES;
   readonly GameViewTab = GameViewTab;
 

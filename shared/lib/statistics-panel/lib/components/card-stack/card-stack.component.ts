@@ -9,11 +9,15 @@ import { getPositionNotation } from 'shared/lib/logic/lib/get-position-notation'
   styleUrl: './card-stack.component.scss',
 })
 export class CardStackComponent {
-  @Input() cardStack: Card[] | null = [];
-  @Input() cardSize: number = 64;
-  @Input() set position(position: CardPosition | null) {
+  @Input({ required: true }) cardStack: Card[] | null = [];
+  @Input({ required: true }) cardSize: number = 64;
+  @Input({ required: true }) redJokerLaneIndex: number | null;
+  @Input({ required: true }) blackJokerLaneIndex: number | null;
+  @Input({ required: true }) set position(position: CardPosition | null) {
+    this.position$.next(position);
     this.positionNotation$.next(getPositionNotation(position));
   }
 
   readonly positionNotation$ = new BehaviorSubject<string | null>(null);
+  readonly position$ = new BehaviorSubject<CardPosition | null>(null);
 }
