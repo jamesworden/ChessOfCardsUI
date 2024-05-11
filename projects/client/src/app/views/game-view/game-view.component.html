@@ -73,11 +73,12 @@
               [username]="
                 playerGameView.IsHost ? 'Guest Player' : 'Host Player'
               "
-              class="rounded-b-md transition h-sm-hidden"
-              [ngClass]="{
-                'bg-rose-700': !isPlayersTurn,
-                'bg-rose-900': isPlayersTurn
-              }"
+              class="h-sm-hidden"
+              [containerClass]="
+                isPlayersTurn
+                  ? 'rounded-b-md bg-rose-900'
+                  : 'rounded-b-md bg-rose-700'
+              "
             ></app-player-banner>
           </div>
 
@@ -154,11 +155,12 @@
               [username]="
                 playerGameView.IsHost ? 'Host Player' : 'Guest Player'
               "
-              class="rounded-t-md transition h-sm-hidden"
-              [ngClass]="{
-                'bg-sky-700': isPlayersTurn,
-                'bg-sky-900': !isPlayersTurn
-              }"
+              class="h-sm-hidden"
+              [containerClass]="
+                isPlayersTurn
+                  ? 'rounded-t-md bg-sky-700'
+                  : 'rounded-t-md bg-sky-900'
+              "
             ></app-player-banner>
           </div>
         </div>

@@ -39,8 +39,13 @@ export class ResponsiveSizeService {
         const maxCardHeight = height / cardRatio.y;
         let cardSize = Math.min(maxCardWidth, maxCardHeight);
 
-        if (height >= BREAKPOINTS.MD && height <= BREAKPOINTS.LG) {
-          cardSize *= 0.925;
+        // Account for player banners and navbar on small screens
+        if (
+          height >= BREAKPOINTS.H_MD &&
+          height <= BREAKPOINTS.H_LG &&
+          width <= BREAKPOINTS.LG
+        ) {
+          cardSize *= 0.95;
         }
 
         this._cardSize$.next(cardSize);
