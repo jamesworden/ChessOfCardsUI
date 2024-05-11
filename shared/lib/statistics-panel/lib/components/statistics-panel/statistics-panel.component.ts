@@ -33,6 +33,24 @@ export class StatisticsPanelComponent {
       title: 'Moves',
       panelView: StatisticsPanelView.Moves,
     },
+    {
+      iconClass: 'material-symbols-outlined',
+      iconString: 'chat',
+      title: 'Chat',
+      panelView: StatisticsPanelView.Chat,
+    },
+    {
+      iconClass: 'material-symbols-outlined',
+      iconString: 'trophy',
+      title: 'Games',
+      panelView: StatisticsPanelView.Games,
+    },
+    {
+      iconClass: 'material-symbols-outlined',
+      iconString: 'groups',
+      title: 'Friends',
+      panelView: StatisticsPanelView.Friends,
+    },
   ];
 
   selectMoveNotation(moveSelectedIndex: number) {

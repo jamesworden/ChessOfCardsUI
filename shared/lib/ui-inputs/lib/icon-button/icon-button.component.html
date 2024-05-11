@@ -1,0 +1,22 @@
+<button
+  class="flex justify-around w-full"
+  [class]="buttonClass"
+  (click)="onClick()"
+>
+  <div class="flex flex-col justify-around">
+    <span
+      class="text-xl md:text-3xl"
+      [class]="iconClass"
+      [ngStyle]="{
+        opacity: disabled ? 0.5 : 1
+      }"
+      >{{ iconString }}</span
+    >
+
+    @if (label) {
+      <div class="w-full flex justify-around sm:text-sm md:text-md">
+        <span class="opacity-80">{{ label }}</span>
+      </div>
+    }
+  </div>
+</button>

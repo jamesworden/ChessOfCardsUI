@@ -16,7 +16,7 @@
 ></animation-overlay>
 
 <div
-  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full dark:bg-gray-700 bg-gray-300 transition"
+  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full bg-gray-200 dark:bg-gray-700 transition"
   [@fadeInOut]
 >
   <app-sidebar
@@ -78,8 +78,8 @@
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn
-                  ? 'rounded-b-md bg-rose-900'
-                  : 'rounded-b-md bg-rose-700'
+                  ? 'rounded-b-sm bg-rose-900'
+                  : 'rounded-b-sm bg-rose-700'
               "
             ></app-player-banner>
           </div>
@@ -159,8 +159,8 @@
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn
-                  ? 'rounded-t-md bg-sky-700'
-                  : 'rounded-t-md bg-sky-900'
+                  ? 'rounded-t-sm bg-sky-700'
+                  : 'rounded-t-sm bg-sky-900'
               "
             ></app-player-banner>
           </div>
@@ -239,7 +239,7 @@
         [clickable]="false"
       ></statistics-pane-nav-button>
       <card-stack
-        class="h-full pb-4"
+        class="h-full pb-4 border-r border-solid border-gray-500 dark:border-gray-700"
         [position]="selectedPosition$ | async"
         [cardStack]="cardStack$ | async"
         [cardSize]="(cardSize$ | async) ?? 64"

@@ -7,15 +7,15 @@
   }"
   (click)="onClick()"
 >
-  <div class="flex flex-col gap-y-2">
+  <div class="flex flex-col">
     <div class="flex justify-around">
-      <span [class]="iconClass" style="font-size: 36px">
+      <span [class]="iconClass" class="text-3xl">
         {{ iconString }}
       </span>
     </div>
 
     <div class="flex justify-around">
-      <span>{{ title }}</span>
+      <span class="opacity-80">{{ title }}</span>
     </div>
   </div>
 </div>

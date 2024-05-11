@@ -1,5 +1,4 @@
-import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
-import { ResponsiveSizeService } from '@shared/game';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-opponent-hand-toolbar',

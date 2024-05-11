@@ -25,7 +25,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { PlayerBannerComponent } from './views/game-view/components/player-banner/player-banner.component';
 import { GameModule } from '@shared/game';
 import { AnimationOverlayModule } from '@shared/animation-overlay';
-import { IconButtonComponent } from './components/icon-button/icon-button.component';
 import { StatisticsPanelModule } from '@shared/statistics-panel';
 import { UiInputsModule } from '@shared/ui-inputs';
 import { OpponentHandToolbarComponent } from './views/game-view/components/opponent-hand-toolbar/opponent-hand-toolbar.component';
@@ -41,7 +40,6 @@ import { GameViewNavbarButtonComponent } from './views/game-view/components/game
     SidebarComponent,
     FooterComponent,
     PlayerBannerComponent,
-    IconButtonComponent,
     OpponentHandToolbarComponent,
     GameViewNavbarComponent,
     GameViewNavbarButtonComponent,
