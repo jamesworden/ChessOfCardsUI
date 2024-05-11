@@ -216,6 +216,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   isPlayersTurn = false;
   isPlacingMultipleCards = false;
   cardSize = 64;
+  movesPanelHeight: number | undefined = undefined;
 
   ngOnInit() {
     this.navigateHomeIfGameInactive();
@@ -818,6 +819,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   selectGameViewTab(gameViewTab: GameViewTab) {
     this.visiblePastGameState$.next(null);
     this.selectedGameViewTab$.next(gameViewTab);
+  }
+
+  setMovesPanelHeight(height: number) {
+    this.movesPanelHeight = height;
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

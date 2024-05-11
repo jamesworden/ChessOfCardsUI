@@ -5,9 +5,10 @@ import {
   Renderer2,
   inject,
   Input,
-  TemplateRef,
   ContentChild,
   OnInit,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 
 @Directive({
@@ -17,8 +18,11 @@ export class ResizableDirective implements OnInit {
   readonly #elementRef = inject(ElementRef);
   readonly #renderer = inject(Renderer2);
 
-  @Input() minHeightPx = 0;
+  @Input({ required: true }) minHeightPx: number;
+  @Input() verticalMaxHeightOffsetPx = 0;
   @Input() startHeightPx = 0;
+
+  @Output() heightChanged = new EventEmitter<number>();
 
   @ContentChild('grabber')
   grabber: ElementRef<HTMLElement | undefined>;
@@ -67,19 +71,28 @@ export class ResizableDirective implements OnInit {
   @HostListener('document:mousemove', ['$event'])
   @HostListener('document:touchmove', ['$event'])
   onMouseMove(event: MouseEvent) {
-    if (this.isResizing) {
-      const deltaY = event.clientY - this.startY;
-      const newHeight = this.startHeight - deltaY;
-      if (newHeight < this.minHeightPx) {
-        return;
-      }
-
-      this.#renderer.setStyle(
-        this.#elementRef.nativeElement,
-        'height',
-        newHeight + 'px'
-      );
+    if (!this.isResizing) {
+      return;
     }
+
+    const deltaY = event.clientY - this.startY;
+    let newHeight = this.startHeight - deltaY;
+    if (newHeight < this.minHeightPx) {
+      return;
+    }
+
+    const maxHeight = window.innerHeight - this.verticalMaxHeightOffsetPx;
+    if (newHeight >= maxHeight) {
+      newHeight = maxHeight;
+    }
+
+    this.#renderer.setStyle(
+      this.#elementRef.nativeElement,
+      'height',
+      newHeight + 'px'
+    );
+
+    this.heightChanged.emit(newHeight);
   }
 
   @HostListener('document:mouseup')
