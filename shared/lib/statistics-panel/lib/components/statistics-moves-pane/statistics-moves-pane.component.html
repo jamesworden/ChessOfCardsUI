@@ -94,7 +94,9 @@
 </div>
 
 @if (moveNotations$ | async; as moveNotations) {
-  <nav class="w-full transition text-white py-4 md:px-6 flex">
+  <nav
+    class="w-full transition text-white py-4 md:px-6 flex sticky bottom-0 bg-gray-600 dark:bg-gray-800"
+  >
     <div class="flex-grow mx-2 md:mx-4">
       <previous-next-selector
         (firstSelected)="selectFirst()"

@@ -31,6 +31,7 @@
       [tooltip]="(isShowingCardStack$ | async) ? 'Hide Stack' : 'Show Stack'"
       materialSymbol="playing_cards"
       (selected)="toggleCardStack()"
+      label="Stack"
     ></app-icon-button>
   </div>
 
@@ -52,6 +53,7 @@
         tooltip="Pass move"
         materialSymbol="waving_hand"
         (selected)="attemptToOpenPassMoveModal()"
+        label="Pass"
       ></app-icon-button>
       <app-icon-button
         [disabled]="!!(waitingForServer$ | async)"
@@ -61,6 +63,7 @@
         tooltip="Offer draw"
         materialSymbol="handshake"
         (selected)="attemptToOpenOfferDrawModel()"
+        label="Draw"
       ></app-icon-button>
       <app-icon-button
         [disabled]="!!(waitingForServer$ | async)"
@@ -70,6 +73,7 @@
         tooltip="Resign"
         materialSymbol="flag"
         (selected)="openResignModal()"
+        label="Resign"
       ></app-icon-button>
       <app-icon-button
         class="block dark:hidden"
@@ -79,6 +83,7 @@
         tooltip="Dark Mode"
         materialSymbol="dark_mode"
         (selected)="toggleDarkMode()"
+        label="Dark"
       ></app-icon-button>
       <app-icon-button
         class="hidden dark:block"
@@ -88,6 +93,7 @@
         tooltip="Light Mode"
         materialSymbol="light_mode"
         (selected)="toggleDarkMode()"
+        label="Light"
       ></app-icon-button>
     </div>
 

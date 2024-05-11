@@ -1,7 +1,6 @@
-<div class="flex justify-around">
+<div class="flex justify-around py-2">
   <button
     class="flex flex-col justify-around"
-    mat-button
     [ngStyle]="{
       height: itemHeight + 'px',
       width: itemWidth ? itemWidth + 'px' : '100%'
@@ -20,5 +19,17 @@
       }"
       >{{ materialSymbol }}</span
     >
+
+    @if (label) {
+      <div class="w-full flex justify-around sm:text-sm md:text-md">
+        <span
+          class="lanes-font"
+          [ngStyle]="{
+            color: iconColor
+          }"
+          >{{ label }}</span
+        >
+      </div>
+    }
   </button>
 </div>

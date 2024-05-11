@@ -18,14 +18,14 @@ export class IconButtonComponent implements AfterViewInit {
   readonly #focusMonitor = inject(FocusMonitor);
   readonly #snackBar = inject(MatSnackBar);
 
-  /** CSS width, height, and font size of the item. */
   @Input({ required: true }) itemHeight: number;
   @Input({ required: true }) iconSize: number;
   @Input({ required: true }) materialSymbol: string;
   @Input() iconColor = 'white';
   @Input({ required: true }) itemWidth: number;
   @Input() disabled = false;
-  @Input() tooltip: string = '';
+  @Input() tooltip = '';
+  @Input() label = '';
 
   @Output() selected = new EventEmitter<void>();
 
