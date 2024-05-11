@@ -9,7 +9,7 @@
         [iconClass]="pane.iconClass"
         [iconString]="pane.iconString"
         [title]="pane.title"
-        [isActive]="true"
+        [isActive]="currentPanelView === pane.panelView"
         [clickable]="true"
       ></statistics-pane-nav-button>
     }

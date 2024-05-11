@@ -1,7 +1,8 @@
 <div
-  class="py-4 flex justify-around text-white flex-1 hover:bg-gray-600 dark:hover:bg-gray-800 transition"
+  class="py-4 flex justify-around text-white flex-1 transition"
   [ngClass]="{
-    'bg-gray-600 dark:bg-gray-800 transition': isActive,
+    'bg-gray-700 dark:bg-gray-900': isActive,
+    'bg-gray-600 dark:bg-gray-800': !isActive,
     'cursor-pointer': clickable
   }"
   (click)="onClick()"

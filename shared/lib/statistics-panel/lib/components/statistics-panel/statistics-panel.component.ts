@@ -31,6 +31,7 @@ export class StatisticsPanelComponent {
       iconClass: 'material-symbols-outlined',
       iconString: 'replay',
       title: 'Moves',
+      panelView: StatisticsPanelView.Moves,
     },
   ];
 
