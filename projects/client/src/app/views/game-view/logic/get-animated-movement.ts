@@ -77,13 +77,20 @@ function getAnimatedPosition(
 
 function getAnimatedPositionFromCardPosition(
   cardPosition: CardPosition
-): AnimatedPosition {
+): AnimatedPosition | null {
   const { LaneIndex: laneIndex, RowIndex: rowIndex } = cardPosition;
 
   const lane = document.getElementsByClassName('lane-animation-target')[
     laneIndex
   ];
+  if (!lane) {
+    return null;
+  }
+
   const position = lane.getElementsByTagName('game-position')[rowIndex];
+  if (!position) {
+    return null;
+  }
 
   let { x, y } = position.getBoundingClientRect();
   // y += window.scrollY;
@@ -94,8 +101,12 @@ function getAnimatedPositionFromCardPosition(
 function getAnimatedPositionFromOpponentCardIndex(
   guestCardIndex: number,
   cardSize: number
-) {
+): AnimatedPosition | null {
   const opponentHand = document.getElementById('opponent-hand')!;
+  if (!opponentHand) {
+    return null;
+  }
+
   let { x, y } = opponentHand.getBoundingClientRect();
   // y += window.scrollY;
   x += cardSize * guestCardIndex;
@@ -109,8 +120,12 @@ function getAnimatedPositionFromOpponentCardIndex(
 function getAnimatedPositionFromPlayerCardIndex(
   guestCardIndex: number,
   cardSize: number
-) {
+): AnimatedPosition | null {
   const playerHand = document.getElementById('player-hand')!;
+  if (!playerHand) {
+    return null;
+  }
+
   let { x, y } = playerHand.getBoundingClientRect();
   // y += window.scrollY;
   x += cardSize * guestCardIndex;
@@ -121,9 +136,16 @@ function getAnimatedPositionFromPlayerCardIndex(
   };
 }
 
-function getAnimatedPositionFromPlayerDeck() {
+function getAnimatedPositionFromPlayerDeck(): AnimatedPosition | null {
   const sidebar = document.getElementsByTagName('app-sidebar')[0];
+  if (!sidebar) {
+    return null;
+  }
+
   const faceDownCards = sidebar.getElementsByTagName('game-face-down-card');
+  if (faceDownCards.length === 0) {
+    return null;
+  }
 
   // Starting with the last face down card in the sidebar, return the first card
   // dimensions that aren't hidden (or has height or width).
@@ -146,9 +168,16 @@ function getAnimatedPositionFromPlayerDeck() {
   };
 }
 
-function getAnimatedPositionFromOpponentDeck() {
+function getAnimatedPositionFromOpponentDeck(): AnimatedPosition | null {
   const sidebar = document.getElementsByTagName('app-sidebar')[0];
+  if (!sidebar) {
+    return null;
+  }
+
   const playerDeck = sidebar.getElementsByTagName('game-face-down-card')[0];
+  if (!playerDeck) {
+    return null;
+  }
 
   if (!playerDeck) {
     return {

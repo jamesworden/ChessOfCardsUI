@@ -131,19 +131,9 @@ function getAnimatedEntity(
     ? AnimationType.FadeOut
     : AnimationType.Movement;
 
-  const sidebar = document.getElementsByTagName('app-sidebar')[0];
-  const faceDownCards = sidebar.getElementsByTagName('game-face-down-card');
-  if (
-    faceDownCards.length === 0 &&
-    (cardMovement.From.HostDeck || cardMovement.From.GuestDeck)
-  ) {
+  if (movement.to && !movement.from) {
     animationType = AnimationType.FadeIn;
-  }
-
-  if (
-    faceDownCards.length === 0 &&
-    (cardMovement.To.HostDeck || cardMovement.To.GuestDeck)
-  ) {
+  } else if (!movement.to && movement.from) {
     animationType = AnimationType.FadeOut;
   }
 
