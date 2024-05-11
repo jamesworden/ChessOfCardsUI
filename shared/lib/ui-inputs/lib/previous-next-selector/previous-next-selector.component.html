@@ -1,6 +1,6 @@
 <div class="flex gap-x-2">
   <button
-    class="px-2 rounded-sm transition flex-1 border border-gray-200"
+    class="px-2 rounded-sm transition flex-1 border border-gray-800 dark:border-gray-200"
     (click)="selectFirst()"
     [disabled]="selectFirstDisabled"
     [ngClass]="{
@@ -9,12 +9,15 @@
     }"
   >
     <div class="flex flex-col justify-around">
-      <span class="material-symbols-outlined text-3xl">first_page</span>
+      <span
+        class="material-symbols-outlined text-3xl text-gray-800 dark:text-gray-200"
+        >first_page</span
+      >
     </div>
   </button>
 
   <button
-    class="px-2 rounded-sm transition flex-2 border border-gray-200"
+    class="px-2 rounded-sm transition flex-2 border border-gray-800 dark:border-gray-200"
     (click)="selectPrevious()"
     [disabled]="selectPrevDisabled"
     [ngClass]="{
@@ -23,13 +26,17 @@
     }"
   >
     <div class="flex flex-col justify-around">
-      <span class="material-symbols-outlined text-3xl"> chevron_left </span>
+      <span
+        class="material-symbols-outlined text-3xl text-gray-800 dark:text-gray-200"
+      >
+        chevron_left
+      </span>
     </div>
   </button>
 
   <button
     [disabled]="selectNextDisabled"
-    class="px-2 rounded-sm transition flex-2 border border-gray-200"
+    class="px-2 rounded-sm transition flex-2 border border-gray-800 dark:border-gray-200"
     (click)="selectNext()"
     [ngClass]="{
       'opacity-50': selectNextDisabled,
@@ -37,13 +44,17 @@
     }"
   >
     <div class="flex flex-col justify-around">
-      <span class="material-symbols-outlined text-3xl"> chevron_right </span>
+      <span
+        class="material-symbols-outlined text-3xl text-gray-800 dark:text-gray-200"
+      >
+        chevron_right
+      </span>
     </div>
   </button>
 
   <button
     [disabled]="selectLastDisabled"
-    class="px-2 rounded-sm transition flex-1 border border-gray-200"
+    class="px-2 rounded-sm transition flex-1 border border-gray-800 dark:border-gray-200"
     (click)="selectLast()"
     [ngClass]="{
       'opacity-50': selectLastDisabled,
@@ -51,7 +62,10 @@
     }"
   >
     <div class="flex flex-col justify-around">
-      <span class="material-symbols-outlined text-3xl">last_page</span>
+      <span
+        class="material-symbols-outlined text-3xl text-gray-800 dark:text-gray-200"
+        >last_page</span
+      >
     </div>
   </button>
 </div>

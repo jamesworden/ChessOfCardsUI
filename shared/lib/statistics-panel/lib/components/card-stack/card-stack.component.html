@@ -1,15 +1,13 @@
-<div
-  class="flex flex-col justify-between h-full bg-gray-600 dark:bg-gray-800 w-20 transition"
->
+<div class="flex flex-col justify-between h-full w-20 transition">
   @if (cardStack && cardStack.length === 0 && !(positionNotation$ | async)) {
     <div class="h-full flex flex-col justify-around">
       <div class="flex flex-col gap-y-4 px-1 -mt-16">
         <div class="flex justify-around">
           <div
-            class="p-2 rounded-full bg-gray-500 dark:bg-gray-700 transition flex flex-col justify-around"
+            class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 transition flex flex-col justify-around"
           >
             <span
-              class="material-symbols-outlined text-gray-600 dark:text-gray-800 transition"
+              class="material-symbols-outlined text-gray-50 dark:text-gray-800 transition"
               style="font-size: 36px"
             >
               playing_cards
@@ -19,8 +17,8 @@
 
         <div class="flex justify-around">
           <div class="text-center max-w-xs">
-            <h2 class="text-sm mb-2 text-white">No position selected!</h2>
-            <p class="text-xs opacity-80 text-white">
+            <h2 class="text-sm mb-2">No position selected!</h2>
+            <p class="text-xs opacity-80">
               Select a position to see its cards.
             </p>
           </div>

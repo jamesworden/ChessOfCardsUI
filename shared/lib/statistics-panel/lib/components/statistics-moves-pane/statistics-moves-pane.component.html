@@ -4,7 +4,7 @@
 >
   @if (moveNotations$ | async; as moveNotations) {
     @if (moveNotations.length > 0) {
-      <div class="flex-1 flex flex-col text-white">
+      <div class="flex-1 flex flex-col gap-y-2 mt-2">
         @for (
           moveNotation of moveNotations;
           track moveNotationIndex;
@@ -12,13 +12,13 @@
         ) {
           <div
             (click)="selectMoveNotation(moveNotationIndex)"
-            class="move-notation-row flex gap-x-2 px-2 py-2 md:py-4 transition bg-gray-600 dark:bg-gray-800 hover:bg-gray-500 hover:dark:bg-gray-700 cursor-pointer"
+            class="move-notation-row flex gap-x-2 px-2 py-2 md:py-4 mx-2 transition bg-gray-50 rounded-sm shadow-lg dark:bg-gray-800 hover:bg-gray-500 hover:dark:bg-gray-700 cursor-pointer"
             [ngClass]="{
-              'bg-sky-900 dark:bg-sky-900 hover:bg-sky-800 dark:hover:bg-sky-800':
+              'bg-sky-200 dark:bg-sky-900 hover:bg-sky-100 dark:hover:bg-sky-800':
                 (selectedNotationIndex$ | async) === moveNotationIndex &&
                 ((moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
                   (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)),
-              'bg-rose-900 dark:bg-rose-900 hover:bg-rose-800 dark:hover:bg-rose-800':
+              'bg-rose-200 dark:bg-rose-900 hover:bg-rose-100 dark:hover:bg-rose-800':
                 (selectedNotationIndex$ | async) === moveNotationIndex &&
                 !(
                   (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
@@ -52,7 +52,7 @@
 
                   @for (notation of notationGroup; track i; let i = $index) {
                     <div
-                      class="mx-2 px-1 bg-gray-500 dark:bg-gray-600 flex justify-around w-16 rounded-sm"
+                      class="mx-2 px-1 bg-gray-50 dark:bg-gray-600 flex justify-around w-16 rounded-sm"
                     >
                       {{ notation }}
                     </div>
@@ -68,10 +68,10 @@
         <div class="flex flex-col gap-y-4">
           <div class="flex justify-around">
             <div
-              class="p-2 rounded-full bg-gray-500 dark:bg-gray-700 transition flex flex-col justify-around"
+              class="p-2 rounded-full bg-gray-300 dark:bg-gray-700 transition flex flex-col justify-around"
             >
               <span
-                class="material-symbols-outlined text-gray-600 dark:text-gray-800 transition"
+                class="material-symbols-outlined text-gray-200 dark:text-gray-800 transition"
                 style="font-size: 96px"
               >
                 replay
@@ -95,7 +95,7 @@
 
 @if (moveNotations$ | async; as moveNotations) {
   <nav
-    class="w-full transition text-white py-4 md:px-6 flex sticky bottom-0 bg-gray-600 dark:bg-gray-800"
+    class="w-full transition text-white py-4 md:px-6 flex sticky bottom-0 bg-gray-100 dark:bg-gray-800"
   >
     <div class="flex-grow mx-2 md:mx-4">
       <previous-next-selector

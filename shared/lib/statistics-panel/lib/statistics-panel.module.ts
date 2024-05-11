@@ -4,7 +4,6 @@ import { StatisticsPanelComponent } from './components/statistics-panel/statisti
 import { CardStackComponent } from './components/card-stack/card-stack.component';
 import { GameModule } from '@shared/game';
 import { StatisticsMovesPaneComponent } from './components/statistics-moves-pane/statistics-moves-pane.component';
-import { StatisticsPaneNavButtonComponent } from './components/statistics-pane-nav-button/statistics-pane-nav-button.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiInputsModule } from '@shared/ui-inputs';
 
@@ -13,13 +12,11 @@ import { UiInputsModule } from '@shared/ui-inputs';
     StatisticsPanelComponent,
     CardStackComponent,
     StatisticsMovesPaneComponent,
-    StatisticsPaneNavButtonComponent,
   ],
   imports: [CommonModule, GameModule, MatTooltipModule, UiInputsModule],
   exports: [
     StatisticsPanelComponent,
     CardStackComponent,
-    StatisticsPaneNavButtonComponent,
     StatisticsMovesPaneComponent,
   ],
 })
