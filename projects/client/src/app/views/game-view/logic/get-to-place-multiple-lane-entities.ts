@@ -4,7 +4,7 @@ import { Card, CardMovement, PlaceCardAttempt } from '@shared/models';
 import { TemplateRef } from '@angular/core';
 import { getAnimatedMovement } from './get-animated-movement';
 
-export function getToPlaceMultipleLaneEntities(
+export function gettoPmcLaneEntities(
   placeCardAttempts: PlaceCardAttempt[],
   cardsInHand: Card[],
   isHost: boolean,

@@ -22,7 +22,7 @@
           class="flex-1"
           [isHost]="(isHost$ | async) ?? false"
           [moveNotations]="moveNotations"
-          [selectedMoveNotationIndex]="selectedMoveNotationIndex"
+          [selectedNotationIndex]="selectedNotationIndex"
           (moveNotationSelected)="selectMoveNotation($event)"
         ></statistics-moves-pane>
       }

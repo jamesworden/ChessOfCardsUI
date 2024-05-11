@@ -25,10 +25,8 @@ export class StatisticsMovesPaneComponent {
   @Input() set moveNotations(moveNotations: MoveNotation[]) {
     this.moveNotations$.next(moveNotations);
   }
-  @Input() set selectedMoveNotationIndex(
-    selectedMoveNotationIndex: number | null
-  ) {
-    this.selectedMoveNotationIndex$.next(selectedMoveNotationIndex);
+  @Input() set selectedNotationIndex(selectedNotationIndex: number | null) {
+    this.selectedNotationIndex$.next(selectedNotationIndex);
   }
 
   @Output() moveNotationSelected = new EventEmitter<number>();
@@ -39,17 +37,15 @@ export class StatisticsMovesPaneComponent {
   readonly PlayerOrNone = PlayerOrNone;
 
   readonly moveNotations$ = new BehaviorSubject<MoveNotation[]>([]);
-  readonly selectedMoveNotationIndex$ = new BehaviorSubject<number | null>(
-    null
-  );
+  readonly selectedNotationIndex$ = new BehaviorSubject<number | null>(null);
 
   ngOnInit() {
-    this.selectedMoveNotationIndex$
+    this.selectedNotationIndex$
       .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe((selectedMoveNotationIndex) => {
-        if (selectedMoveNotationIndex !== null) {
+      .subscribe((selectedNotationIndex) => {
+        if (selectedNotationIndex !== null) {
           setTimeout(() =>
-            this.scrollMoveNotationIntoView(selectedMoveNotationIndex)
+            this.scrollMoveNotationIntoView(selectedNotationIndex)
           );
         }
       });
@@ -64,7 +60,7 @@ export class StatisticsMovesPaneComponent {
   }
 
   selectPrevious() {
-    const current = this.selectedMoveNotationIndex$.getValue();
+    const current = this.selectedNotationIndex$.getValue();
     if (!current) {
       return;
     }
@@ -72,7 +68,7 @@ export class StatisticsMovesPaneComponent {
   }
 
   selectNext() {
-    const current = this.selectedMoveNotationIndex$.getValue();
+    const current = this.selectedNotationIndex$.getValue();
     if (
       current === null ||
       current === this.moveNotations$.getValue().length - 1

@@ -14,7 +14,7 @@ export class StatisticsPanelComponent {
   readonly StatisticsPanelView = StatisticsPanelView;
 
   @Input({ required: true }) moveNotations: MoveNotation[] = [];
-  @Input({ required: true }) selectedMoveNotationIndex: number | null = null;
+  @Input({ required: true }) selectedNotationIndex: number | null = null;
   @Input({ required: true }) set isHost(isHost: boolean) {
     this.isHost$.next(isHost);
   }
