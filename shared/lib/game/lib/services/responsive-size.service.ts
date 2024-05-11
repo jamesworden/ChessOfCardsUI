@@ -36,7 +36,12 @@ export class ResponsiveSizeService {
         width -= sidebarWidth;
         const maxCardWidth = width / cardRatio.x;
         const maxCardHeight = height / cardRatio.y;
-        const cardSize = Math.min(maxCardWidth, maxCardHeight);
+        let cardSize = Math.min(maxCardWidth, maxCardHeight);
+
+        if (height >= 650 && height <= 800) {
+          cardSize *= 0.85;
+        }
+
         this._cardSize$.next(cardSize);
       });
   }
