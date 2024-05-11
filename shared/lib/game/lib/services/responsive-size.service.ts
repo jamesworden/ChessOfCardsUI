@@ -1,6 +1,7 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BREAKPOINTS } from '@shared/constants';
 
 const cardRatio = {
   x: 6,
@@ -38,8 +39,8 @@ export class ResponsiveSizeService {
         const maxCardHeight = height / cardRatio.y;
         let cardSize = Math.min(maxCardWidth, maxCardHeight);
 
-        if (height >= 650 && height <= 800) {
-          cardSize *= 0.85;
+        if (height >= BREAKPOINTS.MD && height <= BREAKPOINTS.LG) {
+          cardSize *= 0.925;
         }
 
         this._cardSize$.next(cardSize);
