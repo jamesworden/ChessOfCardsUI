@@ -19,7 +19,7 @@
   <div class="divider mx-2"></div>
 
   <div
-    class="px-1 pt-2 flex flex-col gap-y-2"
+    class="px-1 pt-2 flex flex-col pb-4"
     [ngClass]="{
       'lg:hidden': !(isShowingCardStack$ | async)
     }"
@@ -43,7 +43,7 @@
       [cardSize]="(cardSize$ | async) ?? 48"
     ></card-stack>
   } @else {
-    <div class="px-1 flex flex-col gap-y-2 py-2">
+    <div class="px-1 flex flex-col gap-y-4 py-2">
       <app-icon-button
         data-testid="pass-move-button"
         [disabled]="!!(waitingForServer$ | async)"

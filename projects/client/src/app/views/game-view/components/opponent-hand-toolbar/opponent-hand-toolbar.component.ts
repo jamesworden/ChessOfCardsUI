@@ -7,8 +7,6 @@ import { ResponsiveSizeService } from '@shared/game';
   styleUrl: './opponent-hand-toolbar.component.scss',
 })
 export class OpponentHandToolbarComponent {
-  readonly #responsiveSizeService = inject(ResponsiveSizeService);
-
   @Input() numCardsInOpponentsHand = 0;
   @Input() isPlacingMultipleCards = false;
   @Input() cardSize = 64;
@@ -18,8 +16,6 @@ export class OpponentHandToolbarComponent {
   @Output() placeMultipleCardsCanceled = new EventEmitter<void>();
   @Output() drawAccepted = new EventEmitter<void>();
   @Output() drawDenied = new EventEmitter<void>();
-
-  readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
   confirmPlaceMultipleCards() {
     this.placeMultipleCardsConfirmed.emit();
