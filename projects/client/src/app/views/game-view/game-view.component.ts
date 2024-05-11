@@ -228,7 +228,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.navigateHomeIfGameInactive();
-    this.onResize();
+    this.updateUiLayout();
 
     this.gameOverData$
       .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -369,7 +369,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize() {
+  updateUiLayout() {
     if (window.innerWidth >= BREAKPOINTS.LG) {
       if (this.selectedTab$.getValue() !== GameViewTab.Board) {
         this.selectedTab$.next(GameViewTab.Board);
