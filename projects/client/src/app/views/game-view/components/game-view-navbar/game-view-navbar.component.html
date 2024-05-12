@@ -8,9 +8,9 @@
     (clicked)="selectGameViewTab(GameViewTab.Board)"
     [buttonClass]="
       selectedTab === GameViewTab.Board
-        ? 'bg-slate-300 dark:bg-gray-900 py-2'
-        : 'bg-gray-50 dark:bg-gray-800 py-2' +
-          ' hover:bg-slate-200 dark:hover:bg-gray-700'
+        ? 'bg-white dark:bg-gray-900 py-2'
+        : 'bg-gray-100 dark:bg-gray-800 py-2' +
+          ' hover:bg-slate-100 dark:hover:bg-gray-700'
     "
     [clickable]="selectedTab !== GameViewTab.Board"
   ></icon-button>
@@ -23,9 +23,9 @@
     (clicked)="selectGameViewTab(GameViewTab.Moves)"
     [buttonClass]="
       selectedTab === GameViewTab.Moves
-        ? 'bg-slate-300 dark:bg-gray-900 py-2'
-        : 'bg-gray-50 dark:bg-gray-800 py-2' +
-          ' hover:bg-slate-200 dark:hover:bg-gray-700'
+        ? 'bg-white dark:bg-gray-900 py-2'
+        : 'bg-gray-100 dark:bg-gray-800 py-2' +
+          ' hover:bg-slate-100 dark:hover:bg-gray-700'
     "
     [clickable]="selectedTab !== GameViewTab.Moves"
   ></icon-button>

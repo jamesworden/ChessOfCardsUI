@@ -16,7 +16,7 @@
 ></animation-overlay>
 
 <div
-  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full bg-slate-200 dark:bg-gray-700 transition"
+  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full bg-gray-300 dark:bg-gray-700 transition"
   [@fadeInOut]
 >
   <app-sidebar
@@ -205,7 +205,7 @@
     [startHeightPx]="movesPanelHeight ?? ((cardSize$ | async) ?? 64) * 2"
     [verticalMaxHeightOffsetPx]="62"
     (heightChanged)="setMovesPanelHeight($event)"
-    class="flex justify-around flex-col bg-gray-100 dark:bg-gray-800 transition sticky bottom-0"
+    class="flex justify-around flex-col bg-gray-100 dark:bg-gray-700 transition sticky bottom-0"
     [ngStyle]="{
       'z-index': Z_INDEXES.MOVES_PANEL
     }"
@@ -232,7 +232,7 @@
   >
     <div class="flex flex-col transition">
       <icon-button
-        class="bg-gray-50"
+        class="bg-gray-100"
         iconClass="material-symbols-outlined"
         iconString="playing_cards"
         buttonClass="py-2"
@@ -241,7 +241,7 @@
         [clickable]="false"
       ></icon-button>
       <card-stack
-        class="h-full pb-2 border-r border-solid border-gray-300 bg-gray-50 shadow-lg"
+        class="h-full pb-2 border-r border-solid border-gray-300 bg-gray-100 shadow-lg"
         [position]="selectedPosition$ | async"
         [cardStack]="cardStack$ | async"
         [cardSize]="(cardSize$ | async) ?? 64"
