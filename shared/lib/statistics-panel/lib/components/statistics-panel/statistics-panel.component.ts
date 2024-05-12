@@ -44,4 +44,8 @@ export class StatisticsPanelComponent {
   selectMoveNotation(moveSelectedIndex: number) {
     this.moveNotationSelected.emit(moveSelectedIndex);
   }
+
+  selectPane(panelView: StatisticsPanelView) {
+    this.currentPanelView = panelView;
+  }
 }
