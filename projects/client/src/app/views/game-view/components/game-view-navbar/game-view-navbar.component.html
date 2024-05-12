@@ -1,18 +1,32 @@
 <div class="flex w-full">
-  <app-game-view-navbar-button
+  <icon-button
+    class="flex-1"
     [clickable]="true"
     iconClass="material-symbols-outlined"
     iconString="grid_view"
-    [isActive]="selectedTab === GameViewTab.Board"
-    title="Board"
+    label="Board"
     (clicked)="selectGameViewTab(GameViewTab.Board)"
-  ></app-game-view-navbar-button>
-  <app-game-view-navbar-button
+    [buttonClass]="
+      selectedTab === GameViewTab.Board
+        ? 'bg-slate-300 dark:bg-gray-900 py-2'
+        : 'bg-gray-50 dark:bg-gray-800 py-2' +
+          ' hover:bg-slate-200 dark:hover:bg-gray-700'
+    "
+    [clickable]="selectedTab !== GameViewTab.Board"
+  ></icon-button>
+  <icon-button
+    class="flex-1"
     [clickable]="true"
     iconClass="material-symbols-outlined"
     iconString="replay"
-    [isActive]="selectedTab === GameViewTab.Moves"
-    title="Moves"
+    label="Moves"
     (clicked)="selectGameViewTab(GameViewTab.Moves)"
-  ></app-game-view-navbar-button>
+    [buttonClass]="
+      selectedTab === GameViewTab.Moves
+        ? 'bg-slate-300 dark:bg-gray-900 py-2'
+        : 'bg-gray-50 dark:bg-gray-800 py-2' +
+          ' hover:bg-slate-200 dark:hover:bg-gray-700'
+    "
+    [clickable]="selectedTab !== GameViewTab.Moves"
+  ></icon-button>
 </div>

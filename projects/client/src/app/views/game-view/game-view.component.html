@@ -32,7 +32,7 @@
 
   <div class="flex flex-col flex-1">
     <app-game-view-navbar
-      class="flex lg:hidden"
+      class="flex lg:hidden shadow-lg"
       [selectedTab]="(selectedTab$ | async) ?? GameViewTab.Board"
       (tabSelected)="selectGameViewTab($event)"
     ></app-game-view-navbar>
