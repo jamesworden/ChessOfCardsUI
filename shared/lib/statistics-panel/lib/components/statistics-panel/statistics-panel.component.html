@@ -11,7 +11,12 @@
         [iconClass]="pane.iconClass"
         [iconString]="pane.iconString"
         [label]="pane.title"
-        [active]="currentPanelView === pane.panelView"
+        [buttonClass]="
+          currentPanelView === pane.panelView
+            ? 'bg-white dark:bg-gray-900 py-2'
+            : 'bg-gray-100 dark:bg-gray-800 py-2' +
+              ' hover:bg-slate-100 dark:hover:bg-gray-700'
+        "
       >
       </icon-button>
     }

@@ -9,7 +9,6 @@ export class IconButtonComponent {
   @Input({ required: true }) iconString: string;
   @Input() iconClass = 'material-symbols-outlined';
   @Input() disabled = false;
-  @Input() active = false;
   @Input() buttonClass = '';
   @Input() activeButtonClass = '';
   @Input() label = '';
