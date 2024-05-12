@@ -34,6 +34,9 @@
           (moveNotationSelected)="selectMoveNotation($event)"
         ></statistics-moves-pane>
       }
+      @case (StatisticsPanelView.Chat) {
+        <statistics-chat-pane class="flex-1"></statistics-chat-pane>
+      }
     }
   </div>
 </div>
