@@ -13,10 +13,11 @@ export class IconButtonComponent {
   @Input() buttonClass = '';
   @Input() activeButtonClass = '';
   @Input() label = '';
+  @Input() clickable = true;
 
   @Output() clicked = new EventEmitter<void>();
 
   onClick() {
-    this.clicked.emit();
+    this.clickable && this.clicked.emit();
   }
 }

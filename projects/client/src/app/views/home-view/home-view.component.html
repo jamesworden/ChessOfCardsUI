@@ -99,7 +99,7 @@
               <p>Send this game code to your opponent:</p>
               <div class="mt-2">
                 <div
-                  class="rounded-sm py-2 px-4 bg-gray-300 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl uppercase min-w-24 flex gap-x-1 w-36"
+                  class="rounded-sm py-2 px-4 bg-gray-200 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl uppercase min-w-24 flex gap-x-1 w-36"
                   [ngClass]="{
                     'border-red-700': !isConnectedToServer
                   }"
@@ -130,7 +130,7 @@
                   ) {
                     <button
                       [attr.data-testid]="button.durationOption"
-                      class="py-1 px-4 bg-gray-300 dark:bg-gray-700 rounded-sm transition border"
+                      class="py-1 px-4 bg-gray-200 dark:bg-gray-700 rounded-sm transition border"
                       [ngClass]="{
                         'border-gray-500 dark:border-gray-100 font-semibold':
                           button.isSelected,
@@ -157,7 +157,7 @@
               <div class="mt-2">
                 <input
                   data-testid="join-game-input"
-                  class="rounded-sm py-2 px-4 bg-gray-300 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl w-36 outline-none uppercase"
+                  class="rounded-sm py-2 px-4 bg-gray-200 border border-gray-400 dark:bg-gray-700 dark:border-gray-300 border-solid font-bold text-xl w-36 outline-none uppercase"
                   [ngClass]="{
                     'border-red-700':
                       (gameCodeIsInvalid$ | async) || !isConnectedToServer

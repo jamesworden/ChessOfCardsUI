@@ -3,7 +3,7 @@
 >
   @if ((playerGameView$ | async)?.GameCode; as gameCode) {
     <div class="flex flex-col justify-around text-center my-2 px-1">
-      <div class="semibold text-center text-md h-sm-hidden">Game<br />Code</div>
+      <div class="semibold text-center text-sm h-sm-hidden">Game<br />Code</div>
       <div class="tracking-widest font-bold text-center text-md mt-1">
         {{ gameCode }}
       </div>
@@ -25,12 +25,13 @@
       label="Stack"
       (clicked)="toggleCardStack()"
       iconClass="material-symbols-outlined"
+      buttonClass="rounded-sm hover:bg-gray-300 dark:hover:bg-gray-700"
     ></icon-button>
   </div>
 
   @if (isShowingCardStack$ | async) {
     <card-stack
-      class="h-full pb-4"
+      class="flex-1 pb-4"
       [cardStack]="cardStack"
       [position]="selectedPosition"
       [cardSize]="(cardSize$ | async) ?? 48"
@@ -48,6 +49,7 @@
         (clicked)="attemptToOpenPassMoveModal()"
         label="Pass"
         iconClass="material-symbols-outlined"
+        buttonClass="rounded-sm hover:bg-gray-300 dark:hover:bg-gray-700"
       ></icon-button>
       <icon-button
         [disabled]="!!(waitingForServer$ | async)"
@@ -57,6 +59,7 @@
         iconClass="material-symbols-outlined"
         (clicked)="attemptToOpenOfferDrawModel()"
         label="Draw"
+        buttonClass="rounded-sm hover:bg-gray-300 dark:hover:bg-gray-700"
       ></icon-button>
       <icon-button
         [disabled]="!!(waitingForServer$ | async)"
@@ -66,6 +69,7 @@
         iconClass="material-symbols-outlined"
         (clicked)="openResignModal()"
         label="Resign"
+        buttonClass="rounded-sm hover:bg-gray-300 dark:hover:bg-gray-700"
       ></icon-button>
       <icon-button
         class="block dark:hidden"
@@ -75,6 +79,7 @@
         iconString="dark_mode"
         (clicked)="toggleDarkMode()"
         label="Dark"
+        buttonClass="rounded-sm hover:bg-gray-300 dark:hover:bg-gray-700"
       ></icon-button>
       <icon-button
         class="hidden dark:block"
@@ -84,6 +89,7 @@
         iconString="light_mode"
         (clicked)="toggleDarkMode()"
         label="Light"
+        buttonClass="rounded-sm hover:bg-gray-300 dark:hover:bg-gray-700"
       ></icon-button>
     </div>
 
