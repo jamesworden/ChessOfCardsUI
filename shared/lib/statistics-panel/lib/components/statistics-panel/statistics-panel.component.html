@@ -1,8 +1,8 @@
 <div
-  class="bg-gray-200 dark:bg-gray-700 w-full h-full flex flex-col transition"
+  class="bg-gray-200 dark:bg-gray-800 w-full h-full flex flex-col transition"
 >
   <div
-    class="flex justify-around w-full bg-gray-100 dark:bg-gray-800 transition border-b border-solid border-gray-300"
+    class="flex justify-around w-full bg-gray-100 dark:bg-gray-800 transition"
   >
     @for (pane of panes; track i; let i = $index) {
       <icon-button
@@ -13,8 +13,8 @@
         [label]="pane.title"
         [buttonClass]="
           currentPanelView === pane.panelView
-            ? 'bg-white dark:bg-gray-900 py-2'
-            : 'bg-gray-100 dark:bg-gray-800 py-2' +
+            ? 'bg-gray-200 dark:bg-gray-800 py-2'
+            : 'bg-gray-100 dark:bg-gray-700 py-2 shadow-lg' +
               ' hover:bg-slate-100 dark:hover:bg-gray-700'
         "
         (clicked)="selectPane(pane.panelView)"

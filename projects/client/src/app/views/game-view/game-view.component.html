@@ -16,7 +16,7 @@
 ></animation-overlay>
 
 <div
-  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full bg-gray-300 dark:bg-gray-700 transition"
+  class="fixed top-0 left-0 min-h-[calc(100dvh)] max-h-[calc(100dvh)] flex justify-between w-full bg-gray-300 dark:bg-gray-900 transition"
   [@fadeInOut]
 >
   <app-sidebar
@@ -227,12 +227,12 @@
 </ng-template>
 
 <ng-template #statisticsPanel>
-  <div
-    class="m-8 rounded-sm overflow-hidden flex-grow max-w-3xl flex shadow-lg"
-  >
-    <div class="flex flex-col transition">
+  <div class="m-8 rounded-sm overflow-hidden flex-grow max-w-3xl flex">
+    <div
+      class="flex flex-col transition border-r border-solid border-gray-300 dark:border-gray-800"
+    >
       <icon-button
-        class="bg-gray-100"
+        class="bg-gray-100 dark:bg-gray-700"
         iconClass="material-symbols-outlined"
         iconString="playing_cards"
         buttonClass="py-2"
@@ -240,7 +240,7 @@
         [clickable]="false"
       ></icon-button>
       <card-stack
-        class="h-full pb-2 border-r border-solid border-gray-300 bg-gray-100 shadow-lg"
+        class="h-full pb-2 bg-gray-100 dark:bg-gray-700 shadow-lg"
         [position]="selectedPosition$ | async"
         [cardStack]="cardStack$ | async"
         [cardSize]="(cardSize$ | async) ?? 64"
