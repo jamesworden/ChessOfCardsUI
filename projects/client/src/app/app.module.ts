@@ -20,7 +20,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { NavbarState } from './state/navbar.state';
 import { FooterComponent } from './components/footer/footer.component';
 import { PlayerBannerComponent } from './views/game-view/components/player-banner/player-banner.component';
 import { GameModule } from '@shared/game';
@@ -46,7 +45,7 @@ import { GameViewNavbarComponent } from './views/game-view/components/game-view-
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState, ServerState, NavbarState]),
+    NgxsModule.forRoot([GameState, ServerState]),
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,

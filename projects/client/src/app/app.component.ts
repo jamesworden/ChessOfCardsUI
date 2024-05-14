@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { NavbarState } from './state/navbar.state';
 import { fadeInOutAnimation } from '@shared/animations';
 
 @Component({
@@ -10,7 +7,4 @@ import { fadeInOutAnimation } from '@shared/animations';
   styleUrls: ['./app.component.scss'],
   animations: [fadeInOutAnimation],
 })
-export class AppComponent {
-  @Select(NavbarState.isOpen)
-  isOpen$: Observable<boolean>;
-}
+export class AppComponent {}
