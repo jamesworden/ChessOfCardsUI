@@ -206,7 +206,7 @@
   <div
     resizable
     [minHeightPx]="((cardSize$ | async) ?? 64) * 2"
-    [startHeightPx]="movesPanelHeight ?? ((cardSize$ | async) ?? 64) * 2"
+    [startHeightPx]="movesPanelHeight ?? ((cardSize$ | async) ?? 64) * 4"
     [verticalMaxHeightOffsetPx]="62"
     (heightChanged)="setMovesPanelHeight($event)"
     class="flex justify-around flex-col bg-gray-200 dark:bg-gray-800 transition sticky bottom-0"
