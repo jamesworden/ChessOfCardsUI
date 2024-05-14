@@ -24,11 +24,11 @@
                   (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
                   (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)
                 ),
-              'bg-gray-50 hover:bg-slate-200 dark:bg-gray-700 hover:dark:bg-slate-500':
+              'bg-gray-50 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-slate-500':
                 (selectedNotationIndex$ | async) !== moveNotationIndex &&
                 ((moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
                   (moveNotation.playedBy === PlayerOrNone.Guest && !isHost)),
-              'bg-gray-50 hover:bg-rose-100 dark:bg-gray-700 hover:dark:bg-slate-500':
+              'bg-gray-50 hover:bg-rose-100 dark:bg-gray-700 dark:hover:bg-slate-500':
                 (selectedNotationIndex$ | async) !== moveNotationIndex &&
                 !(
                   (moveNotation.playedBy === PlayerOrNone.Host && isHost) ||
