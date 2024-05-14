@@ -205,12 +205,12 @@
     [startHeightPx]="movesPanelHeight ?? ((cardSize$ | async) ?? 64) * 2"
     [verticalMaxHeightOffsetPx]="62"
     (heightChanged)="setMovesPanelHeight($event)"
-    class="flex justify-around flex-col bg-gray-100 dark:bg-gray-700 transition sticky bottom-0"
+    class="flex justify-around flex-col bg-gray-200 dark:bg-gray-800 transition sticky bottom-0"
     [ngStyle]="{
       'z-index': Z_INDEXES.MOVES_PANEL
     }"
   >
-    <div #grabber class="flex justify-around cursor-row-resize pt-1 pb-2">
+    <div #grabber class="flex justify-around cursor-row-resize py-1">
       <div class="bg-gray-200 w-24 h-1 rounded-lg"></div>
     </div>
 

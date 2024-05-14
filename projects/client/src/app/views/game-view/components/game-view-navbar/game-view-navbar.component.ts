@@ -20,16 +20,22 @@ export class GameViewNavbarComponent {
     gameViewTab: GameViewTab;
   }[] = [
     {
+      gameViewTab: GameViewTab.Board,
+      iconClass: 'material-symbols-outlined',
+      iconString: 'grid_view',
+      label: 'Board',
+    },
+    {
       gameViewTab: GameViewTab.Moves,
       iconClass: 'material-symbols-outlined',
       iconString: 'replay',
       label: 'Moves',
     },
     {
-      gameViewTab: GameViewTab.Board,
+      gameViewTab: GameViewTab.Chat,
       iconClass: 'material-symbols-outlined',
-      iconString: 'grid_view',
-      label: 'Board',
+      iconString: 'chat',
+      label: 'Chat',
     },
   ];
 
