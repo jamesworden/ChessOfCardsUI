@@ -147,7 +147,7 @@ export class SidebarComponent implements OnInit {
 
     const modalRef = this.#matDialog.open(ModalComponent, {
       width: '250px',
-      maxHeight: '100dvh',
+      maxHeight: '100svh',
       data: modalData,
     });
 
@@ -183,7 +183,7 @@ export class SidebarComponent implements OnInit {
 
     const modalRef = this.#matDialog.open(ModalComponent, {
       width: '250px',
-      maxHeight: '100dvh',
+      maxHeight: '100svh',
       data: modalData,
     });
 
@@ -208,7 +208,7 @@ export class SidebarComponent implements OnInit {
 
     const modalRef = this.#matDialog.open(ModalComponent, {
       width: '250px',
-      maxHeight: '100dvh',
+      maxHeight: '100svh',
       data: modalData,
     });
 
