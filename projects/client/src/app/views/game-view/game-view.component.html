@@ -38,12 +38,16 @@
     ></app-game-view-navbar>
 
     <div class="flex-1">
-      @if ((selectedTab$ | async) === GameViewTab.Board) {
-        <ng-container [ngTemplateOutlet]="boardView"></ng-container>
-      }
-
-      @if ((selectedTab$ | async) === GameViewTab.Moves) {
-        <ng-container [ngTemplateOutlet]="movesView"></ng-container>
+      @switch (selectedTab$ | async) {
+        @case (GameViewTab.Board) {
+          <ng-container [ngTemplateOutlet]="boardView"></ng-container>
+        }
+        @case (GameViewTab.Moves) {
+          <ng-container [ngTemplateOutlet]="movesView"></ng-container>
+        }
+        @case (GameViewTab.Chat) {
+          <ng-container [ngTemplateOutlet]="chatView"></ng-container>
+        }
       }
     </div>
   </div>
@@ -256,3 +260,5 @@
     ></statistics-panel>
   </div>
 </ng-template>
+
+<ng-template #chatView></ng-template>
