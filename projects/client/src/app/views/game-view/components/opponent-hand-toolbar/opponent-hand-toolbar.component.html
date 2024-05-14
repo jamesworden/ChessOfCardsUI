@@ -14,10 +14,14 @@
 
   @if (isPlacingMultipleCards) {
     <div
-      class="rounded-sm bg-gray-50 flex justify-between overflow-hidden shadow-md"
+      class="rounded-sm bg-white dark:bg-gray-700 flex justify-between overflow-hidden shadow-md"
+      [ngStyle]="{
+        'max-height': cardSize + 'px',
+        'min-height': cardSize + 'px'
+      }"
     >
       <div
-        class="text-gray-800 px-2 font-semibold text-center flex flex-col justify-around flex-1"
+        class="px-2 font-semibold text-center flex flex-col justify-around flex-1"
         [ngStyle]="{
           'min-width': cardSize + 'px'
         }"
@@ -50,12 +54,13 @@
 
   @if (!isPlacingMultipleCards && hasPendingDrawOffer) {
     <div
-      class="buttons-container rounded-sm bg-gray-50 flex justify-between overflow-hidden shadow-md flex"
+      class="buttons-container rounded-sm bg-white dark:bg-gray-700 flex justify-between overflow-hidden shadow-md flex"
     >
       <div
-        class="text-gray-800 px-2 font-semibold text-center flex flex-col justify-around flex-1"
+        class="px-2 font-semibold text-center flex flex-col justify-around flex-1"
         [ngStyle]="{
-          'min-width': cardSize + 'px'
+          'max-height': cardSize + 'px',
+          'min-height': cardSize + 'px'
         }"
       >
         <span class="text-left">Accept<br />Draw?</span>
