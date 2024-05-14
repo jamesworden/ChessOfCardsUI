@@ -16,6 +16,7 @@ import {
   AnimationType,
 } from '@shared/animation-overlay';
 import { getAnimatedMovement } from './get-animated-movement';
+import { DURATIONS } from '@shared/constants';
 
 /**
  * Many of the functions here contain `// y += window.scrollY`.
@@ -117,7 +118,7 @@ function getAnimatedEntity(
   latestMoveMadeDetails: MoveMadeDetails | null,
   prevView: PlayerGameView,
   currView: PlayerGameView,
-  durationMs = 500
+  durationMs = DURATIONS.DEFAULT_CARD_ANIMATION
 ): AnimatedEntity<CardMovement> {
   const movement = getAnimatedMovement(
     cardMovement,

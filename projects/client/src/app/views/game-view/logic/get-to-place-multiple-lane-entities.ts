@@ -3,6 +3,7 @@ import { getIndexOfCardInArray } from '@shared/logic';
 import { Card, CardMovement, PlaceCardAttempt } from '@shared/models';
 import { TemplateRef } from '@angular/core';
 import { getAnimatedMovement } from './get-animated-movement';
+import { DURATIONS } from '@shared/constants';
 
 export function gettoPmcLaneEntities(
   placeCardAttempts: PlaceCardAttempt[],
@@ -36,7 +37,7 @@ function getAnimatedEntity(
   template: TemplateRef<CardMovement> | null,
   cardSize: number,
   wasDragged: boolean,
-  durationMs = 500
+  durationMs: number = DURATIONS.DEFAULT_CARD_ANIMATION
 ): AnimatedEntity<CardMovement> | null {
   if (!template) {
     return null;

@@ -2,6 +2,7 @@ import { AnimatedEntity, AnimationType } from '@shared/animation-overlay';
 import { Card, CardMovement, PlaceCardAttempt } from '@shared/models';
 import { TemplateRef } from '@angular/core';
 import { getAnimatedMovement } from './get-animated-movement';
+import { DURATIONS } from '@shared/constants';
 
 export function getfromPmcLaneEntities(
   placeCardAttempts: PlaceCardAttempt[],
@@ -32,7 +33,7 @@ function getAnimatedEntity(
   cardSize: number,
   existingCardsInHand: Card[],
   additionalCardIndex: number,
-  durationMs = 500
+  durationMs = DURATIONS.DEFAULT_CARD_ANIMATION
 ): AnimatedEntity<CardMovement> | null {
   if (!template) {
     return null;
