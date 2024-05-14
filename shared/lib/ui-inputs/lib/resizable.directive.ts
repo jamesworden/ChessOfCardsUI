@@ -42,14 +42,20 @@ export class ResizableDirective implements OnInit {
   }
 
   @HostListener('mousedown', ['$event'])
-  onMouseDown(event: MouseEvent) {
+  @HostListener('touchstart', ['$event'])
+  onTouchStart(event: MouseEvent | TouchEvent) {
     const grabber = this.grabber.nativeElement;
     if (!grabber) {
       return;
     }
 
-    this.startX = event.clientX;
-    this.startY = event.clientY;
+    const clientX =
+      event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+    const clientY =
+      event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
+
+    this.startX = clientX;
+    this.startY = clientY;
     this.startWidth = this.#elementRef.nativeElement.offsetWidth;
     this.startHeight = this.#elementRef.nativeElement.offsetHeight;
 
@@ -70,12 +76,14 @@ export class ResizableDirective implements OnInit {
 
   @HostListener('document:mousemove', ['$event'])
   @HostListener('document:touchmove', ['$event'])
-  onMouseMove(event: MouseEvent) {
+  onTouchMove(event: MouseEvent | TouchEvent) {
     if (!this.isResizing) {
       return;
     }
 
-    const deltaY = event.clientY - this.startY;
+    const clientY =
+      event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
+    const deltaY = clientY - this.startY;
     let newHeight = this.startHeight - deltaY;
     if (newHeight < this.minHeightPx) {
       return;
@@ -96,7 +104,8 @@ export class ResizableDirective implements OnInit {
   }
 
   @HostListener('document:mouseup')
-  onMouseUp() {
+  @HostListener('document:touchend')
+  onTouchEnd() {
     this.isResizing = false;
   }
 }
