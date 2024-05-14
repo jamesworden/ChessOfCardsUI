@@ -5,4 +5,4 @@ import { Component } from '@angular/core';
   templateUrl: './statistics-chat-pane.component.html',
   styleUrl: './statistics-chat-pane.component.scss',
 })
-export class StatisticsChatPanelComponent {}
+export class StatisticsChatPaneComponent {}
