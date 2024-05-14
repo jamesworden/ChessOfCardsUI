@@ -27,7 +27,7 @@
       label="Stack"
       (clicked)="toggleCardStack()"
       iconClass="material-symbols-outlined"
-      buttonClass="rounded-sm hover:bg-white dark:hover:bg-gray-700"
+      buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
     ></icon-button>
   </div>
 
@@ -51,7 +51,7 @@
         (clicked)="attemptToOpenPassMoveModal()"
         label="Pass"
         iconClass="material-symbols-outlined"
-        buttonClass="rounded-sm hover:bg-white dark:hover:bg-gray-700"
+        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
       ></icon-button>
       <icon-button
         [disabled]="!!(waitingForServer$ | async)"
@@ -61,7 +61,7 @@
         iconClass="material-symbols-outlined"
         (clicked)="attemptToOpenOfferDrawModel()"
         label="Draw"
-        buttonClass="rounded-sm hover:bg-white dark:hover:bg-gray-700"
+        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
       ></icon-button>
       <icon-button
         [disabled]="!!(waitingForServer$ | async)"
@@ -71,7 +71,7 @@
         iconClass="material-symbols-outlined"
         (clicked)="openResignModal()"
         label="Resign"
-        buttonClass="rounded-sm hover:bg-white dark:hover:bg-gray-700"
+        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
       ></icon-button>
       <icon-button
         class="block dark:hidden"
@@ -81,7 +81,7 @@
         iconString="dark_mode"
         (clicked)="toggleDarkMode()"
         label="Dark"
-        buttonClass="rounded-sm hover:bg-white dark:hover:bg-gray-700"
+        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
       ></icon-button>
       <icon-button
         class="hidden dark:block"
@@ -91,7 +91,7 @@
         iconString="light_mode"
         (clicked)="toggleDarkMode()"
         label="Light"
-        buttonClass="rounded-sm hover:bg-white dark:hover:bg-gray-700"
+        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
       ></icon-button>
     </div>
 
