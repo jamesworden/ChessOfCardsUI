@@ -1,6 +1,6 @@
 <div
   #scrollContainer
-  class="h-full flex flex-col justify-between mb-2 overflow-auto"
+  class="absolute h-full flex flex-col justify-between mb-2 overflow-auto w-full"
 >
   @if (moveNotations$ | async; as moveNotations) {
     @if (moveNotations.length > 0) {
@@ -93,7 +93,7 @@
 
 @if (moveNotations$ | async; as moveNotations) {
   <nav
-    class="w-full transition text-white py-4 md:px-6 flex sticky bottom-0 bg-white dark:bg-gray-700"
+    class="w-full transition text-white py-4 md:px-6 flex absolute bottom-0 bg-white dark:bg-gray-700"
   >
     <div class="flex-grow mx-2 md:mx-4">
       <previous-next-selector
