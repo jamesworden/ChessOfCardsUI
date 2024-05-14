@@ -33,7 +33,7 @@ import { GameState } from '../../state/game.state';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map, pairwise, startWith } from 'rxjs/operators';
+import { map, pairwise, startWith, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Router } from '@angular/router';
 import {
@@ -152,11 +152,17 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     pairwise()
   );
 
-  readonly movesMade$ = this.playerGameView$.pipe(
-    map((playerGameView) => playerGameView?.MovesMade ?? [])
+  readonly moveNotations$ = this.playerGameView$.pipe(
+    filter((playerGameView) => (playerGameView?.MovesMade?.length ?? 0) > 0),
+    withLatestFrom(this.selectedNotationIndex$),
+    map(([playerGameView, selectedNotationIndex]) =>
+      getMoveNotations(
+        playerGameView?.MovesMade ?? [],
+        playerGameView?.IsHost ?? false,
+        selectedNotationIndex ?? 0
+      )
+    )
   );
-
-  readonly moveNotations$ = this.movesMade$.pipe(map(getMoveNotations));
 
   private readonly latestMoveMadeDetails$ =
     new BehaviorSubject<MoveMadeDetails | null>(null);
@@ -1042,6 +1048,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const moveNotationIndexes = Object.keys(
       this.notationIdxToPastGameViews$.getValue()
     ).map((idx) => parseInt(idx));
+
+    if (moveNotationIndexes.length === 0) {
+      this.selectedNotationIndex$.next(null);
+      return;
+    }
+
     const lastMoveNotationIndex = Math.max(...moveNotationIndexes);
     this.selectedNotationIndex$.next(lastMoveNotationIndex);
   }

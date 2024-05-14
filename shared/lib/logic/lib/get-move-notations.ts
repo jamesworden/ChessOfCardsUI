@@ -4,9 +4,15 @@ export interface MoveNotation {
   playedBy: PlayerOrNone;
   notations: string[][];
   displayIndex: number | null;
+  isSelected: boolean;
+  playedByPlayer: boolean;
 }
 
-export function getMoveNotations(movesMade: MoveMade[]) {
+export function getMoveNotations(
+  movesMade: MoveMade[],
+  isHost: boolean,
+  selectedNotationIndex: number
+) {
   const moveNotations: MoveNotation[] = [];
 
   if (movesMade.length === 0) {
@@ -16,17 +22,26 @@ export function getMoveNotations(movesMade: MoveMade[]) {
   let latestPlayedBy: PlayerOrNone | undefined = undefined;
   let latestIndex = 0;
 
-  for (const moveMade of movesMade) {
+  for (let i = 0; i < movesMade.length; i++) {
+    const moveMade = movesMade[i];
+
     let displayIndex: number | null = null;
     if (moveMade.PlayedBy !== latestPlayedBy) {
       latestIndex++;
       displayIndex = latestIndex;
     }
 
+    const hostAndPlayedByHost =
+      isHost && moveMade.PlayedBy === PlayerOrNone.Host;
+    const guestAndPlayedByGuest =
+      !isHost && moveMade.PlayedBy === PlayerOrNone.Guest;
+
     moveNotations.push({
       notations: [],
       playedBy: moveMade.PlayedBy,
       displayIndex,
+      isSelected: selectedNotationIndex === i,
+      playedByPlayer: hostAndPlayedByHost || guestAndPlayedByGuest,
     });
 
     moveNotations[moveNotations.length - 1].notations.push(
