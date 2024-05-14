@@ -1,0 +1,89 @@
+<div
+  class="overflow-hidden"
+  [ngStyle]="{
+    'max-height': cardSize + 'px',
+    'min-height': cardSize + 'px'
+  }"
+>
+  @if (!isPlacingMultipleCards && !hasPendingDrawOffer) {
+    <game-opponent-hand
+      [cardSize]="cardSize"
+      [numCards]="numCardsInOpponentsHand"
+    ></game-opponent-hand>
+  }
+
+  @if (isPlacingMultipleCards) {
+    <div
+      class="rounded-sm bg-white dark:bg-gray-700 flex justify-between overflow-hidden shadow-md"
+      [ngStyle]="{
+        'max-height': cardSize + 'px',
+        'min-height': cardSize + 'px'
+      }"
+    >
+      <div
+        class="px-2 font-semibold text-center flex flex-col justify-around flex-1"
+        [ngStyle]="{
+          'min-width': cardSize + 'px'
+        }"
+      >
+        <span class="text-left">Place<br />Cards?</span>
+      </div>
+
+      <div class="flex flex-1">
+        <icon-button
+          class="flex-1"
+          data-testid="place-cards-button"
+          matTooltip="Confirm"
+          matTooltipPosition="below"
+          iconString="check"
+          iconClass="material-symbols-outlined"
+          (clicked)="confirmPlaceMultipleCards()"
+        ></icon-button>
+        <icon-button
+          class="flex-1"
+          data-testid="cancel-place-cards-button"
+          matTooltip="Cancel"
+          matTooltipPosition="below"
+          iconString="close"
+          iconClass="material-symbols-outlined"
+          (clicked)="cancelPlaceMultipleCards()"
+        ></icon-button>
+      </div>
+    </div>
+  }
+
+  @if (!isPlacingMultipleCards && hasPendingDrawOffer) {
+    <div
+      class="buttons-container rounded-sm bg-white dark:bg-gray-700 flex justify-between overflow-hidden shadow-md flex"
+    >
+      <div
+        class="px-2 font-semibold text-center flex flex-col justify-around flex-1"
+        [ngStyle]="{
+          'max-height': cardSize + 'px',
+          'min-height': cardSize + 'px'
+        }"
+      >
+        <span class="text-left">Accept<br />Draw?</span>
+      </div>
+
+      <div class="flex flex-1">
+        <icon-button
+          class="flex-1"
+          matTooltip="Accept draw"
+          matTooltipPosition="below"
+          iconString="check"
+          iconClass="material-symbols-outlined"
+          (clicked)="acceptDraw()"
+        ></icon-button>
+        <icon-button
+          class="flex-1"
+          matTooltip="Deny draw"
+          matTooltipPosition="below"
+          iconString="close"
+          iconClass="material-symbols-outlined"
+          (clicked)="denyDraw()"
+        ></icon-button>
+      </div>
+    </div>
+  }
+</div>

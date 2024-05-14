@@ -5,6 +5,7 @@
 
 html {
   font-family: 'Bricolage Grotesque Variable', sans-serif;
+  overscroll-behavior: none;
 }
 
 /* 
@@ -36,6 +37,11 @@ html {
 .card.cdk-drag-placeholder {
   opacity: 0;
   transition: ease-in-out 0.2s;
+  background-color: transparent !important;
+}
+
+.card.cdk-drag-preview {
+  background-color: transparent !important;
 }
 
 .card.cdk-drag-animating {
@@ -58,8 +64,20 @@ html {
   color: #eeeed2;
 }
 
-@media (max-height: 600px) {
+@media (max-height: 650px) {
   .h-sm-hidden {
-    display: none;
+    display: none !important;
   }
+}
+
+.flex-2 {
+  flex-grow: 2;
+}
+
+.flex-3 {
+  flex-grow: 3;
+}
+
+.flex-4 {
+  flex-grow: 4;
 }

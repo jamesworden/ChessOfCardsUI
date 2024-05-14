@@ -8,12 +8,13 @@ import {
   inject,
   DestroyRef,
 } from '@angular/core';
-import { Card } from '@shared/models';
+import { Card, Kind, PlaceCardAttempt } from '@shared/models';
 import { Observable, timer, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { switchMap, filter, delay, map } from 'rxjs/operators';
 import { ResponsiveSizeService } from '@shared/game';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { bounceCardAnimation } from './bounce-cards.animation';
+import { SuitAndKindHasValidMove } from 'projects/client/src/app/views/game-view/logic/suit-and-kind-has-valid-move';
 
 @Component({
   selector: 'game-player-hand',
@@ -25,10 +26,16 @@ export class PlayerHandComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #destroyRef = inject(DestroyRef);
 
+  readonly RELATIVE_BOUNCE_FACTOR = 5;
+  readonly NUM_MAX_CARDS_IN_HAND = 5;
+
+  @Input() connectedToDropList = 'position';
   @Input({ required: true }) isHost: boolean;
   @Input({ required: true }) cardSize: number;
   @Input() disabled = true;
-
+  @Input() fadeAllCards = false;
+  @Input() unfadedKind: Kind | null = null;
+  @Input() suitAndKindHasValidMove: SuitAndKindHasValidMove = {};
   @Input({ required: true }) set placeMultipleCardsHand(
     placeMultipleCardsHand: Card[] | null
   ) {
@@ -48,8 +55,21 @@ export class PlayerHandComponent implements OnInit {
   ) {
     this.isPlacingMultipleCards$.next(isPlacingMultipleCards);
   }
+  @Input({ required: true }) set initialPlaceMultipleCardsAttempt(
+    initialPlaceMultipleCardsAttempt: PlaceCardAttempt | null
+  ) {
+    this.initialPlaceMultipleCardsAttempt$.next(
+      initialPlaceMultipleCardsAttempt
+    );
+  }
+  @Input() set selectedCard(selectedCard: Card | null) {
+    this.selectedCard$.next(selectedCard);
+  }
 
   @Output() cardDropped = new EventEmitter<CdkDragDrop<string>>();
+  @Output() cardDragStarted = new EventEmitter<Card>();
+  @Output() cardDragEnded = new EventEmitter<Card>();
+  @Output() cardClicked = new EventEmitter<Card>();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly bouncingCards$ = new BehaviorSubject(false);
@@ -62,6 +82,9 @@ export class PlayerHandComponent implements OnInit {
   readonly bounceTimer$ = new BehaviorSubject<Observable<number | null>>(
     of(null)
   );
+  readonly initialPlaceMultipleCardsAttempt$ =
+    new BehaviorSubject<PlaceCardAttempt | null>(null);
+  readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
 
   readonly allCards$ = combineLatest([
     this.cards$,
@@ -82,7 +105,12 @@ export class PlayerHandComponent implements OnInit {
       )
       .subscribe(() => this.brieflyApplyBounceClass());
 
-    combineLatest([this.isPlayersTurn$, this.isGameActive$, this.allCards$])
+    combineLatest([
+      this.isPlayersTurn$,
+      this.isGameActive$,
+      this.allCards$,
+      this.selectedCard$,
+    ])
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(([isPlayersTurn, isGameActive, allCards]) =>
         isPlayersTurn && isGameActive && allCards && allCards.length > 0
@@ -120,5 +148,17 @@ export class PlayerHandComponent implements OnInit {
 
   brieflyApplyBounceClass() {
     this.bouncingCards$.next(true);
+  }
+
+  onDragStarted(card: Card) {
+    this.cardDragStarted.emit(card);
+  }
+
+  onDragEnded(card: Card) {
+    this.cardDragEnded.emit(card);
+  }
+
+  selectCard(card: Card) {
+    this.cardClicked.emit(card);
   }
 }

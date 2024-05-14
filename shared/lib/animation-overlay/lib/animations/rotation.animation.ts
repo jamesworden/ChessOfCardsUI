@@ -5,6 +5,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { DURATIONS } from '@shared/constants';
 
 export const rotationAnimation = trigger('rotation', [
   state(
@@ -31,7 +32,7 @@ export const rotationAnimation = trigger('rotation', [
     animate('{{ durationMs }}ms ease-out'),
     {
       params: {
-        durationMs: 500,
+        durationMs: DURATIONS.DEFAULT_CARD_ANIMATION,
       },
     }
   ),

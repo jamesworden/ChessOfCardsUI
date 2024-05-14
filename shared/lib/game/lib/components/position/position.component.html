@@ -2,7 +2,7 @@
   #position
   id="position"
   [class]="
-    'position transition' +
+    'cursor-pointer position transition' +
     ' ' +
     (transparentTile ? 'bg-transparent' : backgroundClass)
   "
@@ -16,44 +16,50 @@
     width: (cardSize$ | async) + 'px',
     'z-index': Z_INDEXES.POSITION_CONTENT
   }"
+  (click)="onClick()"
 >
-  <ng-content></ng-content>
-
   <div class="h-0 w-0 relative">
-    @if (!hideMarker) {
-      <div
-        class="absolute top-0"
-        [ngStyle]="{
-          height: (cardSize$ | async) + 'px',
-          width: (cardSize$ | async) + 'px',
-          'z-index': Z_INDEXES.POSITION_MARKER_CONTAINER
-        }"
-      >
-        <div class="relative w-full h-full">
-          @if ((marker$ | async)?.topLeft; as topLeft) {
-            <span
-              [class]="'absolute font-semibold select-none' + ' ' + textClass"
-              [ngStyle]="{
-                top: ((cardSize$ | async) ?? 64) / 6 + 'px',
-                left: ((cardSize$ | async) ?? 64) / 6 + 'px',
-                fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px'
-              }"
-              >{{ topLeft }}</span
-            >
-          }
-          @if ((marker$ | async)?.bottomRight; as bottomRight) {
-            <span
-              [class]="'absolute font-semibold select-none' + ' ' + textClass"
-              [ngStyle]="{
-                bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
-                right: ((cardSize$ | async) ?? 64) / 6 + 'px',
-                fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px'
-              }"
-              >{{ bottomRight }}</span
-            >
-          }
-        </div>
+    <div
+      class="absolute top-0"
+      [ngStyle]="{
+        height: (cardSize$ | async) + 'px',
+        width: (cardSize$ | async) + 'px',
+        'z-index': Z_INDEXES.POSITION_MARKER_CONTAINER
+      }"
+    >
+      <div class="relative w-full h-full">
+        @if (!hideMarker && (marker$ | async)?.topLeft; as topLeft) {
+          <span
+            [class]="'absolute font-semibold select-none' + ' ' + textClass"
+            [ngStyle]="{
+              top: ((cardSize$ | async) ?? 64) / 6 + 'px',
+              left: ((cardSize$ | async) ?? 64) / 6 + 'px',
+              fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px'
+            }"
+            >{{ topLeft }}</span
+          >
+        }
+        @if (!hideMarker && (marker$ | async)?.bottomRight; as bottomRight) {
+          <span
+            [class]="'absolute font-semibold select-none' + ' ' + textClass"
+            [ngStyle]="{
+              bottom: ((cardSize$ | async) ?? 64) / 6 + 'px',
+              right: ((cardSize$ | async) ?? 64) / 6 + 'px',
+              fontSize: ((cardSize$ | async) ?? 64) / 6 + 'px'
+            }"
+            >{{ bottomRight }}</span
+          >
+        }
+        @if (selectedCard && isValidMove) {
+          <div
+            data-testid="valid-position-marker"
+            class="absolute top-1/4 left-1/4 bg-gray-600 opacity-40 rounded-full h-1/2 w-1/2"
+          ></div>
+        }
       </div>
-    }
+    </div>
   </div>
+
+  <!-- Keep the rendered cards beneath the marker container so that the marker container doesn't get moved when cards exist. -->
+  <ng-content></ng-content>
 </div>

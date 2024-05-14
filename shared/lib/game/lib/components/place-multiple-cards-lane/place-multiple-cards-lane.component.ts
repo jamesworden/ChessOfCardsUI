@@ -31,7 +31,7 @@ export class PlaceMultipleCardsLaneComponent {
   readonly MIN_CARD_HEIGHT_FACTOR = MIN_CARD_HEIGHT_FACTOR;
   readonly Z_INDEXES = Z_INDEXES;
 
-  @Input({ required: true }) isHost: boolean;
+  @Input() selectedCard: Card | null = null;
   @Input({ required: true }) set playerGameView(
     playerGameView: PlayerGameView | null
   ) {
@@ -52,9 +52,13 @@ export class PlaceMultipleCardsLaneComponent {
   ) {
     this.placeMultipleCardsHand$.next(placeMultipleCardsHand);
   }
+  @Input({ required: true }) set isHost(isHost: boolean) {
+    this.isHost$.next(isHost);
+  }
 
   @Output() setPlaceMultipleCards = new EventEmitter<Card[]>();
   @Output() setPlaceMultipleCardsHand = new EventEmitter<Card[]>();
+  @Output() listClicked: EventEmitter<void> = new EventEmitter();
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
@@ -157,5 +161,9 @@ export class PlaceMultipleCardsLaneComponent {
 
     this.setPlaceMultipleCards.emit(placeMultipleCards);
     this.setPlaceMultipleCardsHand.emit(placeMultipleCardsHand);
+  }
+
+  onListClicked() {
+    this.listClicked.emit();
   }
 }

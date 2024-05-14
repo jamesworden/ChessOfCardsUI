@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class PlayerBannerComponent {
   @Input({ required: true }) username: string;
   @Input() elo?: number;
+  @Input() containerClass: string;
 }

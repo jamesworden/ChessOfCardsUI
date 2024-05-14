@@ -55,7 +55,7 @@ type GameStateModel = {
   gameIsActive: boolean;
 };
 
-const initialGameState: GameStateModel = {
+const defaultGameState: GameStateModel = {
   playerGameView: null,
   playerGameViewToAnimate: null,
   isPlacingMultipleCards: false,
@@ -76,7 +76,7 @@ const initialGameState: GameStateModel = {
 
 @State<GameStateModel>({
   name: 'gameState',
-  defaults: initialGameState,
+  defaults: defaultGameState,
 })
 @Injectable()
 export class GameState {
@@ -178,9 +178,8 @@ export class GameState {
   ) {
     ctx.patchState({
       isPlacingMultipleCards: true,
-      placeMultipleCards: [action.placeCardAttempt.Card],
       placeMultipleCardsHand: action.remainingCardsInHand,
-      initalPlaceMultipleCardAttempt: action.placeCardAttempt,
+      initalPlaceMultipleCardAttempt: action.initalPlaceMultipleCardAttempt,
     });
   }
 
@@ -226,17 +225,7 @@ export class GameState {
 
   @Action(ResetGameData)
   resetGameData(ctx: StateContext<GameStateModel>) {
-    ctx.patchState({
-      playerGameView: undefined,
-      pendingGameView: null,
-      drawOfferSent: false,
-      hasPendingDrawOffer: false,
-      gameOverData: {
-        isOver: false,
-        message: undefined,
-      },
-      gameIsActive: false,
-    });
+    ctx.patchState(defaultGameState);
   }
 
   @Action(OfferDraw)

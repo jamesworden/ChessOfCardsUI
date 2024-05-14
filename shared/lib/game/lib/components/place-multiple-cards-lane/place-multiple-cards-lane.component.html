@@ -4,8 +4,13 @@
 ) {
   <div class="lane" *ngIf="playerGameView$ | async">
     <!-- Pseudo-position background beneath actual card list -->
+    <!-- Dynamic flex direction matters for card animations -->
     <div
-      class="absolute flex flex-col-reverse"
+      class="absolute flex"
+      [ngClass]="{
+        'flex-col': !(isHost$ | async),
+        'flex-col-reverse': (isHost$ | async)
+      }"
       [ngStyle]="{
         'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_LANE_BACKGROUND
       }"
@@ -13,18 +18,27 @@
       @for (position of pseudoPositions$ | async; track i; let i = $index) {
         <game-position
           [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
-          [rowIndex]="position.rowIndex"
+          [rowIndex]="
+            (isHost$ | async) ? position.rowIndex : 6 - position.rowIndex
+          "
           [backgroundClass]="position.backgroundClass"
           [textClass]="position.textClass"
           [isHost]="(isHost$ | async) ?? false"
           [dragDropDisabled]="true"
+          [selectedCard]="selectedCard"
+          [isValidMove]="
+            ((placeMultipleCards$ | async)?.length ?? 0) +
+              ((previouslyCapturedCards$ | async)?.length ?? 0) ===
+              ((isHost$ | async) ? i : 6 - i) &&
+            initialPlaceMultipleCardAttempt.Card.Kind === selectedCard?.Kind
+          "
         ></game-position>
       }
     </div>
 
     <div
       id="place-multiple-cards-list"
-      class="place-multiple-cards-list"
+      class="place-multiple-cards-list w-full h-full"
       cdkDropList
       cdkDropListData="place-multiple-cards-list"
       cdkDropListConnectedTo="player-hand"
@@ -38,6 +52,10 @@
         'min-height': MIN_CARD_HEIGHT_FACTOR * (cardSize$ | async)! + 'px',
         width: (cardSize$ | async)! + 'px'
       }"
+      [ngClass]="{
+        'cursor-pointer': selectedCard
+      }"
+      (click)="onListClicked()"
     >
       @for (card of placeMultipleCards$ | async; track i; let i = $index) {
         <game-card

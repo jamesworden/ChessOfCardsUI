@@ -1,9 +1,17 @@
 <img
-  class="card z-5 select-none"
+  class="card z-5 select-none transition-colors rounded-sm"
+  [ngClass]="{
+    'opacity-50': disabled,
+    'bg-yellow-200': selected,
+    'cursor-pointer': playerCanDrag
+  }"
   cdkDrag
   [cdkDragDisabled]="!playerCanDrag"
   cdkDragBoundary=".game"
   [cdkDragData]="card$ | async"
+  (cdkDragStarted)="onDragStarted()"
+  (cdkDragEnded)="onDragEnded()"
   src="../../../../assets/images/{{ imageFileName$ | async }}"
   [ngStyle]="cardStyles$ | async"
+  (click)="onClick()"
 />

@@ -12,3 +12,4 @@ export * from './lib/move-card-to-lane';
 export * from './lib/player-has-won-lane';
 export * from './lib/remove-card-from-array';
 export * from './lib/get-reason-if-move-invalid';
+export * from './lib/get-move-notations';

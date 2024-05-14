@@ -21,8 +21,8 @@ export class UpdatePlayerGameView {
 export class StartPlacingMultipleCards {
   static readonly type = '[GameState] Start Placing Multiple Cards';
   constructor(
-    public placeCardAttempt: PlaceCardAttempt,
-    public remainingCardsInHand: Card[]
+    public remainingCardsInHand: Card[],
+    public initalPlaceMultipleCardAttempt: PlaceCardAttempt
   ) {}
 }
 

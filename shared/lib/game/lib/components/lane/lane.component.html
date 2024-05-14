@@ -1,6 +1,6 @@
 @if (lane$ | async; as lane) {
   <div
-    class="lane rounded-md flex"
+    class="lane rounded-sm flex"
     [ngClass]="{ 'flex-col': !isHost, 'flex-col-reverse': isHost }"
   >
     @for (position of positions$ | async; track i; let i = $index) {
@@ -11,8 +11,12 @@
         [backgroundClass]="position.backgroundClass"
         [textClass]="position.textClass"
         [isHost]="isHost"
+        [isValidMove]="validMoveRowIndexes?.has(position.rowIndex) ?? false"
+        [selectedCard]="selectedCard"
+        [isSelected]="position.isSelected"
         (placeCardAttempted)="onPlaceCardAttempted($event)"
         [hideMarker]="!!position.topCard"
+        (clicked)="onPositionClicked(position)"
       >
         @if (position.topCard) {
           <game-card

@@ -43,7 +43,7 @@ export class AnimationOverlayComponent implements OnInit {
     this.animatedEntities$.next(animatedEntities);
   }
 
-  @Output() finishedAnimations = new EventEmitter();
+  @Output() finishedAnimations = new EventEmitter<AnimatedEntity<unknown>[]>();
   @Output() startingAnimations = new EventEmitter<AnimatedEntity<unknown>[]>();
 
   readonly appliedRotation$ = new BehaviorSubject<boolean>(false);
@@ -88,7 +88,7 @@ export class AnimationOverlayComponent implements OnInit {
     const sequenceWithDelays = sequencesWithDelays[initialIndex];
 
     if (!sequenceWithDelays) {
-      this.finishedAnimations.emit();
+      this.finishedAnimations.emit(this.animatedEntities$.getValue());
       this.currentSequence$.next(null);
       return;
     }

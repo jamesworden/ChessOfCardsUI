@@ -1,15 +1,8 @@
 :host {
   display: flex;
   justify-content: space-between;
-  min-height: 100vh;
+  min-height: 100svh;
+  max-height: 100svh;
+  overflow: hidden;
   width: 100%;
-}
-
-.button-question {
-  padding: 0px 8px;
-  font-weight: bold;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
 }

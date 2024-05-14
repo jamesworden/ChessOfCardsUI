@@ -1,9 +1,16 @@
-<div class="flex justify-around relative rounded-md overflow-hidden shadow-lg">
+<div class="flex justify-around relative">
   @if (playerGameView$ | async; as playerGameView) {
-    <div class="flex">
+    <div class="flex shadow-lg rounded-sm overflow-hidden">
       @if (initialPlaceMultipleCardAttempt) {
         <div
-          class="absolute bg-black opacity-80 overflow-hidden"
+          [@fadeInOut]="{
+            value: '',
+            params: {
+              endOpacity: '.8',
+              duration: 150
+            }
+          }"
+          class="absolute bg-black rounded-sm overflow-hidden opacity-80"
           [ngStyle]="{
             'z-index': Z_INDEXES.PLACE_MULTIPLE_CARDS_OVERLAY,
             height: (cardSize$ | async)! * 7 + 'px',
@@ -23,6 +30,8 @@
         ) {
           @if (initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex) {
             <game-place-multiple-cards-lane
+              class="lane-animation-target"
+              #placeMultipleCardsLane
               [isHost]="playerGameView.IsHost"
               [playerGameView]="playerGameView"
               [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
@@ -30,11 +39,16 @@
               [initialPlaceMultipleCardAttempt]="
                 initialPlaceMultipleCardAttempt
               "
+              [selectedCard]="
+                isPlacingMultipleCards ? (selectedCard$ | async) : null
+              "
               (setPlaceMultipleCards)="placedMultipleCards($event)"
               (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
+              (listClicked)="onPlaceMultipleCardsListClicked()"
             ></game-place-multiple-cards-lane>
           } @else {
             <game-lane
+              class="lane-animation-target"
               [lane]="lane"
               [laneIndex]="laneIndex"
               [isHost]="playerGameView.IsHost"
@@ -42,7 +56,16 @@
               [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
               [transparentTiles]="transparentTiles"
               [isPlayersTurn]="isPlayersTurn"
+              [validMoveRowIndexes]="
+                (laneIndexesToValidMoveRowIndexes$ | async)?.get(laneIndex) ??
+                null
+              "
+              [selectedCard]="
+                isPlacingMultipleCards ? null : (selectedCard$ | async)
+              "
+              [selectedPosition]="selectedPosition"
               (placeCardAttempted)="onPlaceCardAttempted($event)"
+              (rowIndexClicked)="onPositionClicked(laneIndex, $event)"
             ></game-lane>
           }
         }

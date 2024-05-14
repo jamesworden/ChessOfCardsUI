@@ -20,12 +20,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { NavbarState } from './state/navbar.state';
 import { FooterComponent } from './components/footer/footer.component';
 import { PlayerBannerComponent } from './views/game-view/components/player-banner/player-banner.component';
 import { GameModule } from '@shared/game';
 import { AnimationOverlayModule } from '@shared/animation-overlay';
-import { IconButtonComponent } from './components/icon-button/icon-button.component';
+import { StatisticsPanelModule } from '@shared/statistics-panel';
+import { UiInputsModule } from '@shared/ui-inputs';
+import { OpponentHandToolbarComponent } from './views/game-view/components/opponent-hand-toolbar/opponent-hand-toolbar.component';
+import { GameViewNavbarComponent } from './views/game-view/components/game-view-navbar/game-view-navbar.component';
 
 @NgModule({
   declarations: [
@@ -36,13 +38,14 @@ import { IconButtonComponent } from './components/icon-button/icon-button.compon
     SidebarComponent,
     FooterComponent,
     PlayerBannerComponent,
-    IconButtonComponent,
+    OpponentHandToolbarComponent,
+    GameViewNavbarComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState, ServerState, NavbarState]),
+    NgxsModule.forRoot([GameState, ServerState]),
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,
@@ -52,6 +55,8 @@ import { IconButtonComponent } from './components/icon-button/icon-button.compon
     FormsModule,
     GameModule,
     AnimationOverlayModule,
+    StatisticsPanelModule,
+    UiInputsModule,
   ],
   providers: [provideAnimations()],
   bootstrap: [AppComponent],

@@ -1,6 +1,7 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BREAKPOINTS } from '@shared/constants';
 
 const cardRatio = {
   x: 6,
@@ -36,7 +37,17 @@ export class ResponsiveSizeService {
         width -= sidebarWidth;
         const maxCardWidth = width / cardRatio.x;
         const maxCardHeight = height / cardRatio.y;
-        const cardSize = Math.min(maxCardWidth, maxCardHeight);
+        let cardSize = Math.min(maxCardWidth, maxCardHeight);
+
+        // Account for player banners and navbar on small screens
+        if (
+          height >= BREAKPOINTS.H_MD &&
+          height <= BREAKPOINTS.H_LG &&
+          width <= BREAKPOINTS.LG
+        ) {
+          cardSize *= 0.9;
+        }
+
         this._cardSize$.next(cardSize);
       });
   }

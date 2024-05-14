@@ -1,0 +1,129 @@
+<div class="flex flex-col justify-between h-full w-full">
+  <div class="flex-1 relative">
+    <div
+      #scrollContainer
+      class="absolute h-full flex flex-col justify-between overflow-auto w-full"
+    >
+      @if (moveNotations$ | async; as moveNotations) {
+        @if (moveNotations.length > 0) {
+          <div class="flex-1 flex flex-col gap-y-2 mt-2">
+            @for (
+              moveNotation of moveNotations;
+              track moveNotationIndex;
+              let moveNotationIndex = $index
+            ) {
+              <div
+                (click)="selectMoveNotation(moveNotationIndex)"
+                class="move-notation-row flex gap-x-2 px-2 py-2 md:py-4 mx-2 transition rounded-sm shadow-lg cursor-pointer"
+                [ngClass]="{
+                  'bg-slate-200 hover:bg-slate-300 dark:bg-sky-900 dark:hover:bg-sky-800':
+                    moveNotation.isSelected && moveNotation.playedByPlayer,
+                  'bg-rose-100 hover:bg-rose-200 dark:bg-rose-900 dark:hover:bg-rose-800':
+                    moveNotation.isSelected && !moveNotation.playedByPlayer,
+                  'bg-gray-50 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-slate-500':
+                    !moveNotation.isSelected && moveNotation.playedByPlayer,
+                  'bg-gray-50 hover:bg-rose-100 dark:bg-gray-700 dark:hover:bg-slate-500':
+                    !moveNotation.isSelected && !moveNotation.playedByPlayer
+                }"
+              >
+                <div class="ml-4 flex flex-col gap-y-2">
+                  @for (
+                    notationGroup of moveNotation.notations;
+                    track i;
+                    let i = $index
+                  ) {
+                    <div class="flex gap-x-4">
+                      <div class="flex flex-col justify-start w-8">
+                        <span
+                          class="material-symbols-outlined px-2 select-none"
+                          [ngClass]="{
+                            'opacity-0': !moveNotation?.displayIndex
+                          }"
+                        >
+                          person
+                        </span>
+                      </div>
+
+                      <div class="w-4">
+                        @if (moveNotation?.displayIndex) {
+                          {{ moveNotation?.displayIndex }}
+                        }
+                      </div>
+
+                      @for (
+                        notation of notationGroup;
+                        track i;
+                        let i = $index
+                      ) {
+                        <div
+                          class="mx-2 px-1 dark:bg-gray-600 flex justify-around w-16 rounded-sm"
+                        >
+                          {{ notation }}
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="flex flex-col justify-around h-full py-4">
+            <div class="flex flex-col gap-y-4">
+              <div class="flex justify-around">
+                <div
+                  class="p-2 rounded-full bg-gray-300 dark:bg-gray-700 transition flex flex-col justify-around"
+                >
+                  <span
+                    class="material-symbols-outlined text-gray-200 dark:text-gray-800 transition"
+                    style="font-size: 96px"
+                  >
+                    replay
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex justify-around">
+                <div class="text-center max-w-xs">
+                  <h2 class="text-3xl mb-2">No moves made!</h2>
+                  <p class="opacity-80">
+                    Once a player makes a move, they will appear here.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  @if (moveNotations$ | async; as moveNotations) {
+    <nav
+      class="w-full transition text-white py-4 md:px-6 bg-white dark:bg-gray-700"
+    >
+      <div class="flex-grow mx-2 md:mx-4">
+        <previous-next-selector
+          (firstSelected)="selectFirst()"
+          (previousSelected)="selectPrevious()"
+          (nextSelected)="selectNext()"
+          (lastSelected)="selectLast()"
+          [selectFirstDisabled]="
+            moveNotations.length === 0 || (selectedNotationIndex$ | async) === 0
+          "
+          [selectPrevDisabled]="
+            moveNotations.length === 0 || (selectedNotationIndex$ | async) === 0
+          "
+          [selectNextDisabled]="
+            moveNotations.length === 0 ||
+            (selectedNotationIndex$ | async) === moveNotations.length - 1
+          "
+          [selectLastDisabled]="
+            moveNotations.length === 0 ||
+            (selectedNotationIndex$ | async) === moveNotations.length - 1
+          "
+        ></previous-next-selector>
+      </div>
+    </nav>
+  }
+</div>
