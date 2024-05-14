@@ -347,6 +347,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe(
         (selectedCard) => selectedCard && this.selectLastMoveNotation()
       );
+    this.playerGameViewToAnimate$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(() => this.pastGameView$.next(null));
   }
 
   ngAfterViewInit() {
