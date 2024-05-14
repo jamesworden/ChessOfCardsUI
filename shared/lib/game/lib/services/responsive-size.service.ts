@@ -45,7 +45,7 @@ export class ResponsiveSizeService {
           height <= BREAKPOINTS.H_LG &&
           width <= BREAKPOINTS.LG
         ) {
-          cardSize *= 0.95;
+          cardSize *= 0.9;
         }
 
         this._cardSize$.next(cardSize);
