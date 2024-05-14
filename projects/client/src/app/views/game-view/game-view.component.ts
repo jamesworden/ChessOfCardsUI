@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { withLatestFrom, tap } from 'rxjs/operators';
+import { withLatestFrom, tap, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
@@ -152,9 +152,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     pairwise()
   );
 
-  readonly moveNotations$ = this.playerGameView$.pipe(
-    filter((playerGameView) => (playerGameView?.MovesMade?.length ?? 0) > 0),
-    withLatestFrom(this.selectedNotationIndex$),
+  readonly moveNotations$ = combineLatest([
+    this.playerGameView$,
+    this.selectedNotationIndex$.pipe(distinctUntilChanged()),
+  ]).pipe(
+    filter(([playerGameView]) => (playerGameView?.MovesMade?.length ?? 0) > 0),
     map(([playerGameView, selectedNotationIndex]) =>
       getMoveNotations(
         playerGameView?.MovesMade ?? [],
