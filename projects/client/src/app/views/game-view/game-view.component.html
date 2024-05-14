@@ -205,7 +205,7 @@
 <ng-template #movesPanel>
   <div
     resizable
-    [minHeightPx]="100"
+    [minHeightPx]="82"
     [startHeightPx]="movesPanelHeight ?? ((cardSize$ | async) ?? 64) * 4"
     [verticalMaxHeightOffsetPx]="62"
     (heightChanged)="setMovesPanelHeight($event)"
