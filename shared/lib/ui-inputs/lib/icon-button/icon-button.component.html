@@ -1,11 +1,8 @@
 <button
-  class="flex justify-around h-full w-full transition"
-  [class]="buttonClass"
+  [class]="'flex justify-around h-full w-full transition ' + buttonClass"
+  [ngClass]="buttonClassObj"
   (click)="onClick()"
   [disabled]="disabled"
-  [ngClass]="{
-    'cursor-default': !clickable
-  }"
 >
   <div class="flex flex-col justify-around w-full h-full">
     <span

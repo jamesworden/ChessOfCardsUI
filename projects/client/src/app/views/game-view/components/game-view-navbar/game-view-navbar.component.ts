@@ -13,6 +13,26 @@ export class GameViewNavbarComponent {
 
   readonly GameViewTab = GameViewTab;
 
+  readonly gameViewTabs: {
+    iconClass: string;
+    iconString: string;
+    label: string;
+    gameViewTab: GameViewTab;
+  }[] = [
+    {
+      gameViewTab: GameViewTab.Moves,
+      iconClass: 'material-symbols-outlined',
+      iconString: 'replay',
+      label: 'Moves',
+    },
+    {
+      gameViewTab: GameViewTab.Board,
+      iconClass: 'material-symbols-outlined',
+      iconString: 'grid_view',
+      label: 'Board',
+    },
+  ];
+
   selectGameViewTab(gameViewTab: GameViewTab) {
     this.tabSelected.emit(gameViewTab);
   }

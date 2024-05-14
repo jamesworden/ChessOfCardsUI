@@ -1,32 +1,17 @@
 <div class="flex w-full">
-  <icon-button
-    class="flex-1"
-    [clickable]="true"
-    iconClass="material-symbols-outlined"
-    iconString="grid_view"
-    label="Board"
-    (clicked)="selectGameViewTab(GameViewTab.Board)"
-    [buttonClass]="
-      selectedTab === GameViewTab.Board
-        ? 'bg-white dark:bg-gray-900 py-2'
-        : 'bg-gray-100 dark:bg-gray-800 py-2' +
-          ' hover:bg-slate-100 dark:hover:bg-gray-700'
-    "
-    [clickable]="selectedTab !== GameViewTab.Board"
-  ></icon-button>
-  <icon-button
-    class="flex-1"
-    [clickable]="true"
-    iconClass="material-symbols-outlined"
-    iconString="replay"
-    label="Moves"
-    (clicked)="selectGameViewTab(GameViewTab.Moves)"
-    [buttonClass]="
-      selectedTab === GameViewTab.Moves
-        ? 'bg-white dark:bg-gray-900 py-2'
-        : 'bg-gray-100 dark:bg-gray-800 py-2' +
-          ' hover:bg-slate-100 dark:hover:bg-gray-700'
-    "
-    [clickable]="selectedTab !== GameViewTab.Moves"
-  ></icon-button>
+  @for (tab of gameViewTabs; track tab.gameViewTab) {
+    <icon-button
+      class="flex-1"
+      [iconClass]="tab.iconClass"
+      [iconString]="tab.iconString"
+      [label]="tab.label"
+      (clicked)="selectGameViewTab(tab.gameViewTab)"
+      buttonClass="py-2"
+      [buttonClassObj]="{
+        'bg-gray-300 dark:bg-gray-900': selectedTab === tab.gameViewTab,
+        'bg-gray-100 dark:bg-gray-700 hover:bg-slate-100 dark:hover:bg-gray-700 shadow-lg':
+          selectedTab !== tab.gameViewTab
+      }"
+    ></icon-button>
+  }
 </div>
