@@ -6,7 +6,7 @@
     >
       @if (moveNotations$ | async; as moveNotations) {
         @if (moveNotations.length > 0) {
-          <div class="flex-1 flex flex-col gap-y-2 mt-2">
+          <div class="flex-1 flex flex-col gap-y-2 mt-2 pb-2">
             @for (
               moveNotation of moveNotations;
               track moveNotationIndex;

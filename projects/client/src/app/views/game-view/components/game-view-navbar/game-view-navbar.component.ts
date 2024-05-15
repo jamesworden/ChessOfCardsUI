@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { GameViewTab } from '../../models/game-view-tab';
+import { Z_INDEXES } from '@shared/constants';
 
 @Component({
   selector: 'app-game-view-navbar',
@@ -12,6 +13,7 @@ export class GameViewNavbarComponent {
   @Output() tabSelected = new EventEmitter<GameViewTab>();
 
   readonly GameViewTab = GameViewTab;
+  readonly Z_INDEXES = Z_INDEXES;
 
   readonly gameViewTabs: {
     iconClass: string;

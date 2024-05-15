@@ -2,6 +2,9 @@
   @for (tab of gameViewTabs; track tab.gameViewTab) {
     <icon-button
       class="flex-1"
+      [ngClass]="{
+        'z-index': Z_INDEXES.GAME_VIEW_NAVBAR
+      }"
       [iconClass]="tab.iconClass"
       [iconString]="tab.iconString"
       [label]="tab.label"
