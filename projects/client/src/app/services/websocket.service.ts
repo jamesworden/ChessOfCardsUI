@@ -16,6 +16,7 @@ import {
   ResetPendingGameView,
   AnimateGameView,
   SetGameIsActive,
+  UpdatePlayerGameView,
 } from '../actions/game.actions';
 import { environment } from '../../environments/environment';
 import { SetIsConnectedToServer } from '../actions/server.actions';
@@ -54,6 +55,8 @@ enum MessageType {
   CheckHostForEmptyTimer = 'CheckHostForEmptyTimer',
   CheckGuestForEmptyTimer = 'CheckGuestForEmptyTimer',
   TurnSkippedNoMoves = 'TurnSkippedNoMoves',
+  SendChatMessage = 'SendChatMessage',
+  NewChatMessage = 'NewChatMessage',
 }
 
 @Injectable({
@@ -185,6 +188,16 @@ export class WebsocketService {
         verticalPosition: 'top',
       });
     });
+
+    this.hubConnection.on(
+      MessageType.NewChatMessage,
+      (stringifiedPlayerGameView) => {
+        const playerGameView = JSON.parse(
+          stringifiedPlayerGameView
+        ) as PlayerGameView;
+        this.#store.dispatch(new UpdatePlayerGameView(playerGameView));
+      }
+    );
   }
 
   public createGame() {
@@ -238,6 +251,10 @@ export class WebsocketService {
 
   public checkGuestForEmptyTimer() {
     this.hubConnection.invoke(MessageType.CheckGuestForEmptyTimer);
+  }
+
+  public sendChatMessage(message: string) {
+    this.hubConnection.invoke(MessageType.SendChatMessage, message);
   }
 
   private isPlayersTurn(gameState: PlayerGameView) {

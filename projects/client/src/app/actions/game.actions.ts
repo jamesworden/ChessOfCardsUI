@@ -132,3 +132,8 @@ export class SetGameIsActive {
   static readonly type = '[GameState] Game Is Active';
   constructor(public gameIsActive: boolean) {}
 }
+
+export class SendChatMessage {
+  static readonly type = '[GameState] Send Chat Message';
+  constructor(public message: string) {}
+}

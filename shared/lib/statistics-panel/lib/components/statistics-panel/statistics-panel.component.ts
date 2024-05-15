@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { MoveMade } from '@shared/models';
+import { ChatMessage, MoveMade } from '@shared/models';
 import { BehaviorSubject } from 'rxjs';
 import { MoveNotation } from '@shared/logic';
 import { StatisticsPanelView } from '../../models/statistics-panel-view';
@@ -13,6 +13,7 @@ import { StatisticsPane } from '../../models/statistics-pane';
 export class StatisticsPanelComponent {
   readonly StatisticsPanelView = StatisticsPanelView;
 
+  @Input({ required: true }) chatMessages: ChatMessage[] = [];
   @Input({ required: true }) moveNotations: MoveNotation[] = [];
   @Input({ required: true }) selectedNotationIndex: number | null = null;
   @Input({ required: true }) set isHost(isHost: boolean) {
@@ -20,6 +21,7 @@ export class StatisticsPanelComponent {
   }
 
   @Output() moveNotationSelected = new EventEmitter<number>();
+  @Output() chatMessageSent = new EventEmitter<string>();
 
   readonly movesMade$ = new BehaviorSubject<MoveMade[]>([]);
   readonly isHost$ = new BehaviorSubject<boolean>(false);
@@ -47,5 +49,9 @@ export class StatisticsPanelComponent {
 
   selectPane(panelView: StatisticsPanelView) {
     this.currentPanelView = panelView;
+  }
+
+  sendChatMessage(chatMessage: string) {
+    this.chatMessageSent.emit(chatMessage);
   }
 }

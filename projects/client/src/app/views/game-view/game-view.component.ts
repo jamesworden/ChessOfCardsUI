@@ -24,6 +24,7 @@ import {
   ResetGameData,
   ResetPendingGameView,
   ResignGame,
+  SendChatMessage,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -40,6 +41,7 @@ import {
   Card,
   CardMovement,
   CardPosition,
+  ChatMessage,
   GameOverData,
   Lane,
   Move,
@@ -129,6 +131,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @Select(GameState.gameIsActive)
   gameIsActive$!: Observable<boolean>;
+
+  @Select(GameState.chatMessages)
+  chatMessages$!: Observable<ChatMessage[]>;
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly cachedGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
@@ -837,6 +842,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   setMovesPanelHeight(height: number) {
     this.movesPanelHeight = height;
+  }
+
+  sendChatMessage(message: string) {
+    this.#store.dispatch(new SendChatMessage(message));
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

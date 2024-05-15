@@ -257,10 +257,16 @@
       [isHost]="(playerGameView$ | async)?.IsHost ?? false"
       [selectedNotationIndex]="selectedNotationIndex$ | async"
       (moveNotationSelected)="selectMoveNotation($event)"
+      [chatMessages]="(chatMessages$ | async) ?? []"
+      (chatMessageSent)="sendChatMessage($event)"
     ></statistics-panel>
   </div>
 </ng-template>
 
 <ng-template #chatView>
-  <statistics-chat-pane></statistics-chat-pane>
+  <statistics-chat-pane
+    [isHost]="(playerGameView$ | async)?.IsHost ?? false"
+    [chatMessages]="(chatMessages$ | async) ?? []"
+    (chatMessageSent)="sendChatMessage($event)"
+  ></statistics-chat-pane>
 </ng-template>

@@ -35,7 +35,12 @@
         ></statistics-moves-pane>
       }
       @case (StatisticsPanelView.Chat) {
-        <statistics-chat-pane class="flex-1"></statistics-chat-pane>
+        <statistics-chat-pane
+          class="flex-1"
+          [chatMessages]="chatMessages"
+          [isHost]="(isHost$ | async) ?? false"
+          (chatMessageSent)="sendChatMessage($event)"
+        ></statistics-chat-pane>
       }
     }
   </div>

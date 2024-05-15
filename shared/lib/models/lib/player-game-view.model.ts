@@ -1,4 +1,5 @@
 import { CandidateMove } from './candidate-move.model';
+import { ChatMessage } from './chat-message.model';
 import { DurationOption } from './duration-option.model';
 import { Hand } from './hand.model';
 import { Lane } from './lane.model';
@@ -21,4 +22,5 @@ export type PlayerGameView = {
   GameCode: string;
   CandidateMoves?: CandidateMove[];
   HasEnded: boolean;
+  ChatMessages: ChatMessage[];
 };
