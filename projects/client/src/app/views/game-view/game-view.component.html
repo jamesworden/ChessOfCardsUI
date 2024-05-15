@@ -35,6 +35,7 @@
       class="flex lg:hidden"
       [selectedTab]="(selectedTab$ | async) ?? GameViewTab.Board"
       (tabSelected)="selectGameViewTab($event)"
+      [numUnreadChatMessages]="numUnreadChatMessages"
     ></app-game-view-navbar>
 
     <div class="flex-1">
@@ -172,7 +173,7 @@
       }
     </div>
 
-    @if (showingStatsPanel$ | async) {
+    @if (selectedPanelView$ | async) {
       <ng-container [ngTemplateOutlet]="statisticsPanel"></ng-container>
     }
   </div>
@@ -206,8 +207,8 @@
   <div
     resizable
     [minHeightPx]="82"
-    [startHeightPx]="movesPanelHeight ?? ((cardSize$ | async) ?? 64) * 4"
-    [verticalMaxHeightOffsetPx]="62"
+    [startHeightPx]="movesPanelHeight ?? ((cardSize$ | async) ?? 64) * 5"
+    [verticalMaxHeightOffsetPx]="75"
     (heightChanged)="setMovesPanelHeight($event)"
     class="flex justify-around flex-col bg-gray-200 dark:bg-gray-800 transition sticky bottom-0"
     [ngStyle]="{
@@ -259,6 +260,9 @@
       (moveNotationSelected)="selectMoveNotation($event)"
       [chatMessages]="(chatMessages$ | async) ?? []"
       (chatMessageSent)="sendChatMessage($event)"
+      [currentPanelView]="selectedPanelView$ | async"
+      (panelViewSelected)="selectPanelView($event)"
+      [numUnreadChatMessages]="numUnreadChatMessages"
     ></statistics-panel>
   </div>
 </ng-template>

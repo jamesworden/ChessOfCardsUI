@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PreviousNextSelectorComponent } from './previous-next-selector/previous-next-selector.component';
 import { ResizableDirective } from './resizable.directive';
 import { IconButtonComponent } from './icon-button/icon-button.component';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,7 @@ import { IconButtonComponent } from './icon-button/icon-button.component';
     ResizableDirective,
     IconButtonComponent,
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, MatBadgeModule],
   exports: [
     PreviousNextSelectorComponent,
     ResizableDirective,

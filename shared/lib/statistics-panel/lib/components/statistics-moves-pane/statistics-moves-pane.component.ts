@@ -39,14 +39,21 @@ export class StatisticsMovesPaneComponent {
   readonly moveNotations$ = new BehaviorSubject<MoveNotation[]>([]);
   readonly selectedNotationIndex$ = new BehaviorSubject<number | null>(null);
 
+  hasInitiallyScrolledToBottom = false;
+
   ngOnInit() {
     this.selectedNotationIndex$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((selectedNotationIndex) => {
         if (selectedNotationIndex !== null) {
-          setTimeout(() =>
-            this.scrollMoveNotationIntoView(selectedNotationIndex)
-          );
+          setTimeout(() => {
+            if (!this.hasInitiallyScrolledToBottom) {
+              this.scrollToBottom('instant');
+              this.hasInitiallyScrolledToBottom = true;
+            } else {
+              this.scrollToBottom('smooth');
+            }
+          });
         }
       });
   }
@@ -82,12 +89,12 @@ export class StatisticsMovesPaneComponent {
     this.moveNotationSelected.emit(this.moveNotations$.getValue().length - 1);
   }
 
-  scrollToBottom() {
+  scrollToBottom(scrollBehavior: ScrollBehavior) {
     const container = this.scrollContainer?.nativeElement;
     if (container) {
       container.scrollTo({
         top: container.scrollHeight,
-        behavior: 'smooth',
+        behavior: scrollBehavior,
       });
     }
   }

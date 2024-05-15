@@ -6,7 +6,7 @@
     >
       @if (moveNotations$ | async; as moveNotations) {
         @if (moveNotations.length > 0) {
-          <div class="flex-1 flex flex-col gap-y-2 mt-2">
+          <div class="flex-1 flex flex-col gap-y-2 mt-2 pb-2">
             @for (
               moveNotation of moveNotations;
               track moveNotationIndex;
@@ -16,13 +16,15 @@
                 (click)="selectMoveNotation(moveNotationIndex)"
                 class="move-notation-row flex gap-x-2 px-2 py-2 md:py-4 mx-2 transition rounded-sm shadow-lg cursor-pointer"
                 [ngClass]="{
+                  'bg-gray-50 dark:bg-gray-700 dark:hover:bg-slate-500':
+                    !moveNotation.isSelected,
                   'bg-slate-200 hover:bg-slate-300 dark:bg-sky-900 dark:hover:bg-sky-800':
                     moveNotation.isSelected && moveNotation.playedByPlayer,
                   'bg-rose-100 hover:bg-rose-200 dark:bg-rose-900 dark:hover:bg-rose-800':
                     moveNotation.isSelected && !moveNotation.playedByPlayer,
-                  'bg-gray-50 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-slate-500':
+                  'hover:bg-slate-200':
                     !moveNotation.isSelected && moveNotation.playedByPlayer,
-                  'bg-gray-50 hover:bg-rose-100 dark:bg-gray-700 dark:hover:bg-slate-500':
+                  'hover:bg-rose-100':
                     !moveNotation.isSelected && !moveNotation.playedByPlayer
                 }"
               >
@@ -72,21 +74,22 @@
             <div class="w-full flex justify-around">
               <div class="flex lg:flex-col lg:gap-y-4">
                 <div class="flex justify-around mr-8 lg:mr-0">
-                  <div
-                    class="p-2 rounded-full bg-gray-300 dark:bg-gray-700 transition flex flex-col justify-around"
-                  >
-                    <span
-                      class="material-symbols-outlined text-gray-200 dark:text-gray-800 transition"
-                      style="font-size: 96px"
+                  <div class="flex flex-col justify-around">
+                    <div
+                      class="p-2 rounded-full bg-gray-300 dark:bg-gray-700 transition flex flex-col justify-around"
                     >
-                      replay
-                    </span>
+                      <span
+                        class="material-symbols-outlined text-gray-200 dark:text-gray-800 transition text-5xl lg:text-8xl"
+                      >
+                        replay
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 <div class="flex justify-around mt-2 lg:mt-0">
                   <div class="text-left lg:text-center max-w-xs">
-                    <h2 class="text-3xl mb-2">No moves made!</h2>
+                    <h2 class="text-xl lg:text-3xl mb-2">No moves made!</h2>
                     <p class="opacity-80">
                       Once a player makes a move, they will appear here.
                     </p>

@@ -16,17 +16,19 @@ export class StatisticsPanelComponent {
   @Input({ required: true }) chatMessages: ChatMessage[] = [];
   @Input({ required: true }) moveNotations: MoveNotation[] = [];
   @Input({ required: true }) selectedNotationIndex: number | null = null;
+  @Input({ required: true }) currentPanelView: StatisticsPanelView | null =
+    null;
+  @Input({ required: true }) numUnreadChatMessages = 0;
   @Input({ required: true }) set isHost(isHost: boolean) {
     this.isHost$.next(isHost);
   }
 
   @Output() moveNotationSelected = new EventEmitter<number>();
   @Output() chatMessageSent = new EventEmitter<string>();
+  @Output() panelViewSelected = new EventEmitter<StatisticsPanelView>();
 
   readonly movesMade$ = new BehaviorSubject<MoveMade[]>([]);
   readonly isHost$ = new BehaviorSubject<boolean>(false);
-
-  currentPanelView: StatisticsPanelView = StatisticsPanelView.Moves;
 
   readonly panes: StatisticsPane[] = [
     {
@@ -48,7 +50,7 @@ export class StatisticsPanelComponent {
   }
 
   selectPane(panelView: StatisticsPanelView) {
-    this.currentPanelView = panelView;
+    this.panelViewSelected.emit(panelView);
   }
 
   sendChatMessage(chatMessage: string) {
