@@ -56,6 +56,8 @@ export class StatisticsChatPaneComponent {
             sentByPlayer,
           });
         }
+
+        latestedSentBy = chatMessage.SentBy;
       }
 
       return displayChatMessages;
