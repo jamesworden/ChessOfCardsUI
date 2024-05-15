@@ -2,7 +2,7 @@
   <div #scrollContainer class="flex-1 overflow-auto relative w-full">
     @if (displayedChatMessages$ | async; as displayedChatMessages) {
       @if (displayedChatMessages.length > 0) {
-        <div class="flex flex-col gap-y-4 absolute w-full">
+        <div class="flex flex-col gap-y-4 absolute w-full px-4">
           @for (
             chatMessage of displayedChatMessages$ | async;
             track i;
@@ -90,7 +90,7 @@
   <input
     type="text"
     placeholder="Type your message..."
-    class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black"
+    class="border border-gray-300 rounded-sm p-2 mt-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black"
     [(ngModel)]="message"
     (keydown.enter)="sendMessage()"
   />
