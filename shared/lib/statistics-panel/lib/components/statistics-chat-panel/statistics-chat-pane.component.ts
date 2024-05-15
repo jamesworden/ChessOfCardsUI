@@ -72,10 +72,23 @@ export class StatisticsChatPaneComponent {
 
       return displayChatMessages;
     }),
-    tap(() => setTimeout(() => this.scrollToBottom()))
+    tap((displayChatMessages) =>
+      setTimeout(() => {
+        if (
+          displayChatMessages.length > 0 &&
+          !this.hasInitiallyScrolledToBottom
+        ) {
+          this.scrollToBottom('instant');
+          this.hasInitiallyScrolledToBottom = true;
+        } else {
+          this.scrollToBottom('smooth');
+        }
+      })
+    )
   );
 
   message = '';
+  hasInitiallyScrolledToBottom = false;
 
   sendMessage() {
     if (this.message.trim().length === 0) {
@@ -96,11 +109,11 @@ export class StatisticsChatPaneComponent {
     this.message = '';
   }
 
-  scrollToBottom() {
+  scrollToBottom(scrollBehavior: ScrollBehavior = 'smooth') {
     const container = this.scrollContainer.nativeElement;
     container.scrollTo({
       top: container.scrollHeight,
-      behavior: 'smooth',
+      behavior: scrollBehavior,
     });
   }
 }
