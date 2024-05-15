@@ -1,54 +1,90 @@
 <div class="flex flex-col justify-between h-full w-full p-4">
   <div class="flex-1 overflow-auto relative w-full">
-    <div class="flex flex-col gap-y-4 absolute w-full">
-      @for (
-        chatMessage of displayedChatMessages$ | async;
-        track i;
-        let i = $index
-      ) {
-        <div
-          class="w-full flex"
-          [ngClass]="{
-            'justify-start': !chatMessage.sentByPlayer,
-            'justify-end': chatMessage.sentByPlayer
-          }"
-        >
-          <div class="flex flex-col gap-y-1">
-            <span class="opacity-80 text-sm">
-              {{ chatMessage.name }}
-            </span>
-
-            @for (message of chatMessage.messages; track j; let j = $index) {
-              <div
-                class="flex"
-                [ngClass]="{
-                  'justify-start': !chatMessage.sentByPlayer,
-                  'justify-end': chatMessage.sentByPlayer
-                }"
-              >
-                <div
-                  class="rounded-tl-lg rounded-br-lg rounded-bl-lg p-2 py-2 px-4 bg-white text-black shadow-lg"
-                >
-                  {{ message }}
-                </div>
-              </div>
-            }
-
+    @if (displayedChatMessages$ | async; as displayedChatMessages) {
+      @if (displayedChatMessages.length > 0) {
+        <div class="flex flex-col gap-y-4 absolute w-full">
+          @for (
+            chatMessage of displayedChatMessages$ | async;
+            track i;
+            let i = $index
+          ) {
             <div
-              class="opacity-80 text-sm flex"
+              class="w-full flex"
               [ngClass]="{
                 'justify-start': !chatMessage.sentByPlayer,
                 'justify-end': chatMessage.sentByPlayer
               }"
             >
-              <span>
-                {{ chatMessage.date | date: 'shortTime' }}
-              </span>
+              <div class="flex flex-col gap-y-1">
+                <span class="opacity-80 text-sm">
+                  {{ chatMessage.name }}
+                </span>
+
+                @for (
+                  message of chatMessage.messages;
+                  track j;
+                  let j = $index
+                ) {
+                  <div
+                    class="flex"
+                    [ngClass]="{
+                      'justify-start': !chatMessage.sentByPlayer,
+                      'justify-end': chatMessage.sentByPlayer
+                    }"
+                  >
+                    <div
+                      class="rounded-tl-lg rounded-br-lg rounded-bl-lg p-2 py-2 px-4 text-white shadow-lg"
+                      [ngClass]="{
+                        'bg-sky-700': chatMessage.sentByPlayer,
+                        'bg-rose-700': !chatMessage.sentByPlayer
+                      }"
+                    >
+                      {{ message }}
+                    </div>
+                  </div>
+                }
+
+                <div
+                  class="opacity-80 text-sm flex"
+                  [ngClass]="{
+                    'justify-start': !chatMessage.sentByPlayer,
+                    'justify-end': chatMessage.sentByPlayer
+                  }"
+                >
+                  <span>
+                    {{ chatMessage.date | date: 'shortTime' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="flex flex-col justify-around h-full py-4">
+          <div class="flex flex-col gap-y-4">
+            <div class="flex justify-around">
+              <div
+                class="p-5 rounded-full bg-gray-300 dark:bg-gray-700 transition flex flex-col justify-around"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-200 dark:text-gray-800 transition"
+                  style="font-size: 76px"
+                >
+                  chat
+                </span>
+              </div>
+            </div>
+
+            <div class="flex justify-around">
+              <div class="text-center max-w-xs">
+                <h2 class="text-3xl mb-2">Start chatting!</h2>
+                <p class="opacity-80">Send a message to your opponent.</p>
+              </div>
             </div>
           </div>
         </div>
       }
-    </div>
+    }
   </div>
 
   <input
