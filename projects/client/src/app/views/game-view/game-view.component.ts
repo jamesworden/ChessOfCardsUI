@@ -74,6 +74,7 @@ import {
 import { getCardStack } from './logic/get-card-stack';
 import { BREAKPOINTS, Z_INDEXES } from '@shared/constants';
 import { GameViewTab } from './models/game-view-tab';
+import { StatisticsPanelView } from '@shared/statistics-panel';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -88,6 +89,7 @@ const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
 })
 export class GameViewComponent implements OnInit, AfterViewInit {
   readonly PlayerOrNone = PlayerOrNone;
+  readonly StatisticsPanelView = StatisticsPanelView;
 
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
@@ -148,7 +150,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     [notationIdx: number]: PlayerGameView;
   }>({});
   readonly selectedTab$ = new BehaviorSubject<GameViewTab>(GameViewTab.Board);
-  readonly showingStatsPanel$ = new BehaviorSubject<boolean>(false);
+  readonly selectedPanelView$ = new BehaviorSubject<StatisticsPanelView | null>(
+    StatisticsPanelView.Moves
+  );
   private readonly cardMovementTemplate$ =
     new BehaviorSubject<TemplateRef<CardMovement> | null>(null);
 
@@ -238,6 +242,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   isPlacingMultipleCards = false;
   cardSize = 64;
   movesPanelHeight: number | undefined = undefined;
+  numUnreadChatMessages = 0;
 
   ngOnInit() {
     this.navigateHomeIfGameInactive();
@@ -363,6 +368,32 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.playerGameViewToAnimate$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(() => this.pastGameView$.next(null));
+    combineLatest([
+      this.chatMessages$,
+      this.selectedTab$,
+      this.selectedPanelView$,
+    ])
+      .pipe(takeUntilDestroyed(this.#destroyRef), pairwise())
+      .subscribe(
+        ([
+          [prevChatMessages],
+          [currChatMessages, selectedTab, selectedPanelView],
+        ]) => {
+          const isViewingChat =
+            selectedPanelView === StatisticsPanelView.Chat ||
+            (!selectedPanelView && selectedTab === GameViewTab.Chat);
+          if (isViewingChat) {
+            this.numUnreadChatMessages = 0;
+            return;
+          }
+
+          const increasedChatMessages =
+            prevChatMessages.length < currChatMessages.length;
+          if (increasedChatMessages) {
+            this.numUnreadChatMessages = this.numUnreadChatMessages + 1;
+          }
+        }
+      );
   }
 
   ngAfterViewInit() {
@@ -391,13 +422,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         this.selectedTab$.next(GameViewTab.Board);
       }
 
-      this.showingStatsPanel$.next(true);
-
+      this.selectedPanelView$.next(StatisticsPanelView.Moves);
       return;
     }
 
     if (window.innerWidth >= BREAKPOINTS.SM) {
-      this.showingStatsPanel$.next(false);
+      this.selectedPanelView$.next(null);
     }
   }
 
@@ -846,6 +876,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   sendChatMessage(message: string) {
     this.#store.dispatch(new SendChatMessage(message));
+  }
+
+  selectPanelView(statisticsPanelView: StatisticsPanelView) {
+    this.selectedPanelView$.next(statisticsPanelView);
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

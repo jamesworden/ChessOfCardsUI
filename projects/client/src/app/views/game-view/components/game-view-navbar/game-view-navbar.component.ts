@@ -9,6 +9,7 @@ import { Z_INDEXES } from '@shared/constants';
 })
 export class GameViewNavbarComponent {
   @Input({ required: true }) selectedTab: GameViewTab;
+  @Input({ required: true }) numUnreadChatMessages = 0;
 
   @Output() tabSelected = new EventEmitter<GameViewTab>();
 

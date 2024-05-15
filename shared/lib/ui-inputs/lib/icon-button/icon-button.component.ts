@@ -13,6 +13,8 @@ export class IconButtonComponent {
   @Input() buttonClass = '';
   @Input() activeButtonClass = '';
   @Input() label = '';
+  @Input() showBadge = false;
+  @Input() badgeCount = 0;
 
   @Output() clicked = new EventEmitter<void>();
 
