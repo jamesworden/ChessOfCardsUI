@@ -1,7 +1,14 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  Input,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { ChatMessage, PlayerOrNone } from '@shared/models';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 interface DisplayChatMessage {
   name?: string;
@@ -24,6 +31,9 @@ export class StatisticsChatPaneComponent {
   }
 
   @Output() chatMessageSent = new EventEmitter<string>();
+
+  @ViewChild('scrollContainer', { static: true })
+  scrollContainer!: ElementRef<HTMLElement>;
 
   readonly isHost$ = new BehaviorSubject<boolean>(false);
   readonly chatMessages$ = new BehaviorSubject<ChatMessage[]>([]);
@@ -61,7 +71,8 @@ export class StatisticsChatPaneComponent {
       }
 
       return displayChatMessages;
-    })
+    }),
+    tap(() => setTimeout(() => this.scrollToBottom()))
   );
 
   message = '';
@@ -83,5 +94,13 @@ export class StatisticsChatPaneComponent {
     this.chatMessages$.next(newChatMessages);
     this.chatMessageSent.emit(this.message);
     this.message = '';
+  }
+
+  scrollToBottom() {
+    const container = this.scrollContainer.nativeElement;
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: 'smooth',
+    });
   }
 }
