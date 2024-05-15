@@ -38,7 +38,7 @@
         <statistics-chat-pane
           class="flex-1"
           [chatMessages]="chatMessages"
-          [isHost]="isHost"
+          [isHost]="(isHost$ | async) ?? false"
           (chatMessageSent)="sendChatMessage($event)"
         ></statistics-chat-pane>
       }

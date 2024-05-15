@@ -1,8 +1,32 @@
 <div class="flex flex-col justify-between h-full p-2">
   <div class="flex-1 flex flex-col gap-y-4">
-    @for (chatMessage of chatMessages$ | async; track i; let i = $index) {
-      <div class="h-full flex justify-between">
-        {{ chatMessage.Message }}
+    @for (
+      chatMessage of displayedChatMessages$ | async;
+      track i;
+      let i = $index
+    ) {
+      <div
+        class="w-full flex"
+        [ngClass]="{
+          'justify-start': !chatMessage.sentByPlayer,
+          'justify-end': chatMessage.sentByPlayer
+        }"
+      >
+        <div class="flex flex-col gap-y-1">
+          <div>
+            {{ chatMessage.name }}
+          </div>
+
+          @for (message of chatMessage.messages; track j; let j = $index) {
+            <div class="border border-gray-300 rounded-sm p-2">
+              {{ message }}
+            </div>
+          }
+
+          <div>
+            {{ chatMessage.date | date: 'shortTime' }}
+          </div>
+        </div>
       </div>
     }
   </div>
