@@ -7,6 +7,7 @@ import { StatisticsMovesPaneComponent } from './components/statistics-moves-pane
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiInputsModule } from '@shared/ui-inputs';
 import { StatisticsChatPaneComponent } from './components/statistics-chat-panel/statistics-chat-pane.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,13 @@ import { StatisticsChatPaneComponent } from './components/statistics-chat-panel/
     StatisticsMovesPaneComponent,
     StatisticsChatPaneComponent,
   ],
-  imports: [CommonModule, GameModule, MatTooltipModule, UiInputsModule],
+  imports: [
+    CommonModule,
+    GameModule,
+    MatTooltipModule,
+    UiInputsModule,
+    FormsModule,
+  ],
   exports: [
     StatisticsPanelComponent,
     CardStackComponent,

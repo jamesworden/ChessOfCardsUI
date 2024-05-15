@@ -27,6 +27,7 @@ import {
   CheckGuestForEmptyTimer,
   AnimateGameView,
   SetGameIsActive,
+  SendChatMessage,
 } from '../actions/game.actions';
 import {
   Card,
@@ -155,6 +156,11 @@ export class GameState {
   @Selector()
   static isPlayersTurn(state: GameStateModel) {
     return state.playerGameView ? isPlayersTurn(state.playerGameView) : false;
+  }
+
+  @Selector()
+  static chatMessages(state: GameStateModel) {
+    return state.playerGameView?.ChatMessages ?? [];
   }
 
   @Action(UpdatePlayerGameView)
@@ -382,5 +388,13 @@ export class GameState {
     ctx.patchState({
       gameIsActive,
     });
+  }
+
+  @Action(SendChatMessage)
+  sendChatMessage(
+    _: StateContext<GameStateModel>,
+    { message }: SendChatMessage
+  ) {
+    this.#websocketService.sendChatMessage(message);
   }
 }

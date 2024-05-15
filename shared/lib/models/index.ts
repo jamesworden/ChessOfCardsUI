@@ -16,3 +16,4 @@ export * from './lib/player-or-none.model';
 export * from './lib/seconds-remaining.model';
 export * from './lib/suit.model';
 export * from './lib/candidate-move.model';
+export * from './lib/chat-message.model';

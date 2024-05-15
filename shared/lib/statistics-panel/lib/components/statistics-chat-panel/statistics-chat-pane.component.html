@@ -1,25 +1,17 @@
-<div class="flex flex-col justify-around h-full">
-  <div class="flex flex-col gap-y-4">
-    <div class="flex justify-around">
-      <div
-        class="p-2 rounded-full bg-gray-400 lg:bg-gray-300 dark:bg-gray-800 lg:dark:bg-gray-700 transition flex flex-col justify-around"
-      >
-        <span
-          class="material-symbols-outlined text-gray-200 dark:text-gray-900 lg:dark:text-gray-800 transition"
-          style="font-size: 96px"
-        >
-          construction
-        </span>
+<div class="flex flex-col justify-between">
+  <div class="flex-1 flex flex-col gap-y-4">
+    @for (chatMessage of chatMessages$ | async; track i; let i = $index) {
+      <div class="h-full flex justify-between">
+        {{ chatMessage.Message }}
       </div>
-    </div>
-
-    <div class="flex justify-around">
-      <div class="text-center max-w-xs">
-        <h2 class="text-3xl mb-2">Under Construction!</h2>
-        <p class="opacity-80">
-          This will be a place for players to communicate with one another.
-        </p>
-      </div>
-    </div>
+    }
   </div>
+
+  <input
+    type="text"
+    placeholder="Type your message..."
+    class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-blue-500"
+    [(ngModel)]="message"
+    (keydown.enter)="sendMessage()"
+  />
 </div>
