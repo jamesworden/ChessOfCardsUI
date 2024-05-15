@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiInputsModule } from '@shared/ui-inputs';
 import { StatisticsChatPaneComponent } from './components/statistics-chat-panel/statistics-chat-pane.component';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { FormsModule } from '@angular/forms';
     MatTooltipModule,
     UiInputsModule,
     FormsModule,
+    MatButtonModule,
   ],
   exports: [
     StatisticsPanelComponent,
