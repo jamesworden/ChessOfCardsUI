@@ -14,9 +14,9 @@
           }"
         >
           <div class="flex flex-col gap-y-1">
-            <div class="opacity-80 text-sm">
+            <span class="opacity-80 text-sm">
               {{ chatMessage.name }}
-            </div>
+            </span>
 
             @for (message of chatMessage.messages; track j; let j = $index) {
               <div
@@ -26,14 +26,24 @@
                   'justify-end': chatMessage.sentByPlayer
                 }"
               >
-                <div class="border border-gray-300 rounded-sm p-2">
+                <div
+                  class="rounded-tl-lg rounded-br-lg rounded-bl-lg p-2 py-2 px-4 bg-white text-black shadow-lg"
+                >
                   {{ message }}
                 </div>
               </div>
             }
 
-            <div class="opacity-80 text-sm">
-              {{ chatMessage.date | date: 'shortTime' }}
+            <div
+              class="opacity-80 text-sm flex"
+              [ngClass]="{
+                'justify-start': !chatMessage.sentByPlayer,
+                'justify-end': chatMessage.sentByPlayer
+              }"
+            >
+              <span>
+                {{ chatMessage.date | date: 'shortTime' }}
+              </span>
             </div>
           </div>
         </div>

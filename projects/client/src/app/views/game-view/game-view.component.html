@@ -267,5 +267,6 @@
   <statistics-chat-pane
     [isHost]="(playerGameView$ | async)?.IsHost ?? false"
     [chatMessages]="(chatMessages$ | async) ?? []"
+    (chatMessageSent)="sendChatMessage($event)"
   ></statistics-chat-pane>
 </ng-template>
