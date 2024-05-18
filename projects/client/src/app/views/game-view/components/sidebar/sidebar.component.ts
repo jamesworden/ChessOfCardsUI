@@ -122,15 +122,15 @@ export class SidebarComponent implements OnInit {
   attemptToOpenOfferDrawModel() {
     if (this.drawOfferSent) {
       this.#matSnackBar.open('You already offered a draw.', undefined, {
-        duration: 5000,
+        duration: 3000,
         verticalPosition: 'top',
       });
     } else if (this.hasPendingDrawOffer) {
       this.#matSnackBar.open(
-        'Your opponent already offered you a draw.',
+        'Your opponent already offered a draw.',
         undefined,
         {
-          duration: 5000,
+          duration: 3000,
           verticalPosition: 'top',
         }
       );
@@ -168,8 +168,8 @@ export class SidebarComponent implements OnInit {
     if (this.isPlayersTurn) {
       this.openPassMoveModal();
     } else {
-      this.#matSnackBar.open("It's not your turn!", undefined, {
-        duration: 5000,
+      this.#matSnackBar.open("It's not your turn.", undefined, {
+        duration: 3000,
         verticalPosition: 'top',
       });
     }

@@ -5,22 +5,20 @@
   [disabled]="disabled"
 >
   <div class="flex flex-col justify-around w-full h-full">
-    <div>
-      <span
-        [matBadge]="badgeCount"
-        matBadgeColor="warn"
-        [matBadgeHidden]="!showBadge"
-        class="text-xl md:text-3xl"
-        [class]="iconClass"
-        [ngStyle]="{
-          opacity: disabled ? 0.5 : 1
-        }"
-        >{{ iconString }}</span
-      >
-    </div>
+    <span
+      [matBadge]="badgeCount"
+      matBadgeColor="warn"
+      [matBadgeHidden]="!showBadge"
+      [class]="iconFontClass"
+      [class]="iconClass"
+      [ngStyle]="{
+        opacity: disabled ? 0.5 : 1
+      }"
+      >{{ iconString }}</span
+    >
 
     @if (label) {
-      <div class="w-full flex justify-around sm:text-sm md:text-md -mt-2">
+      <div class="w-full flex justify-around sm:text-sm md:text-md">
         <span class="opacity-80">{{ label }}</span>
       </div>
     }

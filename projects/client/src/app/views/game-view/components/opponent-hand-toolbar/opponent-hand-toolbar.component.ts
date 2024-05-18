@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-opponent-hand-toolbar',
@@ -6,6 +7,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrl: './opponent-hand-toolbar.component.scss',
 })
 export class OpponentHandToolbarComponent {
+  readonly #matSnackBar = inject(MatSnackBar);
+
   @Input() numCardsInOpponentsHand = 0;
   @Input() isPlacingMultipleCards = false;
   @Input() cardSize = 64;
@@ -17,10 +20,12 @@ export class OpponentHandToolbarComponent {
   @Output() drawDenied = new EventEmitter<void>();
 
   confirmPlaceMultipleCards() {
+    this.#matSnackBar.dismiss();
     this.placeMultipleCardsConfirmed.emit();
   }
 
   cancelPlaceMultipleCards() {
+    this.#matSnackBar.dismiss();
     this.placeMultipleCardsCanceled.emit();
   }
 
@@ -30,5 +35,16 @@ export class OpponentHandToolbarComponent {
 
   denyDraw() {
     this.drawDenied.emit();
+  }
+
+  showPlaceMultipleInfoMessage() {
+    this.#matSnackBar.open(
+      'You can place multiple cards of the same kind.',
+      'Hide',
+      {
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      }
+    );
   }
 }

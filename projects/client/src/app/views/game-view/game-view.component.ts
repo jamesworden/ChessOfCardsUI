@@ -520,7 +520,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
     if (invalidMoveMessage) {
       this.#matSnackBar.open(invalidMoveMessage, undefined, {
-        duration: 5000,
+        duration: 3000,
         verticalPosition: 'top',
       });
 
@@ -662,10 +662,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       cachedGameView.CandidateMoves
     );
     if (invalidMoveMessage) {
-      this.#matSnackBar.open(invalidMoveMessage, 'Out of order!', {
-        duration: 5000,
-        verticalPosition: 'top',
-      });
+      this.#matSnackBar.open(
+        `Consecutive cards must have matching suit or kind.`,
+        undefined,
+        {
+          duration: 3000,
+          verticalPosition: 'top',
+        }
+      );
 
       return;
     }
@@ -763,7 +767,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.#store.dispatch(new PassMove());
 
     this.#matSnackBar.open('Move passed.', undefined, {
-      duration: 5000,
+      duration: 3000,
       verticalPosition: 'top',
     });
   }
@@ -772,7 +776,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.#store.dispatch(new OfferDraw());
 
     this.#matSnackBar.open('Offered draw.', undefined, {
-      duration: 5000,
+      duration: 3000,
       verticalPosition: 'top',
     });
   }
@@ -1032,10 +1036,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   private showOpponentPassedMoveToast() {
-    this.#matSnackBar.open('Opponent passed their move.', 'Your turn!', {
-      duration: 5000,
-      verticalPosition: 'top',
-    });
+    this.#matSnackBar.open(
+      `Opponent passed their move. It's your turn.`,
+      undefined,
+      {
+        duration: 3000,
+        verticalPosition: 'top',
+      }
+    );
   }
 
   private showGameOverModal(gameOverData: GameOverData) {
