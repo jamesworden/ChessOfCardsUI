@@ -19,7 +19,7 @@ export const movementAnimation = trigger('movement', [
     style({
       top: '{{ toY }}px',
       left: '{{ toX }}px',
-      display: 'visible',
+      display: 'block',
     }),
     {
       params: {
@@ -32,7 +32,7 @@ export const movementAnimation = trigger('movement', [
     '* => in-progress',
     [
       style({
-        display: 'visible',
+        display: 'block',
       }),
       animate(
         '{{ durationMs }}ms ease',
