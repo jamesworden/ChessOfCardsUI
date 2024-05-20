@@ -93,7 +93,6 @@ function getAnimatedPositionFromCardPosition(
   }
 
   let { x, y } = position.getBoundingClientRect();
-  // y += window.scrollY;
 
   return { x, y };
 }
@@ -108,7 +107,6 @@ function getAnimatedPositionFromOpponentCardIndex(
   }
 
   let { x, y } = opponentHand.getBoundingClientRect();
-  // y += window.scrollY;
   x += cardSize * guestCardIndex;
 
   return {
@@ -127,7 +125,6 @@ function getAnimatedPositionFromPlayerCardIndex(
   }
 
   let { x, y } = playerHand.getBoundingClientRect();
-  // y += window.scrollY;
   x += cardSize * guestCardIndex;
 
   return {
@@ -154,7 +151,6 @@ function getAnimatedPositionFromPlayerDeck(): AnimatedPosition | null {
     const clientRect = faceDownCard?.getBoundingClientRect();
 
     if (clientRect.width > 0 && clientRect.height > 0) {
-      // y += window.scrollY;
       return {
         x: clientRect.x,
         y: clientRect.y,
@@ -187,7 +183,6 @@ function getAnimatedPositionFromOpponentDeck(): AnimatedPosition | null {
   }
 
   let { x, y } = playerDeck.getBoundingClientRect();
-  // y += window.scrollY;
 
   return {
     x,
