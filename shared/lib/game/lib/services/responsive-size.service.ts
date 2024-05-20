@@ -1,5 +1,5 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
-import { BehaviorSubject, fromEvent } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BREAKPOINTS } from '@shared/constants';
 
@@ -24,6 +24,7 @@ export class ResponsiveSizeService {
   public readonly cardSize$ = this._cardSize$.asObservable();
 
   private readonly _windowResize$ = fromEvent(window, 'resize');
+  private readonly _recalculateCardSize$ = new Subject();
 
   constructor() {
     this._windowResize$
@@ -31,9 +32,9 @@ export class ResponsiveSizeService {
       .subscribe(() => {
         this._windowDimensions$.next([window.innerWidth, window.innerHeight]);
       });
-    this._windowDimensions$
+    combineLatest([this._windowDimensions$, this._recalculateCardSize$])
       .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe(([width, height]) => {
+      .subscribe(([[width, height]]) => {
         width -= sidebarWidth;
         const maxCardWidth = width / cardRatio.x;
         const maxCardHeight = height / cardRatio.y;
@@ -50,5 +51,9 @@ export class ResponsiveSizeService {
 
         this._cardSize$.next(cardSize);
       });
+  }
+
+  public recalculateCardSize() {
+    this._recalculateCardSize$.next();
   }
 }

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { ResponsiveSizeService } from '@shared/game';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,7 +24,7 @@ import { fadeInOutAnimation } from '@shared/animations';
   styleUrls: ['./board.component.scss'],
   animations: [fadeInOutAnimation],
 })
-export class BoardComponent {
+export class BoardComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   readonly Z_INDEXES = Z_INDEXES;
@@ -101,6 +108,12 @@ export class BoardComponent {
         return laneIndexesToValidMoveRowIndexes;
       })
     );
+
+  ngOnInit() {
+    // [LAN-460]: Recalculate card size for posterity.
+    // Sometimes the card size changes while switching tabs.
+    this.#responsiveSizeService.recalculateCardSize();
+  }
 
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
     this.placeCardAttempted.emit(placeCardAttempt);
