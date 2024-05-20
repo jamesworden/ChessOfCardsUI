@@ -4,7 +4,7 @@ import {
   Input,
   Output,
   inject,
-  OnInit,
+  AfterViewInit,
 } from '@angular/core';
 import { ResponsiveSizeService } from '@shared/game';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
@@ -24,7 +24,7 @@ import { fadeInOutAnimation } from '@shared/animations';
   styleUrls: ['./board.component.scss'],
   animations: [fadeInOutAnimation],
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements AfterViewInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
 
   readonly Z_INDEXES = Z_INDEXES;
@@ -109,10 +109,10 @@ export class BoardComponent implements OnInit {
       })
     );
 
-  ngOnInit() {
+  ngAfterViewInit() {
     // [LAN-460]: Recalculate card size for posterity.
     // Sometimes the card size changes while switching tabs.
-    this.#responsiveSizeService.recalculateCardSize();
+    setTimeout(() => this.#responsiveSizeService.recalculateCardSize());
   }
 
   onPlaceCardAttempted(placeCardAttempt: PlaceCardAttempt) {
