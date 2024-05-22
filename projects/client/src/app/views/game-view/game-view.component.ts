@@ -341,6 +341,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         this.notationIdxToPastGameViews$.next(map);
       });
     this.selectedNotationIndex$
+      .pipe(distinctUntilChanged())
       .pipe(
         takeUntilDestroyed(this.#destroyRef),
         withLatestFrom(this.notationIdxToPastGameViews$)
@@ -362,6 +363,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
               ? null
               : notationIdxToPastGameViews[selectedNotationIndex]
           );
+        }
+
+        if (this.isPlacingMultipleCards) {
+          this.cancelPlaceMultipleCards();
         }
       });
     this.selectedCard$
