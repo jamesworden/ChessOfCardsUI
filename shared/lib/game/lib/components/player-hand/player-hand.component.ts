@@ -110,12 +110,18 @@ export class PlayerHandComponent implements OnInit {
       this.isGameActive$,
       this.allCards$,
       this.selectedCard$,
+      this.isPlacingMultipleCards$,
     ])
       .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe(([isPlayersTurn, isGameActive, allCards]) =>
-        isPlayersTurn && isGameActive && allCards && allCards.length > 0
-          ? this.startBounceTimer()
-          : this.stopBounceTimer()
+      .subscribe(
+        ([isPlayersTurn, isGameActive, allCards, isPlacingMultipleCards]) =>
+          isPlayersTurn &&
+          isGameActive &&
+          allCards &&
+          allCards.length > 0 &&
+          !isPlacingMultipleCards
+            ? this.startBounceTimer()
+            : this.stopBounceTimer()
       );
 
     this.bouncingCards$
