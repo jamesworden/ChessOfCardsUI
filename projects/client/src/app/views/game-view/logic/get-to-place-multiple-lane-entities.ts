@@ -4,6 +4,7 @@ import { Card, CardMovement, PlaceCardAttempt } from '@shared/models';
 import { TemplateRef } from '@angular/core';
 import { getAnimatedMovement } from './get-animated-movement';
 import { DURATIONS } from '@shared/constants';
+import { getCardMovementSoundPaths } from './get-card-movement-sound-paths';
 
 export function gettoPmcLaneEntities(
   placeCardAttempts: PlaceCardAttempt[],
@@ -86,11 +87,14 @@ function getAnimatedEntity(
     durationMs
   );
 
+  const soundPaths = getCardMovementSoundPaths(cardMovement, durationMs);
+
   const entity: AnimatedEntity<CardMovement> = {
     animationType: AnimationType.Movement,
     context: cardMovement,
     movement,
     template,
+    soundPaths,
   };
 
   return entity;

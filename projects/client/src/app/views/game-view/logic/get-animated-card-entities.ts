@@ -1,33 +1,15 @@
 import { TemplateRef } from '@angular/core';
-import {
-  PlayerGameView,
-  PlayerOrNone,
-  CardMovement,
-  CardStore,
-  CardPosition,
-} from '@shared/models';
+import { PlayerGameView, PlayerOrNone, CardMovement } from '@shared/models';
 import { getCardTiltDegrees } from '@shared/logic';
 import { MoveMadeDetails } from '../models/move-made-details.model';
 import {
   AnimatedEntity,
   AnimatedEntityStyles,
-  AnimatedMovement,
-  AnimatedPosition,
   AnimationType,
 } from '@shared/animation-overlay';
 import { getAnimatedMovement } from './get-animated-movement';
 import { DURATIONS } from '@shared/constants';
-
-/**
- * Many of the functions here contain `// y += window.scrollY`.
- *
- * When the displayed view has a fixed height, the body behind it can be scrollable.
- * This means that animated entities y position is incorrectly offset, so these
- * adjustments have been commented out.
- *
- * If we want to show animated entities on a view that doesn't have a fixed height,
- * we should make a boolean parameter for that so they can be adjusted accordingly.
- */
+import { getCardMovementSoundPaths } from './get-card-movement-sound-paths';
 
 export function getAnimatedCardEntities(
   prevAndCurrGameViews: [PlayerGameView | null, PlayerGameView | null],
@@ -198,11 +180,14 @@ function getAnimatedEntity(
     },
   };
 
+  const soundPaths = getCardMovementSoundPaths(cardMovement, durationMs);
+
   return {
     animationType,
     template: cardMovementTemplate,
     context: cardMovement,
     movement,
     styles,
+    soundPaths,
   };
 }

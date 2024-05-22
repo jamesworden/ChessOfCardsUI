@@ -18,6 +18,7 @@ import { fadeOutAnimation } from './animations/fade-out.animation';
 import { fadeInAnimation } from './animations/fade-in.animation';
 import { Z_INDEXES } from '@shared/constants';
 import { rotationAnimation } from './animations/rotation.animation';
+import { AudioCacheService } from '@shared/audio-cache';
 
 @Component({
   selector: 'animation-overlay',
@@ -36,6 +37,7 @@ export class AnimationOverlayComponent implements OnInit {
   readonly APPLY_ROTATION_DELAY = 50;
 
   readonly #destroyRef = inject(DestroyRef);
+  readonly #audioCacheService = inject(AudioCacheService);
 
   @Input({ required: true }) set animatedEntities(
     animatedEntities: AnimatedEntity<unknown>[]
@@ -105,6 +107,8 @@ export class AnimationOverlayComponent implements OnInit {
 
     this.currentSequence$.next(sequence);
 
+    this.playStartingAnimationSounds(currentEntities);
+
     /** [Animation Overlay Documenation] [LAN-308] */
     const correctedDelayMs = delay - 25;
 
@@ -121,5 +125,21 @@ export class AnimationOverlayComponent implements OnInit {
     setTimeout(() => {
       this.appliedRotation$.next(true);
     }, this.APPLY_ROTATION_DELAY);
+  }
+
+  private playStartingAnimationSounds<T>(currentEntities: AnimatedEntity<T>[]) {
+    const sounds = new Set<HTMLAudioElement>();
+
+    for (const entity of currentEntities) {
+      if (entity.soundPaths?.onStart) {
+        sounds.add(
+          this.#audioCacheService.getAudio(entity.soundPaths?.onStart)
+        );
+      }
+    }
+
+    for (const sound of sounds) {
+      sound.play();
+    }
   }
 }

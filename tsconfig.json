@@ -26,7 +26,8 @@
       "@shared/constants": ["shared/lib/constants/index.ts"],
       "@shared/animations": ["shared/lib/animations/index.ts"],
       "@shared/statistics-panel": ["shared/lib/statistics-panel/index.ts"],
-      "@shared/ui-inputs": ["shared/lib/ui-inputs/index.ts"]
+      "@shared/ui-inputs": ["shared/lib/ui-inputs/index.ts"],
+      "@shared/audio-cache": ["shared/lib/audio-cache/index.ts"]
     }
   },
   "angularCompilerOptions": {

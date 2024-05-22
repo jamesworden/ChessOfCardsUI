@@ -75,6 +75,9 @@ import { getCardStack } from './logic/get-card-stack';
 import { BREAKPOINTS, Z_INDEXES } from '@shared/constants';
 import { GameViewTab } from './models/game-view-tab';
 import { StatisticsPanelView } from '@shared/statistics-panel';
+import { AudioCacheService } from '@shared/audio-cache';
+
+const PLACE_CARD_AUDIO_FILE_PATH = 'assets/sounds/place_card.mp3';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -97,6 +100,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #router = inject(Router);
   readonly #destroyRef = inject(DestroyRef);
+  readonly #audioCacheService = inject(AudioCacheService);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -514,6 +518,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
+      this.#audioCacheService.getAudio(PLACE_CARD_AUDIO_FILE_PATH).play();
+    }
+
     const invalidMoveMessage = this.isPlayersTurn
       ? getReasonIfMoveInvalid(move, cachedGameView.CandidateMoves)
       : "It's not your turn!";
@@ -540,6 +548,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     if (!cardPositionChanged) {
       return;
     }
+
+    this.#audioCacheService.getAudio(PLACE_CARD_AUDIO_FILE_PATH).play();
 
     if (this.isPlacingMultipleCards && oneListToAnother) {
       const card = event.item.data as Card;
@@ -726,10 +736,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   placedMultipleCards(cards: Card[]) {
+    this.#audioCacheService.getAudio(PLACE_CARD_AUDIO_FILE_PATH).play();
     this.#store.dispatch(new SetPlaceMultipleCards(cards));
   }
 
   placedMultipleCardsHand(cards: Card[]) {
+    this.#audioCacheService.getAudio(PLACE_CARD_AUDIO_FILE_PATH).play();
     this.#store.dispatch(new SetPlaceMultipleCardsHand(cards));
   }
 
