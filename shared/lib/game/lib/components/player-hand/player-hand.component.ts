@@ -109,7 +109,6 @@ export class PlayerHandComponent implements OnInit {
       this.isPlayersTurn$,
       this.isGameActive$,
       this.allCards$,
-      this.selectedCard$,
       this.isPlacingMultipleCards$,
     ])
       .pipe(takeUntilDestroyed(this.#destroyRef))
