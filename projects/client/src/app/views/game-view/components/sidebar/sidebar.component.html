@@ -1,5 +1,5 @@
 <nav
-  class="sidebar bg-gray-50 dark:bg-gray-700 h-full flex flex-col transition w-20 shadow-lg"
+  class="sidebar bg-gray-50 dark:bg-gray-700 h-full flex flex-col w-20 shadow-lg"
 >
   @if ((playerGameView$ | async)?.GameCode; as gameCode) {
     <div class="flex flex-col justify-around text-center my-2 px-1">
@@ -10,9 +10,7 @@
     </div>
   }
 
-  <div
-    class="h-px rounded-lg bg-gray-400 dark:bg-gray-600 mx-2 transition"
-  ></div>
+  <div class="h-px rounded-lg bg-gray-400 dark:bg-gray-600 mx-2"></div>
 
   <div
     class="px-1 pt-2 flex flex-col pb-4"
@@ -92,7 +90,7 @@
       <div class="game-stats">
         <div
           data-testid="opponent-time"
-          class="border border-1 border-gray-400 rounded-sm text-gray-800 bg-gray-100 font-bold py-1 text-lg mx-2 text-center transition mb-2"
+          class="border border-1 border-gray-400 rounded-sm text-gray-800 bg-gray-100 font-bold py-1 text-lg mx-2 text-center mb-2"
           [ngClass]="{
             'is-not-counting-down': isPlayersTurn
           }"
@@ -117,7 +115,7 @@
         </div>
         <div
           data-testid="player-time"
-          class="border border-1 border-gray-400 rounded-sm text-gray-800 bg-gray-100 font-bold py-1 text-lg mx-2 text-center transition mt-2"
+          class="border border-1 border-gray-400 rounded-sm text-gray-800 bg-gray-100 font-bold py-1 text-lg mx-2 text-center mt-2"
           [ngClass]="{
             'low-time-container': playerHasLowTime,
             'is-not-counting-down': !isPlayersTurn
@@ -131,7 +129,7 @@
 </nav>
 
 <mat-menu
-  class="bg-white dark:bg-gray-600 transition"
+  class="bg-white dark:bg-gray-600"
   #menu="matMenu"
   yPosition="below"
   xPosition="after"
