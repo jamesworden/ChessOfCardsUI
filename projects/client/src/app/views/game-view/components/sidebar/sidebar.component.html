@@ -130,57 +130,15 @@
   }
 </nav>
 
-<ng-template #secondaryOptions>
-  <icon-button
-    class="block dark:hidden"
-    matTooltip="Dark Mode"
-    matTooltipPosition="right"
-    iconClass="material-symbols-outlined"
-    iconString="dark_mode"
-    (clicked)="toggleDarkMode()"
-    label="Dark"
-    buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
-  ></icon-button>
-  <icon-button
-    class="hidden dark:block"
-    matTooltip="Light Mode"
-    matTooltipPosition="right"
-    iconClass="material-symbols-outlined"
-    iconString="light_mode"
-    (clicked)="toggleDarkMode()"
-    label="Light"
-    buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
-  ></icon-button>
-  <icon-button
-    [ngClass]="{
-      hidden: isMuted
-    }"
-    matTooltip="Mute"
-    matTooltipPosition="right"
-    iconClass="material-symbols-outlined"
-    iconString="volume_up"
-    (clicked)="mute()"
-    label="Mute"
-    buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
-  ></icon-button>
-  <icon-button
-    [ngClass]="{
-      hidden: !isMuted
-    }"
-    matTooltip="Unmute"
-    matTooltipPosition="right"
-    iconClass="material-symbols-outlined"
-    iconString="volume_off"
-    (clicked)="unmute()"
-    label="Unmute"
-    buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
-  ></icon-button>
-</ng-template>
-
-<mat-menu #menu="matMenu" yPosition="below" xPosition="after">
+<mat-menu
+  class="bg-white dark:bg-gray-600 transition"
+  #menu="matMenu"
+  yPosition="below"
+  xPosition="after"
+>
   <div class="hidden dark:block">
     <button mat-menu-item (click)="toggleDarkMode()">
-      <div class="flex gap-x-2">
+      <div class="flex gap-x-2 dark:text-white">
         <div class="flex flex-col justify-around">
           <span class="material-symbols-outlined">light_mode</span>
         </div>
@@ -193,7 +151,7 @@
 
   <div class="block dark:hidden">
     <button mat-menu-item (click)="toggleDarkMode()">
-      <div class="flex gap-x-2">
+      <div class="flex gap-x-2 dark:text-white">
         <div class="flex flex-col justify-around">
           <span class="material-symbols-outlined">dark_mode</span>
         </div>
@@ -210,7 +168,7 @@
     }"
   >
     <button mat-menu-item (click)="mute()">
-      <div class="flex gap-x-2">
+      <div class="flex gap-x-2 dark:text-white">
         <div class="flex flex-col justify-around">
           <span class="material-symbols-outlined">volume_up</span>
         </div>
@@ -227,7 +185,7 @@
     }"
   >
     <button mat-menu-item (click)="unmute()">
-      <div class="flex gap-x-2">
+      <div class="flex gap-x-2 dark:text-white">
         <div class="flex flex-col justify-around">
           <span class="material-symbols-outlined">volume_off</span>
         </div>
