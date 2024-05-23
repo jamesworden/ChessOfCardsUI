@@ -73,26 +73,7 @@
         label="Resign"
         buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
       ></icon-button>
-      <icon-button
-        class="block dark:hidden"
-        matTooltip="Dark Mode"
-        matTooltipPosition="right"
-        iconClass="material-symbols-outlined"
-        iconString="dark_mode"
-        (clicked)="toggleDarkMode()"
-        label="Dark"
-        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
-      ></icon-button>
-      <icon-button
-        class="hidden dark:block"
-        matTooltip="Light Mode"
-        matTooltipPosition="right"
-        iconClass="material-symbols-outlined"
-        iconString="light_mode"
-        (clicked)="toggleDarkMode()"
-        label="Light"
-        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
-      ></icon-button>
+      <ng-container [ngTemplateOutlet]="secondaryOptions"> </ng-container>
     </div>
 
     @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
@@ -139,3 +120,50 @@
     }
   }
 </nav>
+
+<ng-template #secondaryOptions>
+  <icon-button
+    class="block dark:hidden"
+    matTooltip="Dark Mode"
+    matTooltipPosition="right"
+    iconClass="material-symbols-outlined"
+    iconString="dark_mode"
+    (clicked)="toggleDarkMode()"
+    label="Dark"
+    buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
+  ></icon-button>
+  <icon-button
+    class="hidden dark:block"
+    matTooltip="Light Mode"
+    matTooltipPosition="right"
+    iconClass="material-symbols-outlined"
+    iconString="light_mode"
+    (clicked)="toggleDarkMode()"
+    label="Light"
+    buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
+  ></icon-button>
+  <icon-button
+    [ngClass]="{
+      hidden: isMuted
+    }"
+    matTooltip="Mute"
+    matTooltipPosition="right"
+    iconClass="material-symbols-outlined"
+    iconString="volume_up"
+    (clicked)="mute()"
+    label="Mute"
+    buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
+  ></icon-button>
+  <icon-button
+    [ngClass]="{
+      hidden: !isMuted
+    }"
+    matTooltip="Unmute"
+    matTooltipPosition="right"
+    iconClass="material-symbols-outlined"
+    iconString="volume_off"
+    (clicked)="unmute()"
+    label="Unmute"
+    buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
+  ></icon-button>
+</ng-template>

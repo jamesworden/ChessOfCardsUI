@@ -137,3 +137,11 @@ export class SendChatMessage {
   static readonly type = '[GameState] Send Chat Message';
   constructor(public message: string) {}
 }
+
+export class Mute {
+  static readonly type = '[GameState] Mute';
+}
+
+export class Unmute {
+  static readonly type = '[GameState] Unmute';
+}

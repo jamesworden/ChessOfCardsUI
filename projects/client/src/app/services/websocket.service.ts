@@ -149,7 +149,7 @@ export class WebsocketService {
         ? "It's your turn."
         : "It's your opponent's turn.";
 
-      this.#matSnackBar.open(message, undefined, {
+      this.#matSnackBar.open(message, 'Hide', {
         duration: 3000,
         verticalPosition: 'top',
       });
@@ -185,7 +185,7 @@ export class WebsocketService {
     this.hubConnection.on(MessageType.TurnSkippedNoMoves, () => {
       this.#matSnackBar.open(
         'You have no available moves. Turn skipped.',
-        undefined,
+        'Hide',
         {
           duration: 3000,
           verticalPosition: 'top',

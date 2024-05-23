@@ -18,6 +18,7 @@ import {
   DenyDrawOffer,
   FinishPlacingMultipleCards,
   MakeMove,
+  Mute,
   OfferDraw,
   PassMove,
   RearrangeHand,
@@ -28,6 +29,7 @@ import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
+  Unmute,
   UpdatePlayerGameView,
 } from '../../actions/game.actions';
 import { GameState } from '../../state/game.state';
@@ -77,7 +79,7 @@ import { GameViewTab } from './models/game-view-tab';
 import { StatisticsPanelView } from '@shared/statistics-panel';
 import { AudioCacheService } from '@shared/audio-cache';
 
-const PLACE_CARD_AUDIO_FILE_PATH = 'assets/sounds/place_card.mp3';
+const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -140,6 +142,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @Select(GameState.chatMessages)
   chatMessages$!: Observable<ChatMessage[]>;
+
+  @Select(GameState.muted)
+  muted$!: Observable<boolean>;
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly cachedGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
@@ -524,7 +529,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
-      this.#audioCacheService.getAudio(PLACE_CARD_AUDIO_FILE_PATH).play();
+      this.playSoundIfUnmuted(SLIDE_CARD_AUDIO_FILE_PATH);
     }
 
     const invalidMoveMessage = this.isPlayersTurn
@@ -532,7 +537,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       : "It's not your turn!";
 
     if (invalidMoveMessage) {
-      this.#matSnackBar.open(invalidMoveMessage, undefined, {
+      this.#matSnackBar.open(invalidMoveMessage, 'Hide', {
         duration: 3000,
         verticalPosition: 'top',
       });
@@ -554,7 +559,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.#audioCacheService.getAudio(PLACE_CARD_AUDIO_FILE_PATH).play();
+    this.playSoundIfUnmuted(SLIDE_CARD_AUDIO_FILE_PATH);
 
     if (this.isPlacingMultipleCards && oneListToAnother) {
       const card = event.item.data as Card;
@@ -679,7 +684,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     if (invalidMoveMessage) {
       this.#matSnackBar.open(
         `Consecutive cards must have matching suit or kind.`,
-        undefined,
+        'Hide',
         {
           duration: 3000,
           verticalPosition: 'top',
@@ -741,12 +746,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   placedMultipleCards(cards: Card[]) {
-    this.#audioCacheService.getAudio(PLACE_CARD_AUDIO_FILE_PATH).play();
+    this.playSoundIfUnmuted(SLIDE_CARD_AUDIO_FILE_PATH);
     this.#store.dispatch(new SetPlaceMultipleCards(cards));
   }
 
   placedMultipleCardsHand(cards: Card[]) {
-    this.#audioCacheService.getAudio(PLACE_CARD_AUDIO_FILE_PATH).play();
+    this.playSoundIfUnmuted(SLIDE_CARD_AUDIO_FILE_PATH);
     this.#store.dispatch(new SetPlaceMultipleCardsHand(cards));
   }
 
@@ -783,7 +788,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.cancelPlaceMultipleCards();
     this.#store.dispatch(new PassMove());
 
-    this.#matSnackBar.open('Move passed.', undefined, {
+    this.#matSnackBar.open('Move passed.', 'Hide', {
       duration: 3000,
       verticalPosition: 'top',
     });
@@ -792,7 +797,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   offerDraw() {
     this.#store.dispatch(new OfferDraw());
 
-    this.#matSnackBar.open('Offered draw.', undefined, {
+    this.#matSnackBar.open('Offered draw.', 'Hide', {
       duration: 3000,
       verticalPosition: 'top',
     });
@@ -901,6 +906,21 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   selectPanelView(statisticsPanelView: StatisticsPanelView) {
     this.selectedPanelView$.next(statisticsPanelView);
+  }
+
+  mute() {
+    this.#store.dispatch(new Mute());
+  }
+
+  unmute() {
+    this.#store.dispatch(new Unmute());
+  }
+
+  private playSoundIfUnmuted(audioFilePath: string) {
+    const isMuted = this.#store.selectSnapshot(GameState.muted);
+    if (!isMuted) {
+      this.#audioCacheService.getAudio(audioFilePath).play();
+    }
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
@@ -1055,7 +1075,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   private showOpponentPassedMoveToast() {
     this.#matSnackBar.open(
       `Opponent passed their move. It's your turn.`,
-      undefined,
+      'Hide',
       {
         duration: 3000,
         verticalPosition: 'top',

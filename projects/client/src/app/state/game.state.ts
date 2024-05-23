@@ -28,6 +28,8 @@ import {
   AnimateGameView,
   SetGameIsActive,
   SendChatMessage,
+  Mute,
+  Unmute,
 } from '../actions/game.actions';
 import {
   Card,
@@ -54,6 +56,7 @@ type GameStateModel = {
   gameCodeIsInvalid: boolean;
   waitingForServer: boolean;
   gameIsActive: boolean;
+  muted: boolean;
 };
 
 const defaultGameState: GameStateModel = {
@@ -73,6 +76,7 @@ const defaultGameState: GameStateModel = {
   gameCodeIsInvalid: false,
   waitingForServer: false,
   gameIsActive: false,
+  muted: false,
 };
 
 @State<GameStateModel>({
@@ -161,6 +165,11 @@ export class GameState {
   @Selector()
   static chatMessages(state: GameStateModel) {
     return state.playerGameView?.ChatMessages ?? [];
+  }
+
+  @Selector()
+  static muted(state: GameStateModel) {
+    return state.muted;
   }
 
   @Action(UpdatePlayerGameView)
@@ -396,5 +405,19 @@ export class GameState {
     { message }: SendChatMessage
   ) {
     this.#websocketService.sendChatMessage(message);
+  }
+
+  @Action(Mute)
+  mute(ctx: StateContext<GameStateModel>) {
+    ctx.patchState({
+      muted: true,
+    });
+  }
+
+  @Action(Unmute)
+  unmute(ctx: StateContext<GameStateModel>) {
+    ctx.patchState({
+      muted: false,
+    });
   }
 }

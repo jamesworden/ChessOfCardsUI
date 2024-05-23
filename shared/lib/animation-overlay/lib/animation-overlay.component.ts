@@ -39,6 +39,7 @@ export class AnimationOverlayComponent implements OnInit {
   readonly #destroyRef = inject(DestroyRef);
   readonly #audioCacheService = inject(AudioCacheService);
 
+  @Input() playSounds = true;
   @Input({ required: true }) set animatedEntities(
     animatedEntities: AnimatedEntity<unknown>[]
   ) {
@@ -107,7 +108,9 @@ export class AnimationOverlayComponent implements OnInit {
 
     this.currentSequence$.next(sequence);
 
-    this.playStartingAnimationSounds(currentEntities);
+    if (this.playSounds) {
+      this.playStartingAnimationSounds(currentEntities);
+    }
 
     /** [Animation Overlay Documenation] [LAN-308] */
     const correctedDelayMs = delay - 25;
