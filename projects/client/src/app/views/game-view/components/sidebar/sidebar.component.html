@@ -73,7 +73,16 @@
         label="Resign"
         buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
       ></icon-button>
-      <ng-container [ngTemplateOutlet]="secondaryOptions"> </ng-container>
+      <icon-button
+        matTooltip="More"
+        matTooltipPosition="right"
+        iconString="more_vert"
+        iconClass="material-symbols-outlined"
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        label="More"
+        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
+      ></icon-button>
     </div>
 
     @if (numCardsInOpponentDeck !== null && numCardsInPlayerDeck !== null) {
@@ -167,3 +176,65 @@
     buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
   ></icon-button>
 </ng-template>
+
+<mat-menu #menu="matMenu" yPosition="below" xPosition="after">
+  <div class="hidden dark:block">
+    <button mat-menu-item (click)="toggleDarkMode()">
+      <div class="flex gap-x-2">
+        <div class="flex flex-col justify-around">
+          <span class="material-symbols-outlined">light_mode</span>
+        </div>
+        <div class="flex flex-col justify-around">
+          <span>Light Mode</span>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <div class="block dark:hidden">
+    <button mat-menu-item (click)="toggleDarkMode()">
+      <div class="flex gap-x-2">
+        <div class="flex flex-col justify-around">
+          <span class="material-symbols-outlined">dark_mode</span>
+        </div>
+        <div class="flex flex-col justify-around">
+          <span>Dark Mode</span>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <div
+    [ngClass]="{
+      hidden: isMuted
+    }"
+  >
+    <button mat-menu-item (click)="mute()">
+      <div class="flex gap-x-2">
+        <div class="flex flex-col justify-around">
+          <span class="material-symbols-outlined">volume_up</span>
+        </div>
+        <div class="flex flex-col justify-around">
+          <span>Mute</span>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <div
+    [ngClass]="{
+      hidden: !isMuted
+    }"
+  >
+    <button mat-menu-item (click)="unmute()">
+      <div class="flex gap-x-2">
+        <div class="flex flex-col justify-around">
+          <span class="material-symbols-outlined">volume_off</span>
+        </div>
+        <div class="flex flex-col justify-around">
+          <span>Unmute</span>
+        </div>
+      </div>
+    </button>
+  </div>
+</mat-menu>

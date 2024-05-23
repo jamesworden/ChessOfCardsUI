@@ -28,6 +28,7 @@ import { StatisticsPanelModule } from '@shared/statistics-panel';
 import { UiInputsModule } from '@shared/ui-inputs';
 import { OpponentHandToolbarComponent } from './views/game-view/components/opponent-hand-toolbar/opponent-hand-toolbar.component';
 import { GameViewNavbarComponent } from './views/game-view/components/game-view-navbar/game-view-navbar.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { GameViewNavbarComponent } from './views/game-view/components/game-view-
     AnimationOverlayModule,
     StatisticsPanelModule,
     UiInputsModule,
+    MatMenuModule,
   ],
   providers: [provideAnimations()],
   bootstrap: [AppComponent],
