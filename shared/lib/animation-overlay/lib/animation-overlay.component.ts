@@ -131,18 +131,16 @@ export class AnimationOverlayComponent implements OnInit {
   }
 
   private playStartingAnimationSounds<T>(currentEntities: AnimatedEntity<T>[]) {
-    const sounds = new Set<HTMLAudioElement>();
+    const audioFilePaths = new Set<string>();
 
     for (const entity of currentEntities) {
       if (entity.soundPaths?.onStart) {
-        sounds.add(
-          this.#audioCacheService.getAudio(entity.soundPaths?.onStart)
-        );
+        audioFilePaths.add(entity.soundPaths?.onStart);
       }
     }
 
-    for (const sound of sounds) {
-      sound.play();
+    for (const filePath of audioFilePaths) {
+      this.#audioCacheService.play(filePath);
     }
   }
 }

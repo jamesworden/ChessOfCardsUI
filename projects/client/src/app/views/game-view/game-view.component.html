@@ -1,19 +1,19 @@
 <animation-overlay
-  [playSounds]="(muted$ | async) === false"
+  [playSounds]="(isMuted$ | async) === false"
   [animatedEntities]="(gameStateEntities$ | async) ?? []"
   (finishedAnimations)="renderAnimatedGameView()"
   (startingAnimations)="removeCardsFromBoardAndOpponentHand($event)"
 ></animation-overlay>
 
 <animation-overlay
-  [playSounds]="(muted$ | async) === false"
+  [playSounds]="(isMuted$ | async) === false"
   [animatedEntities]="(toPmcLaneEntities$ | async) ?? []"
   (finishedAnimations)="addCardToPlaceMultipleCardsLane($event)"
   (startingAnimations)="removeCardsFromPlaceMultipleHand($event)"
 ></animation-overlay>
 
 <animation-overlay
-  [playSounds]="(muted$ | async) === false"
+  [playSounds]="(isMuted$ | async) === false"
   [animatedEntities]="(fromPmcLaneEntities$ | async) ?? []"
   (finishedAnimations)="addCardsToHandFromPlaceMultipleLane($event)"
 ></animation-overlay>
@@ -28,7 +28,7 @@
     [cardStack]="cardStack$ | async"
     [redJokerLaneIndex]="(redJokerLaneIndex$ | async) ?? null"
     [blackJokerLaneIndex]="(blackJokerLaneIndex$ | async) ?? null"
-    [isMuted]="(muted$ | async) ?? false"
+    [isMuted]="(isMuted$ | async) ?? false"
     (drawOffered)="offerDraw()"
     (passedMove)="passMove()"
     (resigned)="resign()"

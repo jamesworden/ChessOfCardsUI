@@ -18,7 +18,6 @@ import {
   DenyDrawOffer,
   FinishPlacingMultipleCards,
   MakeMove,
-  Mute,
   OfferDraw,
   PassMove,
   RearrangeHand,
@@ -29,7 +28,6 @@ import {
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
-  Unmute,
   UpdatePlayerGameView,
 } from '../../actions/game.actions';
 import { GameState } from '../../state/game.state';
@@ -143,10 +141,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @Select(GameState.chatMessages)
   chatMessages$!: Observable<ChatMessage[]>;
 
-  @Select(GameState.muted)
-  muted$!: Observable<boolean>;
-
+  readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+
   readonly cachedGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
   readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
   readonly positionClicked$ = new Subject<CardPosition>();
@@ -529,7 +526,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
-      this.playSoundIfUnmuted(SLIDE_CARD_AUDIO_FILE_PATH);
+      this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
     }
 
     const invalidMoveMessage = this.isPlayersTurn
@@ -559,7 +556,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.playSoundIfUnmuted(SLIDE_CARD_AUDIO_FILE_PATH);
+    this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
 
     if (this.isPlacingMultipleCards && oneListToAnother) {
       const card = event.item.data as Card;
@@ -746,12 +743,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   placedMultipleCards(cards: Card[]) {
-    this.playSoundIfUnmuted(SLIDE_CARD_AUDIO_FILE_PATH);
+    this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
     this.#store.dispatch(new SetPlaceMultipleCards(cards));
   }
 
   placedMultipleCardsHand(cards: Card[]) {
-    this.playSoundIfUnmuted(SLIDE_CARD_AUDIO_FILE_PATH);
+    this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
     this.#store.dispatch(new SetPlaceMultipleCardsHand(cards));
   }
 
@@ -909,18 +906,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   mute() {
-    this.#store.dispatch(new Mute());
+    this.#audioCacheService.mute();
   }
 
   unmute() {
-    this.#store.dispatch(new Unmute());
-  }
-
-  private playSoundIfUnmuted(audioFilePath: string) {
-    const isMuted = this.#store.selectSnapshot(GameState.muted);
-    if (!isMuted) {
-      this.#audioCacheService.getAudio(audioFilePath).play();
-    }
+    this.#audioCacheService.unmute();
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

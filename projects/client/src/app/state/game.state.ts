@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
@@ -28,8 +28,6 @@ import {
   AnimateGameView,
   SetGameIsActive,
   SendChatMessage,
-  Mute,
-  Unmute,
 } from '../actions/game.actions';
 import {
   Card,
@@ -165,11 +163,6 @@ export class GameState {
   @Selector()
   static chatMessages(state: GameStateModel) {
     return state.playerGameView?.ChatMessages ?? [];
-  }
-
-  @Selector()
-  static muted(state: GameStateModel) {
-    return state.muted;
   }
 
   @Action(UpdatePlayerGameView)
@@ -405,19 +398,5 @@ export class GameState {
     { message }: SendChatMessage
   ) {
     this.#websocketService.sendChatMessage(message);
-  }
-
-  @Action(Mute)
-  mute(ctx: StateContext<GameStateModel>) {
-    ctx.patchState({
-      muted: true,
-    });
-  }
-
-  @Action(Unmute)
-  unmute(ctx: StateContext<GameStateModel>) {
-    ctx.patchState({
-      muted: false,
-    });
   }
 }
