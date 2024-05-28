@@ -8,10 +8,10 @@
         [iconString]="pane.iconString"
         [label]="pane.title"
         [buttonClass]="
-          currentPanelView === pane.panelView
+          (currentPanelView === pane.panelView
             ? 'bg-gray-200 dark:bg-gray-800 py-4'
-            : 'bg-gray-50 dark:bg-gray-700 py-4 shadow-lg' +
-              ' hover:bg-slate-200 dark:hover:bg-slate-600'
+            : 'bg-gray-50 dark:bg-gray-700 py-4 shadow-lg') +
+          ' transition hover:bg-slate-200 dark:hover:bg-slate-600'
         "
         (clicked)="selectPane(pane.panelView)"
         [showBadge]="

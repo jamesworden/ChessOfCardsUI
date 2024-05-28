@@ -81,3 +81,9 @@ html {
 .flex-4 {
   flex-grow: 4;
 }
+
+.changing-themes {
+  * {
+    transition: none !important;
+  }
+}

@@ -1,4 +1,7 @@
 export function toggleDarkMode() {
+  document.body.classList.add('changing-themes');
+  setTimeout(() => document.body.classList.remove('changing-themes'));
+
   if (localStorage.getItem('color-theme')) {
     if (localStorage.getItem('color-theme') === 'light') {
       document.documentElement.classList.add('dark');
