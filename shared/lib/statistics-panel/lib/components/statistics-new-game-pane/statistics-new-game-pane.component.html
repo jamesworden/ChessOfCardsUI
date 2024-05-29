@@ -1,5 +1,18 @@
 <div class="flex h-full w-full p-4">
   <div
-    class="flex-1 bg-gray-200 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-4"
-  ></div>
+    class="flex-1 bg-gray-200 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-8"
+  >
+    <div class="flex flex-row w-full gap-x-16">
+      <new-game-type-button
+        label="Join Game"
+        [selected]="joinGameSelected"
+        (newGameTypeSelected)="selectJoinGame()"
+      ></new-game-type-button>
+      <new-game-type-button
+        label="Host Game"
+        [selected]="!joinGameSelected"
+        (newGameTypeSelected)="selectHostGame()"
+      ></new-game-type-button>
+    </div>
+  </div>
 </div>

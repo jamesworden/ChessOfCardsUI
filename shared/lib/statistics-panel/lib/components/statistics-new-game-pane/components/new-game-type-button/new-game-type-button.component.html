@@ -1,0 +1,12 @@
+<div class="flex flex-col gap-y-2">
+  <h2 class="text-xl cursor-pointer" (click)="selectNewGameType()">
+    {{ label }}
+  </h2>
+  <div
+    [ngClass]="{
+      'opacity-0': !selected,
+      'opacity-100': selected
+    }"
+    class="h-1 lanes-bg-yellow w-full transition shadow-md"
+  ></div>
+</div>

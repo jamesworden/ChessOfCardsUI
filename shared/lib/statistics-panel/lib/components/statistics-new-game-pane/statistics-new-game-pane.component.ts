@@ -5,4 +5,14 @@ import { Component } from '@angular/core';
   templateUrl: './statistics-new-game-pane.component.html',
   styleUrl: './statistics-new-game-pane.component.css',
 })
-export class StatisticsNewGamePaneComponent {}
+export class StatisticsNewGamePaneComponent {
+  joinGameSelected = true;
+
+  selectJoinGame() {
+    this.joinGameSelected = true;
+  }
+
+  selectHostGame() {
+    this.joinGameSelected = false;
+  }
+}

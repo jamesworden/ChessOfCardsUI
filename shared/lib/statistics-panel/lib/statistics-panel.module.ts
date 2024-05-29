@@ -10,6 +10,7 @@ import { StatisticsChatPaneComponent } from './components/statistics-chat-panel/
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { StatisticsNewGamePaneComponent } from './components/statistics-new-game-pane/statistics-new-game-pane.component';
+import { NewGameTypeButtonComponent } from './components/statistics-new-game-pane/components/new-game-type-button/new-game-type-button.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { StatisticsNewGamePaneComponent } from './components/statistics-new-game
     StatisticsMovesPaneComponent,
     StatisticsChatPaneComponent,
     StatisticsNewGamePaneComponent,
+    NewGameTypeButtonComponent,
   ],
   imports: [
     CommonModule,
