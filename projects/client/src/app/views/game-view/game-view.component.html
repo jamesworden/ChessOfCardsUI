@@ -46,6 +46,9 @@
 
     <div class="flex-1">
       @switch (selectedTab$ | async) {
+        @case (GameViewTab.NewGame) {
+          <ng-container [ngTemplateOutlet]="newGameView"></ng-container>
+        }
         @case (GameViewTab.Board) {
           <ng-container [ngTemplateOutlet]="boardView"></ng-container>
         }
@@ -279,4 +282,8 @@
     [chatMessages]="(chatMessages$ | async) ?? []"
     (chatMessageSent)="sendChatMessage($event)"
   ></statistics-chat-pane>
+</ng-template>
+
+<ng-template #newGameView>
+  <statistics-new-game-pane></statistics-new-game-pane>
 </ng-template>
