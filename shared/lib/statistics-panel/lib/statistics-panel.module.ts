@@ -9,6 +9,7 @@ import { UiInputsModule } from '@shared/ui-inputs';
 import { StatisticsChatPaneComponent } from './components/statistics-chat-panel/statistics-chat-pane.component';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { StatisticsNewGamePaneComponent } from './components/statistics-new-game-pane/statistics-new-game-pane.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
     CardStackComponent,
     StatisticsMovesPaneComponent,
     StatisticsChatPaneComponent,
+    StatisticsNewGamePaneComponent,
   ],
   imports: [
     CommonModule,
@@ -30,6 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
     CardStackComponent,
     StatisticsMovesPaneComponent,
     StatisticsChatPaneComponent,
+    StatisticsNewGamePaneComponent,
   ],
 })
 export class StatisticsPanelModule {}

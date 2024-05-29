@@ -33,6 +33,12 @@ export class StatisticsPanelComponent {
   readonly panes: StatisticsPane[] = [
     {
       iconClass: 'material-symbols-outlined',
+      iconString: 'add',
+      title: 'New Game',
+      panelView: StatisticsPanelView.NewGame,
+    },
+    {
+      iconClass: 'material-symbols-outlined',
       iconString: 'replay',
       title: 'Moves',
       panelView: StatisticsPanelView.Moves,
