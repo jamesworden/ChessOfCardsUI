@@ -38,7 +38,7 @@ export function getPositionBackgroundClass(
     lane.WonBy === PlayerOrNone.None ? backgroundClass : laneColor;
 
   if (isSelected) {
-    positionClass = 'bg-yellow-200';
+    positionClass = 'lanes-bg-yellow';
     textClass = 'lanes-text-green';
   }
 
