@@ -76,6 +76,7 @@ import { BREAKPOINTS, Z_INDEXES } from '@shared/constants';
 import { GameViewTab } from './models/game-view-tab';
 import { StatisticsPanelView } from '@shared/statistics-panel';
 import { AudioCacheService } from '@shared/audio-cache';
+import { DEFAULT_GAME_VIEW } from './constants';
 
 const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
@@ -93,6 +94,7 @@ const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
 export class GameViewComponent implements OnInit, AfterViewInit {
   readonly PlayerOrNone = PlayerOrNone;
   readonly StatisticsPanelView = StatisticsPanelView;
+  readonly defaultGameView = DEFAULT_GAME_VIEW;
 
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
@@ -155,7 +157,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly notationIdxToPastGameViews$ = new BehaviorSubject<{
     [notationIdx: number]: PlayerGameView;
   }>({});
-  readonly selectedTab$ = new BehaviorSubject<GameViewTab>(GameViewTab.Board);
+  readonly selectedTab$ = new BehaviorSubject<GameViewTab>(GameViewTab.NewGame);
   readonly selectedPanelView$ = new BehaviorSubject<StatisticsPanelView | null>(
     StatisticsPanelView.Moves
   );
@@ -251,7 +253,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   numUnreadChatMessages = 0;
 
   ngOnInit() {
-    this.navigateHomeIfGameInactive();
     this.updateUiLayout();
 
     this.gameOverData$
@@ -433,7 +434,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         this.selectedTab$.next(GameViewTab.Board);
       }
 
-      this.selectedPanelView$.next(StatisticsPanelView.Moves);
+      this.selectedPanelView$.next(StatisticsPanelView.NewGame);
       return;
     }
 
@@ -1053,13 +1054,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.cachedGameView$.next({ ...cachedGameView });
     this.#store.dispatch(new UpdatePlayerGameView(cachedGameView));
     this.#store.dispatch(new MakeMove(move));
-  }
-
-  private navigateHomeIfGameInactive() {
-    const gameIsActive = this.#store.selectSnapshot(GameState.gameIsActive);
-    if (!gameIsActive) {
-      this.#router.navigate(['']);
-    }
   }
 
   private showOpponentPassedMoveToast() {

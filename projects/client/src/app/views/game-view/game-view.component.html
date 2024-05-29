@@ -50,7 +50,7 @@
           <ng-container [ngTemplateOutlet]="newGameView"></ng-container>
         }
         @case (GameViewTab.Board) {
-          <ng-container [ngTemplateOutlet]="boardView"></ng-container>
+          <ng-container [ngTemplateOutlet]="boardWithStatsPanel"></ng-container>
         }
         @case (GameViewTab.Moves) {
           <ng-container [ngTemplateOutlet]="movesView"></ng-container>
@@ -76,19 +76,20 @@
   }
 </ng-template>
 
-<ng-template #boardView>
+<ng-template #boardWithStatsPanel>
   <div class="flex justify-around w-full h-full">
     <div class="flex justify-around">
-      @if (playerGameView$ | async; as playerGameView) {
+      @if (
+        (pastGameView$ | async) ?? (cachedGameView$ | async) ?? defaultGameView;
+        as gameView
+      ) {
         <div
           class="game flex flex-col justify-between h-full lg:pl-8"
           cdkDropListGroup
         >
           <div>
             <app-player-banner
-              [username]="
-                playerGameView.IsHost ? 'Guest Player' : 'Host Player'
-              "
+              [username]="gameView.IsHost ? 'Guest Player' : 'Host Player'"
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn
@@ -99,7 +100,7 @@
           </div>
 
           <app-opponent-hand-toolbar
-            [numCardsInOpponentsHand]="playerGameView.NumCardsInOpponentsHand"
+            [numCardsInOpponentsHand]="gameView.NumCardsInOpponentsHand"
             [cardSize]="(cardSize$ | async) ?? 64"
             [hasPendingDrawOffer]="(hasPendingDrawOffer$ | async) ?? false"
             [isPlacingMultipleCards]="
@@ -111,37 +112,32 @@
             (placeMultipleCardsCanceled)="cancelPlaceMultipleCards()"
           ></app-opponent-hand-toolbar>
 
-          @if (
-            (pastGameView$ | async) ?? (cachedGameView$ | async);
-            as cachedGameView
-          ) {
-            <game-board
-              #board
-              [playerGameView]="cachedGameView"
-              [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
-              [initialPlaceMultipleCardAttempt]="
-                initialPlaceMultipleCardAttempt$ | async
-              "
-              [isPlayersTurn]="isPlayersTurn"
-              [placeMultipleCards]="placeMultipleCards$ | async"
-              [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
-              [selectedCard]="selectedCard$ | async"
-              [selectedPosition]="selectedPosition$ | async"
-              (placeCardAttempted)="attemptToPlaceCard($event)"
-              (setPlaceMultipleCards)="placedMultipleCards($event)"
-              (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
-              (positionClicked)="onPositionClicked($event)"
-              (placeMultipleCardsListClicked)="
-                moveSelectedCardToPlaceMultipleList()
-              "
-            ></game-board>
-          }
+          <game-board
+            #board
+            [playerGameView]="gameView"
+            [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
+            [initialPlaceMultipleCardAttempt]="
+              initialPlaceMultipleCardAttempt$ | async
+            "
+            [isPlayersTurn]="isPlayersTurn"
+            [placeMultipleCards]="placeMultipleCards$ | async"
+            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+            [selectedCard]="selectedCard$ | async"
+            [selectedPosition]="selectedPosition$ | async"
+            (placeCardAttempted)="attemptToPlaceCard($event)"
+            (setPlaceMultipleCards)="placedMultipleCards($event)"
+            (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
+            (positionClicked)="onPositionClicked($event)"
+            (placeMultipleCardsListClicked)="
+              moveSelectedCardToPlaceMultipleList()
+            "
+          ></game-board>
 
           <game-player-hand
             #playerHand
             [isPlacingMultipleCards]="isPlacingMultipleCards"
-            [isHost]="playerGameView.IsHost"
-            [cards]="playerGameView.Hand.Cards"
+            [isHost]="gameView.IsHost"
+            [cards]="gameView.Hand.Cards"
             [cardSize]="(cardSize$ | async)!"
             [disabled]="!!(waitingForServer$ | async)"
             [isPlayersTurn]="isPlayersTurn"
@@ -167,9 +163,7 @@
 
           <div>
             <app-player-banner
-              [username]="
-                playerGameView.IsHost ? 'Host Player' : 'Guest Player'
-              "
+              [username]="gameView.IsHost ? 'Host Player' : 'Guest Player'"
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn
@@ -190,22 +184,23 @@
 
 <ng-template #movesView>
   <div class="flex flex-col justify-between flex-1 h-full">
-    @if (playerGameView$ | async; as playerGameView) {
-      @if ((pastGameView$ | async) ?? (cachedGameView$ | async); as gameView) {
-        <div class="flex-1 flex flex-col justify-around">
-          <game-board
-            #board
-            class="py-2"
-            [playerGameView]="gameView"
-            [isPlayersTurn]="isPlayersTurn"
-            [placeMultipleCards]="placeMultipleCards$ | async"
-            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
-            [selectedCard]="selectedCard$ | async"
-            [selectedPosition]="selectedPosition$ | async"
-            (positionClicked)="onPositionClicked($event)"
-          ></game-board>
-        </div>
-      }
+    @if (
+      (pastGameView$ | async) ?? (cachedGameView$ | async) ?? defaultGameView;
+      as gameView
+    ) {
+      <div class="flex-1 flex flex-col justify-around">
+        <game-board
+          #board
+          class="py-2"
+          [playerGameView]="gameView"
+          [isPlayersTurn]="isPlayersTurn"
+          [placeMultipleCards]="placeMultipleCards$ | async"
+          [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+          [selectedCard]="selectedCard$ | async"
+          [selectedPosition]="selectedPosition$ | async"
+          (positionClicked)="onPositionClicked($event)"
+        ></game-board>
+      </div>
     }
 
     <ng-container [ngTemplateOutlet]="movesPanel"></ng-container>
