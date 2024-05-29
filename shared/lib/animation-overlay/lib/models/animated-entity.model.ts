@@ -17,4 +17,9 @@ export type AnimatedEntity<Context> = {
   movement: AnimatedMovement;
   animationType: AnimationType;
   styles?: AnimatedEntityStyles;
+  soundPaths?: SoundPaths;
+};
+
+export type SoundPaths = {
+  onStart?: string;
 };

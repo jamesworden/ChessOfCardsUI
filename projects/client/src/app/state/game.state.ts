@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   AcceptDrawOffer,
   DenyDrawOffer,
@@ -54,6 +54,7 @@ type GameStateModel = {
   gameCodeIsInvalid: boolean;
   waitingForServer: boolean;
   gameIsActive: boolean;
+  muted: boolean;
 };
 
 const defaultGameState: GameStateModel = {
@@ -73,6 +74,7 @@ const defaultGameState: GameStateModel = {
   gameCodeIsInvalid: false,
   waitingForServer: false,
   gameIsActive: false,
+  muted: false,
 };
 
 @State<GameStateModel>({

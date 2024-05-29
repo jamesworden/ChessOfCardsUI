@@ -75,6 +75,9 @@ import { getCardStack } from './logic/get-card-stack';
 import { BREAKPOINTS, Z_INDEXES } from '@shared/constants';
 import { GameViewTab } from './models/game-view-tab';
 import { StatisticsPanelView } from '@shared/statistics-panel';
+import { AudioCacheService } from '@shared/audio-cache';
+
+const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
 const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
   wasDragged: false,
@@ -97,6 +100,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #router = inject(Router);
   readonly #destroyRef = inject(DestroyRef);
+  readonly #audioCacheService = inject(AudioCacheService);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -137,7 +141,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @Select(GameState.chatMessages)
   chatMessages$!: Observable<ChatMessage[]>;
 
+  readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+
   readonly cachedGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
   readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
   readonly positionClicked$ = new Subject<CardPosition>();
@@ -337,6 +343,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         this.notationIdxToPastGameViews$.next(map);
       });
     this.selectedNotationIndex$
+      .pipe(distinctUntilChanged())
       .pipe(
         takeUntilDestroyed(this.#destroyRef),
         withLatestFrom(this.notationIdxToPastGameViews$)
@@ -358,6 +365,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
               ? null
               : notationIdxToPastGameViews[selectedNotationIndex]
           );
+        }
+
+        if (this.isPlacingMultipleCards) {
+          this.cancelPlaceMultipleCards();
         }
       });
     this.selectedCard$
@@ -514,13 +525,17 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
+      this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
+    }
+
     const invalidMoveMessage = this.isPlayersTurn
       ? getReasonIfMoveInvalid(move, cachedGameView.CandidateMoves)
       : "It's not your turn!";
 
     if (invalidMoveMessage) {
-      this.#matSnackBar.open(invalidMoveMessage, undefined, {
-        duration: 5000,
+      this.#matSnackBar.open(invalidMoveMessage, 'Hide', {
+        duration: 3000,
         verticalPosition: 'top',
       });
 
@@ -540,6 +555,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     if (!cardPositionChanged) {
       return;
     }
+
+    this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
 
     if (this.isPlacingMultipleCards && oneListToAnother) {
       const card = event.item.data as Card;
@@ -662,10 +679,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       cachedGameView.CandidateMoves
     );
     if (invalidMoveMessage) {
-      this.#matSnackBar.open(invalidMoveMessage, 'Out of order!', {
-        duration: 5000,
-        verticalPosition: 'top',
-      });
+      this.#matSnackBar.open(
+        `Consecutive cards must have matching suit or kind.`,
+        'Hide',
+        {
+          duration: 3000,
+          verticalPosition: 'top',
+        }
+      );
 
       return;
     }
@@ -722,10 +743,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   placedMultipleCards(cards: Card[]) {
+    this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
     this.#store.dispatch(new SetPlaceMultipleCards(cards));
   }
 
   placedMultipleCardsHand(cards: Card[]) {
+    this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
     this.#store.dispatch(new SetPlaceMultipleCardsHand(cards));
   }
 
@@ -762,8 +785,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.cancelPlaceMultipleCards();
     this.#store.dispatch(new PassMove());
 
-    this.#matSnackBar.open('Move passed.', undefined, {
-      duration: 5000,
+    this.#matSnackBar.open('Move passed.', 'Hide', {
+      duration: 3000,
       verticalPosition: 'top',
     });
   }
@@ -771,8 +794,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   offerDraw() {
     this.#store.dispatch(new OfferDraw());
 
-    this.#matSnackBar.open('Offered draw.', undefined, {
-      duration: 5000,
+    this.#matSnackBar.open('Offered draw.', 'Hide', {
+      duration: 3000,
       verticalPosition: 'top',
     });
   }
@@ -880,6 +903,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   selectPanelView(statisticsPanelView: StatisticsPanelView) {
     this.selectedPanelView$.next(statisticsPanelView);
+  }
+
+  mute() {
+    this.#audioCacheService.mute();
+  }
+
+  unmute() {
+    this.#audioCacheService.unmute();
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
@@ -1032,10 +1063,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   private showOpponentPassedMoveToast() {
-    this.#matSnackBar.open('Opponent passed their move.', 'Your turn!', {
-      duration: 5000,
-      verticalPosition: 'top',
-    });
+    this.#matSnackBar.open(
+      `Opponent passed their move. It's your turn.`,
+      'Hide',
+      {
+        duration: 3000,
+        verticalPosition: 'top',
+      }
+    );
   }
 
   private showGameOverModal(gameOverData: GameOverData) {

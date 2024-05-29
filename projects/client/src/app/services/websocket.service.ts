@@ -65,7 +65,7 @@ enum MessageType {
 export class WebsocketService {
   private hubConnection: HubConnection;
 
-  readonly #snackBar = inject(MatSnackBar);
+  readonly #matSnackBar = inject(MatSnackBar);
   readonly #store = inject(Store);
   readonly #router = inject(Router);
 
@@ -145,12 +145,12 @@ export class WebsocketService {
       const playerGameView = this.parseAndUpdateGameView(stringifiedGameState);
       this.#router.navigate(['game']);
 
-      const secondaryText = isPlayersTurn(playerGameView)
-        ? "It's your turn!"
-        : "It's your opponent's turn!";
+      const message = isPlayersTurn(playerGameView)
+        ? "It's your turn."
+        : "It's your opponent's turn.";
 
-      this.#snackBar.open('Game started.', secondaryText, {
-        duration: 5000,
+      this.#matSnackBar.open(message, 'Hide', {
+        duration: 3000,
         verticalPosition: 'top',
       });
     });
@@ -183,10 +183,14 @@ export class WebsocketService {
     });
 
     this.hubConnection.on(MessageType.TurnSkippedNoMoves, () => {
-      this.#snackBar.open('You have no available moves!', 'Turn skipped.', {
-        duration: 5000,
-        verticalPosition: 'top',
-      });
+      this.#matSnackBar.open(
+        'You have no available moves. Turn skipped.',
+        'Hide',
+        {
+          duration: 3000,
+          verticalPosition: 'top',
+        }
+      );
     });
 
     this.hubConnection.on(

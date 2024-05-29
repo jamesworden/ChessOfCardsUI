@@ -15,6 +15,7 @@ export class IconButtonComponent {
   @Input() label = '';
   @Input() showBadge = false;
   @Input() badgeCount = 0;
+  @Input() iconFontClass = 'text-xl md:text-3xl';
 
   @Output() clicked = new EventEmitter<void>();
 

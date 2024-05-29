@@ -1,22 +1,25 @@
 <animation-overlay
+  [playSounds]="(isMuted$ | async) === false"
   [animatedEntities]="(gameStateEntities$ | async) ?? []"
   (finishedAnimations)="renderAnimatedGameView()"
   (startingAnimations)="removeCardsFromBoardAndOpponentHand($event)"
 ></animation-overlay>
 
 <animation-overlay
+  [playSounds]="(isMuted$ | async) === false"
   [animatedEntities]="(toPmcLaneEntities$ | async) ?? []"
   (finishedAnimations)="addCardToPlaceMultipleCardsLane($event)"
   (startingAnimations)="removeCardsFromPlaceMultipleHand($event)"
 ></animation-overlay>
 
 <animation-overlay
+  [playSounds]="(isMuted$ | async) === false"
   [animatedEntities]="(fromPmcLaneEntities$ | async) ?? []"
   (finishedAnimations)="addCardsToHandFromPlaceMultipleLane($event)"
 ></animation-overlay>
 
 <div
-  class="fixed top-0 left-0 min-h-[calc(100svh)] max-h-[calc(100svh)] flex justify-between w-full bg-gray-300 dark:bg-gray-900 transition"
+  class="fixed top-0 left-0 min-h-[calc(100svh)] max-h-[calc(100svh)] flex justify-between w-full bg-gray-300 dark:bg-gray-900"
   [@fadeInOut]
 >
   <app-sidebar
@@ -25,9 +28,12 @@
     [cardStack]="cardStack$ | async"
     [redJokerLaneIndex]="(redJokerLaneIndex$ | async) ?? null"
     [blackJokerLaneIndex]="(blackJokerLaneIndex$ | async) ?? null"
+    [isMuted]="(isMuted$ | async) ?? false"
     (drawOffered)="offerDraw()"
     (passedMove)="passMove()"
     (resigned)="resign()"
+    (muted)="mute()"
+    (unmuted)="unmute()"
   ></app-sidebar>
 
   <div class="flex flex-col flex-1">
@@ -210,7 +216,7 @@
     [startHeightPx]="movesPanelHeight ?? ((cardSize$ | async) ?? 64) * 5"
     [verticalMaxHeightOffsetPx]="75"
     (heightChanged)="setMovesPanelHeight($event)"
-    class="flex justify-around flex-col bg-gray-200 dark:bg-gray-800 transition sticky bottom-0"
+    class="flex justify-around flex-col bg-gray-200 dark:bg-gray-800 sticky bottom-0"
     [ngStyle]="{
       'z-index': Z_INDEXES.MOVES_PANEL
     }"
@@ -234,17 +240,17 @@
 <ng-template #statisticsPanel>
   <div class="m-8 rounded-sm overflow-hidden flex-grow max-w-3xl flex">
     <div
-      class="flex flex-col transition border-r border-solid border-gray-300 dark:border-gray-800"
+      class="flex flex-col border-r border-solid border-gray-300 dark:border-gray-800"
     >
       <icon-button
-        class="bg-gray-50 dark:bg-gray-700 transition"
+        class="bg-gray-50 dark:bg-gray-700"
         iconClass="material-symbols-outlined"
         iconString="playing_cards"
         buttonClass="py-2 cursor-default"
         label="Stack"
       ></icon-button>
       <card-stack
-        class="h-full pb-2 bg-gray-50 dark:bg-gray-700 transition shadow-lg"
+        class="h-full pb-2 bg-gray-50 dark:bg-gray-700 shadow-lg"
         [position]="selectedPosition$ | async"
         [cardStack]="cardStack$ | async"
         [cardSize]="(cardSize$ | async) ?? 64"

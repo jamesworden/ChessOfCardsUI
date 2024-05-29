@@ -126,8 +126,8 @@ export class HomeViewComponent implements OnInit {
 
   copyToClipboard(text: string) {
     this.#clipboard.copy(text);
-    this.#matSnackBar.open('Copied to clipboard.', text, {
-      duration: 5000,
+    this.#matSnackBar.open('Copied to clipboard.', 'Hide', {
+      duration: 3000,
       verticalPosition: 'bottom',
     });
   }

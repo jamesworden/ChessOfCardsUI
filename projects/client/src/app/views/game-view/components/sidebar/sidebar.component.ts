@@ -43,6 +43,7 @@ export class SidebarComponent implements OnInit {
   @Input() selectedPosition: CardPosition | null = null;
   @Input() redJokerLaneIndex: number | null = null;
   @Input() blackJokerLaneIndex: number | null = null;
+  @Input() isMuted = false;
   @Input() set isShowingMovesPanel(isShowingMovesPanel: boolean) {
     this.isShowingMovesPanel$.next(isShowingMovesPanel);
   }
@@ -51,6 +52,8 @@ export class SidebarComponent implements OnInit {
   @Output() passedMove = new EventEmitter<void>();
   @Output() resigned = new EventEmitter<void>();
   @Output() movesPanelToggled = new EventEmitter<void>();
+  @Output() muted = new EventEmitter<void>();
+  @Output() unmuted = new EventEmitter<void>();
 
   @Select(GameState.hasPendingDrawOffer)
   hasPendingDrawOffer$!: Observable<boolean>;
@@ -121,19 +124,15 @@ export class SidebarComponent implements OnInit {
 
   attemptToOpenOfferDrawModel() {
     if (this.drawOfferSent) {
-      this.#matSnackBar.open('You already offered a draw.', undefined, {
-        duration: 5000,
+      this.#matSnackBar.open('You already offered a draw.', 'Hide', {
+        duration: 3000,
         verticalPosition: 'top',
       });
     } else if (this.hasPendingDrawOffer) {
-      this.#matSnackBar.open(
-        'Your opponent already offered you a draw.',
-        undefined,
-        {
-          duration: 5000,
-          verticalPosition: 'top',
-        }
-      );
+      this.#matSnackBar.open('Your opponent already offered a draw.', 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
     } else {
       this.openOfferDrawModal();
     }
@@ -168,8 +167,8 @@ export class SidebarComponent implements OnInit {
     if (this.isPlayersTurn) {
       this.openPassMoveModal();
     } else {
-      this.#matSnackBar.open("It's not your turn!", undefined, {
-        duration: 5000,
+      this.#matSnackBar.open("It's not your turn.", 'Hide', {
+        duration: 3000,
         verticalPosition: 'top',
       });
     }
@@ -235,6 +234,14 @@ export class SidebarComponent implements OnInit {
 
   toggleCardStack() {
     this.isShowingCardStack$.next(!this.isShowingCardStack$.getValue());
+  }
+
+  mute() {
+    this.muted.emit();
+  }
+
+  unmute() {
+    this.unmuted.emit();
   }
 
   private secondsToRemainingTimeString(seconds: number) {

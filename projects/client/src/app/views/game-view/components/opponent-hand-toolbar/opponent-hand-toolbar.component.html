@@ -13,40 +13,52 @@
   }
 
   @if (isPlacingMultipleCards) {
-    <div
-      class="rounded-sm bg-white dark:bg-gray-700 flex justify-between overflow-hidden shadow-md"
-      [ngStyle]="{
-        'max-height': cardSize + 'px',
-        'min-height': cardSize + 'px'
-      }"
-    >
+    <div class="flex justify-between">
       <div
-        class="px-2 font-semibold text-center flex flex-col justify-around flex-1"
+        class="flex-1 rounded-sm bg-white dark:bg-gray-600 flex overflow-hidden shadow-md px-2"
         [ngStyle]="{
-          'min-width': cardSize + 'px'
+          'max-height': cardSize + 'px',
+          'min-height': cardSize + 'px'
         }"
       >
-        <span class="text-left">Place<br />Cards?</span>
+        <div class="flex-1 flex flex-col justify-around">
+          <icon-button
+            data-testid="place-cards-button"
+            iconString="check"
+            iconClass="material-symbols-outlined"
+            label="Place cards"
+            buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
+            (clicked)="confirmPlaceMultipleCards()"
+          ></icon-button>
+        </div>
+
+        <div class="flex-1 flex flex-col justify-around">
+          <icon-button
+            data-testid="cancel-place-cards-button"
+            label="Cancel"
+            iconString="close"
+            iconClass="material-symbols-outlined"
+            buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500"
+            (clicked)="cancelPlaceMultipleCards()"
+          ></icon-button>
+        </div>
       </div>
 
-      <div class="flex flex-1">
+      <div
+        class="flex flex-col justify-around h-full"
+        [ngStyle]="{
+          'max-height': cardSize + 'px',
+          'min-height': cardSize + 'px'
+        }"
+      >
         <icon-button
-          class="flex-1"
-          data-testid="place-cards-button"
-          matTooltip="Confirm"
-          matTooltipPosition="below"
-          iconString="check"
+          iconString="help"
           iconClass="material-symbols-outlined"
-          (clicked)="confirmPlaceMultipleCards()"
-        ></icon-button>
-        <icon-button
-          class="flex-1"
-          data-testid="cancel-place-cards-button"
-          matTooltip="Cancel"
+          buttonClass="p-2 lg:p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 rounded-r-sm"
+          iconFontClass="text-md lg:text-2xl"
+          matTooltip="Help"
           matTooltipPosition="below"
-          iconString="close"
-          iconClass="material-symbols-outlined"
-          (clicked)="cancelPlaceMultipleCards()"
+          (clicked)="showPlaceMultipleInfoMessage()"
         ></icon-button>
       </div>
     </div>
