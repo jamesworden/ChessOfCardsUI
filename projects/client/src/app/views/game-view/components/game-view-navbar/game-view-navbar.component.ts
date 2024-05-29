@@ -29,7 +29,7 @@ export class GameViewNavbarComponent {
       label: 'New Game',
     },
     {
-      gameViewTab: GameViewTab.Board,
+      gameViewTab: GameViewTab.BoardWithStatsPanel,
       iconClass: 'material-symbols-outlined',
       iconString: 'grid_view',
       label: 'Board',

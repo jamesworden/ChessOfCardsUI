@@ -430,8 +430,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   updateUiLayout() {
     if (window.innerWidth >= BREAKPOINTS.LG) {
-      if (this.selectedTab$.getValue() !== GameViewTab.Board) {
-        this.selectedTab$.next(GameViewTab.Board);
+      if (this.selectedTab$.getValue() !== GameViewTab.BoardWithStatsPanel) {
+        this.selectedTab$.next(GameViewTab.BoardWithStatsPanel);
       }
 
       this.selectedPanelView$.next(StatisticsPanelView.NewGame);
