@@ -3,7 +3,7 @@
     class="flex-1 flex flex-col gap-y-8 bg-gray-100 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-8"
   >
     @if (hostOrJoinView) {
-      <div class="flex flex-row w-full gap-x-16">
+      <div class="flex justify-between max-w-xs w-full gap-x-4">
         <new-game-type-button
           label="Join Game"
           [selected]="joinGameSelected"
@@ -92,13 +92,15 @@
         </div>
       }
     } @else {
-      <div class="flex-1 flex flex-col gap-y-2">
-        <div class="flex justify-start">
+      <div class="flex-1 flex flex-col gap-y-2 relative">
+        <div class="flex justify-start absolute top-0 left-0">
           <div
             class="flex gap-x-4 cursor-pointer max-w-xs"
             (click)="selectHostOrJoinView()"
           >
-            <span class="material-symbols-outlined text-md">arrow_back</span>
+            <span class="material-symbols-outlined text-md"
+              >keyboard_backspace</span
+            >
             <span class="text-md">Back</span>
           </div>
         </div>
@@ -125,7 +127,9 @@
 
               <div class="flex justify-around">
                 <div class="text-center max-w-xs">
-                  <h2 class="text-3xl">{{ hostedGameCode$ | async }}</h2>
+                  <h2 class="text-3xl lanes-text-yellow">
+                    {{ hostedGameCode$ | async }}
+                  </h2>
                 </div>
               </div>
 
