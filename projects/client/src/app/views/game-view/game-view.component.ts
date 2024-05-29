@@ -15,8 +15,10 @@ import { withLatestFrom, tap, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
+  CreateGame,
   DenyDrawOffer,
   FinishPlacingMultipleCards,
+  JoinGame,
   MakeMove,
   OfferDraw,
   PassMove,
@@ -25,6 +27,7 @@ import {
   ResetPendingGameView,
   ResignGame,
   SendChatMessage,
+  SetGameCodeIsInvalid,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -45,6 +48,7 @@ import {
   GameOverData,
   Lane,
   Move,
+  PendingGameOptions,
   PlaceCardAttempt,
   PlayerGameView,
   PlayerOrNone,
@@ -77,6 +81,8 @@ import { GameViewTab } from './models/game-view-tab';
 import { StatisticsPanelView } from '@shared/statistics-panel';
 import { AudioCacheService } from '@shared/audio-cache';
 import { DEFAULT_GAME_VIEW } from './constants';
+import { WebsocketService } from '../../services/websocket.service';
+import { ServerState } from '../../state/server.state';
 
 const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
@@ -103,6 +109,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly #router = inject(Router);
   readonly #destroyRef = inject(DestroyRef);
   readonly #audioCacheService = inject(AudioCacheService);
+  readonly #websocketService = inject(WebsocketService);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -142,6 +149,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @Select(GameState.chatMessages)
   chatMessages$!: Observable<ChatMessage[]>;
+
+  @Select(ServerState.isConnectedToServer)
+  isConnectedToServer$: Observable<boolean>;
+
+  @Select(GameState.gameCodeIsInvalid)
+  gameCodeIsInvalid$!: Observable<boolean>;
 
   readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
@@ -243,6 +256,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     })
   );
 
+  readonly gameCode$ = this.#store
+    .select(GameState.pendingGameView)
+    .pipe(map((pendingGameView) => pendingGameView?.GameCode));
+
   readonly Z_INDEXES = Z_INDEXES;
   readonly GameViewTab = GameViewTab;
 
@@ -254,6 +271,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.updateUiLayout();
+    this.#websocketService.connectToServer();
 
     this.gameOverData$
       .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -912,6 +930,28 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   unmute() {
     this.#audioCacheService.unmute();
+  }
+
+  attemptToJoinGame(gameCode: string) {
+    if (gameCode.length !== 4) {
+      this.#store.dispatch(new SetGameCodeIsInvalid(false));
+      return;
+    }
+
+    const upperCaseGameCode = gameCode.toUpperCase();
+    const actualGameCode = this.#store.selectSnapshot(
+      GameState.pendingGameView
+    )?.GameCode;
+    if (!actualGameCode || upperCaseGameCode === actualGameCode) {
+      this.#store.dispatch(new SetGameCodeIsInvalid(true));
+      return;
+    }
+
+    this.#store.dispatch(new JoinGame(upperCaseGameCode));
+  }
+
+  hostGame(pendingGameOptions: PendingGameOptions) {
+    this.#store.dispatch(new CreateGame(pendingGameOptions));
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

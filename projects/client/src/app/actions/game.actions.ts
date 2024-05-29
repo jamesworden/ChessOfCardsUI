@@ -6,6 +6,7 @@ import {
   Move,
   DurationOption,
   PendingGameView,
+  PendingGameOptions,
 } from '@shared/models';
 
 export class AnimateGameView {
@@ -95,6 +96,7 @@ export class RearrangeHand {
 
 export class CreateGame {
   static readonly type = '[GameState] Create Game';
+  constructor(public pendingGameOptions?: PendingGameOptions) {}
 }
 
 export class JoinGame {

@@ -339,8 +339,8 @@ export class GameState {
   }
 
   @Action(CreateGame)
-  createGame() {
-    this.#websocketService.createGame();
+  createGame(_: StateContext<GameStateModel>, action: CreateGame) {
+    this.#websocketService.createGame(action.pendingGameOptions);
   }
 
   @Action(JoinGame)

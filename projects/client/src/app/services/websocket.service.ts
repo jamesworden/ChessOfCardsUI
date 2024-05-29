@@ -26,6 +26,7 @@ import {
   Card,
   DurationOption,
   Move,
+  PendingGameOptions,
   PendingGameView,
   PlayerGameView,
 } from '@shared/models';
@@ -204,8 +205,11 @@ export class WebsocketService {
     );
   }
 
-  public createGame() {
-    this.hubConnection.invoke(MessageType.CreateGame);
+  public createGame(pendingGameOptions?: PendingGameOptions) {
+    const stringifiedOptions = pendingGameOptions
+      ? JSON.stringify(pendingGameOptions)
+      : undefined;
+    this.hubConnection.invoke(MessageType.CreateGame, stringifiedOptions);
   }
 
   public joinGame(gameCode: string) {

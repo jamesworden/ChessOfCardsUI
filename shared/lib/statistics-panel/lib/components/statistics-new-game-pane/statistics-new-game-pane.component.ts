@@ -1,4 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DurationOption, PendingGameOptions } from '@shared/models';
+
+const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
+  DurationOption: DurationOption.FiveMinutes,
+};
+
+/**
+ * TODO: Add icons
+ */
+interface DurationButton {
+  label: string;
+  durationOption: DurationOption;
+}
 
 @Component({
   selector: 'statistics-new-game-pane',
@@ -6,6 +19,28 @@ import { Component } from '@angular/core';
   styleUrl: './statistics-new-game-pane.component.css',
 })
 export class StatisticsNewGamePaneComponent {
+  @Input() gameCode = '';
+  @Input() gameCodeIsInvalid = false;
+
+  @Output() attemptedToJoinGame = new EventEmitter<string>();
+  @Output() hostedGame = new EventEmitter<PendingGameOptions>();
+
+  readonly durationButtons: DurationButton[] = [
+    {
+      durationOption: DurationOption.FiveMinutes,
+      label: '5 min',
+    },
+    {
+      durationOption: DurationOption.ThreeMinutes,
+      label: '3 min',
+    },
+    {
+      durationOption: DurationOption.OneMinute,
+      label: '1 min',
+    },
+  ];
+
+  pendingGameOptions: PendingGameOptions = DEFAULT_PENDING_GAME_OPTIONS;
   joinGameSelected = true;
   name = '';
 
@@ -15,5 +50,17 @@ export class StatisticsNewGamePaneComponent {
 
   selectHostGame() {
     this.joinGameSelected = false;
+  }
+
+  hostGame() {
+    this.hostedGame.emit(this.pendingGameOptions);
+  }
+
+  attemptToJoinGame(gameCode: string) {
+    this.attemptedToJoinGame.emit(gameCode);
+  }
+
+  selectDurationOption(durationOption: DurationOption) {
+    this.pendingGameOptions.DurationOption = durationOption;
   }
 }

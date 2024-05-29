@@ -15,16 +15,68 @@
       ></new-game-type-button>
     </div>
 
-    <div>
+    <div class="flex flex-col gap-y-2">
       <label for="name" class="opacity-80"> Your name </label>
 
       <input
         id="name"
         type="text"
         placeholder="Your name..."
-        class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black mt-2"
+        class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black max-w-sm"
         [(ngModel)]="name"
       />
     </div>
+
+    @if (joinGameSelected) {
+      <div class="flex flex-col gap-y-2">
+        <label for="name" class="opacity-80"> Game code </label>
+
+        <input
+          id="name"
+          type="text"
+          placeholder="e.g., ABCD"
+          class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black max-w-sm"
+          [(ngModel)]="gameCode"
+        />
+      </div>
+
+      <div>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="attemptToJoinGame(gameCode)"
+        >
+          Join Game
+        </button>
+      </div>
+    } @else {
+      <div class="flex flex-col gap-y-2">
+        <label class="opacity-80"> Duration </label>
+
+        <div class="flex gap-x-4">
+          @for (button of durationButtons; track button.durationOption) {
+            <button
+              [attr.data-testid]="button.durationOption"
+              class="py-1 px-4 bg-gray-200 dark:bg-gray-700 rounded-sm border"
+              [ngClass]="{
+                'border-gray-500 dark:border-gray-100':
+                  button.durationOption === pendingGameOptions.DurationOption,
+                'dark:border-gray-400 dark:text-gray-300':
+                  button.durationOption !== pendingGameOptions.DurationOption
+              }"
+              (click)="selectDurationOption(button.durationOption)"
+            >
+              {{ button.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div>
+        <button mat-raised-button color="accent" (click)="hostGame()">
+          Start Game
+        </button>
+      </div>
+    }
   </div>
 </div>
