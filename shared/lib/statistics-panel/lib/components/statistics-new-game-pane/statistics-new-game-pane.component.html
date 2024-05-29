@@ -2,88 +2,142 @@
   <div
     class="flex-1 flex flex-col gap-y-8 bg-gray-100 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-8"
   >
-    <div class="flex flex-row w-full gap-x-16">
-      <new-game-type-button
-        label="Join Game"
-        [selected]="joinGameSelected"
-        (newGameTypeSelected)="selectJoinGame()"
-      ></new-game-type-button>
-      <new-game-type-button
-        label="Host Game"
-        [selected]="!joinGameSelected"
-        (newGameTypeSelected)="selectHostGame()"
-      ></new-game-type-button>
-    </div>
+    @if (hostOrJoinView) {
+      <div class="flex flex-row w-full gap-x-16">
+        <new-game-type-button
+          label="Join Game"
+          [selected]="joinGameSelected"
+          (newGameTypeSelected)="selectJoinGame()"
+        ></new-game-type-button>
+        <new-game-type-button
+          label="Host Game"
+          [selected]="!joinGameSelected"
+          (newGameTypeSelected)="selectHostGame()"
+        ></new-game-type-button>
+      </div>
 
-    <div class="flex flex-col gap-y-2">
-      <label for="name" class="opacity-80"> Your name </label>
-
-      <input
-        id="name"
-        type="text"
-        placeholder="Your name..."
-        class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black max-w-sm"
-        [(ngModel)]="name"
-      />
-    </div>
-
-    @if (joinGameSelected) {
       <div class="flex flex-col gap-y-2">
-        <label for="name" class="opacity-80"> Game code </label>
+        <label for="name" class="opacity-80"> Your name </label>
 
         <input
           id="name"
           type="text"
-          maxlength="4"
-          placeholder="e.g., ABCD"
-          class="border rounded-sm p-2 w-full focus:outline-none dark:border-2 dark:text-black max-w-sm uppercase"
-          [ngClass]="{
-            'border-red-500 focus:border-red-500': gameCodeIsInvalid,
-            'border-gray-300 focus:border-blue-500': !gameCodeIsInvalid
-          }"
-          [(ngModel)]="joinGameCode"
-          (ngModelChange)="changeJoinGameCode()"
+          placeholder="Your name..."
+          class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black max-w-sm"
+          [(ngModel)]="name"
         />
-
-        @if (gameCodeIsInvalid) {
-          <span class="text-red-500 text-sm dark:font-semibold"
-            >Invalid game code</span
-          >
-        }
       </div>
 
-      <div>
-        <button mat-raised-button color="accent" (click)="attemptToJoinGame()">
-          Join Game
-        </button>
-      </div>
-    } @else {
-      <div class="flex flex-col gap-y-2">
-        <label class="opacity-80"> Duration </label>
+      @if (joinGameSelected) {
+        <div class="flex flex-col gap-y-2">
+          <label for="name" class="opacity-80"> Game code </label>
 
-        <div class="flex gap-x-4">
-          @for (button of durationButtons; track button.durationOption) {
-            <button
-              [attr.data-testid]="button.durationOption"
-              class="py-1 px-4 bg-transparent rounded-sm border transition"
-              [ngClass]="{
-                'border-gray-600 dark:border-gray-100':
-                  button.durationOption === pendingGameOptions.DurationOption,
-                'border-gray-300 dark:border-gray-400 dark:text-gray-300':
-                  button.durationOption !== pendingGameOptions.DurationOption
-              }"
-              (click)="selectDurationOption(button.durationOption)"
+          <input
+            id="name"
+            type="text"
+            maxlength="4"
+            placeholder="e.g., ABCD"
+            class="border rounded-sm p-2 w-full focus:outline-none dark:border-2 dark:text-black max-w-sm uppercase"
+            [ngClass]="{
+              'border-red-500 focus:border-red-500': gameCodeIsInvalid,
+              'border-gray-300 focus:border-blue-500': !gameCodeIsInvalid
+            }"
+            [(ngModel)]="joinGameCode"
+            (ngModelChange)="changeJoinGameCode()"
+          />
+
+          @if (gameCodeIsInvalid) {
+            <span class="text-red-500 text-sm dark:font-semibold"
+              >Invalid game code</span
             >
-              {{ button.label }}
-            </button>
           }
         </div>
-      </div>
 
-      <div>
-        <button mat-raised-button color="accent" (click)="hostGame()">
-          Start Game
-        </button>
+        <div>
+          <button
+            mat-raised-button
+            color="accent"
+            (click)="attemptToJoinGame()"
+          >
+            Join Game
+          </button>
+        </div>
+      } @else {
+        <div class="flex flex-col gap-y-2">
+          <label class="opacity-80"> Duration </label>
+
+          <div class="flex gap-x-4">
+            @for (button of durationButtons; track button.durationOption) {
+              <button
+                [attr.data-testid]="button.durationOption"
+                class="py-1 px-4 bg-transparent rounded-sm border transition"
+                [ngClass]="{
+                  'border-gray-600 dark:border-gray-100':
+                    button.durationOption === pendingGameOptions.DurationOption,
+                  'border-gray-300 dark:border-gray-400 dark:text-gray-300':
+                    button.durationOption !== pendingGameOptions.DurationOption
+                }"
+                (click)="selectDurationOption(button.durationOption)"
+              >
+                {{ button.label }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div>
+          <button mat-raised-button color="accent" (click)="hostGame()">
+            Start Game
+          </button>
+        </div>
+      }
+    } @else {
+      <div class="flex-1 flex flex-col gap-y-2">
+        <div class="flex justify-start">
+          <div
+            class="flex gap-x-4 cursor-pointer max-w-xs"
+            (click)="selectHostOrJoinView()"
+          >
+            <span class="material-symbols-outlined text-md">arrow_back</span>
+            <span class="text-md">Back</span>
+          </div>
+        </div>
+
+        <div class="flex-1 flex flex-col justify-around">
+          <div>
+            <div class="flex-1 flex flex-col gap-y-4">
+              <div class="flex justify-around">
+                <div
+                  class="p-5 rounded-full bg-gray-400 lg:bg-gray-300 dark:bg-gray-600 flex flex-col justify-around"
+                >
+                  <span
+                    class="material-symbols-outlined text-gray-300 lg:text-gray-200 dark:text-gray-700"
+                    style="font-size: 76px"
+                  >
+                    record_voice_over
+                  </span>
+                </div>
+              </div>
+
+              <div class="text-center opacity-70 text-sm">
+                Your game code is:
+              </div>
+
+              <div class="flex justify-around">
+                <div class="text-center max-w-xs">
+                  <h2 class="text-3xl">{{ hostedGameCode$ | async }}</h2>
+                </div>
+              </div>
+
+              <div class="flex justify-around">
+                <p class="opacity-80 max-w-xs text-center">
+                  Give this game code to your opponent so they can join the
+                  game!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     }
   </div>

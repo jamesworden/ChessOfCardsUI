@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DurationOption, PendingGameOptions } from '@shared/models';
+import { BehaviorSubject } from 'rxjs';
 
 const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
   DurationOption: DurationOption.FiveMinutes,
@@ -19,12 +21,16 @@ interface DurationButton {
   styleUrl: './statistics-new-game-pane.component.css',
 })
 export class StatisticsNewGamePaneComponent {
-  @Input() hostGameCode = '';
   @Input() gameCodeIsInvalid = false;
+  @Input() set hostGameCode(hostedGameCode: string) {
+    this.hostedGameCode$.next(hostedGameCode);
+  }
 
   @Output() attemptedToJoinGame = new EventEmitter<string>();
   @Output() hostedGame = new EventEmitter<PendingGameOptions>();
   @Output() joinGameCodeChanged = new EventEmitter<string>();
+
+  readonly hostedGameCode$ = new BehaviorSubject<string | null>(null);
 
   readonly durationButtons: DurationButton[] = [
     {
@@ -43,8 +49,19 @@ export class StatisticsNewGamePaneComponent {
 
   pendingGameOptions: PendingGameOptions = DEFAULT_PENDING_GAME_OPTIONS;
   joinGameSelected = true;
+  hostOrJoinView = true;
   name = '';
   joinGameCode = '';
+
+  constructor() {
+    this.hostedGameCode$
+      .pipe(takeUntilDestroyed())
+      .subscribe((hostedGameCode) => {
+        if (hostedGameCode) {
+          this.hostOrJoinView = false;
+        }
+      });
+  }
 
   selectJoinGame() {
     this.joinGameSelected = true;
@@ -68,5 +85,9 @@ export class StatisticsNewGamePaneComponent {
 
   changeJoinGameCode() {
     this.joinGameCodeChanged.emit(this.joinGameCode);
+  }
+
+  selectHostOrJoinView() {
+    this.hostOrJoinView = true;
   }
 }
