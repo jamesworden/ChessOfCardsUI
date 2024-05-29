@@ -1,6 +1,6 @@
 <div class="flex h-full w-full p-4">
   <div
-    class="flex-1 bg-gray-200 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-8"
+    class="flex-1 flex flex-col gap-y-8 bg-gray-200 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-8"
   >
     <div class="flex flex-row w-full gap-x-16">
       <new-game-type-button
@@ -13,6 +13,18 @@
         [selected]="!joinGameSelected"
         (newGameTypeSelected)="selectHostGame()"
       ></new-game-type-button>
+    </div>
+
+    <div>
+      <label for="name" class="opacity-80"> Your name </label>
+
+      <input
+        id="name"
+        type="text"
+        placeholder="Your name..."
+        class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black mt-2"
+        [(ngModel)]="name"
+      />
     </div>
   </div>
 </div>

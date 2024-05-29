@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class StatisticsNewGamePaneComponent {
   joinGameSelected = true;
+  name = '';
 
   selectJoinGame() {
     this.joinGameSelected = true;
