@@ -1,6 +1,6 @@
 <div class="flex h-full w-full p-4">
   <div
-    class="flex-1 flex flex-col gap-y-8 bg-gray-50 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-8"
+    class="flex-1 flex flex-col gap-y-8 bg-gray-100 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-8"
   >
     <div class="flex flex-row w-full gap-x-16">
       <new-game-type-button
@@ -34,18 +34,26 @@
         <input
           id="name"
           type="text"
+          maxlength="4"
           placeholder="e.g., ABCD"
-          class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black max-w-sm"
-          [(ngModel)]="gameCode"
+          class="border rounded-sm p-2 w-full focus:outline-none dark:border-2 dark:text-black max-w-sm uppercase"
+          [ngClass]="{
+            'border-red-500 focus:border-red-500': gameCodeIsInvalid,
+            'border-gray-300 focus:border-blue-500': !gameCodeIsInvalid
+          }"
+          [(ngModel)]="joinGameCode"
+          (ngModelChange)="changeJoinGameCode()"
         />
+
+        @if (gameCodeIsInvalid) {
+          <span class="text-red-500 text-sm dark:font-semibold"
+            >Invalid game code</span
+          >
+        }
       </div>
 
       <div>
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="attemptToJoinGame(gameCode)"
-        >
+        <button mat-raised-button color="accent" (click)="attemptToJoinGame()">
           Join Game
         </button>
       </div>
@@ -57,11 +65,11 @@
           @for (button of durationButtons; track button.durationOption) {
             <button
               [attr.data-testid]="button.durationOption"
-              class="py-1 px-4 bg-gray-200 dark:bg-gray-700 rounded-sm border"
+              class="py-1 px-4 bg-transparent rounded-sm border transition"
               [ngClass]="{
-                'border-gray-500 dark:border-gray-100':
+                'border-gray-600 dark:border-gray-100':
                   button.durationOption === pendingGameOptions.DurationOption,
-                'dark:border-gray-400 dark:text-gray-300':
+                'border-gray-300 dark:border-gray-400 dark:text-gray-300':
                   button.durationOption !== pendingGameOptions.DurationOption
               }"
               (click)="selectDurationOption(button.durationOption)"

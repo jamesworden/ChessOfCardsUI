@@ -19,11 +19,12 @@ interface DurationButton {
   styleUrl: './statistics-new-game-pane.component.css',
 })
 export class StatisticsNewGamePaneComponent {
-  @Input() gameCode = '';
+  @Input() hostGameCode = '';
   @Input() gameCodeIsInvalid = false;
 
   @Output() attemptedToJoinGame = new EventEmitter<string>();
   @Output() hostedGame = new EventEmitter<PendingGameOptions>();
+  @Output() joinGameCodeChanged = new EventEmitter<string>();
 
   readonly durationButtons: DurationButton[] = [
     {
@@ -43,6 +44,7 @@ export class StatisticsNewGamePaneComponent {
   pendingGameOptions: PendingGameOptions = DEFAULT_PENDING_GAME_OPTIONS;
   joinGameSelected = true;
   name = '';
+  joinGameCode = '';
 
   selectJoinGame() {
     this.joinGameSelected = true;
@@ -56,11 +58,15 @@ export class StatisticsNewGamePaneComponent {
     this.hostedGame.emit(this.pendingGameOptions);
   }
 
-  attemptToJoinGame(gameCode: string) {
-    this.attemptedToJoinGame.emit(gameCode);
+  attemptToJoinGame() {
+    this.attemptedToJoinGame.emit(this.joinGameCode);
   }
 
   selectDurationOption(durationOption: DurationOption) {
     this.pendingGameOptions.DurationOption = durationOption;
+  }
+
+  changeJoinGameCode() {
+    this.joinGameCodeChanged.emit(this.joinGameCode);
   }
 }

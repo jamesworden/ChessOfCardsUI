@@ -933,11 +933,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   attemptToJoinGame(gameCode: string) {
-    if (gameCode.length !== 4) {
-      this.#store.dispatch(new SetGameCodeIsInvalid(false));
-      return;
-    }
-
     const upperCaseGameCode = gameCode.toUpperCase();
     const actualGameCode = this.#store.selectSnapshot(
       GameState.pendingGameView
@@ -952,6 +947,13 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   hostGame(pendingGameOptions: PendingGameOptions) {
     this.#store.dispatch(new CreateGame(pendingGameOptions));
+  }
+
+  changeJoinGameCode(gameCode: string) {
+    if (gameCode.length !== 4) {
+      this.#store.dispatch(new SetGameCodeIsInvalid(false));
+      return;
+    }
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
