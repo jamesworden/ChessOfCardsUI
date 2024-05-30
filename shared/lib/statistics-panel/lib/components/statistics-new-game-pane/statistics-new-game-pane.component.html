@@ -1,6 +1,6 @@
 <div class="flex h-full w-full p-4">
   <div
-    class="flex-1 flex flex-col gap-y-8 bg-gray-100 dark:bg-gray-700 lg:bg-transparent shadow-lg lg:shadow-none p-8"
+    class="flex-1 flex flex-col gap-y-8 bg-gray-100 dark:bg-gray-800 lg:bg-transparent shadow-lg lg:shadow-none p-8"
   >
     @if (hostOrJoinView) {
       <div class="flex justify-between max-w-[250px] w-full gap-x-4">
@@ -23,7 +23,7 @@
           id="name"
           type="text"
           placeholder="Your name..."
-          class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:border-2 dark:text-black max-w-sm"
+          class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-blue-500 dark:text-black max-w-xs"
           [(ngModel)]="name"
         />
       </div>
@@ -37,7 +37,7 @@
             type="text"
             maxlength="4"
             placeholder="e.g., ABCD"
-            class="border rounded-sm p-2 w-full focus:outline-none dark:border-2 dark:text-black max-w-sm uppercase"
+            class="border rounded-sm p-2 w-full focus:outline-none dark:text-black max-w-xs uppercase"
             [ngClass]="{
               'border-red-500 focus:border-red-500': gameCodeIsInvalid,
               'border-gray-300 focus:border-blue-500': !gameCodeIsInvalid
@@ -46,17 +46,21 @@
             (ngModelChange)="changeJoinGameCode()"
           />
 
-          @if (gameCodeIsInvalid) {
-            <span class="text-red-500 text-sm dark:font-semibold"
+          <div class="relative">
+            <span
+              class="text-red-500 text-sm dark:font-semibold absolute top-0"
+              [ngClass]="{
+                'opacity-0': !gameCodeIsInvalid,
+                'opacity-100': gameCodeIsInvalid
+              }"
               >Invalid game code</span
             >
-          }
+          </div>
         </div>
 
         <div>
           <button
-            mat-raised-button
-            color="accent"
+            class="lanes-bg-yellow px-4 py-2 rounded-xs text-gray-800 shadow-md hover:bg-yellow-300 transition"
             (click)="attemptToJoinGame()"
           >
             Join Game
@@ -86,16 +90,21 @@
         </div>
 
         <div>
-          <button mat-raised-button color="accent" (click)="hostGame()">
-            Start Game
-          </button>
+          <div>
+            <button
+              class="lanes-bg-yellow px-4 py-2 rounded-xs text-gray-800 shadow-md hover:bg-yellow-300 transition"
+              (click)="hostGame()"
+            >
+              Start Game
+            </button>
+          </div>
         </div>
       }
     } @else {
       <div class="flex-1 flex flex-col gap-y-2 relative">
         <div class="flex justify-start absolute top-0 left-0">
           <div
-            class="flex gap-x-4 cursor-pointer max-w-xs"
+            class="flex gap-x-2 cursor-pointer max-w-xs"
             (click)="selectHostOrJoinView()"
           >
             <span class="material-symbols-outlined text-md"
@@ -105,7 +114,7 @@
           </div>
         </div>
 
-        <div class="flex-1 flex flex-col justify-around">
+        <div class="flex-1 flex flex-col justify-around -mt-4">
           <div>
             <div class="flex-1 flex flex-col gap-y-4">
               <div class="flex justify-around">
