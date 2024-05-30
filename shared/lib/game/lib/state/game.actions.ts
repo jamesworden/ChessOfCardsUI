@@ -7,7 +7,18 @@ import {
   DurationOption,
   PendingGameView,
   PendingGameOptions,
+  Environment,
 } from '@shared/models';
+
+export class SetIsConnectedToServer {
+  static readonly type = '[GameState] Set Is Connected To Server';
+  constructor(public isConnectedToServer: boolean) {}
+}
+
+export class ConnectToServer {
+  static readonly type = '[GameState] Connect To Server';
+  constructor(public environment: Environment) {}
+}
 
 export class AnimateGameView {
   static readonly type = '[GameState] Animate Game View';

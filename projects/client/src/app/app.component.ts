@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Store } from '@ngxs/store';
 import { fadeInOutAnimation } from '@shared/animations';
+import { ConnectToServer } from '@shared/game';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +10,10 @@ import { fadeInOutAnimation } from '@shared/animations';
   styleUrls: ['./app.component.scss'],
   animations: [fadeInOutAnimation],
 })
-export class AppComponent {}
+export class AppComponent {
+  readonly #store = inject(Store);
+
+  constructor() {
+    this.#store.dispatch(new ConnectToServer(environment));
+  }
+}

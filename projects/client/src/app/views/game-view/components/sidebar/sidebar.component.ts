@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Select } from '@ngxs/store';
-import { ResponsiveSizeService } from '@shared/game';
+import { GameState, ResponsiveSizeService } from '@shared/game';
 import { ModalData } from '../modal/modal-data';
 import { ModalComponent } from '../modal/modal.component';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -18,7 +18,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Card, CardPosition, PlayerGameView } from '@shared/models';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { GameState } from '../../../../state/game.state';
 import { toggleDarkMode } from '../../../../logic/toggle-dark-mode';
 
 enum YesNoButtons {

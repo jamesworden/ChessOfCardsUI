@@ -32,8 +32,8 @@ import {
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
   UpdatePlayerGameView,
-} from '../../actions/game.actions';
-import { GameState } from '../../state/game.state';
+  GameState,
+} from '@shared/game';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -81,8 +81,6 @@ import { GameViewTab } from './models/game-view-tab';
 import { StatisticsPanelView } from '@shared/statistics-panel';
 import { AudioCacheService } from '@shared/audio-cache';
 import { DEFAULT_GAME_VIEW } from './constants';
-import { WebsocketService } from '../../services/websocket.service';
-import { ServerState } from '../../state/server.state';
 
 const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
@@ -109,7 +107,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly #router = inject(Router);
   readonly #destroyRef = inject(DestroyRef);
   readonly #audioCacheService = inject(AudioCacheService);
-  readonly #websocketService = inject(WebsocketService);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -150,7 +147,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @Select(GameState.chatMessages)
   chatMessages$!: Observable<ChatMessage[]>;
 
-  @Select(ServerState.isConnectedToServer)
+  @Select(GameState.isConnectedToServer)
   isConnectedToServer$: Observable<boolean>;
 
   @Select(GameState.gameCodeIsInvalid)
@@ -270,8 +267,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   numUnreadChatMessages = 0;
 
   ngOnInit() {
+    /**
+     * TODO: Ensure that resizing browser maintains correct nav tab / panel tab.
+     */
     this.updateUiLayout();
-    this.#websocketService.connectToServer();
 
     this.gameOverData$
       .pipe(takeUntilDestroyed(this.#destroyRef))

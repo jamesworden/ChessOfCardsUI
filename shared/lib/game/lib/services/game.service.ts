@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import {
   HubConnection,
   HubConnectionBuilder,
-  HubConnectionState,
   LogLevel,
 } from '@microsoft/signalr';
 import { Store } from '@ngxs/store';
@@ -17,22 +16,20 @@ import {
   AnimateGameView,
   SetGameIsActive,
   UpdatePlayerGameView,
-} from '../actions/game.actions';
-import { environment } from '../../environments/environment';
-import { SetIsConnectedToServer } from '../actions/server.actions';
+  SetIsConnectedToServer,
+} from '../state/game.actions';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Card,
   DurationOption,
+  Environment,
   Move,
   PendingGameOptions,
   PendingGameView,
   PlayerGameView,
 } from '@shared/models';
 import { isPlayersTurn } from '@shared/logic';
-
-const { serverUrl } = environment;
 
 enum MessageType {
   CreatedPendingGame = 'CreatedPendingGame',
@@ -63,33 +60,28 @@ enum MessageType {
 @Injectable({
   providedIn: 'root',
 })
-export class WebsocketService {
+export class GameService {
   private hubConnection: HubConnection;
 
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #store = inject(Store);
   readonly #router = inject(Router);
 
-  constructor() {
-    this.initConnection();
-    this.connectToServer();
-    this.registerConnectionEvents();
+  public connectToServer(environment: Environment) {
+    this.initConnection(environment);
+    this.connectAndRegisterEvents();
     this.registerServerEvents();
   }
 
-  private initConnection() {
+  private initConnection(environment: Environment) {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(`${serverUrl}/game`)
+      .withUrl(`${environment.serverUrl}/game`)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
   }
 
-  public connectToServer() {
-    if (this.hubConnection.state === HubConnectionState.Connected) {
-      return;
-    }
-
+  private connectAndRegisterEvents() {
     this.hubConnection.start().then(
       () => {
         console.log('Connected to server.');
@@ -100,13 +92,9 @@ export class WebsocketService {
         this.#store.dispatch(new SetIsConnectedToServer(false));
       }
     );
-  }
-
-  private registerConnectionEvents() {
     this.hubConnection.onreconnecting(() => {
       this.#store.dispatch(new SetIsConnectedToServer(false));
     });
-
     this.hubConnection.onreconnected(() => {
       this.#store.dispatch(new SetIsConnectedToServer(true));
     });
@@ -172,9 +160,7 @@ export class WebsocketService {
 
     this.hubConnection.on(MessageType.PassedMove, (stringifiedGameState) => {
       const gameState = this.parseAndUpdateGameView(stringifiedGameState);
-      const isPlayersTurn = this.isPlayersTurn(gameState);
-
-      if (isPlayersTurn) {
+      if (isPlayersTurn(gameState)) {
         this.#store.dispatch(new SetOpponentPassedMove(true));
       }
     });
@@ -263,12 +249,6 @@ export class WebsocketService {
 
   public sendChatMessage(message: string) {
     this.hubConnection.invoke(MessageType.SendChatMessage, message);
-  }
-
-  private isPlayersTurn(gameState: PlayerGameView) {
-    const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
-    const guestAndGuestTurn = !gameState.IsHostPlayersTurn && !gameState.IsHost;
-    return hostAndHostTurn || guestAndGuestTurn;
   }
 
   private parseAndUpdateGameView(stringifiedGameState: string) {

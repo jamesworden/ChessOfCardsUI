@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgxsModule } from '@ngxs/store';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { GameState } from './state/game.state';
+import { GameState } from '@shared/game';
 import { GameViewComponent } from './views/game-view/game-view.component';
 import { HomeViewComponent } from './views/home-view/home-view.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from './views/game-view/components/modal/modal.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
-import { ServerState } from './state/server.state';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -46,7 +45,7 @@ import { MatMenuModule } from '@angular/material/menu';
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NgxsModule.forRoot([GameState, ServerState]),
+    NgxsModule.forRoot([GameState]),
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,

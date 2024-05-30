@@ -18,3 +18,4 @@ export * from './lib/suit.model';
 export * from './lib/candidate-move.model';
 export * from './lib/chat-message.model';
 export * from './lib/pending-game-options';
+export * from './lib/environment';
