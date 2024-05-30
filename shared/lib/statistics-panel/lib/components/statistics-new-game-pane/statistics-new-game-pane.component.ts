@@ -87,7 +87,8 @@ export class StatisticsNewGamePaneComponent {
     this.joinGameCodeChanged.emit(this.joinGameCode);
   }
 
-  selectHostOrJoinView() {
+  selectHostView() {
+    this.joinGameSelected = false;
     this.hostOrJoinView = true;
   }
 }
