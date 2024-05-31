@@ -8,7 +8,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiInputsModule } from '@shared/ui-inputs';
 import { StatisticsChatPaneComponent } from './components/statistics-chat-panel/statistics-chat-pane.component';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { StatisticsNewGamePaneComponent } from './components/statistics-new-game-pane/statistics-new-game-pane.component';
 import { NewGameTypeButtonComponent } from './components/statistics-new-game-pane/components/new-game-type-button/new-game-type-button.component';
 
@@ -27,7 +26,6 @@ import { NewGameTypeButtonComponent } from './components/statistics-new-game-pan
     MatTooltipModule,
     UiInputsModule,
     FormsModule,
-    MatButtonModule,
   ],
   exports: [
     StatisticsPanelComponent,
