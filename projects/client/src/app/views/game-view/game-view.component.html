@@ -271,16 +271,13 @@
       (attemptedToJoinGame)="attemptToJoinGame($event)"
       (hostedGame)="hostGame($event)"
       (joinGameCodeChanged)="changeJoinGameCode($event)"
-      [gameIsActive]="(gameIsActive$ | async) ?? false"
     ></statistics-panel>
   </div>
 </ng-template>
 
 <ng-template #chatView>
   <statistics-chat-pane
-    [isHost]="(playerGameView$ | async)?.IsHost ?? false"
     (chatMessageSent)="sendChatMessage($event)"
-    [gameIsActive]="(gameIsActive$ | async) ?? false"
   ></statistics-chat-pane>
 </ng-template>
 

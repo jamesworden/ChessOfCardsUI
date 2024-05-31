@@ -45,9 +45,7 @@
       @case (StatisticsPanelView.Chat) {
         <statistics-chat-pane
           class="flex-1"
-          [isHost]="(isHost$ | async) ?? false"
           (chatMessageSent)="sendChatMessage($event)"
-          [gameIsActive]="gameIsActive"
         ></statistics-chat-pane>
       }
     }

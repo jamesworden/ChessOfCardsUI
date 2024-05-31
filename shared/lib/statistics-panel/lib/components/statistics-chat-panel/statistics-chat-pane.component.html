@@ -80,7 +80,7 @@
                 <h2 class="text-3xl mb-2">Start chatting!</h2>
                 <p class="opacity-80">
                   {{
-                    gameIsActive
+                    (gameIsActive$ | async)
                       ? 'Send a message to your opponent.'
                       : 'Join a game to chat with your opponent.'
                   }}
@@ -100,16 +100,16 @@
       class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-yellow-500 dark:text-black"
       [(ngModel)]="message"
       (keydown.enter)="sendMessage()"
-      [disabled]="!gameIsActive"
+      [disabled]="!(gameIsActive$ | async)"
     />
 
     <button
       class="bg-yellow-500 rounded-full p-2 flex flex-col justify-around shadow-md transition h-10 w-10"
       [ngClass]="{
-        'hover:bg-yellow-400': gameIsActive
+        'hover:bg-yellow-400': (gameIsActive$ | async)
       }"
       (click)="sendMessage()"
-      [disabled]="!gameIsActive"
+      [disabled]="!(gameIsActive$ | async)"
     >
       <div class="flex justify-around">
         <span class="material-symbols-outlined text-gray-800">send</span>
