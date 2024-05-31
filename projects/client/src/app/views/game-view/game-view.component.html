@@ -295,5 +295,6 @@
     (attemptedToJoinGame)="attemptToJoinGame($event)"
     (hostedGame)="hostGame($event)"
     (joinGameCodeChanged)="changeJoinGameCode($event)"
+    [gameIsActive]="(gameIsActive$ | async) ?? false"
   ></statistics-new-game-pane>
 </ng-template>

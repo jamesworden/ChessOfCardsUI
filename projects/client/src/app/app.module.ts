@@ -13,7 +13,6 @@ import {
 } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { ModalComponent } from './views/game-view/components/modal/modal.component';
 import { SidebarComponent } from './views/game-view/components/sidebar/sidebar.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -34,7 +33,6 @@ import { MatMenuModule } from '@angular/material/menu';
     AppComponent,
     GameViewComponent,
     HomeViewComponent,
-    ModalComponent,
     SidebarComponent,
     FooterComponent,
     PlayerBannerComponent,

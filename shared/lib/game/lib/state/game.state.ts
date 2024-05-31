@@ -17,7 +17,7 @@ import {
   PassMove,
   MakeMove,
   RearrangeHand,
-  CreateGame,
+  CreatePendingGame,
   JoinGame,
   ResignGame,
   SelectDurationOption,
@@ -347,8 +347,8 @@ export class GameState {
     this.#gameService.rearrangeHand(action.cards);
   }
 
-  @Action(CreateGame)
-  createGame(_: StateContext<GameStateModel>, action: CreateGame) {
+  @Action(CreatePendingGame)
+  createGame(_: StateContext<GameStateModel>, action: CreatePendingGame) {
     this.#gameService.createGame(action.pendingGameOptions);
   }
 

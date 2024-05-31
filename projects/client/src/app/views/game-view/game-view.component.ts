@@ -15,7 +15,7 @@ import { withLatestFrom, tap, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
-  CreateGame,
+  CreatePendingGame,
   DenyDrawOffer,
   FinishPlacingMultipleCards,
   JoinGame,
@@ -35,7 +35,6 @@ import {
   GameState,
 } from '@shared/game';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, pairwise, startWith, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -81,6 +80,7 @@ import { GameViewTab } from './models/game-view-tab';
 import { StatisticsPanelView } from '@shared/statistics-panel';
 import { AudioCacheService } from '@shared/audio-cache';
 import { DEFAULT_GAME_VIEW } from './constants';
+import { ButtonModalComponent } from '@shared/ui-inputs';
 
 const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
@@ -945,7 +945,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   hostGame(pendingGameOptions: PendingGameOptions) {
-    this.#store.dispatch(new CreateGame(pendingGameOptions));
+    this.#store.dispatch(new CreatePendingGame(pendingGameOptions));
   }
 
   changeJoinGameCode(gameCode: string) {
@@ -1113,7 +1113,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const modalRef = this.#matDialog.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ButtonModalComponent, {
       width: '250px',
       maxHeight: '100svh',
       data: { message: gameOverData.message },

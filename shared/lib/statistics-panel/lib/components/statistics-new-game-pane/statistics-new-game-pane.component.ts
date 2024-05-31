@@ -1,6 +1,14 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatDialog } from '@angular/material/dialog';
+import { Store } from '@ngxs/store';
+import { DeletePendingGame } from '@shared/game';
 import { DurationOption, PendingGameOptions } from '@shared/models';
+import {
+  ButtonModalComponent,
+  ModalData,
+  YesNoButtons,
+} from '@shared/ui-inputs';
 import { BehaviorSubject } from 'rxjs';
 
 const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
@@ -20,6 +28,10 @@ interface DurationButton {
   styleUrl: './statistics-new-game-pane.component.css',
 })
 export class StatisticsNewGamePaneComponent {
+  readonly #matDialog = inject(MatDialog);
+  readonly #store = inject(Store);
+
+  @Input() gameIsActive = false;
   @Input() gameCodeIsInvalid = false;
   @Input() set hostGameCode(hostedGameCode: string) {
     this.hostedGameCode$.next(hostedGameCode);
@@ -90,6 +102,36 @@ export class StatisticsNewGamePaneComponent {
 
   changeJoinGameCode() {
     this.joinGameCodeChanged.emit(this.joinGameCode);
+  }
+
+  attemptToLeaveGame() {
+    if (this.gameIsActive || this.hostedGameCode$.getValue()) {
+      const modalData: ModalData = {
+        message: 'Are you sure you want to leave the game?',
+        buttons: [YesNoButtons.Yes, YesNoButtons.No],
+      };
+
+      const modalRef = this.#matDialog.open(ButtonModalComponent, {
+        width: '250px',
+        maxHeight: '100svh',
+        data: modalData,
+      });
+
+      modalRef.componentInstance.buttonClicked.subscribe((selectedOption) => {
+        if (selectedOption === YesNoButtons.Yes) {
+          this.leaveGame();
+        }
+
+        modalRef.close();
+      });
+    } else {
+      this.leaveGame();
+    }
+  }
+
+  leaveGame() {
+    this.#store.dispatch(new DeletePendingGame());
+    this.selectHostView();
   }
 
   selectHostView() {

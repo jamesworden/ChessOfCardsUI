@@ -10,8 +10,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import { GameState, ResponsiveSizeService } from '@shared/game';
-import { ModalData } from '../modal/modal-data';
-import { ModalComponent } from '../modal/modal.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,11 +17,11 @@ import { Card, CardPosition, PlayerGameView } from '@shared/models';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toggleDarkMode } from '../../../../logic/toggle-dark-mode';
-
-enum YesNoButtons {
-  Yes = 'Yes',
-  No = 'No',
-}
+import {
+  ButtonModalComponent,
+  ModalData,
+  YesNoButtons,
+} from '@shared/ui-inputs';
 
 @Component({
   selector: 'app-sidebar',
@@ -155,7 +153,7 @@ export class SidebarComponent implements OnInit {
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.#matDialog.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ButtonModalComponent, {
       width: '250px',
       maxHeight: '100svh',
       data: modalData,
@@ -200,7 +198,7 @@ export class SidebarComponent implements OnInit {
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.#matDialog.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ButtonModalComponent, {
       width: '250px',
       maxHeight: '100svh',
       data: modalData,
@@ -233,7 +231,7 @@ export class SidebarComponent implements OnInit {
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.#matDialog.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ButtonModalComponent, {
       width: '250px',
       maxHeight: '100svh',
       data: modalData,

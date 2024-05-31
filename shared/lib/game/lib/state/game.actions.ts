@@ -105,9 +105,13 @@ export class RearrangeHand {
   constructor(public cards: Card[]) {}
 }
 
-export class CreateGame {
-  static readonly type = '[GameState] Create Game';
+export class CreatePendingGame {
+  static readonly type = '[GameState] Create Pending Game';
   constructor(public pendingGameOptions?: PendingGameOptions) {}
+}
+
+export class DeletePendingGame {
+  static readonly type = '[GameState] Delete Pending Game';
 }
 
 export class JoinGame {
