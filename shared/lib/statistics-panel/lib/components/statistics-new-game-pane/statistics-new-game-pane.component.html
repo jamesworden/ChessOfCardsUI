@@ -70,16 +70,14 @@
         <div class="flex flex-col gap-y-2">
           <label class="opacity-80"> Duration </label>
 
-          <div class="flex gap-x-4">
+          <div class="flex gap-x-4 flex-wrap gap-y-4">
             @for (button of durationButtons; track button.durationOption) {
               <button
                 [attr.data-testid]="button.durationOption"
-                class="py-1 px-4 bg-transparent rounded-sm border transition flex gap-x-2"
+                class="px-4 py-2 rounded-sm transition flex gap-x-2 rounded-sm shadow-md bg-white dark:bg-gray-600"
                 [ngClass]="{
-                  'border-yellow-500 text-yellow-500':
-                    button.durationOption === pendingGameOptions.DurationOption,
-                  'border-gray-300 dark:border-gray-400 dark:text-gray-300':
-                    button.durationOption !== pendingGameOptions.DurationOption
+                  'text-yellow-500':
+                    button.durationOption === pendingGameOptions.DurationOption
                 }"
                 (click)="selectDurationOption(button.durationOption)"
               >
