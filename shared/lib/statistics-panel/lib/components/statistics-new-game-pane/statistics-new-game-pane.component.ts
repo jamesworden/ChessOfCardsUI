@@ -1,15 +1,25 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  inject,
+  OnDestroy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
-import { DeletePendingGame, GameState } from '@shared/game';
+import {
+  DeletePendingGame,
+  GameState,
+  SetGameCodeIsInvalid,
+} from '@shared/game';
 import { DurationOption, PendingGameOptions } from '@shared/models';
 import {
   ButtonModalComponent,
   ModalData,
   YesNoButtons,
 } from '@shared/ui-inputs';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
   DurationOption: DurationOption.FiveMinutes,
@@ -27,7 +37,7 @@ interface DurationButton {
   templateUrl: './statistics-new-game-pane.component.html',
   styleUrl: './statistics-new-game-pane.component.css',
 })
-export class StatisticsNewGamePaneComponent {
+export class StatisticsNewGamePaneComponent implements OnDestroy {
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
 
@@ -76,6 +86,10 @@ export class StatisticsNewGamePaneComponent {
           this.hostOrJoinView = false;
         }
       });
+  }
+
+  ngOnDestroy() {
+    this.#store.dispatch(new SetGameCodeIsInvalid(false));
   }
 
   selectJoinGame() {
