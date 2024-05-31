@@ -60,7 +60,7 @@ enum MessageType {
 @Injectable({
   providedIn: 'root',
 })
-export class GameService {
+export class GameHubService {
   private hubConnection: HubConnection;
 
   readonly #matSnackBar = inject(MatSnackBar);

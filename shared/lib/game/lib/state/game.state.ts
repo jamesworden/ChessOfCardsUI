@@ -39,7 +39,7 @@ import {
   PlaceCardAttempt,
 } from '@shared/models';
 import { isPlayersTurn } from '@shared/logic';
-import { GameService } from '../services/game.service';
+import { GameHubService } from '../services/game-hub.service';
 
 type GameStateModel = {
   playerGameView: PlayerGameView | null;
@@ -87,7 +87,7 @@ const defaultGameState: GameStateModel = {
 })
 @Injectable()
 export class GameState {
-  readonly #gameService = inject(GameService);
+  readonly #gameService = inject(GameHubService);
 
   @Selector()
   static playerGameViewToAnimate(state: GameStateModel) {
