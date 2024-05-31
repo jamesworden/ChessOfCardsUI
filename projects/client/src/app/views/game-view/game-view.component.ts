@@ -1130,7 +1130,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const subscription = modalRef.afterClosed().subscribe(() => {
       this.#store.dispatch(new ResetGameData());
       this.#store.dispatch(new ResetPendingGameView());
-      this.#router.navigate(['']);
       subscription.unsubscribe();
     });
   }
