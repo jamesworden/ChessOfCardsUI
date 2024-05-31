@@ -2,15 +2,16 @@
   class="sidebar bg-gray-50 dark:bg-gray-700 h-full flex flex-col w-20 shadow-lg"
 >
   @if ((playerGameView$ | async)?.GameCode; as gameCode) {
-    <div class="flex flex-col justify-around text-center my-2 px-1">
+    <div class="flex flex-col justify-around text-center my-2 px-1 h-16">
       <div class="semibold text-center text-sm h-sm-hidden">Game<br />Code</div>
       <div class="tracking-widest font-bold text-center text-md mt-1">
         {{ gameCode }}
       </div>
     </div>
   } @else {
-    <div class="flex flex-col justify-around text-center my-2 px-1">
-      <div class="semibold text-center text-sm h-sm-hidden font-bold">
+    <div class="flex flex-col justify-around text-center my-2 px-1 h-16">
+      <div class="semibold text-center text-sm h-sm-hidden">Game<br />Code</div>
+      <div class="tracking-widest text-center text-xs">
         Chess <br />
         of <br />
         Cards
@@ -18,7 +19,7 @@
     </div>
   }
 
-  <div class="h-px rounded-lg bg-gray-400 dark:bg-gray-600 mx-2"></div>
+  <div class="h-px rounded-lg bg-gray-400 dark:bg-gray-600 mx-2 mb-2"></div>
 
   <div
     class="px-1 pt-2 flex flex-col pb-4"
