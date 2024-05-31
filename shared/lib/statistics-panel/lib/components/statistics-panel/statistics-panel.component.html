@@ -29,8 +29,6 @@
       @case (StatisticsPanelView.NewGame) {
         <statistics-new-game-pane
           class="flex-1"
-          [hostGameCode]="gameCode"
-          [gameCodeIsInvalid]="gameCodeIsInvalid"
           (attemptedToJoinGame)="attemptToJoinGame($event)"
           (hostedGame)="hostGame($event)"
           (joinGameCodeChanged)="changeJoinGameCode($event)"

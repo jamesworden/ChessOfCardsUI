@@ -20,7 +20,6 @@ export class StatisticsPanelComponent {
   @Input({ required: true }) currentPanelView: StatisticsPanelView | null =
     null;
   @Input({ required: true }) numUnreadChatMessages = 0;
-  @Input({ required: true }) gameCode: string;
   @Input({ required: true }) gameCodeIsInvalid: boolean;
   @Input({ required: true }) set isHost(isHost: boolean) {
     this.isHost$.next(isHost);

@@ -179,6 +179,11 @@ export class GameState {
     return state.isConnectedToServer;
   }
 
+  @Selector()
+  static pendingGameCode(state: GameStateModel) {
+    return state.pendingGameView?.GameCode;
+  }
+
   @Action(UpdatePlayerGameView)
   updateGameState(
     ctx: StateContext<GameStateModel>,

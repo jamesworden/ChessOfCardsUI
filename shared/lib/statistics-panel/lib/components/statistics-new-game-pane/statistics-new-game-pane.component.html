@@ -39,8 +39,10 @@
             placeholder="e.g., ABCD"
             class="border rounded-sm p-2 w-full focus:outline-none dark:text-black max-w-xs uppercase"
             [ngClass]="{
-              'border-red-500 focus:border-red-500': gameCodeIsInvalid,
-              'border-gray-300 focus:border-yellow-500': !gameCodeIsInvalid
+              'border-red-500 focus:border-red-500': gameCodeIsInvalid$ | async,
+              'border-gray-300 focus:border-yellow-500': !(
+                gameCodeIsInvalid$ | async
+              )
             }"
             [(ngModel)]="joinGameCode"
             (ngModelChange)="changeJoinGameCode()"
@@ -50,8 +52,8 @@
             <span
               class="text-red-500 text-sm dark:font-semibold absolute top-0"
               [ngClass]="{
-                'opacity-0': !gameCodeIsInvalid,
-                'opacity-100': gameCodeIsInvalid
+                'opacity-0': !(gameCodeIsInvalid$ | async),
+                'opacity-100': gameCodeIsInvalid$ | async
               }"
               >Invalid game code</span
             >
@@ -136,7 +138,7 @@
               <div class="flex justify-around">
                 <div class="text-center max-w-xs">
                   <h2 class="text-3xl font-semibold">
-                    {{ hostedGameCode$ | async }}
+                    {{ pendingGameCode$ | async }}
                   </h2>
                 </div>
               </div>

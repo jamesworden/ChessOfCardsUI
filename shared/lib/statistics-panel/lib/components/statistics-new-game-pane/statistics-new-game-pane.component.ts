@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
-import { Store } from '@ngxs/store';
-import { DeletePendingGame } from '@shared/game';
+import { Select, Store } from '@ngxs/store';
+import { DeletePendingGame, GameState } from '@shared/game';
 import { DurationOption, PendingGameOptions } from '@shared/models';
 import {
   ButtonModalComponent,
   ModalData,
   YesNoButtons,
 } from '@shared/ui-inputs';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
   DurationOption: DurationOption.FiveMinutes,
@@ -31,17 +31,15 @@ export class StatisticsNewGamePaneComponent {
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
 
-  @Input() gameIsActive = false;
-  @Input() gameCodeIsInvalid = false;
-  @Input() set hostGameCode(hostedGameCode: string) {
-    this.hostedGameCode$.next(hostedGameCode);
-  }
-
   @Output() attemptedToJoinGame = new EventEmitter<string>();
   @Output() hostedGame = new EventEmitter<PendingGameOptions>();
   @Output() joinGameCodeChanged = new EventEmitter<string>();
 
-  readonly hostedGameCode$ = new BehaviorSubject<string | null>(null);
+  @Select(GameState.gameCodeIsInvalid)
+  gameCodeIsInvalid$: Observable<boolean>;
+
+  @Select(GameState.pendingGameCode)
+  pendingGameCode$: Observable<boolean>;
 
   readonly durationButtons: DurationButton[] = [
     {
@@ -71,10 +69,10 @@ export class StatisticsNewGamePaneComponent {
   joinGameCode = '';
 
   constructor() {
-    this.hostedGameCode$
+    this.pendingGameCode$
       .pipe(takeUntilDestroyed())
-      .subscribe((hostedGameCode) => {
-        if (hostedGameCode) {
+      .subscribe((pendingGameCode) => {
+        if (pendingGameCode) {
           this.hostOrJoinView = false;
         }
       });
@@ -105,7 +103,10 @@ export class StatisticsNewGamePaneComponent {
   }
 
   attemptToLeaveGame() {
-    if (this.gameIsActive || this.hostedGameCode$.getValue()) {
+    if (
+      this.#store.selectSnapshot(GameState.gameIsActive) ||
+      this.#store.selectSnapshot(GameState.pendingGameCode)
+    ) {
       const modalData: ModalData = {
         message: 'Are you sure you want to leave the game?',
         buttons: [YesNoButtons.Yes, YesNoButtons.No],

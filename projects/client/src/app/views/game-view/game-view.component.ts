@@ -253,10 +253,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     })
   );
 
-  readonly gameCode$ = this.#store
-    .select(GameState.pendingGameView)
-    .pipe(map((pendingGameView) => pendingGameView?.GameCode));
-
   readonly Z_INDEXES = Z_INDEXES;
   readonly GameViewTab = GameViewTab;
 
