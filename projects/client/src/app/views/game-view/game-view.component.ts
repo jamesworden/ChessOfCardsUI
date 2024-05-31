@@ -909,6 +909,18 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   selectGameViewTab(gameViewTab: GameViewTab) {
     this.pastGameView$.next(null);
     this.selectedTab$.next(gameViewTab);
+
+    if (
+      gameViewTab === GameViewTab.BoardWithStatsPanel &&
+      !this.#store.selectSnapshot(GameState.gameIsActive)
+    ) {
+      this.#matSnackBar.open('Join a game to see cards on the board.', 'Hide', {
+        verticalPosition: 'bottom',
+        duration: 3000,
+      });
+    } else {
+      this.#matSnackBar.dismiss();
+    }
   }
 
   setMovesPanelHeight(height: number) {
