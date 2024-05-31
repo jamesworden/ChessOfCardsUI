@@ -41,7 +41,7 @@ enum MessageType {
   GameUpdated = 'GameUpdated',
   PassedMove = 'PassedMove',
   DrawOffered = 'DrawOffered',
-  CreateGame = 'CreateGame',
+  CreatePendingGame = 'CreatePendingGame',
   JoinGame = 'JoinGame',
   RearrangeHand = 'RearrangeHand',
   MakeMove = 'MakeMove',
@@ -191,11 +191,14 @@ export class GameHubService {
     );
   }
 
-  public createGame(pendingGameOptions?: PendingGameOptions) {
+  public createPendingGame(pendingGameOptions?: PendingGameOptions) {
     const stringifiedOptions = pendingGameOptions
       ? JSON.stringify(pendingGameOptions)
       : undefined;
-    this.hubConnection.invoke(MessageType.CreateGame, stringifiedOptions);
+    this.hubConnection.invoke(
+      MessageType.CreatePendingGame,
+      stringifiedOptions
+    );
   }
 
   public joinGame(gameCode: string) {

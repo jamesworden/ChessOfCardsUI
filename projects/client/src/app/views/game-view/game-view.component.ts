@@ -942,9 +942,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   attemptToJoinGame(gameCode: string) {
     const upperCaseGameCode = gameCode.toUpperCase();
     const actualGameCode = this.#store.selectSnapshot(
-      GameState.pendingGameView
-    )?.GameCode;
-    if (!actualGameCode || upperCaseGameCode === actualGameCode) {
+      GameState.pendingGameCode
+    );
+    if (upperCaseGameCode === actualGameCode) {
       this.#store.dispatch(new SetGameCodeIsInvalid(true));
       return;
     }
