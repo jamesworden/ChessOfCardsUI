@@ -19,7 +19,11 @@
           <div class="text-center max-w-xs">
             <h2 class="text-sm mb-2">No position selected!</h2>
             <p class="text-xs opacity-80">
-              Select a position to see its cards.
+              {{
+                isGameActive
+                  ? 'Select a position to see its cards.'
+                  : "Join a game and select a position's cards."
+              }}
             </p>
           </div>
         </div>

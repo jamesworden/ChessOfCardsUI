@@ -91,7 +91,11 @@
                   <div class="text-left lg:text-center max-w-xs">
                     <h2 class="text-xl lg:text-3xl mb-2">No moves made!</h2>
                     <p class="opacity-80">
-                      Once a player makes a move, they will appear here.
+                      {{
+                        gameIsActive
+                          ? 'Once a player makes a move, they will appear here.'
+                          : 'Join a game to see the moves that have been made.'
+                      }}
                     </p>
                   </div>
                 </div>

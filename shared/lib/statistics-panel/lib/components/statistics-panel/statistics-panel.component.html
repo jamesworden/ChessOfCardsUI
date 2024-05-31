@@ -43,6 +43,7 @@
           [moveNotations]="moveNotations"
           [selectedNotationIndex]="selectedNotationIndex"
           (moveNotationSelected)="selectMoveNotation($event)"
+          [gameIsActive]="gameIsActive"
         ></statistics-moves-pane>
       }
       @case (StatisticsPanelView.Chat) {
@@ -51,6 +52,7 @@
           [chatMessages]="chatMessages"
           [isHost]="(isHost$ | async) ?? false"
           (chatMessageSent)="sendChatMessage($event)"
+          [gameIsActive]="gameIsActive"
         ></statistics-chat-pane>
       }
     }

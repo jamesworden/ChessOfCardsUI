@@ -45,6 +45,7 @@
       [cardSize]="(cardSize$ | async) ?? 48"
       [redJokerLaneIndex]="redJokerLaneIndex"
       [blackJokerLaneIndex]="blackJokerLaneIndex"
+      [isGameActive]="(gameIsActive$ | async) ?? false"
     ></card-stack>
   } @else {
     <div class="px-1 flex flex-col gap-y-4 py-2">

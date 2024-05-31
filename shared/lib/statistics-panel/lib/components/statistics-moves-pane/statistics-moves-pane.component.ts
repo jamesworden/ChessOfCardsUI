@@ -21,6 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class StatisticsMovesPaneComponent {
   readonly #destroyRef = inject(DestroyRef);
 
+  @Input() gameIsActive = true;
   @Input({ required: true }) isHost: boolean;
   @Input() set moveNotations(moveNotations: MoveNotation[]) {
     this.moveNotations$.next(moveNotations);

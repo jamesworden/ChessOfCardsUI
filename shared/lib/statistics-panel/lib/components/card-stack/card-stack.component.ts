@@ -13,6 +13,7 @@ export class CardStackComponent {
   @Input({ required: true }) cardSize: number = 64;
   @Input({ required: true }) redJokerLaneIndex: number | null;
   @Input({ required: true }) blackJokerLaneIndex: number | null;
+  @Input() isGameActive = true;
   @Input({ required: true }) set position(position: CardPosition | null) {
     this.position$.next(position);
     this.positionNotation$.next(getPositionNotation(position));

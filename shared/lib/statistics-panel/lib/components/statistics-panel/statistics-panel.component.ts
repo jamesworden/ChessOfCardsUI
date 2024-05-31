@@ -13,6 +13,7 @@ import { StatisticsPane } from '../../models/statistics-pane';
 export class StatisticsPanelComponent {
   readonly StatisticsPanelView = StatisticsPanelView;
 
+  @Input({ required: true }) gameIsActive: boolean;
   @Input({ required: true }) chatMessages: ChatMessage[] = [];
   @Input({ required: true }) moveNotations: MoveNotation[] = [];
   @Input({ required: true }) selectedNotationIndex: number | null = null;

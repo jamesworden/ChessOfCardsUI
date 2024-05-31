@@ -230,6 +230,7 @@
         [isHost]="(playerGameView$ | async)?.IsHost ?? false"
         [selectedNotationIndex]="selectedNotationIndex$ | async"
         (moveNotationSelected)="selectMoveNotation($event)"
+        [gameIsActive]="(gameIsActive$ | async) ?? false"
       ></statistics-moves-pane>
     </div>
   </div>
@@ -254,6 +255,7 @@
         [cardSize]="(cardSize$ | async) ?? 64"
         [redJokerLaneIndex]="(redJokerLaneIndex$ | async) ?? null"
         [blackJokerLaneIndex]="(blackJokerLaneIndex$ | async) ?? null"
+        [isGameActive]="(gameIsActive$ | async) ?? false"
       ></card-stack>
     </div>
 
@@ -272,6 +274,7 @@
       (attemptedToJoinGame)="attemptToJoinGame($event)"
       (hostedGame)="hostGame($event)"
       (joinGameCodeChanged)="changeJoinGameCode($event)"
+      [gameIsActive]="(gameIsActive$ | async) ?? false"
     ></statistics-panel>
   </div>
 </ng-template>
@@ -281,6 +284,7 @@
     [isHost]="(playerGameView$ | async)?.IsHost ?? false"
     [chatMessages]="(chatMessages$ | async) ?? []"
     (chatMessageSent)="sendChatMessage($event)"
+    [gameIsActive]="(gameIsActive$ | async) ?? false"
   ></statistics-chat-pane>
 </ng-template>
 

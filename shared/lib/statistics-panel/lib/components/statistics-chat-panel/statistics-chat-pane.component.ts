@@ -23,6 +23,7 @@ interface DisplayChatMessage {
   styleUrl: './statistics-chat-pane.component.scss',
 })
 export class StatisticsChatPaneComponent {
+  @Input() gameIsActive = true;
   @Input({ required: true }) set isHost(isHost: boolean) {
     this.isHost$.next(isHost);
   }
