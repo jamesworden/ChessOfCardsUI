@@ -74,7 +74,7 @@
             @for (button of durationButtons; track button.durationOption) {
               <button
                 [attr.data-testid]="button.durationOption"
-                class="py-1 px-4 bg-transparent rounded-sm border transition"
+                class="py-1 px-4 bg-transparent rounded-sm border transition flex gap-x-2"
                 [ngClass]="{
                   'border-gray-600 dark:border-gray-100':
                     button.durationOption === pendingGameOptions.DurationOption,
@@ -83,7 +83,8 @@
                 }"
                 (click)="selectDurationOption(button.durationOption)"
               >
-                {{ button.label }}
+                <span [class]="button.iconClass">{{ button.icon }}</span>
+                <span>{{ button.label }}</span>
               </button>
             }
           </div>

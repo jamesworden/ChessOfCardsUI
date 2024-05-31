@@ -7,12 +7,11 @@ const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
   DurationOption: DurationOption.FiveMinutes,
 };
 
-/**
- * TODO: Add icons
- */
 interface DurationButton {
   label: string;
   durationOption: DurationOption;
+  icon: string;
+  iconClass: string;
 }
 
 @Component({
@@ -36,14 +35,20 @@ export class StatisticsNewGamePaneComponent {
     {
       durationOption: DurationOption.FiveMinutes,
       label: '5 min',
+      icon: 'pace',
+      iconClass: 'material-symbols-outlined',
     },
     {
       durationOption: DurationOption.ThreeMinutes,
       label: '3 min',
+      icon: 'avg_pace',
+      iconClass: 'material-symbols-outlined',
     },
     {
       durationOption: DurationOption.OneMinute,
       label: '1 min',
+      icon: 'bolt',
+      iconClass: 'material-symbols-outlined',
     },
   ];
 
