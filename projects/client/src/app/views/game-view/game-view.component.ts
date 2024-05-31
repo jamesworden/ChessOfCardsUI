@@ -419,6 +419,23 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           }
         }
       );
+    this.gameIsActive$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((gameIsActive) => {
+        if (!gameIsActive) {
+          return;
+        }
+
+        if (this.selectedTab$.getValue() === GameViewTab.NewGame) {
+          this.selectedTab$.next(GameViewTab.BoardWithStatsPanel);
+        }
+
+        if (
+          this.selectedPanelView$.getValue() === StatisticsPanelView.NewGame
+        ) {
+          this.selectedPanelView$.next(StatisticsPanelView.Moves);
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -1128,7 +1145,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     });
 
     const subscription = modalRef.afterClosed().subscribe(() => {
-      this.#store.dispatch(new ResetGameData());
       this.#store.dispatch(new ResetPendingGameView());
       subscription.unsubscribe();
     });
