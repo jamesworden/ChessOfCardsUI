@@ -165,6 +165,11 @@ export class GameState {
   }
 
   @Selector()
+  static isHost(state: GameStateModel) {
+    return state.playerGameView ? state.playerGameView.IsHost : false;
+  }
+
+  @Selector()
   static chatMessages(state: GameStateModel) {
     return state.playerGameView?.ChatMessages ?? [];
   }

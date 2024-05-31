@@ -12,6 +12,9 @@ import { MoveNotation } from '@shared/logic';
 import { PlayerOrNone } from '@shared/models';
 import { BehaviorSubject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Select } from '@ngxs/store';
+import { GameState } from '@shared/game';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'statistics-moves-pane',
@@ -21,8 +24,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class StatisticsMovesPaneComponent {
   readonly #destroyRef = inject(DestroyRef);
 
-  @Input() gameIsActive = true;
-  @Input({ required: true }) isHost: boolean;
   @Input() set moveNotations(moveNotations: MoveNotation[]) {
     this.moveNotations$.next(moveNotations);
   }
@@ -31,6 +32,9 @@ export class StatisticsMovesPaneComponent {
   }
 
   @Output() moveNotationSelected = new EventEmitter<number>();
+
+  @Select(GameState.gameIsActive)
+  gameIsActive$: Observable<boolean>;
 
   @ViewChild('scrollContainer', { static: true })
   scrollContainer!: ElementRef;
