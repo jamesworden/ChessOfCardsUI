@@ -934,7 +934,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       gameViewTab === GameViewTab.BoardWithStatsPanel &&
       !this.#store.selectSnapshot(GameState.playerGameView)
     ) {
-      this.#matSnackBar.open('Join a game to see cards on the board.', 'Hide', {
+      this.#matSnackBar.open('Play a game to see cards on the board.', 'Hide', {
         verticalPosition: 'bottom',
         duration: 3000,
       });
