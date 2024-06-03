@@ -89,7 +89,11 @@
         >
           <div>
             <app-player-banner
-              [username]="gameView.IsHost ? 'Guest Player' : 'Host Player'"
+              [username]="
+                gameView.IsHost
+                  ? gameView.GuestName ?? 'Guest Player'
+                  : gameView.HostName ?? 'Host Player'
+              "
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn

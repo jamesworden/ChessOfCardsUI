@@ -30,6 +30,7 @@ import {
   SendChatMessage,
   SetIsConnectedToServer,
   ConnectToServer,
+  DeletePendingGame,
 } from './game.actions';
 import {
   Card,
@@ -87,7 +88,7 @@ const defaultGameState: GameStateModel = {
 })
 @Injectable()
 export class GameState {
-  readonly #gameHubService = inject(GameWebsocketService);
+  readonly #gameWebsocketService = inject(GameWebsocketService);
 
   @Selector()
   static playerGameViewToAnimate(state: GameStateModel) {
@@ -257,7 +258,7 @@ export class GameState {
 
   @Action(OfferDraw)
   offerDraw(ctx: StateContext<GameStateModel>) {
-    this.#gameHubService.offerDraw();
+    this.#gameWebsocketService.offerDraw();
 
     ctx.patchState({
       drawOfferSent: true,
@@ -280,7 +281,7 @@ export class GameState {
 
   @Action(AcceptDrawOffer)
   acceptDrawOffer(ctx: StateContext<GameStateModel>) {
-    this.#gameHubService.acceptDrawOffer();
+    this.#gameWebsocketService.acceptDrawOffer();
 
     ctx.patchState({
       hasPendingDrawOffer: false,
@@ -336,7 +337,7 @@ export class GameState {
 
   @Action(PassMove)
   passMove(ctx: StateContext<GameStateModel>) {
-    this.#gameHubService.passMove();
+    this.#gameWebsocketService.passMove();
 
     ctx.patchState({
       waitingForServer: true,
@@ -345,7 +346,10 @@ export class GameState {
 
   @Action(MakeMove)
   makeMove(ctx: StateContext<GameStateModel>, action: MakeMove) {
-    this.#gameHubService.makeMove(action.move, action.rearrangedCardsInHand);
+    this.#gameWebsocketService.makeMove(
+      action.move,
+      action.rearrangedCardsInHand
+    );
 
     ctx.patchState({
       waitingForServer: true,
@@ -354,7 +358,7 @@ export class GameState {
 
   @Action(RearrangeHand)
   rearrangeHand(_: StateContext<GameStateModel>, action: RearrangeHand) {
-    this.#gameHubService.rearrangeHand(action.cards);
+    this.#gameWebsocketService.rearrangeHand(action.cards);
   }
 
   @Action(CreatePendingGame)
@@ -362,17 +366,17 @@ export class GameState {
     _: StateContext<GameStateModel>,
     action: CreatePendingGame
   ) {
-    this.#gameHubService.createPendingGame(action.pendingGameOptions);
+    this.#gameWebsocketService.createPendingGame(action.pendingGameOptions);
   }
 
   @Action(JoinGame)
   joinGame(_: StateContext<GameStateModel>, action: JoinGame) {
-    this.#gameHubService.joinGame(action.gameCode);
+    this.#gameWebsocketService.joinGame(action.gameCode);
   }
 
   @Action(ResignGame)
   resignGame() {
-    this.#gameHubService.resignGame();
+    this.#gameWebsocketService.resignGame();
   }
 
   @Action(SelectDurationOption)
@@ -380,7 +384,7 @@ export class GameState {
     ctx: StateContext<GameStateModel>,
     action: SelectDurationOption
   ) {
-    this.#gameHubService.selectDurationOption(action.durationOption);
+    this.#gameWebsocketService.selectDurationOption(action.durationOption);
 
     ctx.patchState({
       waitingForServer: true,
@@ -389,12 +393,12 @@ export class GameState {
 
   @Action(CheckHostForEmptyTimer)
   checkHostForEmptyTimer() {
-    this.#gameHubService.checkHostForEmptyTimer();
+    this.#gameWebsocketService.checkHostForEmptyTimer();
   }
 
   @Action(CheckGuestForEmptyTimer)
   checkGuestForEmptyTimer() {
-    this.#gameHubService.checkGuestForEmptyTimer();
+    this.#gameWebsocketService.checkGuestForEmptyTimer();
   }
 
   @Action(AnimateGameView)
@@ -419,7 +423,7 @@ export class GameState {
     _: StateContext<GameStateModel>,
     { message }: SendChatMessage
   ) {
-    this.#gameHubService.sendChatMessage(message);
+    this.#gameWebsocketService.sendChatMessage(message);
   }
 
   @Action(SetIsConnectedToServer)
@@ -434,6 +438,11 @@ export class GameState {
 
   @Action(ConnectToServer)
   connectToServer(_: StateContext<GameStateModel>, action: ConnectToServer) {
-    this.#gameHubService.connectToServer(action.environment);
+    this.#gameWebsocketService.connectToServer(action.environment);
+  }
+
+  @Action(DeletePendingGame)
+  deletePendingGame(_: StateContext<GameStateModel>) {
+    this.#gameWebsocketService.deletePendingGame();
   }
 }

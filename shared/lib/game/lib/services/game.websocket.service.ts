@@ -29,6 +29,7 @@ import {
   PlayerGameView,
 } from '@shared/models';
 import { isPlayersTurn } from '@shared/logic';
+import { JoinPendingGameOptions } from 'shared/lib/models/lib/join-pending-game-options.model';
 
 enum MessageType {
   CreatedPendingGame = 'CreatedPendingGame',
@@ -54,6 +55,7 @@ enum MessageType {
   TurnSkippedNoMoves = 'TurnSkippedNoMoves',
   SendChatMessage = 'SendChatMessage',
   NewChatMessage = 'NewChatMessage',
+  DeletePendingGame = 'DeletePendingGame',
 }
 
 @Injectable({
@@ -198,8 +200,15 @@ export class GameWebsocketService {
     );
   }
 
-  public joinGame(gameCode: string) {
-    this.hubConnection.invoke(MessageType.JoinGame, gameCode);
+  public joinGame(
+    gameCode: string,
+    joinPendingGameOptions?: JoinPendingGameOptions
+  ) {
+    this.hubConnection.invoke(
+      MessageType.JoinGame,
+      gameCode,
+      joinPendingGameOptions
+    );
   }
 
   public rearrangeHand(cards: Card[]) {
@@ -249,6 +258,10 @@ export class GameWebsocketService {
 
   public sendChatMessage(message: string) {
     this.hubConnection.invoke(MessageType.SendChatMessage, message);
+  }
+
+  public deletePendingGame() {
+    this.hubConnection.invoke(MessageType.DeletePendingGame);
   }
 
   private parseAndUpdateGameView(stringifiedGameState: string) {

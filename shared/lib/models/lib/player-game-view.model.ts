@@ -23,4 +23,6 @@ export type PlayerGameView = {
   CandidateMoves?: CandidateMove[];
   HasEnded: boolean;
   ChatMessages: ChatMessage[];
+  HostName?: string;
+  GuestName?: string;
 };
