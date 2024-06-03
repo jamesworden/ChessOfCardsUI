@@ -160,6 +160,8 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
 
     if (this.#store.selectSnapshot(GameState.gameIsActive)) {
       this.#store.dispatch(new ResignGame());
+      this.selectJoinView();
+      return;
     }
 
     this.selectHostView();
@@ -167,6 +169,11 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
 
   selectHostView() {
     this.joinGameSelected = false;
+    this.hostOrJoinView = true;
+  }
+
+  selectJoinView() {
+    this.joinGameSelected = true;
     this.hostOrJoinView = true;
   }
 }
