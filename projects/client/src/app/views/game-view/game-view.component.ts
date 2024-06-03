@@ -15,10 +15,8 @@ import { withLatestFrom, tap, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
-  CreatePendingGame,
   DenyDrawOffer,
   FinishPlacingMultipleCards,
-  JoinGame,
   MakeMove,
   OfferDraw,
   PassMove,
@@ -46,7 +44,6 @@ import {
   GameOverData,
   Lane,
   Move,
-  PendingGameOptions,
   PlaceCardAttempt,
   PlayerGameView,
   PlayerOrNone,
@@ -965,27 +962,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   unmute() {
     this.#audioCacheService.unmute();
-  }
-
-  attemptToJoinGame(gameCode: string) {
-    const upperCaseGameCode = gameCode.toUpperCase();
-    const actualGameCode = this.#store.selectSnapshot(
-      GameState.pendingGameCode
-    );
-    if (upperCaseGameCode === actualGameCode) {
-      this.#store.dispatch(new SetGameCodeIsInvalid(true));
-      return;
-    }
-
-    this.#store.dispatch(
-      new JoinGame(upperCaseGameCode, {
-        GuestName: this.joinGameName,
-      })
-    );
-  }
-
-  hostGame(pendingGameOptions: PendingGameOptions) {
-    this.#store.dispatch(new CreatePendingGame(pendingGameOptions));
   }
 
   changeJoinGameCode(gameCode: string) {

@@ -169,7 +169,11 @@
 
           <div>
             <app-player-banner
-              [username]="gameView.IsHost ? 'Host Player' : 'Guest Player'"
+              [username]="
+                gameView.IsHost
+                  ? gameView.HostName ?? 'Host Player'
+                  : gameView.GuestName ?? 'Guest Player'
+              "
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn
@@ -274,10 +278,6 @@
       (panelViewSelected)="selectPanelView($event)"
       [numUnreadChatMessages]="numUnreadChatMessages"
       [gameCodeIsInvalid]="(gameCodeIsInvalid$ | async) ?? false"
-      (attemptedToJoinGame)="attemptToJoinGame($event)"
-      (hostedGame)="hostGame($event)"
-      (joinGameCodeChanged)="changeJoinGameCode($event)"
-      (nameChanged)="changeName($event)"
     ></statistics-panel>
   </div>
 </ng-template>
@@ -289,10 +289,5 @@
 </ng-template>
 
 <ng-template #newGameView>
-  <statistics-new-game-pane
-    (attemptedToJoinGame)="attemptToJoinGame($event)"
-    (hostedGame)="hostGame($event)"
-    (joinGameCodeChanged)="changeJoinGameCode($event)"
-    (nameChanged)="changeName($event)"
-  ></statistics-new-game-pane>
+  <statistics-new-game-pane></statistics-new-game-pane>
 </ng-template>

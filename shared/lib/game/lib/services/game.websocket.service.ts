@@ -204,10 +204,13 @@ export class GameWebsocketService {
     gameCode: string,
     joinPendingGameOptions?: JoinPendingGameOptions
   ) {
+    const stringifiedOptions = joinPendingGameOptions
+      ? JSON.stringify(joinPendingGameOptions)
+      : undefined;
     this.hubConnection.invoke(
       MessageType.JoinGame,
       gameCode,
-      joinPendingGameOptions
+      stringifiedOptions
     );
   }
 

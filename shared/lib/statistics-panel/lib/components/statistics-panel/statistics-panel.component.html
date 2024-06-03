@@ -27,13 +27,7 @@
   <div class="flex overflow-hidden h-full">
     @switch (currentPanelView) {
       @case (StatisticsPanelView.NewGame) {
-        <statistics-new-game-pane
-          class="flex-1"
-          (attemptedToJoinGame)="attemptToJoinGame($event)"
-          (hostedGame)="hostGame($event)"
-          (joinGameCodeChanged)="changeJoinGameCode($event)"
-          (nameChanged)="changeName($event)"
-        ></statistics-new-game-pane>
+        <statistics-new-game-pane class="flex-1"></statistics-new-game-pane>
       }
       @case (StatisticsPanelView.Moves) {
         <statistics-moves-pane

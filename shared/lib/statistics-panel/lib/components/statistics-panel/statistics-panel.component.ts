@@ -27,10 +27,6 @@ export class StatisticsPanelComponent {
   @Output() moveNotationSelected = new EventEmitter<number>();
   @Output() chatMessageSent = new EventEmitter<string>();
   @Output() panelViewSelected = new EventEmitter<StatisticsPanelView>();
-  @Output() attemptedToJoinGame = new EventEmitter<string>();
-  @Output() hostedGame = new EventEmitter<PendingGameOptions>();
-  @Output() joinGameCodeChanged = new EventEmitter<string>();
-  @Output() nameChanged = new EventEmitter<string>();
 
   readonly movesMade$ = new BehaviorSubject<MoveMade[]>([]);
   readonly isHost$ = new BehaviorSubject<boolean>(false);
@@ -66,21 +62,5 @@ export class StatisticsPanelComponent {
 
   sendChatMessage(chatMessage: string) {
     this.chatMessageSent.emit(chatMessage);
-  }
-
-  attemptToJoinGame(gameCode: string) {
-    this.attemptedToJoinGame.emit(gameCode);
-  }
-
-  hostGame(pendingGameOptions: PendingGameOptions) {
-    this.hostedGame.emit(pendingGameOptions);
-  }
-
-  changeJoinGameCode(gameCode: string) {
-    this.joinGameCodeChanged.emit(gameCode);
-  }
-
-  changeName(name: string) {
-    this.nameChanged.emit(name);
   }
 }

@@ -9,8 +9,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import {
+  CreatePendingGame,
   DeletePendingGame,
   GameState,
+  JoinGame,
   ResignGame,
   SetGameCodeIsInvalid,
 } from '@shared/game';
@@ -45,11 +47,6 @@ interface DurationButton {
 export class StatisticsNewGamePaneComponent implements OnDestroy {
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
-
-  @Output() attemptedToJoinGame = new EventEmitter<string>();
-  @Output() hostedGame = new EventEmitter<PendingGameOptions>();
-  @Output() joinGameCodeChanged = new EventEmitter<string>();
-  @Output() nameChanged = new EventEmitter<string>();
 
   @Select(GameState.gameCodeIsInvalid)
   gameCodeIsInvalid$: Observable<boolean>;
@@ -113,23 +110,28 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   }
 
   hostGame() {
-    this.hostedGame.emit(this.pendingGameOptions);
+    this.#store.dispatch(new CreatePendingGame(this.pendingGameOptions));
   }
 
   attemptToJoinGame() {
-    this.attemptedToJoinGame.emit(this.joinGameCode);
+    const upperCaseGameCode = this.joinGameCode.toUpperCase();
+    const actualGameCode = this.#store.selectSnapshot(
+      GameState.pendingGameCode
+    );
+    if (upperCaseGameCode === actualGameCode) {
+      this.#store.dispatch(new SetGameCodeIsInvalid(true));
+      return;
+    }
+
+    this.#store.dispatch(
+      new JoinGame(upperCaseGameCode, {
+        GuestName: this.name,
+      })
+    );
   }
 
   selectDurationOption(durationOption: DurationOption) {
     this.pendingGameOptions.DurationOption = durationOption;
-  }
-
-  changeJoinGameCode() {
-    this.joinGameCodeChanged.emit(this.joinGameCode);
-  }
-
-  changeName() {
-    this.nameChanged.emit(this.name);
   }
 
   attemptToLeaveGame() {
