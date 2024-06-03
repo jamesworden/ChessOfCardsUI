@@ -18,7 +18,6 @@ import {
   UpdatePlayerGameView,
   SetIsConnectedToServer,
 } from '../state/game.actions';
-import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Card,
@@ -60,12 +59,11 @@ enum MessageType {
 @Injectable({
   providedIn: 'root',
 })
-export class GameHubService {
+export class GameWebsocketService {
   private hubConnection: HubConnection;
 
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #store = inject(Store);
-  readonly #router = inject(Router);
 
   public connectToServer(environment: Environment) {
     this.initConnection(environment);
@@ -132,7 +130,6 @@ export class GameHubService {
     this.hubConnection.on(MessageType.GameStarted, (stringifiedGameState) => {
       this.#store.dispatch(new SetGameIsActive(true));
       const playerGameView = this.parseAndUpdateGameView(stringifiedGameState);
-      this.#router.navigate(['game']);
 
       const message = isPlayersTurn(playerGameView)
         ? "It's your turn."

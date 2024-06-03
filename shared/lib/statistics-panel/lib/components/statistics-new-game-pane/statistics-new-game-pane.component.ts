@@ -11,15 +11,20 @@ import { Select, Store } from '@ngxs/store';
 import {
   DeletePendingGame,
   GameState,
+  ResignGame,
   SetGameCodeIsInvalid,
 } from '@shared/game';
-import { DurationOption, PendingGameOptions } from '@shared/models';
+import {
+  DurationOption,
+  PendingGameOptions,
+  PlayerGameView,
+} from '@shared/models';
 import {
   ButtonModalComponent,
   ModalData,
   YesNoButtons,
 } from '@shared/ui-inputs';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 
 const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
   DurationOption: DurationOption.FiveMinutes,
@@ -51,6 +56,12 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   @Select(GameState.pendingGameCode)
   pendingGameCode$: Observable<boolean>;
 
+  @Select(GameState.gameIsActive)
+  gameIsActive$: Observable<boolean>;
+
+  @Select(GameState.playerGameView)
+  playerGameView$: Observable<PlayerGameView>;
+
   readonly durationButtons: DurationButton[] = [
     {
       durationOption: DurationOption.FiveMinutes,
@@ -79,10 +90,10 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   joinGameCode = '';
 
   constructor() {
-    this.pendingGameCode$
+    combineLatest([this.pendingGameCode$, this.gameIsActive$])
       .pipe(takeUntilDestroyed())
-      .subscribe((pendingGameCode) => {
-        if (pendingGameCode) {
+      .subscribe(([pendingGameCode, gameIsActive]) => {
+        if (pendingGameCode || gameIsActive) {
           this.hostOrJoinView = false;
         }
       });
@@ -146,6 +157,11 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
 
   leaveGame() {
     this.#store.dispatch(new DeletePendingGame());
+
+    if (this.#store.selectSnapshot(GameState.gameIsActive)) {
+      this.#store.dispatch(new ResignGame());
+    }
+
     this.selectHostView();
   }
 

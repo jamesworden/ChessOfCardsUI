@@ -23,7 +23,6 @@ import {
   OfferDraw,
   PassMove,
   RearrangeHand,
-  ResetGameData,
   ResetPendingGameView,
   ResignGame,
   SendChatMessage,

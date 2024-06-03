@@ -122,6 +122,7 @@ export class SidebarComponent implements OnInit {
             this.secondsToRemainingTimeString(opponentsRemainingSeconds);
 
           this.playerHasLowTime = playersRemainingSeconds <= 30;
+          return;
         }
         this.playersRemainingSecondsString =
           this.opponentsRemainingSecondsString =

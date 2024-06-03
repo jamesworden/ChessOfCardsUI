@@ -138,15 +138,23 @@
               <div class="flex justify-around">
                 <div class="text-center max-w-xs">
                   <h2 class="text-3xl font-semibold">
-                    {{ pendingGameCode$ | async }}
+                    {{
+                      (pendingGameCode$ | async) ??
+                        (playerGameView$ | async)?.GameCode
+                    }}
                   </h2>
                 </div>
               </div>
 
               <div class="flex justify-around">
                 <p class="opacity-80 max-w-xs text-center">
-                  Give this game code to your opponent so they can join the
-                  game!
+                  Give this game code to your opponent
+                  {{
+                    (gameIsActive$ | async)
+                      ? 'so they can reconnect to'
+                      : 'so they can join'
+                  }}
+                  the game!
                 </p>
               </div>
             </div>
