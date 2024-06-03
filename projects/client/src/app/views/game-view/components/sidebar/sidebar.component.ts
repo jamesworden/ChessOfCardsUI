@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import { GameState, ResponsiveSizeService } from '@shared/game';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { withLatestFrom } from 'rxjs/operators';
+import { withLatestFrom, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Card, CardPosition, PlayerGameView } from '@shared/models';
 import { RemainingTimeService } from '../../services/remaining-time.service';
@@ -100,8 +100,11 @@ export class SidebarComponent implements OnInit {
         }
       });
     this.#remainingTimeService.secondsRemainingFromLastMove$
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .pipe(withLatestFrom(this.playerGameView$))
+      .pipe(
+        startWith(null),
+        withLatestFrom(this.playerGameView$.pipe(startWith(null))),
+        takeUntilDestroyed(this.#destroyRef)
+      )
       .subscribe(([secondsRemaining, playerGameView]) => {
         if (secondsRemaining && playerGameView) {
           const { IsHost } = playerGameView;
@@ -120,6 +123,9 @@ export class SidebarComponent implements OnInit {
 
           this.playerHasLowTime = playersRemainingSeconds <= 30;
         }
+        this.playersRemainingSecondsString =
+          this.opponentsRemainingSecondsString =
+            this.secondsToRemainingTimeString(0);
       });
   }
 
