@@ -76,13 +76,27 @@
           </div>
         </div>
 
-        <div>
-          <button
-            class="bg-yellow-400 px-4 py-2 rounded-sm text-gray-800 shadow-md hover:bg-yellow-300 transition outline-none"
-            (click)="attemptToJoinGame()"
-          >
-            Join Game
-          </button>
+        <div class="flex flex-col gap-y-2">
+          <div>
+            <button
+              class="bg-yellow-400 px-4 py-2 rounded-sm text-gray-800 shadow-md hover:bg-yellow-300 transition outline-none"
+              (click)="attemptToJoinGame()"
+            >
+              Join Game
+            </button>
+          </div>
+
+          <div class="relative">
+            <span
+              class="text-red-500 text-sm dark:font-semibold absolute top-0"
+              [ngClass]="{
+                'opacity-0': (isConnectedToServer$ | async) || !triedToJoinGame,
+                'opacity-100':
+                  !(isConnectedToServer$ | async) && triedToJoinGame
+              }"
+              >Unable to connect to server!</span
+            >
+          </div>
         </div>
       } @else {
         <div class="flex flex-col gap-y-2">
@@ -106,7 +120,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="flex flex-col gap-y-2">
           <div>
             <button
               class="bg-yellow-400 px-4 py-2 rounded-sm text-gray-800 shadow-md hover:bg-yellow-300 transition outline-none"
@@ -114,6 +128,18 @@
             >
               Start Game
             </button>
+          </div>
+
+          <div class="relative">
+            <span
+              class="text-red-500 text-sm dark:font-semibold absolute top-0"
+              [ngClass]="{
+                'opacity-0': (isConnectedToServer$ | async) || !triedToHostGame,
+                'opacity-100':
+                  !(isConnectedToServer$ | async) && triedToHostGame
+              }"
+              >Unable to connect to server!</span
+            >
           </div>
         </div>
       }

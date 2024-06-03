@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Select, Store } from '@ngxs/store';
 import {
   CreatePendingGame,
@@ -49,6 +50,7 @@ interface DurationButton {
 export class StatisticsNewGamePaneComponent implements OnDestroy {
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   @Select(GameState.gameCodeIsInvalid)
   gameCodeIsInvalid$: Observable<boolean>;
@@ -64,6 +66,9 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
 
   @Select(GameState.nameIsInvalid)
   nameIsInvalid$: Observable<boolean>;
+
+  @Select(GameState.isConnectedToServer)
+  isConnectedToServer$: Observable<boolean>;
 
   readonly durationButtons: DurationButton[] = [
     {
@@ -91,6 +96,8 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   hostOrJoinView = true;
   name = '';
   joinGameCode = '';
+  triedToHostGame = false;
+  triedToJoinGame = false;
 
   constructor() {
     combineLatest([this.pendingGameCode$, this.gameIsActive$])
@@ -125,11 +132,28 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   }
 
   hostGame() {
+    this.triedToHostGame = true;
+
     this.#store.dispatch(
       new CreatePendingGame({
         HostName: this.name,
         ...this.pendingGameOptions,
       })
+    );
+
+    if (!this.#store.selectSnapshot(GameState.isConnectedToServer)) {
+      this.showUnableToConnectMessage();
+    }
+  }
+
+  showUnableToConnectMessage() {
+    this.#matSnackBar.open(
+      'Sorry, we are unable to connect to the server!',
+      'Hide',
+      {
+        verticalPosition: 'top',
+        duration: 3000,
+      }
     );
   }
 
@@ -138,8 +162,18 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
     const actualGameCode = this.#store.selectSnapshot(
       GameState.pendingGameCode
     );
-    if (upperCaseGameCode === actualGameCode) {
+    if (
+      upperCaseGameCode === actualGameCode ||
+      upperCaseGameCode.length !== 4
+    ) {
       this.#store.dispatch(new SetGameCodeIsInvalid(true));
+      return;
+    }
+
+    this.triedToJoinGame = true;
+
+    if (!this.#store.selectSnapshot(GameState.isConnectedToServer)) {
+      this.showUnableToConnectMessage();
       return;
     }
 
