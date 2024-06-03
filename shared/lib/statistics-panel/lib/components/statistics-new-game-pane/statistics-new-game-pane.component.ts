@@ -4,6 +4,7 @@ import {
   Output,
   inject,
   OnDestroy,
+  HostListener,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
@@ -99,6 +100,15 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
           this.hostOrJoinView = false;
         }
       });
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  handleEscapeKey() {
+    if (!this.hostOrJoinView) {
+      return;
+    }
+
+    this.joinGameSelected ? this.selectJoinGame() : this.hostGame();
   }
 
   ngOnDestroy() {
