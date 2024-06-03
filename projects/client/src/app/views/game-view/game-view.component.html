@@ -139,7 +139,9 @@
             [isHost]="gameView.IsHost"
             [cards]="gameView.Hand.Cards"
             [cardSize]="(cardSize$ | async)!"
-            [disabled]="!!(waitingForServer$ | async)"
+            [disabled]="
+              !!(waitingForServer$ | async) || !(gameIsActive$ | async)
+            "
             [isPlayersTurn]="isPlayersTurn"
             [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
             [isGameActive]="(gameIsActive$ | async) ?? false"

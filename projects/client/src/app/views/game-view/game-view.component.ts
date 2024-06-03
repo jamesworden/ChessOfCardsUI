@@ -556,8 +556,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
-      this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
+    if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
+      this.#matSnackBar.open('This game is not in progress!', 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
+      return;
     }
 
     const invalidMoveMessage = this.isPlayersTurn
@@ -569,8 +573,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         duration: 3000,
         verticalPosition: 'top',
       });
-
       return;
+    }
+
+    if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
+      this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
     }
 
     canPlaceMultipleCards(placeCardAttempt, cachedGameView.CandidateMoves)
@@ -849,6 +856,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   onCardClicked(card: Card) {
+    if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
+      return;
+    }
+
     const selectedCard = this.selectedCard$.getValue();
     const matchingKind = card.Kind === selectedCard?.Kind;
     const matchingSuit = card.Suit === selectedCard?.Suit;
