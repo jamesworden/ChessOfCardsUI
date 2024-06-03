@@ -14,7 +14,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Select } from '@ngxs/store';
 import { GameState } from '@shared/game';
-import { distinctUntilChanged, startWith, pairwise } from 'rxjs/operators';
+import { pairwise, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'statistics-moves-pane',
@@ -49,22 +49,22 @@ export class StatisticsMovesPaneComponent {
   ngOnInit() {
     this.moveNotations$
       .pipe(
-        startWith(null),
         pairwise(),
-        distinctUntilChanged(([prev, curr]) => prev?.length === curr?.length),
+        filter(([prev, curr]) => prev && curr && prev.length !== curr.length),
         takeUntilDestroyed(this.#destroyRef)
       )
       .subscribe(([_, moveNotations]) => {
-        if ((moveNotations?.length ?? 0) > 0) {
-          setTimeout(() => {
+        // Timeout gives time for the last move notation vertical space to load before scrolling
+        setTimeout(() => {
+          if (moveNotations && moveNotations.length > 0) {
             if (!this.hasInitiallyScrolledToBottom) {
               this.scrollToBottom('instant');
               this.hasInitiallyScrolledToBottom = true;
             } else {
               this.scrollToBottom('smooth');
             }
-          });
-        }
+          }
+        });
       });
   }
 
