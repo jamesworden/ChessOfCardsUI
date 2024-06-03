@@ -25,6 +25,7 @@
           placeholder="Your name..."
           class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-yellow-500 dark:text-black max-w-xs"
           [(ngModel)]="name"
+          (ngModelChange)="changeName()"
         />
       </div>
 

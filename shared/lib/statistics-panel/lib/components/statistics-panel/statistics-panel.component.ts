@@ -30,6 +30,7 @@ export class StatisticsPanelComponent {
   @Output() attemptedToJoinGame = new EventEmitter<string>();
   @Output() hostedGame = new EventEmitter<PendingGameOptions>();
   @Output() joinGameCodeChanged = new EventEmitter<string>();
+  @Output() nameChanged = new EventEmitter<string>();
 
   readonly movesMade$ = new BehaviorSubject<MoveMade[]>([]);
   readonly isHost$ = new BehaviorSubject<boolean>(false);
@@ -77,5 +78,9 @@ export class StatisticsPanelComponent {
 
   changeJoinGameCode(gameCode: string) {
     this.joinGameCodeChanged.emit(gameCode);
+  }
+
+  changeName(name: string) {
+    this.nameChanged.emit(name);
   }
 }

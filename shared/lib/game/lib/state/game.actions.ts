@@ -9,6 +9,7 @@ import {
   PendingGameOptions,
   Environment,
 } from '@shared/models';
+import { JoinPendingGameOptions } from 'shared/lib/models/lib/join-pending-game-options.model';
 
 export class SetIsConnectedToServer {
   static readonly type = '[GameState] Set Is Connected To Server';
@@ -116,7 +117,10 @@ export class DeletePendingGame {
 
 export class JoinGame {
   static readonly type = '[GameState] Join Game';
-  constructor(public gameCode: string) {}
+  constructor(
+    public gameCode: string,
+    public joinPendingGameOptions?: JoinPendingGameOptions
+  ) {}
 }
 
 export class ResignGame {

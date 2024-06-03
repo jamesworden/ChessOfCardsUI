@@ -260,6 +260,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   cardSize = 64;
   movesPanelHeight: number | undefined = undefined;
   numUnreadChatMessages = 0;
+  joinGameName = '';
 
   ngOnInit() {
     /**
@@ -976,7 +977,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.#store.dispatch(new JoinGame(upperCaseGameCode));
+    this.#store.dispatch(
+      new JoinGame(upperCaseGameCode, {
+        GuestName: this.joinGameName,
+      })
+    );
   }
 
   hostGame(pendingGameOptions: PendingGameOptions) {
@@ -988,6 +993,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       this.#store.dispatch(new SetGameCodeIsInvalid(false));
       return;
     }
+  }
+
+  changeName(name: string) {
+    this.joinGameName = name;
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {

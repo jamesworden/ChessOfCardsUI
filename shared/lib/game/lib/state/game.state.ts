@@ -371,7 +371,10 @@ export class GameState {
 
   @Action(JoinGame)
   joinGame(_: StateContext<GameStateModel>, action: JoinGame) {
-    this.#gameWebsocketService.joinGame(action.gameCode);
+    this.#gameWebsocketService.joinGame(
+      action.gameCode,
+      action.joinPendingGameOptions
+    );
   }
 
   @Action(ResignGame)

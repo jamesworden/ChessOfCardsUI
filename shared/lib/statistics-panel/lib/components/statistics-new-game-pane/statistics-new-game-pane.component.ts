@@ -49,6 +49,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   @Output() attemptedToJoinGame = new EventEmitter<string>();
   @Output() hostedGame = new EventEmitter<PendingGameOptions>();
   @Output() joinGameCodeChanged = new EventEmitter<string>();
+  @Output() nameChanged = new EventEmitter<string>();
 
   @Select(GameState.gameCodeIsInvalid)
   gameCodeIsInvalid$: Observable<boolean>;
@@ -125,6 +126,10 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
 
   changeJoinGameCode() {
     this.joinGameCodeChanged.emit(this.joinGameCode);
+  }
+
+  changeName() {
+    this.nameChanged.emit(this.name);
   }
 
   attemptToLeaveGame() {
