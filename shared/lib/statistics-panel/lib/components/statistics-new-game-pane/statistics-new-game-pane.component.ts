@@ -102,7 +102,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
       });
   }
 
-  @HostListener('document:keydown.enter', ['$event'])
+  @HostListener('document:keydown.enter')
   handleEscapeKey() {
     if (!this.hostOrJoinView) {
       return;
