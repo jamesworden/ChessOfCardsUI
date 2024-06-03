@@ -108,7 +108,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
       return;
     }
 
-    this.joinGameSelected ? this.selectJoinGame() : this.hostGame();
+    this.joinGameSelected ? this.attemptToJoinGame() : this.hostGame();
   }
 
   ngOnDestroy() {
