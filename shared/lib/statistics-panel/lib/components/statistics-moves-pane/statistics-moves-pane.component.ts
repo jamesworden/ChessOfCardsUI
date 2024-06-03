@@ -10,11 +10,11 @@ import {
 } from '@angular/core';
 import { MoveNotation } from '@shared/logic';
 import { PlayerOrNone } from '@shared/models';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Select } from '@ngxs/store';
 import { GameState } from '@shared/game';
-import { Observable } from 'rxjs';
+import { distinctUntilChanged, startWith, pairwise } from 'rxjs/operators';
 
 @Component({
   selector: 'statistics-moves-pane',
@@ -47,10 +47,15 @@ export class StatisticsMovesPaneComponent {
   hasInitiallyScrolledToBottom = false;
 
   ngOnInit() {
-    this.selectedNotationIndex$
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe((selectedNotationIndex) => {
-        if (selectedNotationIndex !== null) {
+    this.moveNotations$
+      .pipe(
+        startWith(null),
+        pairwise(),
+        distinctUntilChanged(([prev, curr]) => prev?.length === curr?.length),
+        takeUntilDestroyed(this.#destroyRef)
+      )
+      .subscribe(([_, moveNotations]) => {
+        if ((moveNotations?.length ?? 0) > 0) {
           setTimeout(() => {
             if (!this.hasInitiallyScrolledToBottom) {
               this.scrollToBottom('instant');
