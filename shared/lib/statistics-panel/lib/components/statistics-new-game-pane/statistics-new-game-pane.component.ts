@@ -15,6 +15,7 @@ import {
   JoinGame,
   ResignGame,
   SetGameCodeIsInvalid,
+  SetNameIsInvalid,
 } from '@shared/game';
 import {
   DurationOption,
@@ -60,6 +61,9 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   @Select(GameState.playerGameView)
   playerGameView$: Observable<PlayerGameView>;
 
+  @Select(GameState.nameIsInvalid)
+  nameIsInvalid$: Observable<boolean>;
+
   readonly durationButtons: DurationButton[] = [
     {
       durationOption: DurationOption.FiveMinutes,
@@ -99,6 +103,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.#store.dispatch(new SetGameCodeIsInvalid(false));
+    this.#store.dispatch(new SetNameIsInvalid(false));
   }
 
   selectJoinGame() {
@@ -110,7 +115,12 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   }
 
   hostGame() {
-    this.#store.dispatch(new CreatePendingGame(this.pendingGameOptions));
+    this.#store.dispatch(
+      new CreatePendingGame({
+        HostName: this.name,
+        ...this.pendingGameOptions,
+      })
+    );
   }
 
   attemptToJoinGame() {
@@ -182,5 +192,13 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   selectJoinView() {
     this.joinGameSelected = true;
     this.hostOrJoinView = true;
+  }
+
+  nameChanged() {
+    this.#store.dispatch(new SetNameIsInvalid(false));
+  }
+
+  gameCodeChanged() {
+    this.#store.dispatch(new SetGameCodeIsInvalid(false));
   }
 }

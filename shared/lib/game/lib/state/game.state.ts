@@ -31,6 +31,7 @@ import {
   SetIsConnectedToServer,
   ConnectToServer,
   DeletePendingGame,
+  SetNameIsInvalid,
 } from './game.actions';
 import {
   Card,
@@ -55,6 +56,7 @@ type GameStateModel = {
   gameOverData: GameOverData;
   opponentPassedMove: boolean;
   gameCodeIsInvalid: boolean;
+  nameIsInvalid: boolean;
   waitingForServer: boolean;
   gameIsActive: boolean;
   muted: boolean;
@@ -76,6 +78,7 @@ const defaultGameState: GameStateModel = {
   },
   opponentPassedMove: false,
   gameCodeIsInvalid: false,
+  nameIsInvalid: false,
   waitingForServer: false,
   gameIsActive: false,
   muted: false,
@@ -148,6 +151,11 @@ export class GameState {
   @Selector()
   static gameCodeIsInvalid(state: GameStateModel) {
     return state.gameCodeIsInvalid;
+  }
+
+  @Selector()
+  static nameIsInvalid(state: GameStateModel) {
+    return state.nameIsInvalid;
   }
 
   @Selector()
@@ -332,6 +340,16 @@ export class GameState {
   ) {
     ctx.patchState({
       gameCodeIsInvalid: action.gameCodeIsInvalid,
+    });
+  }
+
+  @Action(SetNameIsInvalid)
+  setNameIsInvalid(
+    ctx: StateContext<GameStateModel>,
+    action: SetNameIsInvalid
+  ) {
+    ctx.patchState({
+      nameIsInvalid: action.nameIsInvalid,
     });
   }
 

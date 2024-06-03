@@ -17,6 +17,7 @@ import {
   SetGameIsActive,
   UpdatePlayerGameView,
   SetIsConnectedToServer,
+  SetNameIsInvalid,
 } from '../state/game.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -56,6 +57,7 @@ enum MessageType {
   SendChatMessage = 'SendChatMessage',
   NewChatMessage = 'NewChatMessage',
   DeletePendingGame = 'DeletePendingGame',
+  InvalidName = 'InvalidName',
 }
 
 @Injectable({
@@ -188,6 +190,10 @@ export class GameWebsocketService {
         this.#store.dispatch(new UpdatePlayerGameView(playerGameView));
       }
     );
+
+    this.hubConnection.on(MessageType.InvalidName, () => {
+      this.#store.dispatch(new SetNameIsInvalid(true));
+    });
   }
 
   public createPendingGame(pendingGameOptions?: PendingGameOptions) {

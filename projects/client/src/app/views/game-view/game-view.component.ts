@@ -24,7 +24,6 @@ import {
   ResetPendingGameView,
   ResignGame,
   SendChatMessage,
-  SetGameCodeIsInvalid,
   SetPlaceMultipleCards,
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
@@ -962,13 +961,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   unmute() {
     this.#audioCacheService.unmute();
-  }
-
-  changeJoinGameCode(gameCode: string) {
-    if (gameCode.length !== 4) {
-      this.#store.dispatch(new SetGameCodeIsInvalid(false));
-      return;
-    }
   }
 
   changeName(name: string) {

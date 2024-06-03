@@ -23,9 +23,25 @@
           id="name"
           type="text"
           placeholder="Your name..."
-          class="border border-gray-300 rounded-sm p-2 w-full focus:outline-none focus:border-yellow-500 dark:text-black max-w-xs"
+          class="border rounded-sm p-2 w-full focus:outline-none dark:text-black max-w-xs"
           [(ngModel)]="name"
+          (ngModelChange)="nameChanged()"
+          [ngClass]="{
+            'border-red-500 focus:border-red-500': nameIsInvalid$ | async,
+            'border-gray-300 focus:border-yellow-500': !(nameIsInvalid$ | async)
+          }"
         />
+
+        <div class="relative">
+          <span
+            class="text-red-500 text-sm dark:font-semibold absolute top-0"
+            [ngClass]="{
+              'opacity-0': !(nameIsInvalid$ | async),
+              'opacity-100': nameIsInvalid$ | async
+            }"
+            >Invalid name</span
+          >
+        </div>
       </div>
 
       @if (joinGameSelected) {
@@ -38,6 +54,7 @@
             maxlength="4"
             placeholder="e.g., ABCD"
             class="border rounded-sm p-2 w-full focus:outline-none dark:text-black max-w-xs uppercase"
+            (ngModelChange)="gameCodeChanged()"
             [ngClass]="{
               'border-red-500 focus:border-red-500': gameCodeIsInvalid$ | async,
               'border-gray-300 focus:border-yellow-500': !(

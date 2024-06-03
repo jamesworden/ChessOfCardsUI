@@ -89,6 +89,11 @@ export class SetGameCodeIsInvalid {
   constructor(public gameCodeIsInvalid: boolean) {}
 }
 
+export class SetNameIsInvalid {
+  static readonly type = '[GameState] Set Name Is Invalid';
+  constructor(public nameIsInvalid: boolean) {}
+}
+
 export class PassMove {
   static readonly type = '[GameState] Pass Move';
 }
