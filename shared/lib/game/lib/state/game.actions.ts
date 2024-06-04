@@ -6,7 +6,20 @@ import {
   Move,
   DurationOption,
   PendingGameView,
+  PendingGameOptions,
+  Environment,
 } from '@shared/models';
+import { JoinPendingGameOptions } from 'shared/lib/models/lib/join-pending-game-options.model';
+
+export class SetIsConnectedToServer {
+  static readonly type = '[GameState] Set Is Connected To Server';
+  constructor(public isConnectedToServer: boolean) {}
+}
+
+export class ConnectToServer {
+  static readonly type = '[GameState] Connect To Server';
+  constructor(public environment: Environment) {}
+}
 
 export class AnimateGameView {
   static readonly type = '[GameState] Animate Game View';
@@ -76,6 +89,11 @@ export class SetGameCodeIsInvalid {
   constructor(public gameCodeIsInvalid: boolean) {}
 }
 
+export class SetNameIsInvalid {
+  static readonly type = '[GameState] Set Name Is Invalid';
+  constructor(public nameIsInvalid: boolean) {}
+}
+
 export class PassMove {
   static readonly type = '[GameState] Pass Move';
 }
@@ -93,13 +111,21 @@ export class RearrangeHand {
   constructor(public cards: Card[]) {}
 }
 
-export class CreateGame {
-  static readonly type = '[GameState] Create Game';
+export class CreatePendingGame {
+  static readonly type = '[GameState] Create Pending Game';
+  constructor(public pendingGameOptions?: PendingGameOptions) {}
+}
+
+export class DeletePendingGame {
+  static readonly type = '[GameState] Delete Pending Game';
 }
 
 export class JoinGame {
   static readonly type = '[GameState] Join Game';
-  constructor(public gameCode: string) {}
+  constructor(
+    public gameCode: string,
+    public joinPendingGameOptions?: JoinPendingGameOptions
+  ) {}
 }
 
 export class ResignGame {

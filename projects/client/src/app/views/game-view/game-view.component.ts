@@ -21,7 +21,6 @@ import {
   OfferDraw,
   PassMove,
   RearrangeHand,
-  ResetGameData,
   ResetPendingGameView,
   ResignGame,
   SendChatMessage,
@@ -29,10 +28,9 @@ import {
   SetPlaceMultipleCardsHand,
   StartPlacingMultipleCards,
   UpdatePlayerGameView,
-} from '../../actions/game.actions';
-import { GameState } from '../../state/game.state';
+  GameState,
+} from '@shared/game';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalComponent } from './components/modal/modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, pairwise, startWith, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -76,6 +74,8 @@ import { BREAKPOINTS, Z_INDEXES } from '@shared/constants';
 import { GameViewTab } from './models/game-view-tab';
 import { StatisticsPanelView } from '@shared/statistics-panel';
 import { AudioCacheService } from '@shared/audio-cache';
+import { DEFAULT_GAME_VIEW } from './constants';
+import { ButtonModalComponent } from '@shared/ui-inputs';
 
 const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
@@ -93,6 +93,7 @@ const DEFAULT_LATEST_MOVE_DETAILS: MoveMadeDetails = {
 export class GameViewComponent implements OnInit, AfterViewInit {
   readonly PlayerOrNone = PlayerOrNone;
   readonly StatisticsPanelView = StatisticsPanelView;
+  readonly defaultGameView = DEFAULT_GAME_VIEW;
 
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(Store);
@@ -141,6 +142,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @Select(GameState.chatMessages)
   chatMessages$!: Observable<ChatMessage[]>;
 
+  @Select(GameState.isConnectedToServer)
+  isConnectedToServer$: Observable<boolean>;
+
+  @Select(GameState.gameCodeIsInvalid)
+  gameCodeIsInvalid$!: Observable<boolean>;
+
   readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
 
@@ -155,7 +162,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly notationIdxToPastGameViews$ = new BehaviorSubject<{
     [notationIdx: number]: PlayerGameView;
   }>({});
-  readonly selectedTab$ = new BehaviorSubject<GameViewTab>(GameViewTab.Board);
+  readonly selectedTab$ = new BehaviorSubject<GameViewTab>(GameViewTab.NewGame);
   readonly selectedPanelView$ = new BehaviorSubject<StatisticsPanelView | null>(
     StatisticsPanelView.Moves
   );
@@ -241,6 +248,30 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     })
   );
 
+  readonly opponentUsername$ = this.playerGameView$.pipe(
+    map((playerGameView) => {
+      if (playerGameView) {
+        return playerGameView.IsHost
+          ? playerGameView.GuestName ?? 'Guest Player'
+          : playerGameView.HostName ?? 'Host Player';
+      } else {
+        return 'Opponent';
+      }
+    })
+  );
+
+  readonly playerUsername$ = this.playerGameView$.pipe(
+    map((playerGameView) => {
+      if (playerGameView) {
+        return playerGameView.IsHost
+          ? playerGameView.HostName ?? 'Host Player'
+          : playerGameView.GuestName ?? 'Guest Player';
+      } else {
+        return 'You';
+      }
+    })
+  );
+
   readonly Z_INDEXES = Z_INDEXES;
   readonly GameViewTab = GameViewTab;
 
@@ -249,9 +280,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   cardSize = 64;
   movesPanelHeight: number | undefined = undefined;
   numUnreadChatMessages = 0;
+  joinGameName = '';
 
   ngOnInit() {
-    this.navigateHomeIfGameInactive();
+    /**
+     * TODO: Ensure that resizing browser maintains correct nav tab / panel tab.
+     */
     this.updateUiLayout();
 
     this.gameOverData$
@@ -405,6 +439,23 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           }
         }
       );
+    this.gameIsActive$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((gameIsActive) => {
+        if (!gameIsActive) {
+          return;
+        }
+
+        if (this.selectedTab$.getValue() === GameViewTab.NewGame) {
+          this.selectedTab$.next(GameViewTab.BoardWithStatsPanel);
+        }
+
+        if (
+          this.selectedPanelView$.getValue() === StatisticsPanelView.NewGame
+        ) {
+          this.selectedPanelView$.next(StatisticsPanelView.Moves);
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -429,11 +480,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   updateUiLayout() {
     if (window.innerWidth >= BREAKPOINTS.LG) {
-      if (this.selectedTab$.getValue() !== GameViewTab.Board) {
-        this.selectedTab$.next(GameViewTab.Board);
+      if (this.selectedTab$.getValue() !== GameViewTab.BoardWithStatsPanel) {
+        this.selectedTab$.next(GameViewTab.BoardWithStatsPanel);
       }
 
-      this.selectedPanelView$.next(StatisticsPanelView.Moves);
+      this.selectedPanelView$.next(StatisticsPanelView.NewGame);
       return;
     }
 
@@ -525,8 +576,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
-      this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
+    if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
+      this.#matSnackBar.open('This game is not in progress!', 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
+      return;
     }
 
     const invalidMoveMessage = this.isPlayersTurn
@@ -538,8 +593,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         duration: 3000,
         verticalPosition: 'top',
       });
-
       return;
+    }
+
+    if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
+      this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
     }
 
     canPlaceMultipleCards(placeCardAttempt, cachedGameView.CandidateMoves)
@@ -818,6 +876,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   onCardClicked(card: Card) {
+    if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
+      return;
+    }
+
     const selectedCard = this.selectedCard$.getValue();
     const matchingKind = card.Kind === selectedCard?.Kind;
     const matchingSuit = card.Suit === selectedCard?.Suit;
@@ -891,6 +953,18 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   selectGameViewTab(gameViewTab: GameViewTab) {
     this.pastGameView$.next(null);
     this.selectedTab$.next(gameViewTab);
+
+    if (
+      gameViewTab === GameViewTab.BoardWithStatsPanel &&
+      !this.#store.selectSnapshot(GameState.playerGameView)
+    ) {
+      this.#matSnackBar.open('Play a game to see cards on the board.', 'Hide', {
+        verticalPosition: 'bottom',
+        duration: 3000,
+      });
+    } else {
+      this.#matSnackBar.dismiss();
+    }
   }
 
   setMovesPanelHeight(height: number) {
@@ -911,6 +985,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   unmute() {
     this.#audioCacheService.unmute();
+  }
+
+  changeName(name: string) {
+    this.joinGameName = name;
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
@@ -1055,13 +1133,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.#store.dispatch(new MakeMove(move));
   }
 
-  private navigateHomeIfGameInactive() {
-    const gameIsActive = this.#store.selectSnapshot(GameState.gameIsActive);
-    if (!gameIsActive) {
-      this.#router.navigate(['']);
-    }
-  }
-
   private showOpponentPassedMoveToast() {
     this.#matSnackBar.open(
       `Opponent passed their move. It's your turn.`,
@@ -1078,16 +1149,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const modalRef = this.#matDialog.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ButtonModalComponent, {
       width: '250px',
       maxHeight: '100svh',
       data: { message: gameOverData.message },
     });
 
     const subscription = modalRef.afterClosed().subscribe(() => {
-      this.#store.dispatch(new ResetGameData());
       this.#store.dispatch(new ResetPendingGameView());
-      this.#router.navigate(['']);
       subscription.unsubscribe();
     });
   }

@@ -17,7 +17,7 @@ import {
   PassMove,
   MakeMove,
   RearrangeHand,
-  CreateGame,
+  CreatePendingGame,
   JoinGame,
   ResignGame,
   SelectDurationOption,
@@ -28,7 +28,11 @@ import {
   AnimateGameView,
   SetGameIsActive,
   SendChatMessage,
-} from '../actions/game.actions';
+  SetIsConnectedToServer,
+  ConnectToServer,
+  DeletePendingGame,
+  SetNameIsInvalid,
+} from './game.actions';
 import {
   Card,
   PlayerGameView,
@@ -36,8 +40,8 @@ import {
   PendingGameView,
   PlaceCardAttempt,
 } from '@shared/models';
-import { WebsocketService } from '../services/websocket.service';
 import { isPlayersTurn } from '@shared/logic';
+import { GameWebsocketService } from '../services/game.websocket.service';
 
 type GameStateModel = {
   playerGameView: PlayerGameView | null;
@@ -52,9 +56,11 @@ type GameStateModel = {
   gameOverData: GameOverData;
   opponentPassedMove: boolean;
   gameCodeIsInvalid: boolean;
+  nameIsInvalid: boolean;
   waitingForServer: boolean;
   gameIsActive: boolean;
   muted: boolean;
+  isConnectedToServer: boolean;
 };
 
 const defaultGameState: GameStateModel = {
@@ -72,9 +78,11 @@ const defaultGameState: GameStateModel = {
   },
   opponentPassedMove: false,
   gameCodeIsInvalid: false,
+  nameIsInvalid: false,
   waitingForServer: false,
   gameIsActive: false,
   muted: false,
+  isConnectedToServer: false,
 };
 
 @State<GameStateModel>({
@@ -83,7 +91,7 @@ const defaultGameState: GameStateModel = {
 })
 @Injectable()
 export class GameState {
-  readonly #websocketService = inject(WebsocketService);
+  readonly #gameWebsocketService = inject(GameWebsocketService);
 
   @Selector()
   static playerGameViewToAnimate(state: GameStateModel) {
@@ -146,6 +154,11 @@ export class GameState {
   }
 
   @Selector()
+  static nameIsInvalid(state: GameStateModel) {
+    return state.nameIsInvalid;
+  }
+
+  @Selector()
   static waitingForServer(state: GameStateModel) {
     return state.waitingForServer;
   }
@@ -161,8 +174,23 @@ export class GameState {
   }
 
   @Selector()
+  static isHost(state: GameStateModel) {
+    return state.playerGameView ? state.playerGameView.IsHost : false;
+  }
+
+  @Selector()
   static chatMessages(state: GameStateModel) {
     return state.playerGameView?.ChatMessages ?? [];
+  }
+
+  @Selector()
+  static isConnectedToServer(state: GameStateModel) {
+    return state.isConnectedToServer;
+  }
+
+  @Selector()
+  static pendingGameCode(state: GameStateModel) {
+    return state.pendingGameView?.GameCode;
   }
 
   @Action(UpdatePlayerGameView)
@@ -238,7 +266,7 @@ export class GameState {
 
   @Action(OfferDraw)
   offerDraw(ctx: StateContext<GameStateModel>) {
-    this.#websocketService.offerDraw();
+    this.#gameWebsocketService.offerDraw();
 
     ctx.patchState({
       drawOfferSent: true,
@@ -261,7 +289,7 @@ export class GameState {
 
   @Action(AcceptDrawOffer)
   acceptDrawOffer(ctx: StateContext<GameStateModel>) {
-    this.#websocketService.acceptDrawOffer();
+    this.#gameWebsocketService.acceptDrawOffer();
 
     ctx.patchState({
       hasPendingDrawOffer: false,
@@ -315,9 +343,19 @@ export class GameState {
     });
   }
 
+  @Action(SetNameIsInvalid)
+  setNameIsInvalid(
+    ctx: StateContext<GameStateModel>,
+    action: SetNameIsInvalid
+  ) {
+    ctx.patchState({
+      nameIsInvalid: action.nameIsInvalid,
+    });
+  }
+
   @Action(PassMove)
   passMove(ctx: StateContext<GameStateModel>) {
-    this.#websocketService.passMove();
+    this.#gameWebsocketService.passMove();
 
     ctx.patchState({
       waitingForServer: true,
@@ -326,7 +364,10 @@ export class GameState {
 
   @Action(MakeMove)
   makeMove(ctx: StateContext<GameStateModel>, action: MakeMove) {
-    this.#websocketService.makeMove(action.move, action.rearrangedCardsInHand);
+    this.#gameWebsocketService.makeMove(
+      action.move,
+      action.rearrangedCardsInHand
+    );
 
     ctx.patchState({
       waitingForServer: true,
@@ -335,22 +376,28 @@ export class GameState {
 
   @Action(RearrangeHand)
   rearrangeHand(_: StateContext<GameStateModel>, action: RearrangeHand) {
-    this.#websocketService.rearrangeHand(action.cards);
+    this.#gameWebsocketService.rearrangeHand(action.cards);
   }
 
-  @Action(CreateGame)
-  createGame() {
-    this.#websocketService.createGame();
+  @Action(CreatePendingGame)
+  createPendingGame(
+    _: StateContext<GameStateModel>,
+    action: CreatePendingGame
+  ) {
+    this.#gameWebsocketService.createPendingGame(action.pendingGameOptions);
   }
 
   @Action(JoinGame)
   joinGame(_: StateContext<GameStateModel>, action: JoinGame) {
-    this.#websocketService.joinGame(action.gameCode);
+    this.#gameWebsocketService.joinGame(
+      action.gameCode,
+      action.joinPendingGameOptions
+    );
   }
 
   @Action(ResignGame)
   resignGame() {
-    this.#websocketService.resignGame();
+    this.#gameWebsocketService.resignGame();
   }
 
   @Action(SelectDurationOption)
@@ -358,7 +405,7 @@ export class GameState {
     ctx: StateContext<GameStateModel>,
     action: SelectDurationOption
   ) {
-    this.#websocketService.selectDurationOption(action.durationOption);
+    this.#gameWebsocketService.selectDurationOption(action.durationOption);
 
     ctx.patchState({
       waitingForServer: true,
@@ -367,12 +414,12 @@ export class GameState {
 
   @Action(CheckHostForEmptyTimer)
   checkHostForEmptyTimer() {
-    this.#websocketService.checkHostForEmptyTimer();
+    this.#gameWebsocketService.checkHostForEmptyTimer();
   }
 
   @Action(CheckGuestForEmptyTimer)
   checkGuestForEmptyTimer() {
-    this.#websocketService.checkGuestForEmptyTimer();
+    this.#gameWebsocketService.checkGuestForEmptyTimer();
   }
 
   @Action(AnimateGameView)
@@ -397,6 +444,26 @@ export class GameState {
     _: StateContext<GameStateModel>,
     { message }: SendChatMessage
   ) {
-    this.#websocketService.sendChatMessage(message);
+    this.#gameWebsocketService.sendChatMessage(message);
+  }
+
+  @Action(SetIsConnectedToServer)
+  setIsConnectedToServer(
+    ctx: StateContext<GameStateModel>,
+    action: SetIsConnectedToServer
+  ) {
+    ctx.patchState({
+      isConnectedToServer: action.isConnectedToServer,
+    });
+  }
+
+  @Action(ConnectToServer)
+  connectToServer(_: StateContext<GameStateModel>, action: ConnectToServer) {
+    this.#gameWebsocketService.connectToServer(action.environment);
+  }
+
+  @Action(DeletePendingGame)
+  deletePendingGame(_: StateContext<GameStateModel>) {
+    this.#gameWebsocketService.deletePendingGame();
   }
 }

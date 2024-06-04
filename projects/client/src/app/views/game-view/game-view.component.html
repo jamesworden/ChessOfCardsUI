@@ -39,15 +39,18 @@
   <div class="flex flex-col flex-1">
     <app-game-view-navbar
       class="flex lg:hidden"
-      [selectedTab]="(selectedTab$ | async) ?? GameViewTab.Board"
+      [selectedTab]="(selectedTab$ | async) ?? GameViewTab.BoardWithStatsPanel"
       (tabSelected)="selectGameViewTab($event)"
       [numUnreadChatMessages]="numUnreadChatMessages"
     ></app-game-view-navbar>
 
     <div class="flex-1">
       @switch (selectedTab$ | async) {
-        @case (GameViewTab.Board) {
-          <ng-container [ngTemplateOutlet]="boardView"></ng-container>
+        @case (GameViewTab.NewGame) {
+          <ng-container [ngTemplateOutlet]="newGameView"></ng-container>
+        }
+        @case (GameViewTab.BoardWithStatsPanel) {
+          <ng-container [ngTemplateOutlet]="boardWithStatsPanel"></ng-container>
         }
         @case (GameViewTab.Moves) {
           <ng-container [ngTemplateOutlet]="movesView"></ng-container>
@@ -73,19 +76,20 @@
   }
 </ng-template>
 
-<ng-template #boardView>
+<ng-template #boardWithStatsPanel>
   <div class="flex justify-around w-full h-full">
     <div class="flex justify-around">
-      @if (playerGameView$ | async; as playerGameView) {
+      @if (
+        (pastGameView$ | async) ?? (cachedGameView$ | async) ?? defaultGameView;
+        as gameView
+      ) {
         <div
           class="game flex flex-col justify-between h-full lg:pl-8"
           cdkDropListGroup
         >
           <div>
             <app-player-banner
-              [username]="
-                playerGameView.IsHost ? 'Guest Player' : 'Host Player'
-              "
+              [username]="(opponentUsername$ | async) ?? ''"
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn
@@ -96,7 +100,7 @@
           </div>
 
           <app-opponent-hand-toolbar
-            [numCardsInOpponentsHand]="playerGameView.NumCardsInOpponentsHand"
+            [numCardsInOpponentsHand]="gameView.NumCardsInOpponentsHand"
             [cardSize]="(cardSize$ | async) ?? 64"
             [hasPendingDrawOffer]="(hasPendingDrawOffer$ | async) ?? false"
             [isPlacingMultipleCards]="
@@ -108,39 +112,36 @@
             (placeMultipleCardsCanceled)="cancelPlaceMultipleCards()"
           ></app-opponent-hand-toolbar>
 
-          @if (
-            (pastGameView$ | async) ?? (cachedGameView$ | async);
-            as cachedGameView
-          ) {
-            <game-board
-              #board
-              [playerGameView]="cachedGameView"
-              [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
-              [initialPlaceMultipleCardAttempt]="
-                initialPlaceMultipleCardAttempt$ | async
-              "
-              [isPlayersTurn]="isPlayersTurn"
-              [placeMultipleCards]="placeMultipleCards$ | async"
-              [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
-              [selectedCard]="selectedCard$ | async"
-              [selectedPosition]="selectedPosition$ | async"
-              (placeCardAttempted)="attemptToPlaceCard($event)"
-              (setPlaceMultipleCards)="placedMultipleCards($event)"
-              (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
-              (positionClicked)="onPositionClicked($event)"
-              (placeMultipleCardsListClicked)="
-                moveSelectedCardToPlaceMultipleList()
-              "
-            ></game-board>
-          }
+          <game-board
+            #board
+            [playerGameView]="gameView"
+            [isPlacingMultipleCards]="isPlacingMultipleCards$ | async"
+            [initialPlaceMultipleCardAttempt]="
+              initialPlaceMultipleCardAttempt$ | async
+            "
+            [isPlayersTurn]="isPlayersTurn"
+            [placeMultipleCards]="placeMultipleCards$ | async"
+            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+            [selectedCard]="selectedCard$ | async"
+            [selectedPosition]="selectedPosition$ | async"
+            (placeCardAttempted)="attemptToPlaceCard($event)"
+            (setPlaceMultipleCards)="placedMultipleCards($event)"
+            (setPlaceMultipleCardsHand)="placedMultipleCardsHand($event)"
+            (positionClicked)="onPositionClicked($event)"
+            (placeMultipleCardsListClicked)="
+              moveSelectedCardToPlaceMultipleList()
+            "
+          ></game-board>
 
           <game-player-hand
             #playerHand
             [isPlacingMultipleCards]="isPlacingMultipleCards"
-            [isHost]="playerGameView.IsHost"
-            [cards]="playerGameView.Hand.Cards"
+            [isHost]="gameView.IsHost"
+            [cards]="gameView.Hand.Cards"
             [cardSize]="(cardSize$ | async)!"
-            [disabled]="!!(waitingForServer$ | async)"
+            [disabled]="
+              !!(waitingForServer$ | async) || !(gameIsActive$ | async)
+            "
             [isPlayersTurn]="isPlayersTurn"
             [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
             [isGameActive]="(gameIsActive$ | async) ?? false"
@@ -164,9 +165,7 @@
 
           <div>
             <app-player-banner
-              [username]="
-                playerGameView.IsHost ? 'Host Player' : 'Guest Player'
-              "
+              [username]="(playerUsername$ | async) ?? ''"
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn
@@ -187,22 +186,23 @@
 
 <ng-template #movesView>
   <div class="flex flex-col justify-between flex-1 h-full">
-    @if (playerGameView$ | async; as playerGameView) {
-      @if ((pastGameView$ | async) ?? (cachedGameView$ | async); as gameView) {
-        <div class="flex-1 flex flex-col justify-around">
-          <game-board
-            #board
-            class="py-2"
-            [playerGameView]="gameView"
-            [isPlayersTurn]="isPlayersTurn"
-            [placeMultipleCards]="placeMultipleCards$ | async"
-            [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
-            [selectedCard]="selectedCard$ | async"
-            [selectedPosition]="selectedPosition$ | async"
-            (positionClicked)="onPositionClicked($event)"
-          ></game-board>
-        </div>
-      }
+    @if (
+      (pastGameView$ | async) ?? (cachedGameView$ | async) ?? defaultGameView;
+      as gameView
+    ) {
+      <div class="flex-1 flex flex-col justify-around">
+        <game-board
+          #board
+          class="py-2"
+          [playerGameView]="gameView"
+          [isPlayersTurn]="isPlayersTurn"
+          [placeMultipleCards]="placeMultipleCards$ | async"
+          [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
+          [selectedCard]="selectedCard$ | async"
+          [selectedPosition]="selectedPosition$ | async"
+          (positionClicked)="onPositionClicked($event)"
+        ></game-board>
+      </div>
     }
 
     <ng-container [ngTemplateOutlet]="movesPanel"></ng-container>
@@ -229,7 +229,6 @@
       <statistics-moves-pane
         class="flex-1"
         [moveNotations]="(moveNotations$ | async) ?? []"
-        [isHost]="(playerGameView$ | async)?.IsHost ?? false"
         [selectedNotationIndex]="selectedNotationIndex$ | async"
         (moveNotationSelected)="selectMoveNotation($event)"
       ></statistics-moves-pane>
@@ -246,7 +245,7 @@
         class="bg-gray-50 dark:bg-gray-700"
         iconClass="material-symbols-outlined"
         iconString="playing_cards"
-        buttonClass="py-2 cursor-default"
+        buttonClass="py-4 cursor-default"
         label="Stack"
       ></icon-button>
       <card-stack
@@ -256,6 +255,7 @@
         [cardSize]="(cardSize$ | async) ?? 64"
         [redJokerLaneIndex]="(redJokerLaneIndex$ | async) ?? null"
         [blackJokerLaneIndex]="(blackJokerLaneIndex$ | async) ?? null"
+        [isGameActive]="(gameIsActive$ | async) ?? false"
       ></card-stack>
     </div>
 
@@ -269,14 +269,17 @@
       [currentPanelView]="selectedPanelView$ | async"
       (panelViewSelected)="selectPanelView($event)"
       [numUnreadChatMessages]="numUnreadChatMessages"
+      [gameCodeIsInvalid]="(gameCodeIsInvalid$ | async) ?? false"
     ></statistics-panel>
   </div>
 </ng-template>
 
 <ng-template #chatView>
   <statistics-chat-pane
-    [isHost]="(playerGameView$ | async)?.IsHost ?? false"
-    [chatMessages]="(chatMessages$ | async) ?? []"
     (chatMessageSent)="sendChatMessage($event)"
   ></statistics-chat-pane>
+</ng-template>
+
+<ng-template #newGameView>
+  <statistics-new-game-pane></statistics-new-game-pane>
 </ng-template>

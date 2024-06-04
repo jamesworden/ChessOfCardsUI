@@ -18,19 +18,23 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/LanesFrontend",
+            "outputPath": {
+              "base": "dist/LanesFrontend"
+            },
             "index": "projects/client/src/index.html",
-            "main": "projects/client/src/main.ts",
-            "polyfills": "projects/client/src/polyfills.ts",
+            "polyfills": [
+              "projects/client/src/polyfills.ts"
+            ],
             "tsConfig": "projects/client/tsconfig.client.json",
             "assets": ["projects/client/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "projects/client/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "browser": "projects/client/src/main.ts"
           },
           "configurations": {
             "prod": {
@@ -55,9 +59,7 @@
               "outputHashing": "all"
             },
             "local": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,

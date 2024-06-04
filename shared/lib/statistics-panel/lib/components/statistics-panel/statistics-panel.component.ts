@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ChatMessage, MoveMade } from '@shared/models';
+import { ChatMessage, MoveMade, PendingGameOptions } from '@shared/models';
 import { BehaviorSubject } from 'rxjs';
 import { MoveNotation } from '@shared/logic';
 import { StatisticsPanelView } from '../../models/statistics-panel-view';
@@ -19,6 +19,7 @@ export class StatisticsPanelComponent {
   @Input({ required: true }) currentPanelView: StatisticsPanelView | null =
     null;
   @Input({ required: true }) numUnreadChatMessages = 0;
+  @Input({ required: true }) gameCodeIsInvalid: boolean;
   @Input({ required: true }) set isHost(isHost: boolean) {
     this.isHost$.next(isHost);
   }
@@ -31,6 +32,12 @@ export class StatisticsPanelComponent {
   readonly isHost$ = new BehaviorSubject<boolean>(false);
 
   readonly panes: StatisticsPane[] = [
+    {
+      iconClass: 'material-symbols-outlined',
+      iconString: 'add',
+      title: 'New Game',
+      panelView: StatisticsPanelView.NewGame,
+    },
     {
       iconClass: 'material-symbols-outlined',
       iconString: 'replay',

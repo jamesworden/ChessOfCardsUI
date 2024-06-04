@@ -23,7 +23,13 @@ export class GameViewNavbarComponent {
     gameViewTab: GameViewTab;
   }[] = [
     {
-      gameViewTab: GameViewTab.Board,
+      gameViewTab: GameViewTab.NewGame,
+      iconClass: 'material-symbols-outlined',
+      iconString: 'add',
+      label: 'New Game',
+    },
+    {
+      gameViewTab: GameViewTab.BoardWithStatsPanel,
       iconClass: 'material-symbols-outlined',
       iconString: 'grid_view',
       label: 'Board',

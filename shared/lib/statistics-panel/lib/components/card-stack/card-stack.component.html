@@ -19,7 +19,11 @@
           <div class="text-center max-w-xs">
             <h2 class="text-sm mb-2">No position selected!</h2>
             <p class="text-xs opacity-80">
-              Select a position to see its cards.
+              {{
+                isGameActive
+                  ? 'Select a position to see its cards.'
+                  : "Join a game and select a position's cards."
+              }}
             </p>
           </div>
         </div>
@@ -61,9 +65,9 @@
 
     <div class="flex justify-around py-2 px-1">
       <div
-        class="bg-yellow-200 rounded-sm text-black h-14 w-14 flex justify-around flex-col"
+        class="bg-yellow-400 rounded-sm text-black h-14 w-14 flex justify-around flex-col shadow-md"
       >
-        <span class="text-center font-semibold">
+        <span class="text-center font-semibold text-gray-800">
           {{ positionNotation }}
         </span>
       </div>

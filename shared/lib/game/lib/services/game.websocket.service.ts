@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import {
   HubConnection,
   HubConnectionBuilder,
-  HubConnectionState,
   LogLevel,
 } from '@microsoft/signalr';
 import { Store } from '@ngxs/store';
@@ -17,21 +16,21 @@ import {
   AnimateGameView,
   SetGameIsActive,
   UpdatePlayerGameView,
-} from '../actions/game.actions';
-import { environment } from '../../environments/environment';
-import { SetIsConnectedToServer } from '../actions/server.actions';
-import { Router } from '@angular/router';
+  SetIsConnectedToServer,
+  SetNameIsInvalid,
+} from '../state/game.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Card,
   DurationOption,
+  Environment,
   Move,
+  PendingGameOptions,
   PendingGameView,
   PlayerGameView,
 } from '@shared/models';
 import { isPlayersTurn } from '@shared/logic';
-
-const { serverUrl } = environment;
+import { JoinPendingGameOptions } from 'shared/lib/models/lib/join-pending-game-options.model';
 
 enum MessageType {
   CreatedPendingGame = 'CreatedPendingGame',
@@ -43,7 +42,7 @@ enum MessageType {
   GameUpdated = 'GameUpdated',
   PassedMove = 'PassedMove',
   DrawOffered = 'DrawOffered',
-  CreateGame = 'CreateGame',
+  CreatePendingGame = 'CreatePendingGame',
   JoinGame = 'JoinGame',
   RearrangeHand = 'RearrangeHand',
   MakeMove = 'MakeMove',
@@ -57,38 +56,34 @@ enum MessageType {
   TurnSkippedNoMoves = 'TurnSkippedNoMoves',
   SendChatMessage = 'SendChatMessage',
   NewChatMessage = 'NewChatMessage',
+  DeletePendingGame = 'DeletePendingGame',
+  InvalidName = 'InvalidName',
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class WebsocketService {
+export class GameWebsocketService {
   private hubConnection: HubConnection;
 
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #store = inject(Store);
-  readonly #router = inject(Router);
 
-  constructor() {
-    this.initConnection();
-    this.connectToServer();
-    this.registerConnectionEvents();
+  public connectToServer(environment: Environment) {
+    this.initConnection(environment);
+    this.connectAndRegisterEvents();
     this.registerServerEvents();
   }
 
-  private initConnection() {
+  private initConnection(environment: Environment) {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(`${serverUrl}/game`)
+      .withUrl(`${environment.serverUrl}/game`)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
   }
 
-  public connectToServer() {
-    if (this.hubConnection.state === HubConnectionState.Connected) {
-      return;
-    }
-
+  private connectAndRegisterEvents() {
     this.hubConnection.start().then(
       () => {
         console.log('Connected to server.');
@@ -99,13 +94,9 @@ export class WebsocketService {
         this.#store.dispatch(new SetIsConnectedToServer(false));
       }
     );
-  }
-
-  private registerConnectionEvents() {
     this.hubConnection.onreconnecting(() => {
       this.#store.dispatch(new SetIsConnectedToServer(false));
     });
-
     this.hubConnection.onreconnected(() => {
       this.#store.dispatch(new SetIsConnectedToServer(true));
     });
@@ -143,7 +134,6 @@ export class WebsocketService {
     this.hubConnection.on(MessageType.GameStarted, (stringifiedGameState) => {
       this.#store.dispatch(new SetGameIsActive(true));
       const playerGameView = this.parseAndUpdateGameView(stringifiedGameState);
-      this.#router.navigate(['game']);
 
       const message = isPlayersTurn(playerGameView)
         ? "It's your turn."
@@ -171,9 +161,7 @@ export class WebsocketService {
 
     this.hubConnection.on(MessageType.PassedMove, (stringifiedGameState) => {
       const gameState = this.parseAndUpdateGameView(stringifiedGameState);
-      const isPlayersTurn = this.isPlayersTurn(gameState);
-
-      if (isPlayersTurn) {
+      if (isPlayersTurn(gameState)) {
         this.#store.dispatch(new SetOpponentPassedMove(true));
       }
     });
@@ -202,14 +190,34 @@ export class WebsocketService {
         this.#store.dispatch(new UpdatePlayerGameView(playerGameView));
       }
     );
+
+    this.hubConnection.on(MessageType.InvalidName, () => {
+      this.#store.dispatch(new SetNameIsInvalid(true));
+    });
   }
 
-  public createGame() {
-    this.hubConnection.invoke(MessageType.CreateGame);
+  public createPendingGame(pendingGameOptions?: PendingGameOptions) {
+    const stringifiedOptions = pendingGameOptions
+      ? JSON.stringify(pendingGameOptions)
+      : undefined;
+    this.hubConnection.invoke(
+      MessageType.CreatePendingGame,
+      stringifiedOptions
+    );
   }
 
-  public joinGame(gameCode: string) {
-    this.hubConnection.invoke(MessageType.JoinGame, gameCode);
+  public joinGame(
+    gameCode: string,
+    joinPendingGameOptions?: JoinPendingGameOptions
+  ) {
+    const stringifiedOptions = joinPendingGameOptions
+      ? JSON.stringify(joinPendingGameOptions)
+      : undefined;
+    this.hubConnection.invoke(
+      MessageType.JoinGame,
+      gameCode,
+      stringifiedOptions
+    );
   }
 
   public rearrangeHand(cards: Card[]) {
@@ -261,10 +269,8 @@ export class WebsocketService {
     this.hubConnection.invoke(MessageType.SendChatMessage, message);
   }
 
-  private isPlayersTurn(gameState: PlayerGameView) {
-    const hostAndHostTurn = gameState.IsHostPlayersTurn && gameState.IsHost;
-    const guestAndGuestTurn = !gameState.IsHostPlayersTurn && !gameState.IsHost;
-    return hostAndHostTurn || guestAndGuestTurn;
+  public deletePendingGame() {
+    this.hubConnection.invoke(MessageType.DeletePendingGame);
   }
 
   private parseAndUpdateGameView(stringifiedGameState: string) {

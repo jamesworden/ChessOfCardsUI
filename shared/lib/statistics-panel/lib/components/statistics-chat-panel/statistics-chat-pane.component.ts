@@ -5,10 +5,16 @@ import {
   Input,
   ViewChild,
   ElementRef,
+  OnInit,
+  DestroyRef,
+  inject,
 } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
+import { GameState } from '@shared/game';
 import { ChatMessage, PlayerOrNone } from '@shared/models';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface DisplayChatMessage {
   name?: string;
@@ -22,20 +28,21 @@ interface DisplayChatMessage {
   templateUrl: './statistics-chat-pane.component.html',
   styleUrl: './statistics-chat-pane.component.scss',
 })
-export class StatisticsChatPaneComponent {
-  @Input({ required: true }) set isHost(isHost: boolean) {
-    this.isHost$.next(isHost);
-  }
-  @Input({ required: true }) set chatMessages(chatMessages: ChatMessage[]) {
-    this.chatMessages$.next(chatMessages);
-  }
+export class StatisticsChatPaneComponent implements OnInit {
+  readonly #destroyRef = inject(DestroyRef);
+  readonly #store = inject(Store);
 
   @Output() chatMessageSent = new EventEmitter<string>();
+
+  @Select(GameState.gameIsActive)
+  gameIsActive$!: Observable<boolean>;
+
+  @Select(GameState.isHost)
+  isHost$!: Observable<boolean>;
 
   @ViewChild('scrollContainer', { static: true })
   scrollContainer!: ElementRef<HTMLElement>;
 
-  readonly isHost$ = new BehaviorSubject<boolean>(false);
   readonly chatMessages$ = new BehaviorSubject<ChatMessage[]>([]);
 
   readonly displayedChatMessages$ = combineLatest([
@@ -90,6 +97,13 @@ export class StatisticsChatPaneComponent {
   message = '';
   hasInitiallyScrolledToBottom = false;
 
+  ngOnInit() {
+    this.#store
+      .select(GameState.chatMessages)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((chatMessages) => this.chatMessages$.next(chatMessages));
+  }
+
   sendMessage() {
     if (this.message.trim().length === 0) {
       return;
@@ -98,7 +112,9 @@ export class StatisticsChatPaneComponent {
     const chatMessage: ChatMessage = {
       Message: this.message,
       SentAtUTC: new Date(),
-      SentBy: this.isHost$.getValue() ? PlayerOrNone.Host : PlayerOrNone.Guest,
+      SentBy: this.#store.selectSnapshot(GameState.isHost)
+        ? PlayerOrNone.Host
+        : PlayerOrNone.Guest,
     };
 
     const existingChatMessages = this.chatMessages$.getValue();

@@ -4,18 +4,22 @@ import { PreviousNextSelectorComponent } from './previous-next-selector/previous
 import { ResizableDirective } from './resizable.directive';
 import { IconButtonComponent } from './icon-button/icon-button.component';
 import { MatBadgeModule } from '@angular/material/badge';
+import { ButtonModalComponent } from './button-modal/button-modal.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     PreviousNextSelectorComponent,
     ResizableDirective,
     IconButtonComponent,
+    ButtonModalComponent,
   ],
-  imports: [CommonModule, MatBadgeModule],
+  imports: [CommonModule, MatBadgeModule, MatButtonModule],
   exports: [
     PreviousNextSelectorComponent,
     ResizableDirective,
     IconButtonComponent,
+    ButtonModalComponent,
   ],
 })
 export class UiInputsModule {}

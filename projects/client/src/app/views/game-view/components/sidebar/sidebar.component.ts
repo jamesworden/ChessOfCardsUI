@@ -8,23 +8,20 @@ import {
   Output,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Select } from '@ngxs/store';
-import { ResponsiveSizeService } from '@shared/game';
-import { ModalData } from '../modal/modal-data';
-import { ModalComponent } from '../modal/modal.component';
+import { Select, Store } from '@ngxs/store';
+import { GameState, ResponsiveSizeService } from '@shared/game';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { withLatestFrom } from 'rxjs/operators';
+import { withLatestFrom, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Card, CardPosition, PlayerGameView } from '@shared/models';
 import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { GameState } from '../../../../state/game.state';
 import { toggleDarkMode } from '../../../../logic/toggle-dark-mode';
-
-enum YesNoButtons {
-  Yes = 'Yes',
-  No = 'No',
-}
+import {
+  ButtonModalComponent,
+  ModalData,
+  YesNoButtons,
+} from '@shared/ui-inputs';
 
 @Component({
   selector: 'app-sidebar',
@@ -37,6 +34,7 @@ export class SidebarComponent implements OnInit {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #remainingTimeService = inject(RemainingTimeService);
   readonly #destroyRef = inject(DestroyRef);
+  readonly #store = inject(Store);
 
   @Input({ required: true }) isPlayersTurn = false;
   @Input() cardStack: Card[] | null = [];
@@ -66,6 +64,9 @@ export class SidebarComponent implements OnInit {
 
   @Select(GameState.waitingForServer)
   waitingForServer$!: Observable<boolean>;
+
+  @Select(GameState.gameIsActive)
+  gameIsActive$!: Observable<boolean>;
 
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly isShowingCardStack$ = new BehaviorSubject<boolean>(false);
@@ -99,8 +100,11 @@ export class SidebarComponent implements OnInit {
         }
       });
     this.#remainingTimeService.secondsRemainingFromLastMove$
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .pipe(withLatestFrom(this.playerGameView$))
+      .pipe(
+        startWith(null),
+        withLatestFrom(this.playerGameView$.pipe(startWith(null))),
+        takeUntilDestroyed(this.#destroyRef)
+      )
       .subscribe(([secondsRemaining, playerGameView]) => {
         if (secondsRemaining && playerGameView) {
           const { IsHost } = playerGameView;
@@ -118,11 +122,23 @@ export class SidebarComponent implements OnInit {
             this.secondsToRemainingTimeString(opponentsRemainingSeconds);
 
           this.playerHasLowTime = playersRemainingSeconds <= 30;
+          return;
         }
+        this.playersRemainingSecondsString =
+          this.opponentsRemainingSecondsString =
+            this.secondsToRemainingTimeString(0);
       });
   }
 
   attemptToOpenOfferDrawModel() {
+    if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
+      this.#matSnackBar.open("There's no game in progress.", 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
+      return;
+    }
+
     if (this.drawOfferSent) {
       this.#matSnackBar.open('You already offered a draw.', 'Hide', {
         duration: 3000,
@@ -144,7 +160,7 @@ export class SidebarComponent implements OnInit {
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.#matDialog.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ButtonModalComponent, {
       width: '250px',
       maxHeight: '100svh',
       data: modalData,
@@ -164,14 +180,23 @@ export class SidebarComponent implements OnInit {
   }
 
   attemptToOpenPassMoveModal() {
-    if (this.isPlayersTurn) {
-      this.openPassMoveModal();
-    } else {
+    if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
+      this.#matSnackBar.open("There's no game in progress.", 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
+      return;
+    }
+
+    if (!this.isPlayersTurn) {
       this.#matSnackBar.open("It's not your turn.", 'Hide', {
         duration: 3000,
         verticalPosition: 'top',
       });
+      return;
     }
+
+    this.openPassMoveModal();
   }
 
   openPassMoveModal() {
@@ -180,7 +205,7 @@ export class SidebarComponent implements OnInit {
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.#matDialog.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ButtonModalComponent, {
       width: '250px',
       maxHeight: '100svh',
       data: modalData,
@@ -200,12 +225,20 @@ export class SidebarComponent implements OnInit {
   }
 
   openResignModal() {
+    if (!this.#store.selectSnapshot(GameState.gameIsActive)) {
+      this.#matSnackBar.open("There's no game in progress.", 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
+      return;
+    }
+
     const modalData: ModalData = {
       message: 'Are you sure you want to resign?',
       buttons: [YesNoButtons.Yes, YesNoButtons.No],
     };
 
-    const modalRef = this.#matDialog.open(ModalComponent, {
+    const modalRef = this.#matDialog.open(ButtonModalComponent, {
       width: '250px',
       maxHeight: '100svh',
       data: modalData,

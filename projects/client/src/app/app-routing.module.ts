@@ -12,6 +12,7 @@ const routes: Routes = [
     path: 'game',
     component: GameViewComponent,
   },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({

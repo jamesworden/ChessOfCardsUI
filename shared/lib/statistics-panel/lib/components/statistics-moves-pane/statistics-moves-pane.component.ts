@@ -10,8 +10,11 @@ import {
 } from '@angular/core';
 import { MoveNotation } from '@shared/logic';
 import { PlayerOrNone } from '@shared/models';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Select } from '@ngxs/store';
+import { GameState } from '@shared/game';
+import { pairwise, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'statistics-moves-pane',
@@ -21,7 +24,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class StatisticsMovesPaneComponent {
   readonly #destroyRef = inject(DestroyRef);
 
-  @Input({ required: true }) isHost: boolean;
   @Input() set moveNotations(moveNotations: MoveNotation[]) {
     this.moveNotations$.next(moveNotations);
   }
@@ -30,6 +32,9 @@ export class StatisticsMovesPaneComponent {
   }
 
   @Output() moveNotationSelected = new EventEmitter<number>();
+
+  @Select(GameState.gameIsActive)
+  gameIsActive$: Observable<boolean>;
 
   @ViewChild('scrollContainer', { static: true })
   scrollContainer!: ElementRef;
@@ -42,19 +47,24 @@ export class StatisticsMovesPaneComponent {
   hasInitiallyScrolledToBottom = false;
 
   ngOnInit() {
-    this.selectedNotationIndex$
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe((selectedNotationIndex) => {
-        if (selectedNotationIndex !== null) {
-          setTimeout(() => {
+    this.moveNotations$
+      .pipe(
+        pairwise(),
+        filter(([prev, curr]) => prev && curr && prev.length !== curr.length),
+        takeUntilDestroyed(this.#destroyRef)
+      )
+      .subscribe(([_, moveNotations]) => {
+        // Timeout gives time for the last move notation vertical space to load before scrolling
+        setTimeout(() => {
+          if (moveNotations && moveNotations.length > 0) {
             if (!this.hasInitiallyScrolledToBottom) {
               this.scrollToBottom('instant');
               this.hasInitiallyScrolledToBottom = true;
             } else {
               this.scrollToBottom('smooth');
             }
-          });
-        }
+          }
+        });
       });
   }
 

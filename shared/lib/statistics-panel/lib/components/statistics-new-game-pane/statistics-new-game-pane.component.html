@@ -1,0 +1,208 @@
+<div class="flex h-full w-full p-4">
+  <div
+    class="flex-1 flex flex-col gap-y-8 bg-gray-100 dark:bg-gray-700 shadow-lg py-8 px-4 md:px-8"
+  >
+    @if (hostOrJoinView) {
+      <div class="flex justify-between max-w-[250px] w-full gap-x-4">
+        <new-game-type-button
+          label="Join Game"
+          [selected]="joinGameSelected"
+          (newGameTypeSelected)="selectJoinGame()"
+        ></new-game-type-button>
+        <new-game-type-button
+          label="Host Game"
+          [selected]="!joinGameSelected"
+          (newGameTypeSelected)="selectHostGame()"
+        ></new-game-type-button>
+      </div>
+
+      <div class="flex flex-col gap-y-2">
+        <label for="name" class="opacity-80"> Your name </label>
+
+        <input
+          id="name"
+          type="text"
+          placeholder="Your name..."
+          class="border rounded-sm p-2 w-full focus:outline-none dark:text-black max-w-xs"
+          [(ngModel)]="name"
+          (ngModelChange)="nameChanged()"
+          [ngClass]="{
+            'border-red-500 focus:border-red-500': nameIsInvalid$ | async,
+            'border-gray-300 focus:border-yellow-500': !(nameIsInvalid$ | async)
+          }"
+        />
+
+        <div class="relative">
+          <span
+            class="text-red-500 text-sm dark:font-semibold absolute top-0"
+            [ngClass]="{
+              'opacity-0': !(nameIsInvalid$ | async),
+              'opacity-100': nameIsInvalid$ | async
+            }"
+            >Invalid name</span
+          >
+        </div>
+      </div>
+
+      @if (joinGameSelected) {
+        <div class="flex flex-col gap-y-2">
+          <label for="name" class="opacity-80"> Game code </label>
+
+          <input
+            id="name"
+            type="text"
+            maxlength="4"
+            placeholder="e.g., ABCD"
+            class="border rounded-sm p-2 w-full focus:outline-none dark:text-black max-w-xs uppercase"
+            (ngModelChange)="gameCodeChanged()"
+            [ngClass]="{
+              'border-red-500 focus:border-red-500': gameCodeIsInvalid$ | async,
+              'border-gray-300 focus:border-yellow-500': !(
+                gameCodeIsInvalid$ | async
+              )
+            }"
+            [(ngModel)]="joinGameCode"
+          />
+
+          <div class="relative">
+            <span
+              class="text-red-500 text-sm dark:font-semibold absolute top-0"
+              [ngClass]="{
+                'opacity-0': !(gameCodeIsInvalid$ | async),
+                'opacity-100': gameCodeIsInvalid$ | async
+              }"
+              >Invalid game code</span
+            >
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-y-2">
+          <div>
+            <button
+              class="bg-yellow-400 px-4 py-2 rounded-sm text-gray-800 shadow-md hover:bg-yellow-300 transition outline-none"
+              (click)="attemptToJoinGame()"
+            >
+              Join Game
+            </button>
+          </div>
+
+          <div class="relative">
+            <span
+              class="text-red-500 text-sm dark:font-semibold absolute top-0"
+              [ngClass]="{
+                'opacity-0': (isConnectedToServer$ | async) || !triedToJoinGame,
+                'opacity-100':
+                  !(isConnectedToServer$ | async) && triedToJoinGame
+              }"
+              >Unable to connect to server!</span
+            >
+          </div>
+        </div>
+      } @else {
+        <div class="flex flex-col gap-y-2">
+          <label class="opacity-80"> Duration </label>
+
+          <div class="flex gap-x-4 flex-wrap gap-y-4">
+            @for (button of durationButtons; track button.durationOption) {
+              <button
+                [attr.data-testid]="button.durationOption"
+                class="px-4 py-2 rounded-sm transition flex gap-x-2 rounded-sm shadow-md bg-white dark:bg-gray-600"
+                [ngClass]="{
+                  'text-yellow-500':
+                    button.durationOption === pendingGameOptions.DurationOption
+                }"
+                (click)="selectDurationOption(button.durationOption)"
+              >
+                <span [class]="button.iconClass">{{ button.icon }}</span>
+                <span>{{ button.label }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-y-2">
+          <div>
+            <button
+              class="bg-yellow-400 px-4 py-2 rounded-sm text-gray-800 shadow-md hover:bg-yellow-300 transition outline-none"
+              (click)="hostGame()"
+            >
+              Start Game
+            </button>
+          </div>
+
+          <div class="relative">
+            <span
+              class="text-red-500 text-sm dark:font-semibold absolute top-0"
+              [ngClass]="{
+                'opacity-0': (isConnectedToServer$ | async) || !triedToHostGame,
+                'opacity-100':
+                  !(isConnectedToServer$ | async) && triedToHostGame
+              }"
+              >Unable to connect to server!</span
+            >
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="flex-1 flex flex-col gap-y-2 relative">
+        <div class="flex justify-start absolute top-0 left-0">
+          <div
+            class="flex gap-x-2 cursor-pointer max-w-xs"
+            (click)="attemptToLeaveGame()"
+          >
+            <span class="material-symbols-outlined text-md"
+              >keyboard_backspace</span
+            >
+            <span class="text-md">Leave Game</span>
+          </div>
+        </div>
+
+        <div class="flex-1 flex flex-col justify-around">
+          <div>
+            <div class="flex-1 flex flex-col gap-y-4">
+              <div class="flex justify-around">
+                <div
+                  class="p-5 rounded-full bg-gray-200 dark:bg-gray-600 flex flex-col justify-around"
+                >
+                  <span
+                    class="material-symbols-outlined text-gray-100 dark:text-gray-700"
+                    style="font-size: 76px"
+                  >
+                    record_voice_over
+                  </span>
+                </div>
+              </div>
+
+              <div class="text-center opacity-70 text-sm">
+                Your game code is:
+              </div>
+
+              <div class="flex justify-around">
+                <div class="text-center max-w-xs">
+                  <h2 class="text-3xl font-semibold">
+                    {{
+                      (pendingGameCode$ | async) ??
+                        (playerGameView$ | async)?.GameCode
+                    }}
+                  </h2>
+                </div>
+              </div>
+
+              <div class="flex justify-around">
+                <p class="opacity-80 max-w-xs text-center">
+                  Give this game code to your opponent
+                  {{
+                    (gameIsActive$ | async)
+                      ? 'so they can reconnect to'
+                      : 'so they can join'
+                  }}
+                  the game!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
