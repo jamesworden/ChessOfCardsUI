@@ -105,6 +105,11 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
       .subscribe(([pendingGameCode, gameIsActive]) => {
         if (pendingGameCode || gameIsActive) {
           this.hostOrJoinView = false;
+          return;
+        }
+
+        if (!gameIsActive || !pendingGameCode) {
+          this.hostOrJoinView = true;
         }
       });
   }
