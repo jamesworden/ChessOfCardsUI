@@ -89,11 +89,7 @@
         >
           <div>
             <app-player-banner
-              [username]="
-                gameView.IsHost
-                  ? gameView.GuestName ?? 'Guest Player'
-                  : gameView.HostName ?? 'Host Player'
-              "
+              [username]="(opponentUsername$ | async) ?? ''"
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn
@@ -169,11 +165,7 @@
 
           <div>
             <app-player-banner
-              [username]="
-                gameView.IsHost
-                  ? gameView.HostName ?? 'Host Player'
-                  : gameView.GuestName ?? 'Guest Player'
-              "
+              [username]="(playerUsername$ | async) ?? ''"
               class="h-sm-hidden"
               [containerClass]="
                 isPlayersTurn

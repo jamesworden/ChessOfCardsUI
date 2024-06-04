@@ -248,6 +248,30 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     })
   );
 
+  readonly opponentUsername$ = this.playerGameView$.pipe(
+    map((playerGameView) => {
+      if (playerGameView) {
+        return playerGameView.IsHost
+          ? playerGameView.GuestName ?? 'Guest Player'
+          : playerGameView.HostName ?? 'Host Player';
+      } else {
+        return 'Opponent';
+      }
+    })
+  );
+
+  readonly playerUsername$ = this.playerGameView$.pipe(
+    map((playerGameView) => {
+      if (playerGameView) {
+        return playerGameView.IsHost
+          ? playerGameView.HostName ?? 'Host Player'
+          : playerGameView.GuestName ?? 'Guest Player';
+      } else {
+        return 'You';
+      }
+    })
+  );
+
   readonly Z_INDEXES = Z_INDEXES;
   readonly GameViewTab = GameViewTab;
 
