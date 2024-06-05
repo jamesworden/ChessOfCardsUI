@@ -33,4 +33,6 @@ export const DEFAULT_GAME_VIEW: PlayerGameView = {
   NumCardsInOpponentsDeck: 0,
   NumCardsInOpponentsHand: 0,
   NumCardsInPlayersDeck: 0,
+  HostSecondsRemaining: 0,
+  GuestSecondsRemaining: 0,
 };

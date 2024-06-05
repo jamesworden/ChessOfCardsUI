@@ -10,11 +10,9 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import { GameState, ResponsiveSizeService } from '@shared/game';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { withLatestFrom, startWith } from 'rxjs/operators';
+import { BehaviorSubject, Observable, combineLatest, of, timer } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Card, CardPosition, PlayerGameView } from '@shared/models';
-import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toggleDarkMode } from '../../../../logic/toggle-dark-mode';
 import {
@@ -22,6 +20,7 @@ import {
   ModalData,
   YesNoButtons,
 } from '@shared/ui-inputs';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
@@ -32,7 +31,6 @@ export class SidebarComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
-  readonly #remainingTimeService = inject(RemainingTimeService);
   readonly #destroyRef = inject(DestroyRef);
   readonly #store = inject(Store);
 
@@ -72,6 +70,72 @@ export class SidebarComponent implements OnInit {
   readonly isShowingCardStack$ = new BehaviorSubject<boolean>(false);
   readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);
 
+  readonly playerRemainingTime$ = combineLatest([
+    this.playerGameView$,
+    this.gameIsActive$,
+  ]).pipe(
+    map(([playerGameView, gameIsActive]) => {
+      if (!playerGameView || playerGameView.HasEnded || !gameIsActive) {
+        return of(0);
+      }
+
+      const isPlayersTurn =
+        (playerGameView.IsHost && playerGameView.IsHostPlayersTurn) ||
+        (!playerGameView.IsHost && !playerGameView.IsHostPlayersTurn);
+      if (isPlayersTurn) {
+        return timer(0, 1000);
+      }
+
+      return of(0);
+    }),
+    switchMap((timer) => timer),
+    withLatestFrom(this.playerGameView$),
+    map(([timeElapsed, playerGameView]) => {
+      if (!playerGameView) {
+        return this.secondsToRemainingTimeString(0);
+      }
+
+      const secondsRemaining = playerGameView.IsHost
+        ? playerGameView.HostSecondsRemaining
+        : playerGameView.GuestSecondsRemaining;
+
+      return this.secondsToRemainingTimeString(secondsRemaining - timeElapsed);
+    })
+  );
+
+  readonly opponentRemainingTime$ = combineLatest([
+    this.playerGameView$,
+    this.gameIsActive$,
+  ]).pipe(
+    map(([playerGameView, gameIsActive]) => {
+      if (!playerGameView || playerGameView.HasEnded || !gameIsActive) {
+        return of(0);
+      }
+
+      const isOpponentsTurn =
+        (playerGameView.IsHost && !playerGameView.IsHostPlayersTurn) ||
+        (!playerGameView.IsHost && playerGameView.IsHostPlayersTurn);
+      if (isOpponentsTurn) {
+        return timer(0, 1000);
+      }
+
+      return of(0);
+    }),
+    switchMap((timer) => timer),
+    withLatestFrom(this.playerGameView$),
+    map(([timeElapsed, playerGameView]) => {
+      if (!playerGameView) {
+        return this.secondsToRemainingTimeString(0);
+      }
+
+      const secondsRemaining = playerGameView.IsHost
+        ? playerGameView.GuestSecondsRemaining
+        : playerGameView.HostSecondsRemaining;
+
+      return this.secondsToRemainingTimeString(secondsRemaining - timeElapsed);
+    })
+  );
+
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
   numCardsInPlayerDeck: number | null = null;
@@ -98,35 +162,6 @@ export class SidebarComponent implements OnInit {
           this.numCardsInPlayerDeck = playerGameView.NumCardsInPlayersDeck;
           this.numCardsInOpponentDeck = playerGameView.NumCardsInOpponentsDeck;
         }
-      });
-    this.#remainingTimeService.secondsRemainingFromLastMove$
-      .pipe(
-        startWith(null),
-        withLatestFrom(this.playerGameView$.pipe(startWith(null))),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe(([secondsRemaining, playerGameView]) => {
-        if (secondsRemaining && playerGameView) {
-          const { IsHost } = playerGameView;
-
-          const playersRemainingSeconds = IsHost
-            ? secondsRemaining.host
-            : secondsRemaining.guest;
-          const opponentsRemainingSeconds = IsHost
-            ? secondsRemaining.guest
-            : secondsRemaining.host;
-
-          this.playersRemainingSecondsString =
-            this.secondsToRemainingTimeString(playersRemainingSeconds);
-          this.opponentsRemainingSecondsString =
-            this.secondsToRemainingTimeString(opponentsRemainingSeconds);
-
-          this.playerHasLowTime = playersRemainingSeconds <= 30;
-          return;
-        }
-        this.playersRemainingSecondsString =
-          this.opponentsRemainingSecondsString =
-            this.secondsToRemainingTimeString(0);
       });
   }
 

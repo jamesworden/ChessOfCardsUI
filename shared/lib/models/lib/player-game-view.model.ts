@@ -25,4 +25,6 @@ export type PlayerGameView = {
   ChatMessages: ChatMessage[];
   HostName?: string;
   GuestName?: string;
+  HostSecondsRemaining: number;
+  GuestSecondsRemaining: number;
 };
