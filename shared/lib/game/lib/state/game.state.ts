@@ -326,6 +326,7 @@ export class GameState {
       gameOverData: action.gameOverData,
       waitingForServer: false,
       gameIsActive: false,
+      opponentIsDisconnected: false,
     });
   }
 

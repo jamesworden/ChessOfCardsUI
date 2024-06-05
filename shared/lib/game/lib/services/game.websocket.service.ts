@@ -12,7 +12,6 @@ import {
   SetOpponentPassedMove,
   SetGameCodeIsInvalid,
   SetPendingGameView,
-  ResetPendingGameView,
   AnimateGameView,
   SetGameIsActive,
   UpdatePlayerGameView,
