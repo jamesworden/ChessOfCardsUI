@@ -86,6 +86,7 @@ import { DEFAULT_GAME_VIEW } from './constants';
 import { ButtonModalComponent } from '@shared/ui-inputs';
 import { Router } from '@angular/router';
 import { addMinutes, isAfter } from 'date-fns';
+import { getOpponentUsername, getPlayerUsername } from './logic/get-username';
 
 interface InProgressGameData {
   gameCode: string;
@@ -277,28 +278,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   );
 
   readonly opponentUsername$ = this.playerGameView$.pipe(
-    map((playerGameView) => {
-      if (playerGameView) {
-        return playerGameView.IsHost
-          ? playerGameView.GuestName ?? 'Guest Player'
-          : playerGameView.HostName ?? 'Host Player';
-      } else {
-        return 'Opponent';
-      }
-    })
+    map(getOpponentUsername)
   );
 
-  readonly playerUsername$ = this.playerGameView$.pipe(
-    map((playerGameView) => {
-      if (playerGameView) {
-        return playerGameView.IsHost
-          ? playerGameView.HostName ?? 'Host Player'
-          : playerGameView.GuestName ?? 'Guest Player';
-      } else {
-        return 'You';
-      }
-    })
-  );
+  readonly playerUsername$ = this.playerGameView$.pipe(map(getPlayerUsername));
 
   readonly Z_INDEXES = Z_INDEXES;
   readonly GameViewTab = GameViewTab;
