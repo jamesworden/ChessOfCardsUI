@@ -477,10 +477,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           this.selectedPanelView$.next(StatisticsPanelView.Moves);
         }
       });
-    combineLatest([
-      this.gameCode$.pipe(startWith(null)),
-      this.pendingGameCode$.pipe(startWith(null)),
-    ])
+    combineLatest([this.gameCode$, this.pendingGameCode$])
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(([gameCode, pendingGameCode]) =>
         this.#router.navigate(['game', gameCode ?? pendingGameCode ?? ''])
