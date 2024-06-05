@@ -35,7 +35,6 @@ import { JoinPendingGameOptions } from 'shared/lib/models/lib/join-pending-game-
 enum MessageType {
   CreatedPendingGame = 'CreatedPendingGame',
   PendingGameUpdated = 'PendingGameUpdated',
-  OpponentDisconnected = 'OpponentDisconnected',
   InvalidGameCode = 'InvalidGameCode',
   GameStarted = 'GameStarted',
   GameOver = 'GameOver',
@@ -58,6 +57,9 @@ enum MessageType {
   NewChatMessage = 'NewChatMessage',
   DeletePendingGame = 'DeletePendingGame',
   InvalidName = 'InvalidName',
+  OpponentReconnected = 'OpponentReconnected',
+  OpponentDisconnected = 'OpponentDisconnected',
+  Reconnected = 'Reconnected',
 }
 
 @Injectable({
@@ -193,6 +195,36 @@ export class GameWebsocketService {
 
     this.hubConnection.on(MessageType.InvalidName, () => {
       this.#store.dispatch(new SetNameIsInvalid(true));
+    });
+
+    this.hubConnection.on(MessageType.OpponentDisconnected, () => {
+      // TODO: Update new state property and reflect in UI somehow
+      this.#matSnackBar.open('Opponent Disconnected', 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
+    });
+
+    this.hubConnection.on(MessageType.OpponentReconnected, () => {
+      // TODO: Update new state property and reflect in UI somehow
+      this.#matSnackBar.open('Opponent Reconnected', 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
+    });
+
+    this.hubConnection.on(MessageType.Reconnected, (stringifiedGameState) => {
+      this.#store.dispatch(new SetGameIsActive(true));
+      const playerGameView = this.parseAndUpdateGameView(stringifiedGameState);
+
+      const message = isPlayersTurn(playerGameView)
+        ? "Reconnected. It's your turn."
+        : "Reconnected. It's your opponent's turn.";
+
+      this.#matSnackBar.open(message, 'Hide', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
     });
   }
 
