@@ -109,7 +109,7 @@
         }"
       >
         <span>
-          {{ opponentRemainingTime$ | async }}
+          {{ (clocks$ | async)?.opponent }}
         </span>
       </div>
       <div>
@@ -134,7 +134,7 @@
           'is-not-counting-down': !isPlayersTurn
         }"
       >
-        <span>{{ playerRemainingTime$ | async }}</span>
+        <span>{{ (clocks$ | async)?.player }}</span>
       </div>
     </div>
   }

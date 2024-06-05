@@ -9,8 +9,12 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
-import { GameState, ResponsiveSizeService } from '@shared/game';
-import { BehaviorSubject, Observable, of, timer } from 'rxjs';
+import {
+  GameClockService,
+  GameState,
+  ResponsiveSizeService,
+} from '@shared/game';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Card, CardPosition, PlayerGameView } from '@shared/models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,7 +24,6 @@ import {
   ModalData,
   YesNoButtons,
 } from '@shared/ui-inputs';
-import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
@@ -33,6 +36,7 @@ export class SidebarComponent implements OnInit {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #destroyRef = inject(DestroyRef);
   readonly #store = inject(Store);
+  readonly #gameClockService = inject(GameClockService);
 
   @Input({ required: true }) isPlayersTurn = false;
   @Input() cardStack: Card[] | null = [];
@@ -66,69 +70,10 @@ export class SidebarComponent implements OnInit {
   @Select(GameState.gameIsActive)
   gameIsActive$!: Observable<boolean>;
 
+  readonly clocks$ = this.#gameClockService.clocks$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly isShowingCardStack$ = new BehaviorSubject<boolean>(false);
   readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);
-
-  readonly playerRemainingTime$ = this.playerGameView$.pipe(
-    map((playerGameView) => {
-      if (!playerGameView || playerGameView.HasEnded) {
-        return of(0);
-      }
-
-      const isPlayersTurn =
-        (playerGameView.IsHost && playerGameView.IsHostPlayersTurn) ||
-        (!playerGameView.IsHost && !playerGameView.IsHostPlayersTurn);
-      if (isPlayersTurn) {
-        return timer(0, 1000);
-      }
-
-      return of(0);
-    }),
-    switchMap((timer) => timer),
-    withLatestFrom(this.playerGameView$),
-    map(([timeElapsed, playerGameView]) => {
-      if (!playerGameView) {
-        return this.secondsToRemainingTimeString(0);
-      }
-
-      const secondsRemaining = playerGameView.IsHost
-        ? playerGameView.HostSecondsRemaining
-        : playerGameView.GuestSecondsRemaining;
-
-      return this.secondsToRemainingTimeString(secondsRemaining - timeElapsed);
-    })
-  );
-
-  readonly opponentRemainingTime$ = this.playerGameView$.pipe(
-    map((playerGameView) => {
-      if (!playerGameView || playerGameView.HasEnded) {
-        return of(0);
-      }
-
-      const isOpponentsTurn =
-        (playerGameView.IsHost && !playerGameView.IsHostPlayersTurn) ||
-        (!playerGameView.IsHost && playerGameView.IsHostPlayersTurn);
-      if (isOpponentsTurn) {
-        return timer(0, 1000);
-      }
-
-      return of(0);
-    }),
-    switchMap((timer) => timer),
-    withLatestFrom(this.playerGameView$),
-    map(([timeElapsed, playerGameView]) => {
-      if (!playerGameView) {
-        return this.secondsToRemainingTimeString(0);
-      }
-
-      const secondsRemaining = playerGameView.IsHost
-        ? playerGameView.GuestSecondsRemaining
-        : playerGameView.HostSecondsRemaining;
-
-      return this.secondsToRemainingTimeString(secondsRemaining - timeElapsed);
-    })
-  );
 
   drawOfferSent: boolean;
   hasPendingDrawOffer: boolean;
@@ -304,17 +249,5 @@ export class SidebarComponent implements OnInit {
 
   unmute() {
     this.unmuted.emit();
-  }
-
-  private secondsToRemainingTimeString(seconds: number) {
-    if (seconds <= 0) {
-      return '0:00';
-    }
-
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return (
-      minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds
-    );
   }
 }
