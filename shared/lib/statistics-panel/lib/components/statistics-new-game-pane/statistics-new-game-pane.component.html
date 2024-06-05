@@ -56,10 +56,10 @@
             class="border rounded-sm p-2 w-full focus:outline-none dark:text-black max-w-xs uppercase"
             (ngModelChange)="gameCodeChanged()"
             [ngClass]="{
-              'border-red-500 focus:border-red-500': gameCodeIsInvalid$ | async,
-              'border-gray-300 focus:border-yellow-500': !(
-                gameCodeIsInvalid$ | async
-              )
+              'border-red-500 focus:border-red-500':
+                (gameCodeIsInvalid$ | async) && triedToJoinGame,
+              'border-gray-300 focus:border-yellow-500':
+                !(gameCodeIsInvalid$ | async) || !triedToJoinGame
             }"
             [(ngModel)]="joinGameCode"
           />
@@ -68,8 +68,8 @@
             <span
               class="text-red-500 text-sm dark:font-semibold absolute top-0"
               [ngClass]="{
-                'opacity-0': !(gameCodeIsInvalid$ | async),
-                'opacity-100': gameCodeIsInvalid$ | async
+                'opacity-0': !(gameCodeIsInvalid$ | async) || !triedToJoinGame,
+                'opacity-100': (gameCodeIsInvalid$ | async) && triedToJoinGame
               }"
               >Invalid game code</span
             >

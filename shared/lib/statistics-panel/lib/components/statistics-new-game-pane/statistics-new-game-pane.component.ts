@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Output,
-  inject,
-  OnDestroy,
-  HostListener,
-} from '@angular/core';
+import { Component, inject, OnDestroy, HostListener } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -97,6 +90,10 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   name = '';
   joinGameCode = '';
   triedToHostGame = false;
+  /**
+   * Behind the scenes, our app may try to join the game and fail while reconnecting.
+   * If that connection attempt had nothing to do with this component, don't reflect that.
+   */
   triedToJoinGame = false;
 
   constructor() {
