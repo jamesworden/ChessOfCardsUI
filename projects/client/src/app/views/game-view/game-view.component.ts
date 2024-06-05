@@ -291,7 +291,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   cardSize = 64;
   movesPanelHeight: number | undefined = undefined;
   numUnreadChatMessages = 0;
-  joinGameName = '';
 
   ngOnInit() {
     this.checkToJoinInProgressGame();
@@ -1014,10 +1013,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   unmute() {
     this.#audioCacheService.unmute();
-  }
-
-  changeName(name: string) {
-    this.joinGameName = name;
   }
 
   private storeLocalGameData(playerGameView: PlayerGameView) {
