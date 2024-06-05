@@ -287,7 +287,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly GameViewTab = GameViewTab;
 
   isPlayersTurn = false;
-  isPlacingMultipleCards = false;
   cardSize = 64;
   movesPanelHeight: number | undefined = undefined;
   numUnreadChatMessages = 0;
@@ -312,12 +311,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe(
         (opponentPassedMove) =>
           opponentPassedMove && this.showOpponentPassedMoveToast()
-      );
-    this.isPlacingMultipleCards$
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe(
-        (isPlacingMultipleCards) =>
-          (this.isPlacingMultipleCards = isPlacingMultipleCards)
       );
     this.positionClicked$
       .pipe(
@@ -409,7 +402,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           );
         }
 
-        if (this.isPlacingMultipleCards) {
+        if (this.#store.selectSnapshot(GameState.isPlacingMultipleCards)) {
           this.cancelPlaceMultipleCards();
         }
       });
@@ -492,7 +485,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscapeKey() {
-    if (this.isPlacingMultipleCards) {
+    if (this.#store.selectSnapshot(GameState.isPlacingMultipleCards)) {
       this.cancelPlaceMultipleCards();
     }
   }
@@ -591,7 +584,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   attemptToPlaceCard(placeCardAttempt: PlaceCardAttempt) {
-    if (this.isPlacingMultipleCards) {
+    if (this.#store.selectSnapshot(GameState.isPlacingMultipleCards)) {
       return;
     }
 
@@ -644,13 +637,17 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
     this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
 
-    if (this.isPlacingMultipleCards && oneListToAnother) {
+    const isPlacingMultipleCards = this.#store.selectSnapshot(
+      GameState.isPlacingMultipleCards
+    );
+
+    if (isPlacingMultipleCards && oneListToAnother) {
       const card = event.item.data as Card;
       this.dragCardBackToHand(card, event.currentIndex);
       return;
     }
 
-    this.isPlacingMultipleCards
+    isPlacingMultipleCards
       ? this.rearrangePlaceMultipleHand(event.previousIndex, event.currentIndex)
       : this.rearrangeHand(event.previousIndex, event.currentIndex);
   }

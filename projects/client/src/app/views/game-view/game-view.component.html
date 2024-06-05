@@ -161,7 +161,9 @@
 
           <game-player-hand
             #playerHand
-            [isPlacingMultipleCards]="isPlacingMultipleCards"
+            [isPlacingMultipleCards]="
+              (isPlacingMultipleCards$ | async) ?? false
+            "
             [isHost]="gameView.IsHost"
             [cards]="gameView.Hand.Cards"
             [cardSize]="(cardSize$ | async)!"
@@ -179,7 +181,9 @@
               (initialPlaceMultipleCardAttempt$ | async)?.Card?.Kind ?? null
             "
             [connectedToDropList]="
-              isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
+              (isPlacingMultipleCards$ | async) ?? false
+                ? 'place-multiple-cards-list'
+                : 'position'
             "
             [fadeAllCards]="!isPlayersTurn"
             [suitAndKindHasValidMove]="(suitAndKindHasValidMove$ | async) ?? {}"
