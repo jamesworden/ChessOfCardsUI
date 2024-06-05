@@ -5,10 +5,13 @@
   }"
 >
   <div
-    class="flex pb-0"
+    class="flex pb-0 transition"
     id="opponent-hand"
     [ngStyle]="{
       minWidth: 5 * cardSize + 'px'
+    }"
+    [ngClass]="{
+      'opacity-40': opaqueCards
     }"
   >
     @for (_ of [].constructor(numCards); track i; let i = $index) {

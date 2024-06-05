@@ -100,6 +100,28 @@
               "
               [opponentDisconnectTimer]="opponentDisconnectedTimer$ | async"
             ></app-player-banner>
+
+            @if (((opponentDisconnectedTimer$ | async) ?? 0) > 0) {
+              <div [@fadeInOut] class="h-gt-sm-hidden relative flex-1">
+                <div
+                  class="absolute top-0 left-0 w-full"
+                  [ngStyle]="{
+                    'z-index': 1000
+                  }"
+                >
+                  <div
+                    class="rounded-b-sm dark:bg-gray-700 bg-gray-100 flex justify-evenly py-2"
+                  >
+                    <span> Reconnecting... </span>
+                    <div
+                      class="border border-1 border-gray-400 rounded-sm text-gray-800 bg-gray-100 font-bold text-sm w-10 text-center"
+                    >
+                      {{ opponentDisconnectedTimer$ | async }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
 
           <app-opponent-hand-toolbar
@@ -113,6 +135,7 @@
             (drawAccepted)="acceptDraw()"
             (placeMultipleCardsConfirmed)="confirmPlaceMultipleCards()"
             (placeMultipleCardsCanceled)="cancelPlaceMultipleCards()"
+            [opaqueCards]="((opponentDisconnectedTimer$ | async) ?? 0) > 0"
           ></app-opponent-hand-toolbar>
 
           <game-board

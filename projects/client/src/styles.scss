@@ -74,6 +74,12 @@ html {
   }
 }
 
+@media (min-height: 650px) {
+  .h-gt-sm-hidden {
+    display: none !important;
+  }
+}
+
 @media (max-height: 600px) {
   .h-xs-hidden {
     display: none !important;
