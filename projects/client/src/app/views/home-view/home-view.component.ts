@@ -1,8 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { Clipboard } from '@angular/cdk/clipboard';
 import { toggleDarkMode } from '../../logic/toggle-dark-mode';
 import { fadeInOutAnimation } from '@shared/animations';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,16 +11,6 @@ import { Router } from '@angular/router';
 })
 export class HomeViewComponent {
   readonly #router = inject(Router);
-  readonly #clipboard = inject(Clipboard);
-  readonly #matSnackBar = inject(MatSnackBar);
-
-  copyToClipboard(text: string) {
-    this.#clipboard.copy(text);
-    this.#matSnackBar.open('Copied to clipboard.', 'Hide', {
-      duration: 3000,
-      verticalPosition: 'bottom',
-    });
-  }
 
   toggleDarkMode() {
     toggleDarkMode();
