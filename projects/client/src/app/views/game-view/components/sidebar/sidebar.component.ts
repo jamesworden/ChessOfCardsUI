@@ -10,7 +10,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import { GameState, ResponsiveSizeService } from '@shared/game';
-import { BehaviorSubject, Observable, combineLatest, of, timer } from 'rxjs';
+import { BehaviorSubject, Observable, of, timer } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Card, CardPosition, PlayerGameView } from '@shared/models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -70,12 +70,9 @@ export class SidebarComponent implements OnInit {
   readonly isShowingCardStack$ = new BehaviorSubject<boolean>(false);
   readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);
 
-  readonly playerRemainingTime$ = combineLatest([
-    this.playerGameView$,
-    this.gameIsActive$,
-  ]).pipe(
-    map(([playerGameView, gameIsActive]) => {
-      if (!playerGameView || playerGameView.HasEnded || !gameIsActive) {
+  readonly playerRemainingTime$ = this.playerGameView$.pipe(
+    map((playerGameView) => {
+      if (!playerGameView || playerGameView.HasEnded) {
         return of(0);
       }
 
@@ -103,12 +100,9 @@ export class SidebarComponent implements OnInit {
     })
   );
 
-  readonly opponentRemainingTime$ = combineLatest([
-    this.playerGameView$,
-    this.gameIsActive$,
-  ]).pipe(
-    map(([playerGameView, gameIsActive]) => {
-      if (!playerGameView || playerGameView.HasEnded || !gameIsActive) {
+  readonly opponentRemainingTime$ = this.playerGameView$.pipe(
+    map((playerGameView) => {
+      if (!playerGameView || playerGameView.HasEnded) {
         return of(0);
       }
 
