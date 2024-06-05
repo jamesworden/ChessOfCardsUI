@@ -34,6 +34,7 @@ import {
   StartPlacingMultipleCards,
   UpdatePlayerGameView,
   GameState,
+  JoinGame,
 } from '@shared/game';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -44,6 +45,8 @@ import {
   CardMovement,
   CardPosition,
   ChatMessage,
+  DURATION_OPTIONS_TO_MINUTES,
+  DurationOption,
   GameOverData,
   Lane,
   Move,
@@ -81,6 +84,13 @@ import { AudioCacheService } from '@shared/audio-cache';
 import { DEFAULT_GAME_VIEW } from './constants';
 import { ButtonModalComponent } from '@shared/ui-inputs';
 import { Router } from '@angular/router';
+import { addMinutes, isAfter } from 'date-fns';
+
+interface InProgressGameData {
+  gameCode: string;
+  durationOption: DurationOption;
+  gameStartedTimestampUTC: string;
+}
 
 const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
@@ -307,6 +317,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   joinGameName = '';
 
   ngOnInit() {
+    this.checkToJoinInProgressGame();
     this.updateUiLayout();
 
     this.gameOverData$
@@ -482,6 +493,21 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe(([gameCode, pendingGameCode]) =>
         this.#router.navigate(['game', gameCode ?? pendingGameCode ?? ''])
       );
+    this.playerGameView$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((playerGameView) => {
+        if (!playerGameView || playerGameView.HasEnded) {
+          return;
+        }
+        this.storeLocalGameData(playerGameView);
+      });
+    this.gameIsActive$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((isActive) => {
+        if (!isActive) {
+          this.destroyLocalGameData();
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -1017,6 +1043,31 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.joinGameName = name;
   }
 
+  private storeLocalGameData(playerGameView: PlayerGameView) {
+    const inProgressGameData: InProgressGameData = {
+      durationOption: playerGameView.DurationOption,
+      gameCode: playerGameView.GameCode,
+      gameStartedTimestampUTC: playerGameView.GameCreatedTimestampUTC,
+    };
+
+    localStorage.setItem(
+      'in-progress-game',
+      JSON.stringify(inProgressGameData)
+    );
+  }
+
+  private destroyLocalGameData() {
+    localStorage.removeItem('in-progress-game');
+  }
+
+  private getLocalGameData() {
+    const stringifiedGameData = localStorage.getItem('in-progress-game');
+    if (!stringifiedGameData || typeof stringifiedGameData !== 'string') {
+      return null;
+    }
+    return JSON.parse(stringifiedGameData) as InProgressGameData;
+  }
+
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
     const existingDetails =
       this.latestMoveMadeDetails$.getValue() ?? DEFAULT_LATEST_MOVE_DETAILS;
@@ -1024,6 +1075,30 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       ...existingDetails,
       ...updatedDetails,
     });
+  }
+
+  private checkToJoinInProgressGame() {
+    const inProgressGameData = this.getLocalGameData();
+    this.destroyLocalGameData();
+    if (!inProgressGameData) {
+      return;
+    }
+
+    const gameStarted = new Date(inProgressGameData.gameStartedTimestampUTC);
+    const playerTurnMinutes =
+      DURATION_OPTIONS_TO_MINUTES[inProgressGameData.durationOption];
+    const totalPossibleDuration = playerTurnMinutes * 2;
+    const gameEndedBy = addMinutes(gameStarted, totalPossibleDuration);
+    if (isAfter(gameStarted, gameEndedBy)) {
+      return;
+    }
+
+    const sub = this.isConnectedToServer$
+      .pipe(filter((isConnected) => isConnected))
+      .subscribe(() => {
+        this.#store.dispatch(new JoinGame(inProgressGameData.gameCode));
+        sub.unsubscribe();
+      });
   }
 
   private rearrangeHand(previousIndex: number, targetIndex: number) {

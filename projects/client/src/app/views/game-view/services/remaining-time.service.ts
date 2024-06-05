@@ -2,9 +2,13 @@ import { DestroyRef, Injectable, inject } from '@angular/core';
 import { timer, BehaviorSubject, Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { Select, Store } from '@ngxs/store';
-import { durationOptionsMetadata } from '../../../metadata/duration-options-metadata';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PlayerGameView, SecondsRemaining, PlayerOrNone } from '@shared/models';
+import {
+  PlayerGameView,
+  SecondsRemaining,
+  PlayerOrNone,
+  DURATION_OPTIONS_TO_MINUTES,
+} from '@shared/models';
 import {
   CheckGuestForEmptyTimer,
   CheckHostForEmptyTimer,
@@ -88,14 +92,6 @@ export class RemainingTimeService {
     const { MovesMade, GameCreatedTimestampUTC, DurationOption } =
       playerGameView;
 
-    const durationMetadata = durationOptionsMetadata.find(
-      (metadata) => metadata.durationOption === DurationOption
-    );
-
-    if (!durationMetadata) {
-      return;
-    }
-
     const totalElapsedMs = {
       host: 0,
       guest: 0,
@@ -116,7 +112,7 @@ export class RemainingTimeService {
       lastTimestamp = currentTimestamp;
     }
 
-    const totalMs = durationMetadata.minutes * 60 * 1000;
+    const totalMs = DURATION_OPTIONS_TO_MINUTES[DurationOption] * 60 * 1000;
 
     const msRemainingFromLastMove = {
       host: totalMs - totalElapsedMs.host,

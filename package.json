@@ -24,6 +24,7 @@
     "@fontsource-variable/bricolage-grotesque": "^5.0.5",
     "@microsoft/signalr": "^6.0.8",
     "@ngxs/store": "^3.8.2",
+    "date-fns": "^3.6.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "web-animations-js": "^2.3.2",
