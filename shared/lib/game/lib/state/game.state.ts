@@ -59,7 +59,6 @@ type GameStateModel = {
   nameIsInvalid: boolean;
   waitingForServer: boolean;
   gameIsActive: boolean;
-  muted: boolean;
   isConnectedToServer: boolean;
 };
 
@@ -81,7 +80,6 @@ const defaultGameState: GameStateModel = {
   nameIsInvalid: false,
   waitingForServer: false,
   gameIsActive: false,
-  muted: false,
   isConnectedToServer: false,
 };
 
