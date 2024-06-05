@@ -74,6 +74,12 @@ html {
   }
 }
 
+@media (max-height: 600px) {
+  .h-xs-hidden {
+    display: none !important;
+  }
+}
+
 .flex-2 {
   flex-grow: 2;
 }
