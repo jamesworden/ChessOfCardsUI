@@ -80,6 +80,7 @@ import { StatisticsPanelView } from '@shared/statistics-panel';
 import { AudioCacheService } from '@shared/audio-cache';
 import { DEFAULT_GAME_VIEW } from './constants';
 import { ButtonModalComponent } from '@shared/ui-inputs';
+import { Router } from '@angular/router';
 
 const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
@@ -105,6 +106,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #destroyRef = inject(DestroyRef);
   readonly #audioCacheService = inject(AudioCacheService);
+  readonly #router = inject(Router);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -153,6 +155,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @Select(GameState.opponentIsDisconnected)
   opponentIsDisconnected$!: Observable<boolean>;
+
+  @Select(GameState.pendingGameCode)
+  pendingGameCode$!: Observable<string>;
+
+  @Select(GameState.gameCode)
+  gameCode$!: Observable<string>;
 
   readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
@@ -469,6 +477,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           this.selectedPanelView$.next(StatisticsPanelView.Moves);
         }
       });
+    combineLatest([
+      this.gameCode$.pipe(startWith(null)),
+      this.pendingGameCode$.pipe(startWith(null)),
+    ])
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(([gameCode, pendingGameCode]) =>
+        this.#router.navigate(['game', gameCode ?? pendingGameCode ?? ''])
+      );
   }
 
   ngAfterViewInit() {

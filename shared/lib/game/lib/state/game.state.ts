@@ -195,6 +195,11 @@ export class GameState {
   }
 
   @Selector()
+  static gameCode(state: GameStateModel) {
+    return state.playerGameView?.GameCode;
+  }
+
+  @Selector()
   static opponentIsDisconnected(state: GameStateModel) {
     return state.opponentIsDisconnected;
   }
@@ -470,8 +475,12 @@ export class GameState {
   }
 
   @Action(DeletePendingGame)
-  deletePendingGame(_: StateContext<GameStateModel>) {
+  deletePendingGame(ctx: StateContext<GameStateModel>) {
     this.#gameWebsocketService.deletePendingGame();
+
+    ctx.patchState({
+      pendingGameView: null,
+    });
   }
 
   @Action(SetOpponentIsDisconnected)

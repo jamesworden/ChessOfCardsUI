@@ -12,6 +12,10 @@ const routes: Routes = [
     path: 'game',
     component: GameViewComponent,
   },
+  {
+    path: 'game/:gameCode',
+    component: GameViewComponent,
+  },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
