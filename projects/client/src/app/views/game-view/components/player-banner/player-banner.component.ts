@@ -9,4 +9,5 @@ export class PlayerBannerComponent {
   @Input({ required: true }) username: string;
   @Input() elo?: number;
   @Input() containerClass: string;
+  @Input() opponentDisconnectTimer: number | null;
 }

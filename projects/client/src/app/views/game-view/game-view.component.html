@@ -92,10 +92,13 @@
               [username]="(opponentUsername$ | async) ?? ''"
               class="h-sm-hidden"
               [containerClass]="
-                isPlayersTurn
-                  ? 'rounded-b-sm bg-rose-900'
-                  : 'rounded-b-sm bg-rose-700'
+                (opponentIsDisconnected$ | async)
+                  ? 'rounded-b-sm transition bg-gray-700'
+                  : isPlayersTurn
+                    ? 'rounded-b-sm transition bg-rose-900'
+                    : 'rounded-b-sm transition bg-rose-700'
               "
+              [opponentDisconnectTimer]="opponentDisconnectedTimer$ | async"
             ></app-player-banner>
           </div>
 

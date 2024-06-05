@@ -32,6 +32,7 @@ import {
   ConnectToServer,
   DeletePendingGame,
   SetNameIsInvalid,
+  SetOpponentIsDisconnected,
 } from './game.actions';
 import {
   Card,
@@ -60,6 +61,7 @@ type GameStateModel = {
   waitingForServer: boolean;
   gameIsActive: boolean;
   isConnectedToServer: boolean;
+  opponentIsDisconnected: boolean;
 };
 
 const defaultGameState: GameStateModel = {
@@ -81,6 +83,7 @@ const defaultGameState: GameStateModel = {
   waitingForServer: false,
   gameIsActive: false,
   isConnectedToServer: false,
+  opponentIsDisconnected: false,
 };
 
 @State<GameStateModel>({
@@ -189,6 +192,11 @@ export class GameState {
   @Selector()
   static pendingGameCode(state: GameStateModel) {
     return state.pendingGameView?.GameCode;
+  }
+
+  @Selector()
+  static opponentIsDisconnected(state: GameStateModel) {
+    return state.opponentIsDisconnected;
   }
 
   @Action(UpdatePlayerGameView)
@@ -463,5 +471,15 @@ export class GameState {
   @Action(DeletePendingGame)
   deletePendingGame(_: StateContext<GameStateModel>) {
     this.#gameWebsocketService.deletePendingGame();
+  }
+
+  @Action(SetOpponentIsDisconnected)
+  setOpponentIsDisconnected(
+    ctx: StateContext<GameStateModel>,
+    { opponentIsDisconnected }: SetOpponentIsDisconnected
+  ) {
+    ctx.patchState({
+      opponentIsDisconnected,
+    });
   }
 }

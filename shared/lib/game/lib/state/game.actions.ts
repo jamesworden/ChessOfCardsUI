@@ -163,3 +163,8 @@ export class SendChatMessage {
   static readonly type = '[GameState] Send Chat Message';
   constructor(public message: string) {}
 }
+
+export class SetOpponentIsDisconnected {
+  static readonly type = '[GameState] Opponent Is Disconnected';
+  constructor(public opponentIsDisconnected: boolean) {}
+}

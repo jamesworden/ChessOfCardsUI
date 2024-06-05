@@ -18,6 +18,7 @@ import {
   UpdatePlayerGameView,
   SetIsConnectedToServer,
   SetNameIsInvalid,
+  SetOpponentIsDisconnected,
 } from '../state/game.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -125,10 +126,6 @@ export class GameWebsocketService {
       }
     );
 
-    this.hubConnection.on(MessageType.OpponentDisconnected, () => {
-      this.#store.dispatch(new ResetPendingGameView());
-    });
-
     this.hubConnection.on(MessageType.InvalidGameCode, () => {
       this.#store.dispatch(new SetGameCodeIsInvalid(true));
     });
@@ -198,19 +195,11 @@ export class GameWebsocketService {
     });
 
     this.hubConnection.on(MessageType.OpponentDisconnected, () => {
-      // TODO: Update new state property and reflect in UI somehow
-      this.#matSnackBar.open('Opponent Disconnected', 'Hide', {
-        duration: 3000,
-        verticalPosition: 'top',
-      });
+      this.#store.dispatch(new SetOpponentIsDisconnected(true));
     });
 
     this.hubConnection.on(MessageType.OpponentReconnected, () => {
-      // TODO: Update new state property and reflect in UI somehow
-      this.#matSnackBar.open('Opponent Reconnected', 'Hide', {
-        duration: 3000,
-        verticalPosition: 'top',
-      });
+      this.#store.dispatch(new SetOpponentIsDisconnected(false));
     });
 
     this.hubConnection.on(MessageType.Reconnected, (stringifiedGameState) => {

@@ -10,8 +10,13 @@ import {
   HostListener,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { withLatestFrom, tap, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, of, timer } from 'rxjs';
+import {
+  withLatestFrom,
+  tap,
+  distinctUntilChanged,
+  switchMap,
+} from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
@@ -34,7 +39,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, pairwise, startWith, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { Router } from '@angular/router';
 import {
   Card,
   CardMovement,
@@ -99,7 +103,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly #store = inject(Store);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
-  readonly #router = inject(Router);
   readonly #destroyRef = inject(DestroyRef);
   readonly #audioCacheService = inject(AudioCacheService);
 
@@ -147,6 +150,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @Select(GameState.gameCodeIsInvalid)
   gameCodeIsInvalid$!: Observable<boolean>;
+
+  @Select(GameState.opponentIsDisconnected)
+  opponentIsDisconnected$!: Observable<boolean>;
 
   readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
@@ -272,6 +278,16 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     })
   );
 
+  readonly opponentDisconnectedTimer$ = this.opponentIsDisconnected$.pipe(
+    map((opponentIsDisconnected) =>
+      opponentIsDisconnected ? timer(0, 1000) : of(null)
+    ),
+    switchMap((timer) => timer),
+    map((timeElapsed) =>
+      typeof timeElapsed === 'number' ? 30 - timeElapsed : null
+    )
+  );
+
   readonly Z_INDEXES = Z_INDEXES;
   readonly GameViewTab = GameViewTab;
 
@@ -283,9 +299,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   joinGameName = '';
 
   ngOnInit() {
-    /**
-     * TODO: Ensure that resizing browser maintains correct nav tab / panel tab.
-     */
     this.updateUiLayout();
 
     this.gameOverData$
