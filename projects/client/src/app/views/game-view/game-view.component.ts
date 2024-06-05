@@ -1080,10 +1080,15 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   private checkToJoinInProgressGame() {
     const inProgressGameData = this.getLocalGameData();
     this.destroyLocalGameData();
-    if (!inProgressGameData) {
-      return;
-    }
 
+    inProgressGameData
+      ? this.joinInProgressGameFromLocalData(inProgressGameData)
+      : this.joinInProgressGameFromUrl();
+  }
+
+  private joinInProgressGameFromLocalData(
+    inProgressGameData: InProgressGameData
+  ) {
     const gameStarted = new Date(inProgressGameData.gameStartedTimestampUTC);
     const playerTurnMinutes =
       DURATION_OPTIONS_TO_MINUTES[inProgressGameData.durationOption];
@@ -1093,10 +1098,22 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    this.joinGameUponConnectingToServer(inProgressGameData.gameCode);
+  }
+
+  private joinInProgressGameFromUrl() {
+    const urlPieces = this.#router.url.split('/');
+    const potentialGameCode = urlPieces[urlPieces.length - 1];
+    if (/[A-Z]/.test(potentialGameCode) && potentialGameCode.length === 4) {
+      this.joinGameUponConnectingToServer(potentialGameCode);
+    }
+  }
+
+  private joinGameUponConnectingToServer(gameCode: string) {
     const sub = this.isConnectedToServer$
       .pipe(filter((isConnected) => isConnected))
       .subscribe(() => {
-        this.#store.dispatch(new JoinGame(inProgressGameData.gameCode));
+        this.#store.dispatch(new JoinGame(gameCode));
         sub.unsubscribe();
       });
   }
