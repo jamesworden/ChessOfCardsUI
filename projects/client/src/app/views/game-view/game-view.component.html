@@ -98,10 +98,10 @@
                     ? 'rounded-b-sm transition bg-rose-900'
                     : 'rounded-b-sm transition bg-rose-700'
               "
-              [opponentDisconnectTimer]="opponentDisconnectedTimer$ | async"
+              [opponentDisconnectTimer]="opponentDisconnectClock$ | async"
             ></app-player-banner>
 
-            @if (((opponentDisconnectedTimer$ | async) ?? 0) > 0) {
+            @if (((opponentDisconnectClock$ | async) ?? 0) > 0) {
               <div [@fadeInOut] class="h-gt-sm-hidden relative flex-1">
                 <div
                   class="absolute top-0 left-0 w-full"
@@ -116,7 +116,7 @@
                     <div
                       class="border border-1 border-gray-400 rounded-sm text-gray-800 bg-gray-100 font-bold text-sm w-10 text-center"
                     >
-                      {{ opponentDisconnectedTimer$ | async }}
+                      {{ opponentDisconnectClock$ | async }}
                     </div>
                   </div>
                 </div>
@@ -135,7 +135,7 @@
             (drawAccepted)="acceptDraw()"
             (placeMultipleCardsConfirmed)="confirmPlaceMultipleCards()"
             (placeMultipleCardsCanceled)="cancelPlaceMultipleCards()"
-            [opaqueCards]="((opponentDisconnectedTimer$ | async) ?? 0) > 0"
+            [opaqueCards]="((opponentDisconnectClock$ | async) ?? 0) > 0"
           ></app-opponent-hand-toolbar>
 
           <game-board

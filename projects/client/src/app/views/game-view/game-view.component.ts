@@ -35,6 +35,7 @@ import {
   UpdatePlayerGameView,
   GameState,
   JoinGame,
+  GameClockService,
 } from '@shared/game';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -117,6 +118,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly #destroyRef = inject(DestroyRef);
   readonly #audioCacheService = inject(AudioCacheService);
   readonly #router = inject(Router);
+  readonly #gameClockService = inject(GameClockService);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -174,6 +176,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly opponentDisconnectClock$ =
+    this.#gameClockService.opponentDisconnectClock$;
 
   readonly cachedGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
   readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
@@ -294,16 +298,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         return 'You';
       }
     })
-  );
-
-  readonly opponentDisconnectedTimer$ = this.opponentIsDisconnected$.pipe(
-    map((opponentIsDisconnected) =>
-      opponentIsDisconnected ? timer(0, 1000) : of(null)
-    ),
-    switchMap((timer) => timer),
-    map((timeElapsed) =>
-      typeof timeElapsed === 'number' ? 30 - timeElapsed : null
-    )
   );
 
   readonly Z_INDEXES = Z_INDEXES;

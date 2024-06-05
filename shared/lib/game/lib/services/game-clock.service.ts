@@ -12,7 +12,20 @@ export class GameClockService {
   @Select(GameState.playerGameView)
   playerGameView$!: Observable<PlayerGameView>;
 
-  public readonly clocks$ = this.playerGameView$.pipe(
+  @Select(GameState.opponentIsDisconnected)
+  opponentIsDisconnected$!: Observable<boolean>;
+
+  public readonly opponentDisconnectClock$ = this.opponentIsDisconnected$.pipe(
+    map((opponentIsDisconnected) =>
+      opponentIsDisconnected ? timer(0, 1000) : of(null)
+    ),
+    switchMap((timer) => timer),
+    map((timeElapsed) =>
+      typeof timeElapsed === 'number' ? 30 - timeElapsed : null
+    )
+  );
+
+  public readonly remainingTimeClocks$ = this.playerGameView$.pipe(
     map((playerGameView) =>
       !playerGameView || playerGameView.HasEnded ? of(0) : timer(0, 1000)
     ),

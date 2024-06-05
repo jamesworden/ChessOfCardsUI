@@ -70,7 +70,7 @@ export class SidebarComponent implements OnInit {
   @Select(GameState.gameIsActive)
   gameIsActive$!: Observable<boolean>;
 
-  readonly clocks$ = this.#gameClockService.clocks$;
+  readonly clocks$ = this.#gameClockService.remainingTimeClocks$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly isShowingCardStack$ = new BehaviorSubject<boolean>(false);
   readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);
