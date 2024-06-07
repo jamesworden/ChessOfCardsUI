@@ -1,6 +1,9 @@
 <div class="flex gap-x-2">
   <button
-    [class]="'px-2 rounded-sm transition flex-1 border ' + buttonClass"
+    [class]="
+      'disable-dbl-tap-zoom px-2 rounded-sm transition flex-1 border ' +
+      buttonClass
+    "
     (click)="selectFirst()"
     [disabled]="selectFirstDisabled"
     [ngClass]="{
@@ -15,7 +18,10 @@
   </button>
 
   <button
-    [class]="'px-2 rounded-sm transition flex-2 border ' + buttonClass"
+    [class]="
+      'disable-dbl-tap-zoom px-2 rounded-sm transition flex-2 border ' +
+      buttonClass
+    "
     (click)="selectPrevious()"
     [disabled]="selectPrevDisabled"
     [ngClass]="{
@@ -31,7 +37,10 @@
 
   <button
     [disabled]="selectNextDisabled"
-    [class]="'px-2 rounded-sm transition flex-2 border ' + buttonClass"
+    [class]="
+      'disable-dbl-tap-zoom px-2 rounded-sm transition flex-2 border ' +
+      buttonClass
+    "
     (click)="selectNext()"
     [ngClass]="{
       'opacity-30': selectNextDisabled
@@ -46,7 +55,10 @@
 
   <button
     [disabled]="selectLastDisabled"
-    [class]="'px-2 rounded-sm transition flex-1 border ' + buttonClass"
+    [class]="
+      'disable-dbl-tap-zoom px-2 rounded-sm transition flex-1 border ' +
+      buttonClass
+    "
     (click)="selectLast()"
     [ngClass]="{
       'opacity-30': selectLastDisabled

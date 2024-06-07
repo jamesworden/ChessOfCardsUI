@@ -107,3 +107,7 @@ html {
 .bg-gray-700-important {
   background-color: #374151 !important;
 }
+
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
+}
