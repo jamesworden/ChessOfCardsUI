@@ -112,7 +112,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   }
 
   @HostListener('document:keydown.enter')
-  handleEscapeKey() {
+  handleEnterKey() {
     if (!this.hostOrJoinView) {
       return;
     }
@@ -160,6 +160,8 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   }
 
   attemptToJoinGame() {
+    this.triedToJoinGame = true;
+
     const upperCaseGameCode = this.joinGameCode.toUpperCase();
     const actualGameCode = this.#store.selectSnapshot(
       GameState.pendingGameCode
@@ -171,8 +173,6 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
       this.#store.dispatch(new SetGameCodeIsInvalid(true));
       return;
     }
-
-    this.triedToJoinGame = true;
 
     if (!this.#store.selectSnapshot(GameState.isConnectedToServer)) {
       this.showUnableToConnectMessage();
@@ -233,6 +233,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   selectHostView() {
     this.joinGameSelected = false;
     this.hostOrJoinView = true;
+    this.triedToJoinGame = false;
   }
 
   selectJoinView() {
