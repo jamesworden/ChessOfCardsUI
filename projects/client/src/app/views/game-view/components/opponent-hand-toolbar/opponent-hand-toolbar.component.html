@@ -28,7 +28,7 @@
             iconString="check"
             iconClass="material-symbols-outlined"
             label="Place cards"
-            buttonClass="rounded-sm hover:bg-slate-600 dark:hover:bg-slate-500"
+            buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
             (clicked)="confirmPlaceMultipleCards()"
           ></icon-button>
         </div>
@@ -39,7 +39,7 @@
             label="Cancel"
             iconString="close"
             iconClass="material-symbols-outlined"
-            buttonClass="rounded-sm hover:bg-slate-600 dark:hover:bg-slate-500"
+            buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
             (clicked)="cancelPlaceMultipleCards()"
           ></icon-button>
         </div>
@@ -55,7 +55,7 @@
         <icon-button
           iconString="help"
           iconClass="material-symbols-outlined"
-          buttonClass="p-2 lg:p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 rounded-r-sm"
+          buttonClass="p-2 lg:p-3 bg-gray-100 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-slate-600 rounded-r-sm transition"
           iconFontClass="text-md lg:text-2xl"
           matTooltip="Help"
           matTooltipPosition="below"
@@ -86,6 +86,7 @@
           matTooltipPosition="below"
           iconString="check"
           iconClass="material-symbols-outlined"
+          buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
           (clicked)="acceptDraw()"
         ></icon-button>
         <icon-button
@@ -94,6 +95,7 @@
           matTooltipPosition="below"
           iconString="close"
           iconClass="material-symbols-outlined"
+          buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
           (clicked)="denyDraw()"
         ></icon-button>
       </div>
