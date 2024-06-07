@@ -16,6 +16,8 @@ export class PreviousNextSelectorComponent {
   @Input() selectPrevDisabled = false;
   @Input() selectNextDisabled = false;
   @Input() selectLastDisabled = false;
+  @Input() buttonClass = '';
+  @Input() iconClass = '';
 
   @Output() firstSelected = new EventEmitter();
   @Output() previousSelected = new EventEmitter();
