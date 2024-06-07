@@ -33,6 +33,7 @@ import {
   DeletePendingGame,
   SetNameIsInvalid,
   SetOpponentIsDisconnected,
+  InitGameState,
 } from './game.actions';
 import {
   Card,
@@ -40,6 +41,7 @@ import {
   GameOverData,
   PendingGameView,
   PlaceCardAttempt,
+  Environment,
 } from '@shared/models';
 import { isPlayersTurn } from '@shared/logic';
 import { GameWebsocketService } from '../services/game.websocket.service';
@@ -62,6 +64,7 @@ type GameStateModel = {
   gameIsActive: boolean;
   isConnectedToServer: boolean;
   opponentIsDisconnected: boolean;
+  environment: Environment | null;
 };
 
 const defaultGameState: GameStateModel = {
@@ -84,6 +87,7 @@ const defaultGameState: GameStateModel = {
   gameIsActive: false,
   isConnectedToServer: false,
   opponentIsDisconnected: false,
+  environment: null,
 };
 
 @State<GameStateModel>({
@@ -470,8 +474,16 @@ export class GameState {
   }
 
   @Action(ConnectToServer)
-  connectToServer(_: StateContext<GameStateModel>, action: ConnectToServer) {
-    this.#gameWebsocketService.connectToServer(action.environment);
+  connectToServer(ctx: StateContext<GameStateModel>) {
+    const { environment } = ctx.getState();
+
+    if (environment) {
+      this.#gameWebsocketService.connectToServer(environment);
+    } else {
+      console.error(
+        '[GameState]: Tried to connect to the server without initializing!'
+      );
+    }
   }
 
   @Action(DeletePendingGame)
@@ -490,6 +502,16 @@ export class GameState {
   ) {
     ctx.patchState({
       opponentIsDisconnected,
+    });
+  }
+
+  @Action(InitGameState)
+  initGameState(
+    ctx: StateContext<GameStateModel>,
+    { environment }: InitGameState
+  ) {
+    ctx.patchState({
+      environment,
     });
   }
 }

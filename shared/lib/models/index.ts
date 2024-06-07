@@ -18,4 +18,5 @@ export * from './lib/suit.model';
 export * from './lib/candidate-move.model';
 export * from './lib/chat-message.model';
 export * from './lib/pending-game-options';
-export * from './lib/environment';
+export * from './lib/environment.model';
+export * from './lib/join-pending-game-options.model';

@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Select, Store } from '@ngxs/store';
 import {
+  ConnectToServer,
   CreatePendingGame,
   DeletePendingGame,
   GameState,
@@ -144,19 +145,23 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
     );
 
     if (!this.#store.selectSnapshot(GameState.isConnectedToServer)) {
-      this.showUnableToConnectMessage();
+      this.showRetryConnectionMessage(this.hostGame.bind(this));
     }
   }
 
-  showUnableToConnectMessage() {
-    this.#matSnackBar.open(
-      'Sorry, we are unable to connect to the server!',
-      'Hide',
-      {
+  showRetryConnectionMessage(initialAction: () => unknown) {
+    this.#store.dispatch(new ConnectToServer());
+
+    const sub = this.#matSnackBar
+      .open('Unable to connect to the server!', 'Retry', {
         verticalPosition: 'top',
         duration: 3000,
-      }
-    );
+      })
+      .onAction()
+      .subscribe(() => {
+        initialAction();
+        sub.unsubscribe();
+      });
   }
 
   attemptToJoinGame() {
@@ -175,7 +180,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
     }
 
     if (!this.#store.selectSnapshot(GameState.isConnectedToServer)) {
-      this.showUnableToConnectMessage();
+      this.showRetryConnectionMessage(this.attemptToJoinGame.bind(this));
       return;
     }
 
