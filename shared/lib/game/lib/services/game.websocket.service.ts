@@ -107,10 +107,7 @@ export class GameWebsocketService {
   private registerServerEvents(): void {
     this.hubConnection.on(
       MessageType.CreatedPendingGame,
-      (stringifiedPendingGameView: string) => {
-        const pendingGameView: PendingGameView = JSON.parse(
-          stringifiedPendingGameView
-        );
+      (pendingGameView: PendingGameView) => {
         this.#store.dispatch(new SetPendingGameView(pendingGameView));
       }
     );
@@ -230,13 +227,10 @@ export class GameWebsocketService {
     );
   }
 
-  public createPendingGame(pendingGameOptions?: PendingGameOptions) {
-    const stringifiedOptions = pendingGameOptions
-      ? JSON.stringify(pendingGameOptions)
-      : undefined;
+  public createPendingGame(pendingGameOptions: PendingGameOptions) {
     this.hubConnection.invoke(
       MessageType.CreatePendingGame,
-      stringifiedOptions
+      pendingGameOptions
     );
   }
 

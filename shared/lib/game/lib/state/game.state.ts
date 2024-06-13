@@ -42,6 +42,7 @@ import {
   PendingGameView,
   PlaceCardAttempt,
   Environment,
+  DurationOption,
 } from '@shared/models';
 import { isPlayersTurn } from '@shared/logic';
 import { GameWebsocketService } from '../services/game.websocket.service';
@@ -195,7 +196,7 @@ export class GameState {
 
   @Selector()
   static pendingGameCode(state: GameStateModel) {
-    return state.pendingGameView?.GameCode;
+    return state.pendingGameView?.gameCode;
   }
 
   @Selector()
@@ -400,7 +401,11 @@ export class GameState {
     _: StateContext<GameStateModel>,
     action: CreatePendingGame
   ) {
-    this.#gameWebsocketService.createPendingGame(action.pendingGameOptions);
+    this.#gameWebsocketService.createPendingGame(
+      action.pendingGameOptions ?? {
+        DurationOption: DurationOption.FiveMinutes,
+      }
+    );
   }
 
   @Action(JoinGame)
