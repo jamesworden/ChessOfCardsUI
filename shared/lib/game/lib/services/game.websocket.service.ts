@@ -30,7 +30,7 @@ import {
   PlayerGameView,
 } from '@shared/models';
 import { isPlayersTurn } from '@shared/logic';
-import { JoinPendingGameOptions } from 'shared/lib/models/lib/join-pending-game-options.model';
+import { JoinGameOptions } from 'shared/lib/models/lib/join-game-options.model';
 
 enum MessageType {
   CreatedPendingGame = 'CreatedPendingGame',
@@ -234,18 +234,8 @@ export class GameWebsocketService {
     );
   }
 
-  public joinGame(
-    gameCode: string,
-    joinPendingGameOptions?: JoinPendingGameOptions
-  ) {
-    const stringifiedOptions = joinPendingGameOptions
-      ? JSON.stringify(joinPendingGameOptions)
-      : undefined;
-    this.hubConnection.invoke(
-      MessageType.JoinGame,
-      gameCode,
-      stringifiedOptions
-    );
+  public joinGame(joinGameOptions: JoinGameOptions) {
+    this.hubConnection.invoke(MessageType.JoinGame, joinGameOptions);
   }
 
   public rearrangeHand(cards: Card[]) {

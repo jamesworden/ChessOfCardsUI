@@ -185,8 +185,9 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
     }
 
     this.#store.dispatch(
-      new JoinGame(upperCaseGameCode, {
-        GuestName: this.name,
+      new JoinGame({
+        gameCode: upperCaseGameCode,
+        name: this.name,
       })
     );
   }

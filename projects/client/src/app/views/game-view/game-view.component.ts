@@ -1082,7 +1082,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const sub = this.isConnectedToServer$
       .pipe(filter((isConnected) => isConnected))
       .subscribe(() => {
-        this.#store.dispatch(new JoinGame(gameCode));
+        this.#store.dispatch(
+          new JoinGame({
+            gameCode,
+          })
+        );
         sub.unsubscribe();
       });
   }
