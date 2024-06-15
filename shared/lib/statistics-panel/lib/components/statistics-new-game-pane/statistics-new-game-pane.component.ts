@@ -26,7 +26,7 @@ import {
 import { Observable, combineLatest } from 'rxjs';
 
 const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
-  DurationOption: DurationOption.FiveMinutes,
+  durationOption: DurationOption.FiveMinutes,
 };
 
 interface DurationButton {
@@ -139,7 +139,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
 
     this.#store.dispatch(
       new CreatePendingGame({
-        HostName: this.name,
+        hostName: this.name,
         ...this.pendingGameOptions,
       })
     );
@@ -193,7 +193,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   }
 
   selectDurationOption(durationOption: DurationOption) {
-    this.pendingGameOptions.DurationOption = durationOption;
+    this.pendingGameOptions.durationOption = durationOption;
   }
 
   attemptToLeaveGame() {

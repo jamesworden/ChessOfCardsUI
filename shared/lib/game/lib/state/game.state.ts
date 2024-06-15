@@ -403,7 +403,7 @@ export class GameState {
   ) {
     this.#gameWebsocketService.createPendingGame(
       action.pendingGameOptions ?? {
-        DurationOption: DurationOption.FiveMinutes,
+        durationOption: DurationOption.FiveMinutes,
       }
     );
   }
