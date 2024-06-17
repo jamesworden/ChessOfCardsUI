@@ -679,7 +679,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    cachedGameView.Hand.Cards = placeMultipleCardsHand;
+    cachedGameView.hand.Cards = placeMultipleCardsHand;
     this.cachedGameView$.next({ ...cachedGameView });
     this.#store.dispatch(new FinishPlacingMultipleCards(false));
 
@@ -723,8 +723,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const cardsToAdd = cardEntities
       .map((entity) => entity.context.Card as Card)
       .filter((card) => card);
-    const combinedCards = cachedGameView.Hand.Cards.concat(cardsToAdd);
-    cachedGameView.Hand.Cards = combinedCards;
+    const combinedCards = cachedGameView.hand.Cards.concat(cardsToAdd);
+    cachedGameView.hand.Cards = combinedCards;
 
     this.#store.dispatch(new UpdatePlayerGameView(cachedGameView));
     this.#store.dispatch(new RearrangeHand(combinedCards));
@@ -852,7 +852,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       GameState.isPlacingMultipleCards
     )
       ? this.#store.selectSnapshot(GameState.placeMultipleCardsHand) ?? []
-      : [...cachedGameView.Hand.Cards];
+      : [...cachedGameView.hand.Cards];
 
     cardsToAdd.forEach((card) => removeCardFromArray(card, cardsFromHand));
     this.cachedGameView$.next(cachedGameView);
@@ -1096,10 +1096,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     if (!cachedGameView) {
       return;
     }
-    moveItemInArray(cachedGameView.Hand.Cards, previousIndex, targetIndex);
+    moveItemInArray(cachedGameView.hand.Cards, previousIndex, targetIndex);
     this.cachedGameView$.next(cachedGameView);
     this.#store.dispatch(new UpdatePlayerGameView(cachedGameView));
-    this.#store.dispatch(new RearrangeHand(cachedGameView.Hand.Cards));
+    this.#store.dispatch(new RearrangeHand(cachedGameView.hand.Cards));
   }
 
   private rearrangePlaceMultipleHand(
@@ -1163,7 +1163,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    cachedGameView.Hand.Cards = handAfterSwitch;
+    cachedGameView.hand.Cards = handAfterSwitch;
     this.cachedGameView$.next(cachedGameView);
     this.#store.dispatch(new UpdatePlayerGameView(cachedGameView));
     new RearrangeHand(handAfterSwitch);
@@ -1175,7 +1175,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const initialPlaceMultipleCardsHand = [...cachedGameView.Hand.Cards];
+    const initialPlaceMultipleCardsHand = [...cachedGameView.hand.Cards];
 
     const cardWasDragged = this.latestMoveMadeDetails$.getValue()?.wasDragged;
     if (cardWasDragged) {
@@ -1216,7 +1216,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         moveCardToLane(placeCardAttempt, lanes);
       }
 
-      removeCardFromArray(placeCardAttempt.Card, cachedGameView.Hand.Cards);
+      removeCardFromArray(placeCardAttempt.Card, cachedGameView.hand.Cards);
     }
 
     this.cachedGameView$.next({ ...cachedGameView });

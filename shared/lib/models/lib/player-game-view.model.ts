@@ -6,7 +6,7 @@ import { Lane } from './lane.model';
 import { MoveMade } from './move-made.model';
 
 export type PlayerGameView = {
-  Hand: Hand;
+  hand: Hand;
   Lanes: Lane[];
   NumCardsInOpponentsDeck: number;
   NumCardsInOpponentsHand: number;

@@ -165,7 +165,7 @@
               (isPlacingMultipleCards$ | async) ?? false
             "
             [isHost]="gameView.IsHost"
-            [cards]="gameView.Hand.Cards"
+            [cards]="gameView.hand.Cards"
             [cardSize]="(cardSize$ | async)!"
             [disabled]="
               !!(waitingForServer$ | async) || !(gameIsActive$ | async)

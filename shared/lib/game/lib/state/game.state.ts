@@ -243,7 +243,7 @@ export class GameState {
     const { playerGameView, placeMultipleCardsHand } = ctx.getState();
 
     if (cardPlacementsConfirmed && playerGameView && placeMultipleCardsHand) {
-      playerGameView.Hand.Cards = placeMultipleCardsHand;
+      playerGameView.hand.Cards = placeMultipleCardsHand;
     }
 
     ctx.patchState({

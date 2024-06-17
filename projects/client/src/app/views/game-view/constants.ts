@@ -16,7 +16,7 @@ export const DEFAULT_GAME_VIEW: PlayerGameView = {
   DurationOption: DurationOption.FiveMinutes,
   GameCode: '',
   GameCreatedTimestampUTC: '',
-  Hand: {
+  hand: {
     Cards: [],
   },
   HasEnded: false,

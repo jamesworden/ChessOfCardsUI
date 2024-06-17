@@ -18,7 +18,7 @@ export function suitAndKindHasValidMove(
 
   const suitAndKindHasValidMove: SuitAndKindHasValidMove = {};
 
-  const cardsInHand = playerGameView.Hand?.Cards ?? [];
+  const cardsInHand = playerGameView.hand?.Cards ?? [];
 
   const cardsWithValidMoves = cardsInHand.filter(
     (card) =>
