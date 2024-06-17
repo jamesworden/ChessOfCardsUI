@@ -59,7 +59,7 @@ enum MessageType {
   InvalidName = 'InvalidName',
   OpponentReconnected = 'OpponentReconnected',
   OpponentDisconnected = 'OpponentDisconnected',
-  Reconnected = 'Reconnected',
+  PlayerReconnected = 'PlayerReconnected',
 }
 
 @Injectable({
@@ -112,108 +112,110 @@ export class GameWebsocketService {
       }
     );
 
-    this.hubConnection.on(
-      MessageType.PendingGameUpdated,
-      (stringifiedPendingGameView: string) => {
-        const pendingGameView: PendingGameView = JSON.parse(
-          stringifiedPendingGameView
-        );
-        this.#store.dispatch(new SetPendingGameView(pendingGameView));
-      }
-    );
+    // this.hubConnection.on(
+    //   MessageType.PendingGameUpdated,
+    //   (stringifiedPendingGameView: string) => {
+    //     const pendingGameView: PendingGameView = JSON.parse(
+    //       stringifiedPendingGameView
+    //     );
+    //     this.#store.dispatch(new SetPendingGameView(pendingGameView));
+    //   }
+    // );
 
     this.hubConnection.on(MessageType.InvalidGameCode, () => {
       this.#store.dispatch(new SetGameCodeIsInvalid(true));
     });
 
-    this.hubConnection.on(MessageType.GameStarted, (stringifiedGameState) => {
-      this.#store.dispatch(new SetGameIsActive(true));
-      const playerGameView = this.parseAndUpdateGameView(stringifiedGameState);
-
-      const message = isPlayersTurn(playerGameView)
-        ? "It's your turn."
-        : "It's your opponent's turn.";
-
-      this.#matSnackBar.open(message, 'Hide', {
-        duration: 3000,
-        verticalPosition: 'top',
-      });
-    });
-
     this.hubConnection.on(
-      MessageType.GameOver,
-      (stringifiedGameState: string, message: string) => {
-        this.parseAndUpdateGameView(stringifiedGameState);
-        this.#store.dispatch(
-          new SetGameOverData({
-            isOver: true,
-            message,
-          })
-        );
-      }
-    );
+      MessageType.GameStarted,
+      (playerGameView: PlayerGameView) => {
+        this.#store.dispatch(new SetGameIsActive(true));
+        this.#store.dispatch(new AnimateGameView(playerGameView));
 
-    this.hubConnection.on(
-      MessageType.GameUpdated,
-      (stringifiedGameState: string) => {
-        this.#store.dispatch(new FinishPlacingMultipleCards(false));
-        this.parseAndUpdateGameView(stringifiedGameState);
-      }
-    );
+        const message = isPlayersTurn(playerGameView)
+          ? "It's your turn."
+          : "It's your opponent's turn.";
 
-    this.hubConnection.on(
-      MessageType.PassedMove,
-      (stringifiedGameState: string) => {
-        const gameState = this.parseAndUpdateGameView(stringifiedGameState);
-        if (isPlayersTurn(gameState)) {
-          this.#store.dispatch(new SetOpponentPassedMove(true));
-        }
-      }
-    );
-
-    this.hubConnection.on(MessageType.DrawOffered, () => {
-      this.#store.dispatch(new DrawOffered());
-    });
-
-    this.hubConnection.on(MessageType.TurnSkippedNoMoves, () => {
-      this.#matSnackBar.open(
-        'You have no available moves. Turn skipped.',
-        'Hide',
-        {
+        this.#matSnackBar.open(message, 'Hide', {
           duration: 3000,
           verticalPosition: 'top',
-        }
-      );
-    });
-
-    this.hubConnection.on(
-      MessageType.NewChatMessage,
-      (stringifiedPlayerGameView) => {
-        const playerGameView = JSON.parse(
-          stringifiedPlayerGameView
-        ) as PlayerGameView;
-        this.#store.dispatch(new UpdatePlayerGameView(playerGameView));
+        });
       }
     );
+
+    // this.hubConnection.on(
+    //   MessageType.GameOver,
+    //   (playerGameView: PlayerGameView, message: string) => {
+    //     this.#store.dispatch(new AnimateGameView(playerGameView));
+    //     this.#store.dispatch(
+    //       new SetGameOverData({
+    //         isOver: true,
+    //         message,
+    //       })
+    //     );
+    //   }
+    // );
+
+    // this.hubConnection.on(
+    //   MessageType.GameUpdated,
+    //   (playerGameView: PlayerGameView) => {
+    //     this.#store.dispatch(new FinishPlacingMultipleCards(false));
+    //     this.#store.dispatch(new AnimateGameView(playerGameView));
+    //   }
+    // );
+
+    // this.hubConnection.on(
+    //   MessageType.PassedMove,
+    //   (playerGameView: PlayerGameView) => {
+    //     this.#store.dispatch(new AnimateGameView(playerGameView));
+    //     if (isPlayersTurn(playerGameView)) {
+    //       this.#store.dispatch(new SetOpponentPassedMove(true));
+    //     }
+    //   }
+    // );
+
+    // this.hubConnection.on(MessageType.DrawOffered, () => {
+    //   this.#store.dispatch(new DrawOffered());
+    // });
+
+    // this.hubConnection.on(MessageType.TurnSkippedNoMoves, () => {
+    //   this.#matSnackBar.open(
+    //     'You have no available moves. Turn skipped.',
+    //     'Hide',
+    //     {
+    //       duration: 3000,
+    //       verticalPosition: 'top',
+    //     }
+    //   );
+    // });
+
+    // this.hubConnection.on(
+    //   MessageType.NewChatMessage,
+    //   (stringifiedPlayerGameView) => {
+    //     const playerGameView = JSON.parse(
+    //       stringifiedPlayerGameView
+    //     ) as PlayerGameView;
+    //     this.#store.dispatch(new UpdatePlayerGameView(playerGameView));
+    //   }
+    // );
 
     this.hubConnection.on(MessageType.InvalidName, () => {
       this.#store.dispatch(new SetNameIsInvalid(true));
     });
 
-    this.hubConnection.on(MessageType.OpponentDisconnected, () => {
-      this.#store.dispatch(new SetOpponentIsDisconnected(true));
-    });
+    // this.hubConnection.on(MessageType.OpponentDisconnected, () => {
+    //   this.#store.dispatch(new SetOpponentIsDisconnected(true));
+    // });
 
-    this.hubConnection.on(MessageType.OpponentReconnected, () => {
-      this.#store.dispatch(new SetOpponentIsDisconnected(false));
-    });
+    // this.hubConnection.on(MessageType.OpponentReconnected, () => {
+    //   this.#store.dispatch(new SetOpponentIsDisconnected(false));
+    // });
 
     this.hubConnection.on(
-      MessageType.Reconnected,
-      (stringifiedGameState: string) => {
+      MessageType.PlayerReconnected,
+      (playerGameView: PlayerGameView) => {
         this.#store.dispatch(new SetGameIsActive(true));
-        const playerGameView =
-          this.parseAndUpdateGameView(stringifiedGameState);
+        this.#store.dispatch(new AnimateGameView(playerGameView));
 
         const message = isPlayersTurn(playerGameView)
           ? "Reconnected. It's your turn."
@@ -289,13 +291,5 @@ export class GameWebsocketService {
 
   public deletePendingGame() {
     this.hubConnection.invoke(MessageType.DeletePendingGame);
-  }
-
-  private parseAndUpdateGameView(stringifiedGameState: string) {
-    let playerGameView: PlayerGameView = JSON.parse(stringifiedGameState);
-    console.log(playerGameView);
-    this.#store.dispatch(new AnimateGameView(playerGameView));
-
-    return playerGameView;
   }
 }
