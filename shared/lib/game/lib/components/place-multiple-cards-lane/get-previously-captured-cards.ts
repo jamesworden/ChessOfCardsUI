@@ -9,7 +9,7 @@ export function getPreviouslyCapturedCards(
   }
 
   const { TargetLaneIndex, TargetRowIndex } = initialMultiplePlaceCardAttempt;
-  const lane = playerGameView.Lanes[TargetLaneIndex];
+  const lane = playerGameView.lanes[TargetLaneIndex];
   const cards: Card[] = [];
 
   if (playerGameView.IsHost) {

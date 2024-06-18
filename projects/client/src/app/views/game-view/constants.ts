@@ -22,7 +22,7 @@ export const DEFAULT_GAME_VIEW: PlayerGameView = {
   HasEnded: false,
   IsHost: false,
   IsHostPlayersTurn: false,
-  Lanes: [
+  lanes: [
     { ...DEFAULT_LANE },
     { ...DEFAULT_LANE },
     { ...DEFAULT_LANE },

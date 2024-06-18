@@ -34,7 +34,7 @@ export class BoardComponent implements AfterViewInit {
     playerGameView: PlayerGameView
   ) {
     // Hacky change detection to update lanes
-    playerGameView.Lanes = [...playerGameView.Lanes];
+    playerGameView.lanes = [...playerGameView.lanes];
     const x = JSON.stringify(playerGameView);
     const y = JSON.parse(x) as PlayerGameView;
     this.playerGameView$.next(y);

@@ -9,7 +9,7 @@ export function getCardStack(
   }
 
   return (
-    playerGameView?.Lanes[cardPosition.LaneIndex].Rows[cardPosition.RowIndex] ??
+    playerGameView?.lanes[cardPosition.LaneIndex].Rows[cardPosition.RowIndex] ??
     []
   );
 }

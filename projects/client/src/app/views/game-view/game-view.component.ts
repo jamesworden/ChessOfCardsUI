@@ -564,7 +564,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     let cardEntities = animatedEntities as AnimatedEntity<CardMovement>[];
-    const numLanes = cachedGameView.Lanes.length;
+    const numLanes = cachedGameView.lanes.length;
 
     for (const cardEntity of cardEntities) {
       for (let laneIndex = 0; laneIndex < numLanes; laneIndex++) {
@@ -623,7 +623,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
     canPlaceMultipleCards(placeCardAttempt, cachedGameView.CandidateMoves)
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
-      : this.makeValidatedMove(move, cachedGameView.Lanes);
+      : this.makeValidatedMove(move, cachedGameView.lanes);
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
@@ -796,9 +796,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   patchPlayerSideGameViewWithMoves(gameView: PlayerGameView, move: Move) {
     for (const placeCardAttempt of move.PlaceCardAttempts) {
-      for (let laneIndex = 0; laneIndex < gameView.Lanes.length; laneIndex++) {
+      for (let laneIndex = 0; laneIndex < gameView.lanes.length; laneIndex++) {
         if (placeCardAttempt.TargetLaneIndex === laneIndex) {
-          const lane = gameView.Lanes[laneIndex];
+          const lane = gameView.lanes[laneIndex];
           for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
             const isOnPlayersSide =
               (gameView.IsHost && placeCardAttempt.TargetRowIndex < 3) ||
@@ -1257,7 +1257,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     cardEntity: AnimatedEntity<CardMovement>,
     gameView: PlayerGameView
   ) {
-    const lane = gameView.Lanes[laneIndex];
+    const lane = gameView.lanes[laneIndex];
 
     for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
       const { CardPosition } = cardEntity.context.From;

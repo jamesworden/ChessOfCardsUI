@@ -24,7 +24,7 @@
         [ngClass]="{ 'flex-row-reverse': !playerGameView.IsHost }"
       >
         @for (
-          lane of playerGameView.Lanes;
+          lane of playerGameView.lanes;
           track laneIndex;
           let laneIndex = $index
         ) {
