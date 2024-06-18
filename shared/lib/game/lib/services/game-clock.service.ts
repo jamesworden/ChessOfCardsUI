@@ -27,7 +27,7 @@ export class GameClockService {
 
   public readonly remainingTimeClocks$ = this.playerGameView$.pipe(
     map((playerGameView) =>
-      !playerGameView || playerGameView.HasEnded ? of(0) : timer(0, 1000)
+      !playerGameView || playerGameView.hasEnded ? of(0) : timer(0, 1000)
     ),
     switchMap((timer) => timer),
     withLatestFrom(this.playerGameView$),
@@ -39,17 +39,17 @@ export class GameClockService {
         };
       }
 
-      let playerSecondsRemaining = playerGameView.IsHost
-        ? playerGameView.HostSecondsRemaining
-        : playerGameView.GuestSecondsRemaining;
+      let playerSecondsRemaining = playerGameView.isHost
+        ? playerGameView.hostSecondsRemaining
+        : playerGameView.guestSecondsRemaining;
 
-      let opponentSecondsRemaining = playerGameView.IsHost
-        ? playerGameView.GuestSecondsRemaining
-        : playerGameView.HostSecondsRemaining;
+      let opponentSecondsRemaining = playerGameView.isHost
+        ? playerGameView.guestSecondsRemaining
+        : playerGameView.hostSecondsRemaining;
 
       const isPlayersTurn =
-        (playerGameView.IsHost && playerGameView.IsHostPlayersTurn) ||
-        (!playerGameView.IsHost && !playerGameView.IsHostPlayersTurn);
+        (playerGameView.isHost && playerGameView.isHostPlayersTurn) ||
+        (!playerGameView.isHost && !playerGameView.isHostPlayersTurn);
 
       if (isPlayersTurn) {
         playerSecondsRemaining -= timeElapsed;

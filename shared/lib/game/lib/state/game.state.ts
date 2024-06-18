@@ -181,12 +181,12 @@ export class GameState {
 
   @Selector()
   static isHost(state: GameStateModel) {
-    return state.playerGameView ? state.playerGameView.IsHost : false;
+    return state.playerGameView ? state.playerGameView.isHost : false;
   }
 
   @Selector()
   static chatMessages(state: GameStateModel) {
-    return state.playerGameView?.ChatMessages ?? [];
+    return state.playerGameView?.chatMessages ?? [];
   }
 
   @Selector()
@@ -201,7 +201,7 @@ export class GameState {
 
   @Selector()
   static gameCode(state: GameStateModel) {
-    return state.playerGameView?.GameCode;
+    return state.playerGameView?.gameCode;
   }
 
   @Selector()
@@ -243,7 +243,7 @@ export class GameState {
     const { playerGameView, placeMultipleCardsHand } = ctx.getState();
 
     if (cardPlacementsConfirmed && playerGameView && placeMultipleCardsHand) {
-      playerGameView.hand.Cards = placeMultipleCardsHand;
+      playerGameView.hand.cards = placeMultipleCardsHand;
     }
 
     ctx.patchState({

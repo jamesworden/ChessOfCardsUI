@@ -5,7 +5,8 @@ export function convertPlaceMultipleCardsToMove(
   initialPlaceMultipleCardAttempt: PlaceCardAttempt,
   isHost: boolean
 ) {
-  let { TargetLaneIndex, TargetRowIndex } = initialPlaceMultipleCardAttempt;
+  let { targetLaneIndex: TargetLaneIndex, targetRowIndex: TargetRowIndex } =
+    initialPlaceMultipleCardAttempt;
 
   const PlaceCardAttempts = placeMultipleCards.map((Card, index) => {
     let targetRowIndex: number;
@@ -27,16 +28,16 @@ export function convertPlaceMultipleCardsToMove(
     }
 
     const placeCardAttempt: PlaceCardAttempt = {
-      Card,
-      TargetLaneIndex,
-      TargetRowIndex: targetRowIndex,
+      card: Card,
+      targetLaneIndex: TargetLaneIndex,
+      targetRowIndex: targetRowIndex,
     };
 
     return placeCardAttempt;
   });
 
   const move: Move = {
-    PlaceCardAttempts,
+    placeCardAttempts: PlaceCardAttempts,
   };
 
   return move;

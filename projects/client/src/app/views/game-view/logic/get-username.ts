@@ -2,9 +2,9 @@ import { PlayerGameView } from '@shared/models';
 
 export function getPlayerUsername(playerGameView: PlayerGameView | null) {
   if (playerGameView) {
-    return playerGameView.IsHost
-      ? playerGameView.HostName ?? 'Host Player'
-      : playerGameView.GuestName ?? 'Guest Player';
+    return playerGameView.isHost
+      ? playerGameView.hostName ?? 'Host Player'
+      : playerGameView.guestName ?? 'Guest Player';
   } else {
     return 'You';
   }
@@ -12,9 +12,9 @@ export function getPlayerUsername(playerGameView: PlayerGameView | null) {
 
 export function getOpponentUsername(playerGameView: PlayerGameView | null) {
   if (playerGameView) {
-    return playerGameView.IsHost
-      ? playerGameView.GuestName ?? 'Guest Player'
-      : playerGameView.HostName ?? 'Host Player';
+    return playerGameView.isHost
+      ? playerGameView.guestName ?? 'Guest Player'
+      : playerGameView.hostName ?? 'Host Player';
   } else {
     return 'Opponent';
   }

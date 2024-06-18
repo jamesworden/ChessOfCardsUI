@@ -45,7 +45,7 @@ function getAnimatedEntity(
   }
 
   const indexOfCardInHand = getIndexOfCardInArray(
-    placeCardAttempt.Card,
+    placeCardAttempt.card,
     cardsInHand
   );
   if (indexOfCardInHand === null) {
@@ -53,26 +53,26 @@ function getAnimatedEntity(
   }
 
   const cardMovement: CardMovement = {
-    From: {
-      HostHandCardIndex: isHost ? indexOfCardInHand : null,
-      GuestHandCardIndex: isHost ? null : indexOfCardInHand,
-      CardPosition: null,
-      Destroyed: false,
-      GuestDeck: false,
-      HostDeck: false,
+    from: {
+      hostHandCardIndex: isHost ? indexOfCardInHand : null,
+      guestHandCardIndex: isHost ? null : indexOfCardInHand,
+      cardPosition: null,
+      destroyed: false,
+      guestDeck: false,
+      hostDeck: false,
     },
-    To: {
-      CardPosition: {
-        LaneIndex: placeCardAttempt.TargetLaneIndex,
-        RowIndex: placeCardAttempt.TargetRowIndex,
+    to: {
+      cardPosition: {
+        laneIndex: placeCardAttempt.targetLaneIndex,
+        rowIndex: placeCardAttempt.targetRowIndex,
       },
-      HostHandCardIndex: null,
-      GuestHandCardIndex: null,
-      Destroyed: false,
-      GuestDeck: false,
-      HostDeck: false,
+      hostHandCardIndex: null,
+      guestHandCardIndex: null,
+      destroyed: false,
+      guestDeck: false,
+      hostDeck: false,
     },
-    Card: placeCardAttempt.Card,
+    card: placeCardAttempt.card,
   };
 
   if (wasDragged) {

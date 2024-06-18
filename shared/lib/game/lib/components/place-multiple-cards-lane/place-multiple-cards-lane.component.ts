@@ -102,8 +102,8 @@ export class PlaceMultipleCardsLaneComponent {
         return false;
       }
 
-      const kindOfAttemptedCard = dragData.data.Kind as Kind;
-      const { Kind: kindOfInitialCard } = initialPlaceCardAttempt.Card;
+      const kindOfAttemptedCard = dragData.data.kind as Kind;
+      const { kind: kindOfInitialCard } = initialPlaceCardAttempt.card;
 
       return kindOfAttemptedCard == kindOfInitialCard;
     };

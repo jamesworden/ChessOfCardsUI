@@ -55,26 +55,26 @@ export class StatisticsChatPaneComponent implements OnInit {
       let latestedSentBy = PlayerOrNone.None;
 
       for (const chatMessage of chatMessages) {
-        if (chatMessage.SentBy === latestedSentBy) {
+        if (chatMessage.sentBy === latestedSentBy) {
           displayChatMessages[displayChatMessages.length - 1].date =
-            chatMessage.SentAtUTC;
+            chatMessage.sentAtUTC;
           displayChatMessages[displayChatMessages.length - 1].messages.push(
-            chatMessage.Message
+            chatMessage.message
           );
         } else {
           const sentByPlayer =
-            (isHost && chatMessage.SentBy === PlayerOrNone.Host) ||
-            (!isHost && chatMessage.SentBy === PlayerOrNone.Guest);
+            (isHost && chatMessage.sentBy === PlayerOrNone.Host) ||
+            (!isHost && chatMessage.sentBy === PlayerOrNone.Guest);
 
           displayChatMessages.push({
-            messages: [chatMessage.Message],
+            messages: [chatMessage.message],
             name: sentByPlayer ? undefined : 'Opponent',
-            date: chatMessage.SentAtUTC,
+            date: chatMessage.sentAtUTC,
             sentByPlayer,
           });
         }
 
-        latestedSentBy = chatMessage.SentBy;
+        latestedSentBy = chatMessage.sentBy;
       }
 
       return displayChatMessages;
@@ -110,9 +110,9 @@ export class StatisticsChatPaneComponent implements OnInit {
     }
 
     const chatMessage: ChatMessage = {
-      Message: this.message,
-      SentAtUTC: new Date(),
-      SentBy: this.#store.selectSnapshot(GameState.isHost)
+      message: this.message,
+      sentAtUTC: new Date(),
+      sentBy: this.#store.selectSnapshot(GameState.isHost)
         ? PlayerOrNone.Host
         : PlayerOrNone.Guest,
     };

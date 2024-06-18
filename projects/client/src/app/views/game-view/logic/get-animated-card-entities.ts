@@ -24,7 +24,7 @@ export function getAnimatedCardEntities(
   }
 
   const numLastMovesToProcess =
-    currView.MovesMade.length - prevView.MovesMade.length;
+    currView.movesMade.length - prevView.movesMade.length;
 
   if (numLastMovesToProcess <= 0) {
     return [];
@@ -33,18 +33,18 @@ export function getAnimatedCardEntities(
   let animatedEntities: AnimatedEntity<CardMovement>[] = [];
 
   for (
-    let i = currView.MovesMade.length - numLastMovesToProcess;
-    i < currView.MovesMade.length;
+    let i = currView.movesMade.length - numLastMovesToProcess;
+    i < currView.movesMade.length;
     i++
   ) {
-    const { CardMovements } = currView.MovesMade[i];
+    const { cardMovements: CardMovements } = currView.movesMade[i];
 
     for (let sequence = 0; sequence < CardMovements.length; sequence++) {
       for (const cardMovement of CardMovements[sequence]) {
         const animatedEntity = getAnimatedEntity(
           cardMovement,
           sequence,
-          currView.IsHost,
+          currView.isHost,
           cardSize,
           cardMovementTemplate,
           latestMoveMadeDetails,
@@ -55,12 +55,12 @@ export function getAnimatedCardEntities(
         for (const entity of animatedEntities) {
           const prevSequence = entity.movement.sequence < sequence;
           const suitMatches =
-            entity.context.Card?.Suit === cardMovement.Card?.Suit;
+            entity.context.card?.suit === cardMovement.card?.suit;
           const kindMatches =
-            entity.context.Card?.Kind === cardMovement.Card?.Kind;
+            entity.context.card?.kind === cardMovement.card?.kind;
 
           if (
-            entity.context.Card &&
+            entity.context.card &&
             prevSequence &&
             suitMatches &&
             kindMatches &&
@@ -79,10 +79,10 @@ export function getAnimatedCardEntities(
 }
 
 function isFromPlayerHand(cardMovement: CardMovement, isHost: boolean) {
-  const hostHandCardIndex = cardMovement.From?.HostHandCardIndex;
+  const hostHandCardIndex = cardMovement.from?.hostHandCardIndex;
   const fromHostHand =
     hostHandCardIndex !== null && hostHandCardIndex !== undefined;
-  const guestHandCardIndex = cardMovement.From?.GuestHandCardIndex;
+  const guestHandCardIndex = cardMovement.from?.guestHandCardIndex;
   const fromGuestHand =
     guestHandCardIndex !== null && guestHandCardIndex !== undefined;
   const isHostAndFromHostHand = isHost && fromHostHand && true;
@@ -110,7 +110,7 @@ function getAnimatedEntity(
     durationMs
   );
 
-  let animationType = cardMovement.To.Destroyed
+  let animationType = cardMovement.to.destroyed
     ? AnimationType.FadeOut
     : AnimationType.Movement;
 
@@ -127,9 +127,9 @@ function getAnimatedEntity(
 
   if (wasDraggedFromPlayerHand) {
     const toGuestSideAndIsHost =
-      (cardMovement.To.CardPosition?.RowIndex ?? 3) > 3 && isHost;
+      (cardMovement.to.cardPosition?.rowIndex ?? 3) > 3 && isHost;
     const toHostSideAndIsGuest =
-      (cardMovement.To.CardPosition?.RowIndex ?? 3) < 3 && !isHost;
+      (cardMovement.to.cardPosition?.rowIndex ?? 3) < 3 && !isHost;
     const ontoOpposingSide = toGuestSideAndIsHost || toHostSideAndIsGuest;
 
     if (ontoOpposingSide) {
@@ -140,34 +140,34 @@ function getAnimatedEntity(
   }
 
   const beforeRotation =
-    cardMovement.Card &&
-    typeof cardMovement.From.CardPosition?.RowIndex === 'number'
+    cardMovement.card &&
+    typeof cardMovement.from.cardPosition?.rowIndex === 'number'
       ? getCardTiltDegrees(
-          cardMovement.Card,
-          cardMovement.From.CardPosition?.RowIndex,
+          cardMovement.card,
+          cardMovement.from.cardPosition?.rowIndex,
           isHost,
-          typeof cardMovement.From.CardPosition?.LaneIndex === 'number'
-            ? prevView.lanes[cardMovement.From.CardPosition?.LaneIndex]
-                .LaneAdvantage
+          typeof cardMovement.from.cardPosition?.laneIndex === 'number'
+            ? prevView.lanes[cardMovement.from.cardPosition?.laneIndex]
+                .laneAdvantage
             : PlayerOrNone.None
         )
       : 0;
 
   let afterRotation =
-    cardMovement.Card &&
-    typeof cardMovement.To.CardPosition?.RowIndex === 'number'
+    cardMovement.card &&
+    typeof cardMovement.to.cardPosition?.rowIndex === 'number'
       ? getCardTiltDegrees(
-          cardMovement.Card,
-          cardMovement.To.CardPosition?.RowIndex,
+          cardMovement.card,
+          cardMovement.to.cardPosition?.rowIndex,
           isHost,
-          typeof cardMovement.To.CardPosition?.LaneIndex === 'number'
-            ? currView.lanes[cardMovement.To.CardPosition?.LaneIndex]
-                .LaneAdvantage
+          typeof cardMovement.to.cardPosition?.laneIndex === 'number'
+            ? currView.lanes[cardMovement.to.cardPosition?.laneIndex]
+                .laneAdvantage
             : PlayerOrNone.None
         )
       : 0;
 
-  if (cardMovement.To.Destroyed) {
+  if (cardMovement.to.destroyed) {
     afterRotation = beforeRotation;
   }
 

@@ -6,22 +6,22 @@ import {
 } from '@shared/models';
 
 const DEFAULT_LANE: Lane = {
-  LaneAdvantage: PlayerOrNone.None,
-  Rows: [[], [], [], [], [], [], []],
-  WonBy: PlayerOrNone.None,
+  laneAdvantage: PlayerOrNone.None,
+  rows: [[], [], [], [], [], [], []],
+  wonBy: PlayerOrNone.None,
 };
 
 export const DEFAULT_GAME_VIEW: PlayerGameView = {
-  ChatMessages: [],
-  DurationOption: DurationOption.FiveMinutes,
-  GameCode: '',
-  GameCreatedTimestampUTC: '',
+  chatMessages: [],
+  durationOption: DurationOption.FiveMinutes,
+  gameCode: '',
+  gameCreatedTimestampUTC: '',
   hand: {
-    Cards: [],
+    cards: [],
   },
-  HasEnded: false,
-  IsHost: false,
-  IsHostPlayersTurn: false,
+  hasEnded: false,
+  isHost: false,
+  isHostPlayersTurn: false,
   lanes: [
     { ...DEFAULT_LANE },
     { ...DEFAULT_LANE },
@@ -29,10 +29,10 @@ export const DEFAULT_GAME_VIEW: PlayerGameView = {
     { ...DEFAULT_LANE },
     { ...DEFAULT_LANE },
   ],
-  MovesMade: [],
-  NumCardsInOpponentsDeck: 0,
-  NumCardsInOpponentsHand: 0,
-  NumCardsInPlayersDeck: 0,
-  HostSecondsRemaining: 0,
-  GuestSecondsRemaining: 0,
+  movesMade: [],
+  numCardsInOpponentsDeck: 0,
+  numCardsInOpponentsHand: 0,
+  numCardsInPlayersDeck: 0,
+  hostSecondsRemaining: 0,
+  guestSecondsRemaining: 0,
 };

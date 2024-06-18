@@ -1,10 +1,10 @@
 import { CardPosition } from './card-position.model';
 
 export type CardStore = {
-  HostHandCardIndex: number | null;
-  GuestHandCardIndex: number | null;
-  CardPosition: CardPosition | null;
-  Destroyed: boolean;
-  HostDeck: boolean;
-  GuestDeck: boolean;
+  hostHandCardIndex: number | null;
+  guestHandCardIndex: number | null;
+  cardPosition: CardPosition | null;
+  destroyed: boolean;
+  hostDeck: boolean;
+  guestDeck: boolean;
 };

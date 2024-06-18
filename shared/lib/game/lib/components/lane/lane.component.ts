@@ -52,7 +52,7 @@ export class LaneComponent {
   ]).pipe(
     map(([lane, isPlayersTurn, selectedPosition]) =>
       lane
-        ? lane?.Rows.map((row, rowIndex) =>
+        ? lane?.rows.map((row, rowIndex) =>
             getPositionDetails(
               lane,
               row,

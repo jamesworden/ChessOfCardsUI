@@ -125,7 +125,7 @@
           </div>
 
           <app-opponent-hand-toolbar
-            [numCardsInOpponentsHand]="gameView.NumCardsInOpponentsHand"
+            [numCardsInOpponentsHand]="gameView.numCardsInOpponentsHand"
             [cardSize]="(cardSize$ | async) ?? 64"
             [hasPendingDrawOffer]="(hasPendingDrawOffer$ | async) ?? false"
             [isPlacingMultipleCards]="
@@ -164,8 +164,8 @@
             [isPlacingMultipleCards]="
               (isPlacingMultipleCards$ | async) ?? false
             "
-            [isHost]="gameView.IsHost"
-            [cards]="gameView.hand.Cards"
+            [isHost]="gameView.isHost"
+            [cards]="gameView.hand.cards"
             [cardSize]="(cardSize$ | async)!"
             [disabled]="
               !!(waitingForServer$ | async) || !(gameIsActive$ | async)
@@ -178,7 +178,7 @@
             "
             [selectedCard]="selectedCard$ | async"
             [unfadedKind]="
-              (initialPlaceMultipleCardAttempt$ | async)?.Card?.Kind ?? null
+              (initialPlaceMultipleCardAttempt$ | async)?.card?.kind ?? null
             "
             [connectedToDropList]="
               (isPlacingMultipleCards$ | async) ?? false
@@ -289,7 +289,7 @@
 
     <statistics-panel
       [moveNotations]="(moveNotations$ | async) ?? []"
-      [isHost]="(playerGameView$ | async)?.IsHost ?? false"
+      [isHost]="(playerGameView$ | async)?.isHost ?? false"
       [selectedNotationIndex]="selectedNotationIndex$ | async"
       (moveNotationSelected)="selectMoveNotation($event)"
       [chatMessages]="(chatMessages$ | async) ?? []"

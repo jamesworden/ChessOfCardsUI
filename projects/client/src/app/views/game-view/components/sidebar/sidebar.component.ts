@@ -98,8 +98,8 @@ export class SidebarComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((playerGameView) => {
         if (playerGameView) {
-          this.numCardsInPlayerDeck = playerGameView.NumCardsInPlayersDeck;
-          this.numCardsInOpponentDeck = playerGameView.NumCardsInOpponentsDeck;
+          this.numCardsInPlayerDeck = playerGameView.numCardsInPlayersDeck;
+          this.numCardsInOpponentDeck = playerGameView.numCardsInOpponentsDeck;
         }
       });
   }

@@ -4,8 +4,12 @@ export function moveCardToLane(
   placeCardAttempt: PlaceCardAttempt,
   lanes: Lane[]
 ) {
-  const { TargetLaneIndex, TargetRowIndex, Card } = placeCardAttempt;
+  const {
+    targetLaneIndex: TargetLaneIndex,
+    targetRowIndex: TargetRowIndex,
+    card: Card,
+  } = placeCardAttempt;
   const targetLane = lanes[TargetLaneIndex];
-  const targetRow = targetLane.Rows[TargetRowIndex];
+  const targetRow = targetLane.rows[TargetRowIndex];
   targetRow.push(Card);
 }

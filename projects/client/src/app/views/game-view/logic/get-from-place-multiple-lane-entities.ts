@@ -43,26 +43,26 @@ function getAnimatedEntity(
   const toHandIndex = existingCardsInHand.length + additionalCardIndex;
 
   const cardMovement: CardMovement = {
-    From: {
-      CardPosition: {
-        LaneIndex: placeCardAttempt.TargetLaneIndex,
-        RowIndex: placeCardAttempt.TargetRowIndex,
+    from: {
+      cardPosition: {
+        laneIndex: placeCardAttempt.targetLaneIndex,
+        rowIndex: placeCardAttempt.targetRowIndex,
       },
-      HostHandCardIndex: null,
-      GuestHandCardIndex: null,
-      Destroyed: false,
-      GuestDeck: false,
-      HostDeck: false,
+      hostHandCardIndex: null,
+      guestHandCardIndex: null,
+      destroyed: false,
+      guestDeck: false,
+      hostDeck: false,
     },
-    To: {
-      CardPosition: null,
-      HostHandCardIndex: isHost ? toHandIndex : null,
-      GuestHandCardIndex: isHost ? null : toHandIndex,
-      Destroyed: false,
-      GuestDeck: false,
-      HostDeck: false,
+    to: {
+      cardPosition: null,
+      hostHandCardIndex: isHost ? toHandIndex : null,
+      guestHandCardIndex: isHost ? null : toHandIndex,
+      destroyed: false,
+      guestDeck: false,
+      hostDeck: false,
     },
-    Card: placeCardAttempt.Card,
+    card: placeCardAttempt.card,
   };
 
   const movement = getAnimatedMovement(

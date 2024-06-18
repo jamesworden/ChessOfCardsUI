@@ -14,7 +14,7 @@ export function getCardTiltDegrees(
   // Card animations where the lane hasn't technically been won yet use its PlayedBy
   // property to determine which way it should turn because we know it's going to the middle.
   if (laneAdvantage === PlayerOrNone.None) {
-    laneAdvantage = card.PlayedBy;
+    laneAdvantage = card.playedBy;
   }
 
   const nobodyHasAdvantage = laneAdvantage === PlayerOrNone.None;

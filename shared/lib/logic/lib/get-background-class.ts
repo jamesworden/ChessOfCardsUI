@@ -12,10 +12,10 @@ export function getPositionBackgroundClass(
 ) {
   const isLastCardPlayed =
     topCard &&
-    lane.LastCardPlayed &&
-    lane.LastCardPlayed.PlayedBy !== PlayerOrNone.None &&
-    topCard.Kind === lane.LastCardPlayed.Kind &&
-    topCard.Suit === lane.LastCardPlayed.Suit;
+    lane.lastCardPlayed &&
+    lane.lastCardPlayed.playedBy !== PlayerOrNone.None &&
+    topCard.kind === lane.lastCardPlayed.kind &&
+    topCard.suit === lane.lastCardPlayed.suit;
 
   let { backgroundClass, textClass } = getDefaultBackgroundClasses(
     laneIndex,
@@ -29,13 +29,13 @@ export function getPositionBackgroundClass(
     );
   }
 
-  if (lane.WonBy !== PlayerOrNone.None) {
+  if (lane.wonBy !== PlayerOrNone.None) {
     textClass = 'lanes-text-lightgreen';
   }
 
   const { laneColor } = getLaneBackgroundClass(lane, isHost, isPlayersTurn);
   let positionClass =
-    lane.WonBy === PlayerOrNone.None ? backgroundClass : laneColor;
+    lane.wonBy === PlayerOrNone.None ? backgroundClass : laneColor;
 
   if (isSelected) {
     positionClass = 'bg-yellow-400';
@@ -94,9 +94,9 @@ function getLastCardPlayedBackgroundClass(
   isPlayersTurn: boolean
 ) {
   const hostAndPlayedByHost =
-    lastCardPlayed.PlayedBy === PlayerOrNone.Host && isHost;
+    lastCardPlayed.playedBy === PlayerOrNone.Host && isHost;
   const guestAndPlayedByGuest =
-    lastCardPlayed.PlayedBy === PlayerOrNone.Guest && !isHost;
+    lastCardPlayed.playedBy === PlayerOrNone.Guest && !isHost;
   const playerPlayedCard = hostAndPlayedByHost || guestAndPlayedByGuest;
 
   return playerPlayedCard
