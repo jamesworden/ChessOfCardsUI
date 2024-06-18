@@ -442,6 +442,8 @@ export class GameState {
 
   @Action(AnimateGameView)
   animateGameView(ctx: StateContext<GameStateModel>, action: AnimateGameView) {
+    console.log('[Game]: Starting animations...', action.playerGameView);
+
     ctx.patchState({
       playerGameViewToAnimate: action.playerGameView,
     });
