@@ -143,36 +143,36 @@ export class GameWebsocketService {
       }
     );
 
-    // this.hubConnection.on(
-    //   MessageType.GameOver,
-    //   (playerGameView: PlayerGameView, message: string) => {
-    //     this.#store.dispatch(new AnimateGameView(playerGameView));
-    //     this.#store.dispatch(
-    //       new SetGameOverData({
-    //         isOver: true,
-    //         message,
-    //       })
-    //     );
-    //   }
-    // );
+    this.hubConnection.on(
+      MessageType.GameOver,
+      (playerGameView: PlayerGameView, message: string) => {
+        this.#store.dispatch(new AnimateGameView(playerGameView));
+        this.#store.dispatch(
+          new SetGameOverData({
+            isOver: true,
+            message,
+          })
+        );
+      }
+    );
 
-    // this.hubConnection.on(
-    //   MessageType.GameUpdated,
-    //   (playerGameView: PlayerGameView) => {
-    //     this.#store.dispatch(new FinishPlacingMultipleCards(false));
-    //     this.#store.dispatch(new AnimateGameView(playerGameView));
-    //   }
-    // );
+    this.hubConnection.on(
+      MessageType.GameUpdated,
+      (playerGameView: PlayerGameView) => {
+        this.#store.dispatch(new FinishPlacingMultipleCards(false));
+        this.#store.dispatch(new AnimateGameView(playerGameView));
+      }
+    );
 
-    // this.hubConnection.on(
-    //   MessageType.PassedMove,
-    //   (playerGameView: PlayerGameView) => {
-    //     this.#store.dispatch(new AnimateGameView(playerGameView));
-    //     if (isPlayersTurn(playerGameView)) {
-    //       this.#store.dispatch(new SetOpponentPassedMove(true));
-    //     }
-    //   }
-    // );
+    this.hubConnection.on(
+      MessageType.PassedMove,
+      (playerGameView: PlayerGameView) => {
+        this.#store.dispatch(new AnimateGameView(playerGameView));
+        if (isPlayersTurn(playerGameView)) {
+          this.#store.dispatch(new SetOpponentPassedMove(true));
+        }
+      }
+    );
 
     // this.hubConnection.on(MessageType.DrawOffered, () => {
     //   this.#store.dispatch(new DrawOffered());
