@@ -203,13 +203,13 @@ export class GameWebsocketService {
       this.#store.dispatch(new SetNameIsInvalid(true));
     });
 
-    // this.hubConnection.on(MessageType.OpponentDisconnected, () => {
-    //   this.#store.dispatch(new SetOpponentIsDisconnected(true));
-    // });
+    this.hubConnection.on(MessageType.OpponentDisconnected, () => {
+      this.#store.dispatch(new SetOpponentIsDisconnected(true));
+    });
 
-    // this.hubConnection.on(MessageType.OpponentReconnected, () => {
-    //   this.#store.dispatch(new SetOpponentIsDisconnected(false));
-    // });
+    this.hubConnection.on(MessageType.OpponentReconnected, () => {
+      this.#store.dispatch(new SetOpponentIsDisconnected(false));
+    });
 
     this.hubConnection.on(
       MessageType.PlayerReconnected,
