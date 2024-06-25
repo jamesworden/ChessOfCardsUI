@@ -67,9 +67,9 @@
 </div>
 
 <ng-template #cardMovementTemplate let-animatedEntity>
-  @if (animatedEntity.context.Card) {
+  @if (animatedEntity.context.card) {
     @if (playerGameViewToAnimate$ | async; as playerGameViewToAnimate) {
-      <game-card [card]="animatedEntity.context.Card"></game-card>
+      <game-card [card]="animatedEntity.context.card"></game-card>
     }
   } @else {
     <game-face-down-card></game-face-down-card>

@@ -52,7 +52,7 @@ enum MessageType {
   SelectDurationOption = 'SelectDurationOption',
   CheckHostForEmptyTimer = 'CheckHostForEmptyTimer',
   CheckGuestForEmptyTimer = 'CheckGuestForEmptyTimer',
-  TurnSkippedNoMoves = 'TurnSkippedNoMoves',
+  TurnSkipped = 'TurnSkipped',
   SendChatMessage = 'SendChatMessage',
   NewChatMessage = 'NewChatMessage',
   DeletePendingGame = 'DeletePendingGame',
@@ -178,16 +178,16 @@ export class GameWebsocketService {
     //   this.#store.dispatch(new DrawOffered());
     // });
 
-    // this.hubConnection.on(MessageType.TurnSkippedNoMoves, () => {
-    //   this.#matSnackBar.open(
-    //     'You have no available moves. Turn skipped.',
-    //     'Hide',
-    //     {
-    //       duration: 3000,
-    //       verticalPosition: 'top',
-    //     }
-    //   );
-    // });
+    this.hubConnection.on(MessageType.TurnSkipped, () => {
+      this.#matSnackBar.open(
+        'You have no available moves. Turn skipped.',
+        'Hide',
+        {
+          duration: 3000,
+          verticalPosition: 'top',
+        }
+      );
+    });
 
     // this.hubConnection.on(
     //   MessageType.NewChatMessage,
@@ -246,15 +246,10 @@ export class GameWebsocketService {
   }
 
   public makeMove(move: Move, rearrangedCardsInHand?: Card[]) {
-    const stringifiedMove = JSON.stringify(move);
-    const stringifiedRearrangedCardsInHand = rearrangedCardsInHand
-      ? JSON.stringify(rearrangedCardsInHand)
-      : null;
-    this.hubConnection.invoke(
-      MessageType.MakeMove,
-      stringifiedMove,
-      stringifiedRearrangedCardsInHand
-    );
+    this.hubConnection.invoke(MessageType.MakeMove, {
+      move,
+      rearrangedCardsInHand,
+    });
   }
 
   public passMove() {
