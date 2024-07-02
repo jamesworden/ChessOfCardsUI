@@ -3,6 +3,11 @@
 @import 'tailwindcss/utilities';
 @import '@fontsource-variable/bricolage-grotesque';
 
+html,
+body {
+  height: 100svh;
+}
+
 html {
   font-family: 'Bricolage Grotesque Variable', sans-serif;
   overscroll-behavior: none;
