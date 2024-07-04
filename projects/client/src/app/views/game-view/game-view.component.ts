@@ -39,7 +39,7 @@ import {
 } from '@shared/game';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map, pairwise, startWith, filter } from 'rxjs/operators';
+import { map, pairwise, startWith, filter, takeUntil } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import {
   Card,
@@ -1083,15 +1083,19 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   private joinGameUponConnectingToServer(gameCode: string) {
-    const sub = this.isConnectedToServer$
-      .pipe(filter((isConnected) => isConnected))
+    const hasDispatchedAction$ = new Subject();
+    this.isConnectedToServer$
+      .pipe(
+        filter((isConnected) => isConnected),
+        takeUntil(hasDispatchedAction$)
+      )
       .subscribe(() => {
         this.#store.dispatch(
           new JoinGame({
             gameCode,
           })
         );
-        sub.unsubscribe();
+        hasDispatchedAction$.next();
       });
   }
 
