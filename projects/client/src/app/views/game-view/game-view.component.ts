@@ -946,6 +946,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    if (placeMultipleCards[0]?.kind !== selectedCard.kind) {
+      return;
+    }
+
     let TargetRowIndex = cachedGameView.isHost
       ? initialPlaceCardAttempt.targetRowIndex + placeMultipleCards.length
       : initialPlaceCardAttempt.targetRowIndex - placeMultipleCards.length;
