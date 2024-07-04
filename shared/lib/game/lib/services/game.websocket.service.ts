@@ -241,8 +241,9 @@ export class GameWebsocketService {
   }
 
   public rearrangeHand(cards: Card[]) {
-    const stringifiedCards = JSON.stringify(cards);
-    this.hubConnection.invoke(MessageType.RearrangeHand, stringifiedCards);
+    this.hubConnection.invoke(MessageType.RearrangeHand, {
+      cards,
+    });
   }
 
   public makeMove(move: Move, rearrangedCardsInHand?: Card[]) {
