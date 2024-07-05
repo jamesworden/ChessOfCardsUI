@@ -4,6 +4,7 @@ import { DurationOption } from './duration-option.model';
 import { Hand } from './hand.model';
 import { Lane } from './lane.model';
 import { MoveMade } from './move-made.model';
+import { PlayerOrNone } from './player-or-none.model';
 
 export type PlayerGameView = {
   hand: Hand;
@@ -27,4 +28,5 @@ export type PlayerGameView = {
   guestName?: string;
   hostSecondsRemaining: number;
   guestSecondsRemaining: number;
+  wonBy: PlayerOrNone;
 };

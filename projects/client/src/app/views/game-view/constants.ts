@@ -35,4 +35,5 @@ export const DEFAULT_GAME_VIEW: PlayerGameView = {
   numCardsInPlayersDeck: 0,
   hostSecondsRemaining: 0,
   guestSecondsRemaining: 0,
+  wonBy: PlayerOrNone.None,
 };

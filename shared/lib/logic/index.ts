@@ -13,3 +13,4 @@ export * from './lib/player-has-won-lane';
 export * from './lib/remove-card-from-array';
 export * from './lib/get-reason-if-move-invalid';
 export * from './lib/get-move-notations';
+export * from './lib/get-game-over-message';

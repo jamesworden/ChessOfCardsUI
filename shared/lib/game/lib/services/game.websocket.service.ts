@@ -24,12 +24,13 @@ import {
   Card,
   DurationOption,
   Environment,
+  GameOverReason,
   Move,
   PendingGameOptions,
   PendingGameView,
   PlayerGameView,
 } from '@shared/models';
-import { isPlayersTurn } from '@shared/logic';
+import { getGameOverMessage, isPlayersTurn } from '@shared/logic';
 import { JoinGameOptions } from 'shared/lib/models/lib/join-game-options.model';
 
 enum MessageType {
@@ -145,12 +146,16 @@ export class GameWebsocketService {
 
     this.hubConnection.on(
       MessageType.GameOver,
-      (playerGameView: PlayerGameView, message: string) => {
+      (playerGameView: PlayerGameView, gameOverReason: GameOverReason) => {
         this.#store.dispatch(new AnimateGameView(playerGameView));
         this.#store.dispatch(
           new SetGameOverData({
             isOver: true,
-            message,
+            message: getGameOverMessage(
+              gameOverReason,
+              playerGameView.isHost,
+              playerGameView.wonBy
+            ),
           })
         );
       }
