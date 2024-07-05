@@ -47,6 +47,9 @@ export class GameClockService {
         ? playerGameView.guestSecondsRemaining
         : playerGameView.hostSecondsRemaining;
 
+      playerSecondsRemaining = Math.round(playerSecondsRemaining);
+      opponentSecondsRemaining = Math.round(opponentSecondsRemaining);
+
       const isPlayersTurn =
         (playerGameView.isHost && playerGameView.isHostPlayersTurn) ||
         (!playerGameView.isHost && !playerGameView.isHostPlayersTurn);
