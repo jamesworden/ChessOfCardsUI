@@ -14,10 +14,10 @@ import {
   SetPendingGameView,
   AnimateGameView,
   SetGameIsActive,
-  UpdatePlayerGameView,
   SetIsConnectedToServer,
   SetNameIsInvalid,
   SetOpponentIsDisconnected,
+  UpdatePlayerGameView,
 } from '../state/game.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -55,7 +55,7 @@ enum MessageType {
   CheckGuestForEmptyTimer = 'CheckGuestForEmptyTimer',
   TurnSkipped = 'TurnSkipped',
   SendChatMessage = 'SendChatMessage',
-  NewChatMessage = 'NewChatMessage',
+  ChatMessageSent = 'ChatMessageSent',
   DeletePendingGame = 'DeletePendingGame',
   InvalidName = 'InvalidName',
   OpponentReconnected = 'OpponentReconnected',
@@ -194,15 +194,12 @@ export class GameWebsocketService {
       );
     });
 
-    // this.hubConnection.on(
-    //   MessageType.NewChatMessage,
-    //   (stringifiedPlayerGameView) => {
-    //     const playerGameView = JSON.parse(
-    //       stringifiedPlayerGameView
-    //     ) as PlayerGameView;
-    //     this.#store.dispatch(new UpdatePlayerGameView(playerGameView));
-    //   }
-    // );
+    this.hubConnection.on(
+      MessageType.ChatMessageSent,
+      (playerGameView: PlayerGameView) => {
+        this.#store.dispatch(new UpdatePlayerGameView(playerGameView));
+      }
+    );
 
     this.hubConnection.on(MessageType.InvalidName, () => {
       this.#store.dispatch(new SetNameIsInvalid(true));
@@ -286,8 +283,10 @@ export class GameWebsocketService {
     this.hubConnection.invoke(MessageType.CheckGuestForEmptyTimer);
   }
 
-  public sendChatMessage(message: string) {
-    this.hubConnection.invoke(MessageType.SendChatMessage, message);
+  public sendChatMessage(rawMessage: string) {
+    this.hubConnection.invoke(MessageType.SendChatMessage, {
+      rawMessage,
+    });
   }
 
   public deletePendingGame() {

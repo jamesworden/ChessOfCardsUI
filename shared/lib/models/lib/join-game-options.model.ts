@@ -1,4 +1,4 @@
 export interface JoinGameOptions {
-  name?: string;
+  guestName?: string;
   gameCode: string;
 }
