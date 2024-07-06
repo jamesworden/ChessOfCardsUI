@@ -1,5 +1,3 @@
-import { PlayerOrNone } from './player-or-none.model';
-
 export enum GameOverReason {
   DrawByAgreement = 'DrawByAgreement',
   Disconnected = 'Disconnected',

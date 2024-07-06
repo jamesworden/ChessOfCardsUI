@@ -11,7 +11,7 @@ export function getGameOverMessage(
 
   switch (gameOverReason) {
     case GameOverReason.DrawByAgreement:
-      return 'The game ended in a draw by mutual agreement.';
+      return 'The game ended in a draw.';
     case GameOverReason.Disconnected:
       return `The game ended because ${playerWon ? 'your opponent' : 'you'} disconnected.`;
     case GameOverReason.Won:
