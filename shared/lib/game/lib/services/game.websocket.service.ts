@@ -179,9 +179,9 @@ export class GameWebsocketService {
       }
     );
 
-    // this.hubConnection.on(MessageType.DrawOffered, () => {
-    //   this.#store.dispatch(new DrawOffered());
-    // });
+    this.hubConnection.on(MessageType.DrawOffered, () => {
+      this.#store.dispatch(new DrawOffered());
+    });
 
     this.hubConnection.on(MessageType.TurnSkipped, () => {
       this.#matSnackBar.open(
