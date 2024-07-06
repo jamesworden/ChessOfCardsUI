@@ -175,6 +175,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @Select(GameState.gameCode)
   gameCode$!: Observable<string>;
 
+  readonly clocks$ = this.#gameClockService.remainingTimeClocks$;
   readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly opponentDisconnectClock$ =

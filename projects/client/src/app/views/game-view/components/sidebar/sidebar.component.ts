@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
 import {
   GameClockService,
+  GameClocks,
   GameState,
   ResponsiveSizeService,
 } from '@shared/game';
@@ -36,7 +37,6 @@ export class SidebarComponent implements OnInit {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #destroyRef = inject(DestroyRef);
   readonly #store = inject(Store);
-  readonly #gameClockService = inject(GameClockService);
 
   @Input({ required: true }) isPlayersTurn = false;
   @Input() cardStack: Card[] | null = [];
@@ -47,6 +47,7 @@ export class SidebarComponent implements OnInit {
   @Input() set isShowingMovesPanel(isShowingMovesPanel: boolean) {
     this.isShowingMovesPanel$.next(isShowingMovesPanel);
   }
+  @Input({ required: true }) clocks: GameClocks;
 
   @Output() drawOffered = new EventEmitter<void>();
   @Output() passedMove = new EventEmitter<void>();
@@ -70,7 +71,6 @@ export class SidebarComponent implements OnInit {
   @Select(GameState.gameIsActive)
   gameIsActive$!: Observable<boolean>;
 
-  readonly clocks$ = this.#gameClockService.remainingTimeClocks$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
   readonly isShowingCardStack$ = new BehaviorSubject<boolean>(false);
   readonly isShowingMovesPanel$ = new BehaviorSubject<boolean>(false);

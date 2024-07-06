@@ -5,6 +5,11 @@ import { Observable, of, timer } from 'rxjs';
 import { PlayerGameView } from '@shared/models';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
+export interface GameClocks {
+  player: string;
+  opponent: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
