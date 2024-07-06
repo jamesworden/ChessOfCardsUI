@@ -29,4 +29,5 @@ export type PlayerGameView = {
   hostSecondsRemaining: number;
   guestSecondsRemaining: number;
   wonBy: PlayerOrNone;
+  numUnreadMessages: number;
 };

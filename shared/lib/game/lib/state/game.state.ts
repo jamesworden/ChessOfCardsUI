@@ -34,6 +34,7 @@ import {
   SetNameIsInvalid,
   SetOpponentIsDisconnected,
   InitGameState,
+  MarkLatestReadChatMessage,
 } from './game.actions';
 import {
   Card,
@@ -517,5 +518,13 @@ export class GameState {
     ctx.patchState({
       environment,
     });
+  }
+
+  @Action(MarkLatestReadChatMessage)
+  markLatestReadChatMessage(
+    _: StateContext<GameStateModel>,
+    { latestIndex }: MarkLatestReadChatMessage
+  ) {
+    this.#gameWebsocketService.markLatestReadChatMessage(latestIndex);
   }
 }

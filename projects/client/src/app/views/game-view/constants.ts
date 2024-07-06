@@ -36,4 +36,5 @@ export const DEFAULT_GAME_VIEW: PlayerGameView = {
   hostSecondsRemaining: 0,
   guestSecondsRemaining: 0,
   wonBy: PlayerOrNone.None,
+  numUnreadMessages: 0,
 };

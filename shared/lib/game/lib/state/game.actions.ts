@@ -169,3 +169,8 @@ export class InitGameState {
   static readonly type = '[GameState] Init Game State';
   constructor(public environment: Environment) {}
 }
+
+export class MarkLatestReadChatMessage {
+  static readonly type = '[GameState] Mark Latest Read Chat Message';
+  constructor(public latestIndex: number) {}
+}

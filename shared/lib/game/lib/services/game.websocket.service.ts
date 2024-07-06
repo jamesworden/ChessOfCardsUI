@@ -61,6 +61,8 @@ enum MessageType {
   OpponentReconnected = 'OpponentReconnected',
   OpponentDisconnected = 'OpponentDisconnected',
   PlayerReconnected = 'PlayerReconnected',
+  MarkLatestReadChatMessage = 'MarkLatestReadChatMessage',
+  LatestReadChatMessageMarked = 'LatestReadChatMessageMarked',
 }
 
 @Injectable({
@@ -229,6 +231,13 @@ export class GameWebsocketService {
         });
       }
     );
+
+    this.hubConnection.on(
+      MessageType.LatestReadChatMessageMarked,
+      (playerGameView: PlayerGameView) => {
+        this.#store.dispatch(new UpdatePlayerGameView(playerGameView));
+      }
+    );
   }
 
   public createPendingGame(pendingGameOptions: PendingGameOptions) {
@@ -291,5 +300,11 @@ export class GameWebsocketService {
 
   public deletePendingGame() {
     this.hubConnection.invoke(MessageType.DeletePendingGame);
+  }
+
+  public markLatestReadChatMessage(latestIndex: number) {
+    this.hubConnection.invoke(MessageType.MarkLatestReadChatMessage, {
+      latestIndex,
+    });
   }
 }

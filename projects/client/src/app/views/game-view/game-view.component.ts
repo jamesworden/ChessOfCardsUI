@@ -36,6 +36,7 @@ import {
   GameState,
   JoinGame,
   GameClockService,
+  MarkLatestReadChatMessage,
 } from '@shared/game';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -416,31 +417,35 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(() => this.pastGameView$.next(null));
     combineLatest([
-      this.chatMessages$,
+      this.playerGameView$,
       this.selectedTab$,
       this.selectedPanelView$,
     ])
-      .pipe(takeUntilDestroyed(this.#destroyRef), pairwise())
-      .subscribe(
-        ([
-          [prevChatMessages],
-          [currChatMessages, selectedTab, selectedPanelView],
-        ]) => {
-          const isViewingChat =
-            selectedPanelView === StatisticsPanelView.Chat ||
-            (!selectedPanelView && selectedTab === GameViewTab.Chat);
-          if (isViewingChat) {
-            this.numUnreadChatMessages = 0;
-            return;
-          }
-
-          const increasedChatMessages =
-            prevChatMessages.length < currChatMessages.length;
-          if (increasedChatMessages) {
-            this.numUnreadChatMessages = this.numUnreadChatMessages + 1;
-          }
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(([playerGameView, selectedTab, selectedPanelView]) => {
+        if (!playerGameView) {
+          this.numUnreadChatMessages = 0;
+          return;
         }
-      );
+        const isViewingChat =
+          selectedPanelView === StatisticsPanelView.Chat ||
+          (!selectedPanelView && selectedTab === GameViewTab.Chat);
+
+        if (!isViewingChat) {
+          this.numUnreadChatMessages = playerGameView.numUnreadMessages;
+          return;
+        }
+
+        if (playerGameView.numUnreadMessages > 0) {
+          this.#store.dispatch(
+            new MarkLatestReadChatMessage(
+              playerGameView.chatMessages.length - 1
+            )
+          );
+        }
+
+        this.numUnreadChatMessages = 0;
+      });
     this.gameIsActive$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((gameIsActive) => {
