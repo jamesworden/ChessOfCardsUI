@@ -1,7 +1,7 @@
 # ChessOfCardsUI
 
 ## What is this?
-This repository contains the code for [chessofcards.com](https://chessofcards.com/).
+This repository contains the code for the UI in [chessofcards.com](https://chessofcards.com/).
 
 ---
 
