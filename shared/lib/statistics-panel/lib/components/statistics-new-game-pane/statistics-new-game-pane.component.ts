@@ -1,16 +1,10 @@
-import {
-  Component,
-  EventEmitter,
-  Output,
-  inject,
-  OnDestroy,
-  HostListener,
-} from '@angular/core';
+import { Component, inject, OnDestroy, HostListener } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Select, Store } from '@ngxs/store';
 import {
+  ConnectToServer,
   CreatePendingGame,
   DeletePendingGame,
   GameState,
@@ -32,7 +26,7 @@ import {
 import { Observable, combineLatest } from 'rxjs';
 
 const DEFAULT_PENDING_GAME_OPTIONS: PendingGameOptions = {
-  DurationOption: DurationOption.FiveMinutes,
+  durationOption: DurationOption.FiveMinutes,
 };
 
 interface DurationButton {
@@ -97,6 +91,10 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   name = '';
   joinGameCode = '';
   triedToHostGame = false;
+  /**
+   * Behind the scenes, our app may try to join the game and fail while reconnecting.
+   * If that connection attempt had nothing to do with this component, don't reflect that.
+   */
   triedToJoinGame = false;
 
   constructor() {
@@ -115,7 +113,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   }
 
   @HostListener('document:keydown.enter')
-  handleEscapeKey() {
+  handleEnterKey() {
     if (!this.hostOrJoinView) {
       return;
     }
@@ -141,28 +139,34 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
 
     this.#store.dispatch(
       new CreatePendingGame({
-        HostName: this.name,
+        hostName: this.name,
         ...this.pendingGameOptions,
       })
     );
 
     if (!this.#store.selectSnapshot(GameState.isConnectedToServer)) {
-      this.showUnableToConnectMessage();
+      this.showRetryConnectionMessage(this.hostGame.bind(this));
     }
   }
 
-  showUnableToConnectMessage() {
-    this.#matSnackBar.open(
-      'Sorry, we are unable to connect to the server!',
-      'Hide',
-      {
+  showRetryConnectionMessage(initialAction: () => unknown) {
+    this.#store.dispatch(new ConnectToServer());
+
+    const sub = this.#matSnackBar
+      .open('Unable to connect to the server!', 'Retry', {
         verticalPosition: 'top',
         duration: 3000,
-      }
-    );
+      })
+      .onAction()
+      .subscribe(() => {
+        initialAction();
+        sub.unsubscribe();
+      });
   }
 
   attemptToJoinGame() {
+    this.triedToJoinGame = true;
+
     const upperCaseGameCode = this.joinGameCode.toUpperCase();
     const actualGameCode = this.#store.selectSnapshot(
       GameState.pendingGameCode
@@ -175,22 +179,21 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
       return;
     }
 
-    this.triedToJoinGame = true;
-
     if (!this.#store.selectSnapshot(GameState.isConnectedToServer)) {
-      this.showUnableToConnectMessage();
+      this.showRetryConnectionMessage(this.attemptToJoinGame.bind(this));
       return;
     }
 
     this.#store.dispatch(
-      new JoinGame(upperCaseGameCode, {
-        GuestName: this.name,
+      new JoinGame({
+        gameCode: upperCaseGameCode,
+        guestName: this.name,
       })
     );
   }
 
   selectDurationOption(durationOption: DurationOption) {
-    this.pendingGameOptions.DurationOption = durationOption;
+    this.pendingGameOptions.durationOption = durationOption;
   }
 
   attemptToLeaveGame() {
@@ -236,6 +239,7 @@ export class StatisticsNewGamePaneComponent implements OnDestroy {
   selectHostView() {
     this.joinGameSelected = false;
     this.hostOrJoinView = true;
+    this.triedToJoinGame = false;
   }
 
   selectJoinView() {

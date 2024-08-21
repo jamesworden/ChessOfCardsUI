@@ -1,6 +1,9 @@
 <div class="flex gap-x-2">
   <button
-    class="px-2 rounded-sm transition flex-1 border border-gray-800 dark:border-gray-200"
+    [class]="
+      'disable-dbl-tap-zoom px-2 rounded-sm transition flex-1 border ' +
+      buttonClass
+    "
     (click)="selectFirst()"
     [disabled]="selectFirstDisabled"
     [ngClass]="{
@@ -8,15 +11,17 @@
     }"
   >
     <div class="flex flex-col justify-around">
-      <span
-        class="material-symbols-outlined text-3xl text-gray-800 dark:text-gray-200"
+      <span [class]="'material-symbols-outlined text-3xl ' + iconClass"
         >first_page</span
       >
     </div>
   </button>
 
   <button
-    class="px-2 rounded-sm transition flex-2 border border-gray-800 dark:border-gray-200"
+    [class]="
+      'disable-dbl-tap-zoom px-2 rounded-sm transition flex-2 border ' +
+      buttonClass
+    "
     (click)="selectPrevious()"
     [disabled]="selectPrevDisabled"
     [ngClass]="{
@@ -24,9 +29,7 @@
     }"
   >
     <div class="flex flex-col justify-around">
-      <span
-        class="material-symbols-outlined text-3xl text-gray-800 dark:text-gray-200"
-      >
+      <span [class]="'material-symbols-outlined text-3xl ' + iconClass">
         chevron_left
       </span>
     </div>
@@ -34,16 +37,17 @@
 
   <button
     [disabled]="selectNextDisabled"
-    class="px-2 rounded-sm transition flex-2 border border-gray-800 dark:border-gray-200"
+    [class]="
+      'disable-dbl-tap-zoom px-2 rounded-sm transition flex-2 border ' +
+      buttonClass
+    "
     (click)="selectNext()"
     [ngClass]="{
       'opacity-30': selectNextDisabled
     }"
   >
     <div class="flex flex-col justify-around">
-      <span
-        class="material-symbols-outlined text-3xl text-gray-800 dark:text-gray-200"
-      >
+      <span [class]="'material-symbols-outlined text-3xl ' + iconClass">
         chevron_right
       </span>
     </div>
@@ -51,15 +55,17 @@
 
   <button
     [disabled]="selectLastDisabled"
-    class="px-2 rounded-sm transition flex-1 border border-gray-800 dark:border-gray-200"
+    [class]="
+      'disable-dbl-tap-zoom px-2 rounded-sm transition flex-1 border ' +
+      buttonClass
+    "
     (click)="selectLast()"
     [ngClass]="{
       'opacity-30': selectLastDisabled
     }"
   >
     <div class="flex flex-col justify-around">
-      <span
-        class="material-symbols-outlined text-3xl text-gray-800 dark:text-gray-200"
+      <span [class]="'material-symbols-outlined text-3xl ' + iconClass"
         >last_page</span
       >
     </div>

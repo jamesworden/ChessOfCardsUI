@@ -3,6 +3,11 @@
 @import 'tailwindcss/utilities';
 @import '@fontsource-variable/bricolage-grotesque';
 
+html,
+body {
+  height: 100svh;
+}
+
 html {
   font-family: 'Bricolage Grotesque Variable', sans-serif;
   overscroll-behavior: none;
@@ -74,6 +79,18 @@ html {
   }
 }
 
+@media (min-height: 650px) {
+  .h-gt-sm-hidden {
+    display: none !important;
+  }
+}
+
+@media (max-height: 600px) {
+  .h-xs-hidden {
+    display: none !important;
+  }
+}
+
 .flex-2 {
   flex-grow: 2;
 }
@@ -90,4 +107,12 @@ html {
   * {
     transition: none !important;
   }
+}
+
+.bg-gray-700-important {
+  background-color: #374151 !important;
+}
+
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
 }

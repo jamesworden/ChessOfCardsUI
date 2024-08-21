@@ -7,16 +7,16 @@ export function canPlaceMultipleCards(
   return (
     candidateMoves?.some(
       (candidateMove) =>
-        initialPlaceCardAttempt.Card.Kind ===
-          candidateMove.Move.PlaceCardAttempts[0].Card.Kind &&
-        initialPlaceCardAttempt.Card.Suit ===
-          candidateMove.Move.PlaceCardAttempts[0].Card.Suit &&
-        initialPlaceCardAttempt.TargetLaneIndex ===
-          candidateMove.Move.PlaceCardAttempts[0].TargetLaneIndex &&
-        initialPlaceCardAttempt.TargetRowIndex ===
-          candidateMove.Move.PlaceCardAttempts[0].TargetRowIndex &&
-        candidateMove.Move.PlaceCardAttempts.length > 1 &&
-        candidateMove.IsValid
+        initialPlaceCardAttempt.card.kind ===
+          candidateMove.move.placeCardAttempts[0].card.kind &&
+        initialPlaceCardAttempt.card.suit ===
+          candidateMove.move.placeCardAttempts[0].card.suit &&
+        initialPlaceCardAttempt.targetLaneIndex ===
+          candidateMove.move.placeCardAttempts[0].targetLaneIndex &&
+        initialPlaceCardAttempt.targetRowIndex ===
+          candidateMove.move.placeCardAttempts[0].targetRowIndex &&
+        candidateMove.move.placeCardAttempts.length > 1 &&
+        candidateMove.isValid
     ) ?? false
   );
 }

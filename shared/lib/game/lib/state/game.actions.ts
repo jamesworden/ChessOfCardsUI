@@ -8,8 +8,8 @@ import {
   PendingGameView,
   PendingGameOptions,
   Environment,
+  JoinGameOptions,
 } from '@shared/models';
-import { JoinPendingGameOptions } from 'shared/lib/models/lib/join-pending-game-options.model';
 
 export class SetIsConnectedToServer {
   static readonly type = '[GameState] Set Is Connected To Server';
@@ -18,7 +18,6 @@ export class SetIsConnectedToServer {
 
 export class ConnectToServer {
   static readonly type = '[GameState] Connect To Server';
-  constructor(public environment: Environment) {}
 }
 
 export class AnimateGameView {
@@ -122,10 +121,7 @@ export class DeletePendingGame {
 
 export class JoinGame {
   static readonly type = '[GameState] Join Game';
-  constructor(
-    public gameCode: string,
-    public joinPendingGameOptions?: JoinPendingGameOptions
-  ) {}
+  constructor(public joinGameOptions: JoinGameOptions) {}
 }
 
 export class ResignGame {
@@ -162,4 +158,19 @@ export class SetGameIsActive {
 export class SendChatMessage {
   static readonly type = '[GameState] Send Chat Message';
   constructor(public message: string) {}
+}
+
+export class SetOpponentIsDisconnected {
+  static readonly type = '[GameState] Opponent Is Disconnected';
+  constructor(public opponentIsDisconnected: boolean) {}
+}
+
+export class InitGameState {
+  static readonly type = '[GameState] Init Game State';
+  constructor(public environment: Environment) {}
+}
+
+export class MarkLatestReadChatMessage {
+  static readonly type = '[GameState] Mark Latest Read Chat Message';
+  constructor(public latestIndex: number) {}
 }

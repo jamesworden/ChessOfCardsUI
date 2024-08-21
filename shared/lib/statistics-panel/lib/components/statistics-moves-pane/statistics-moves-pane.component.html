@@ -108,7 +108,9 @@
   </div>
 
   @if (moveNotations$ | async; as moveNotations) {
-    <nav class="w-full text-white py-4 md:px-6 bg-white dark:bg-gray-700">
+    <nav
+      class="w-full text-white py-4 md:px-6 border border-t border-gray-300 md:border-none dark:border-none bg-gray-200 md:bg-gray-800 dark:bg-gray-700"
+    >
       <div class="flex-grow mx-2 md:mx-4">
         <previous-next-selector
           (firstSelected)="selectFirst()"
@@ -129,6 +131,8 @@
             moveNotations.length === 0 ||
             (selectedNotationIndex$ | async) === moveNotations.length - 1
           "
+          buttonClass="border-gray-800 md:border-white dark:border-gray-200"
+          iconClass="text-gray-800 md:text-gray-200 dark:text-gray-200"
         ></previous-next-selector>
       </div>
     </nav>

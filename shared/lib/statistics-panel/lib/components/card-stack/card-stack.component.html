@@ -4,10 +4,10 @@
       <div class="flex flex-col gap-y-4 px-1 -mt-16">
         <div class="flex justify-around">
           <div
-            class="p-2 rounded-full bg-gray-200 dark:bg-gray-600 flex flex-col justify-around"
+            class="p-2 rounded-full bg-slate-700 dark:bg-gray-600 flex flex-col justify-around"
           >
             <span
-              class="material-symbols-outlined text-gray-50 dark:text-gray-700"
+              class="material-symbols-outlined text-gray-800 dark:text-gray-700"
               style="font-size: 36px"
             >
               playing_cards
@@ -47,13 +47,13 @@
 
     @if (position$ | async; as position) {
       @if (
-        position.RowIndex === 3 &&
-        (redJokerLaneIndex === position.LaneIndex ||
-          blackJokerLaneIndex === position.LaneIndex)
+        position.rowIndex === 3 &&
+        (redJokerLaneIndex === position.laneIndex ||
+          blackJokerLaneIndex === position.laneIndex)
       ) {
         <div class="flex flex-row justify-around mt-2">
           <game-joker-card
-            [isRedJoker]="redJokerLaneIndex === position.LaneIndex"
+            [isRedJoker]="redJokerLaneIndex === position.laneIndex"
           ></game-joker-card>
         </div>
       }

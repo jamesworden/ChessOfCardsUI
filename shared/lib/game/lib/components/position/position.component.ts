@@ -67,9 +67,9 @@ export class PositionComponent {
     const Card = event.item.data;
 
     const placeCardAttempt: PlaceCardAttempt = {
-      Card,
-      TargetLaneIndex: this.laneIndex$.getValue(),
-      TargetRowIndex: this.rowIndex$.getValue(),
+      card: Card,
+      targetLaneIndex: this.laneIndex$.getValue(),
+      targetRowIndex: this.rowIndex$.getValue(),
     };
 
     this.placeCardAttempted.emit(placeCardAttempt);

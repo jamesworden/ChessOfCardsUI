@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ChatMessage, MoveMade, PendingGameOptions } from '@shared/models';
+import { ChatMessage, MoveMade } from '@shared/models';
 import { BehaviorSubject } from 'rxjs';
 import { MoveNotation } from '@shared/logic';
 import { StatisticsPanelView } from '../../models/statistics-panel-view';

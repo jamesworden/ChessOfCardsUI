@@ -7,7 +7,7 @@ export function getCardMovementSoundPaths(
 ) {
   const soundPaths: SoundPaths = {};
 
-  if (cardMovement.From && cardMovement.To && durationMs > 0) {
+  if (cardMovement.from && cardMovement.to && durationMs > 0) {
     soundPaths.onStart = 'assets/sounds/slide_card.mp3';
   }
 

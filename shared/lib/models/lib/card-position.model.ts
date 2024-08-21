@@ -1,4 +1,4 @@
 export type CardPosition = {
-  LaneIndex: number;
-  RowIndex: number;
+  laneIndex: number;
+  rowIndex: number;
 };

@@ -18,7 +18,8 @@ export function getPseudoPositions(
     isHost ? rowIndex <= 6 : rowIndex >= 0;
     isHost ? rowIndex++ : rowIndex--
   ) {
-    const { TargetLaneIndex } = initialPlaceMultipleCardAttempt!;
+    const { targetLaneIndex: TargetLaneIndex } =
+      initialPlaceMultipleCardAttempt!;
 
     const { backgroundClass, textClass } = getDefaultBackgroundClasses(
       TargetLaneIndex,

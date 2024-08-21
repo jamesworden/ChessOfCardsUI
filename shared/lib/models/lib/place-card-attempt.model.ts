@@ -1,7 +1,7 @@
 import { Card } from './card.model';
 
 export type PlaceCardAttempt = {
-  Card: Card;
-  TargetLaneIndex: number;
-  TargetRowIndex: number;
+  card: Card;
+  targetLaneIndex: number;
+  targetRowIndex: number;
 };

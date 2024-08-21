@@ -10,8 +10,12 @@ import {
   HostListener,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { withLatestFrom, tap, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, of, timer } from 'rxjs';
+import {
+  withLatestFrom,
+  tap,
+  distinctUntilChanged,
+} from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AcceptDrawOffer,
@@ -29,17 +33,21 @@ import {
   StartPlacingMultipleCards,
   UpdatePlayerGameView,
   GameState,
+  JoinGame,
+  GameClockService,
+  MarkLatestReadChatMessage,
 } from '@shared/game';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map, pairwise, startWith, filter } from 'rxjs/operators';
+import { map, pairwise, startWith, filter, takeUntil } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { Router } from '@angular/router';
 import {
   Card,
   CardMovement,
   CardPosition,
   ChatMessage,
+  DURATION_OPTIONS_TO_MINUTES,
+  DurationOption,
   GameOverData,
   Lane,
   Move,
@@ -76,6 +84,15 @@ import { StatisticsPanelView } from '@shared/statistics-panel';
 import { AudioCacheService } from '@shared/audio-cache';
 import { DEFAULT_GAME_VIEW } from './constants';
 import { ButtonModalComponent } from '@shared/ui-inputs';
+import { Router } from '@angular/router';
+import { addMinutes, isAfter } from 'date-fns';
+import { getOpponentUsername, getPlayerUsername } from './logic/get-username';
+
+interface InProgressGameData {
+  gameCode: string;
+  durationOption: DurationOption;
+  gameStartedTimestampUTC: string;
+}
 
 const SLIDE_CARD_AUDIO_FILE_PATH = 'assets/sounds/slide_card.mp3';
 
@@ -99,9 +116,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   readonly #store = inject(Store);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
-  readonly #router = inject(Router);
   readonly #destroyRef = inject(DestroyRef);
   readonly #audioCacheService = inject(AudioCacheService);
+  readonly #router = inject(Router);
+  readonly #gameClockService = inject(GameClockService);
 
   @ViewChild('cardMovementTemplate', { read: TemplateRef })
   cardMovementTemplate: TemplateRef<any>;
@@ -148,8 +166,20 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   @Select(GameState.gameCodeIsInvalid)
   gameCodeIsInvalid$!: Observable<boolean>;
 
+  @Select(GameState.opponentIsDisconnected)
+  opponentIsDisconnected$!: Observable<boolean>;
+
+  @Select(GameState.pendingGameCode)
+  pendingGameCode$!: Observable<string>;
+
+  @Select(GameState.gameCode)
+  gameCode$!: Observable<string>;
+
+  readonly clocks$ = this.#gameClockService.remainingTimeClocks$;
   readonly isMuted$ = this.#audioCacheService.isMuted$;
   readonly cardSize$ = this.#responsiveSizeService.cardSize$;
+  readonly opponentDisconnectClock$ =
+    this.#gameClockService.opponentDisconnectClock$;
 
   readonly cachedGameView$ = new BehaviorSubject<PlayerGameView | null>(null);
   readonly selectedCard$ = new BehaviorSubject<Card | null>(null);
@@ -178,11 +208,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.playerGameView$,
     this.selectedNotationIndex$.pipe(distinctUntilChanged()),
   ]).pipe(
-    filter(([playerGameView]) => (playerGameView?.MovesMade?.length ?? 0) > 0),
+    filter(([playerGameView]) => (playerGameView?.movesMade?.length ?? 0) > 0),
     map(([playerGameView, selectedNotationIndex]) =>
       getMoveNotations(
-        playerGameView?.MovesMade ?? [],
-        playerGameView?.IsHost ?? false,
+        playerGameView?.movesMade ?? [],
+        playerGameView?.isHost ?? false,
         selectedNotationIndex ?? 0
       )
     )
@@ -234,7 +264,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   ]).pipe(
     map(([pastGameView, cachedGameView]) => {
       const gameView = pastGameView ?? cachedGameView;
-      return gameView?.RedJokerLaneIndex;
+      return gameView?.redJokerLaneIndex;
     })
   );
 
@@ -244,48 +274,26 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   ]).pipe(
     map(([pastGameView, cachedGameView]) => {
       const gameView = pastGameView ?? cachedGameView;
-      return gameView?.BlackJokerLaneIndex;
+      return gameView?.blackJokerLaneIndex;
     })
   );
 
   readonly opponentUsername$ = this.playerGameView$.pipe(
-    map((playerGameView) => {
-      if (playerGameView) {
-        return playerGameView.IsHost
-          ? playerGameView.GuestName ?? 'Guest Player'
-          : playerGameView.HostName ?? 'Host Player';
-      } else {
-        return 'Opponent';
-      }
-    })
+    map(getOpponentUsername)
   );
 
-  readonly playerUsername$ = this.playerGameView$.pipe(
-    map((playerGameView) => {
-      if (playerGameView) {
-        return playerGameView.IsHost
-          ? playerGameView.HostName ?? 'Host Player'
-          : playerGameView.GuestName ?? 'Guest Player';
-      } else {
-        return 'You';
-      }
-    })
-  );
+  readonly playerUsername$ = this.playerGameView$.pipe(map(getPlayerUsername));
 
   readonly Z_INDEXES = Z_INDEXES;
   readonly GameViewTab = GameViewTab;
 
   isPlayersTurn = false;
-  isPlacingMultipleCards = false;
   cardSize = 64;
   movesPanelHeight: number | undefined = undefined;
   numUnreadChatMessages = 0;
-  joinGameName = '';
 
   ngOnInit() {
-    /**
-     * TODO: Ensure that resizing browser maintains correct nav tab / panel tab.
-     */
+    this.checkToJoinInProgressGame();
     this.updateUiLayout();
 
     this.gameOverData$
@@ -305,12 +313,6 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         (opponentPassedMove) =>
           opponentPassedMove && this.showOpponentPassedMoveToast()
       );
-    this.isPlacingMultipleCards$
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe(
-        (isPlacingMultipleCards) =>
-          (this.isPlacingMultipleCards = isPlacingMultipleCards)
-      );
     this.positionClicked$
       .pipe(
         withLatestFrom(this.selectedCard$, this.selectedPosition$),
@@ -319,9 +321,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .subscribe(([position, selectedCard, selectedPosition]) => {
         if (selectedCard) {
           this.attemptToPlaceCard({
-            Card: selectedCard,
-            TargetLaneIndex: position.LaneIndex,
-            TargetRowIndex: position.RowIndex,
+            card: selectedCard,
+            targetLaneIndex: position.laneIndex,
+            targetRowIndex: position.rowIndex,
           });
           this.selectedPosition$.next(null);
           return;
@@ -329,8 +331,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
         if (
           selectedPosition &&
-          selectedPosition.LaneIndex === position.LaneIndex &&
-          selectedPosition.RowIndex === position.RowIndex
+          selectedPosition.laneIndex === position.laneIndex &&
+          selectedPosition.rowIndex === position.rowIndex
         ) {
           this.selectedPosition$.next(null);
           return;
@@ -401,7 +403,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           );
         }
 
-        if (this.isPlacingMultipleCards) {
+        if (this.#store.selectSnapshot(GameState.isPlacingMultipleCards)) {
           this.cancelPlaceMultipleCards();
         }
       });
@@ -414,31 +416,35 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(() => this.pastGameView$.next(null));
     combineLatest([
-      this.chatMessages$,
+      this.playerGameView$,
       this.selectedTab$,
       this.selectedPanelView$,
     ])
-      .pipe(takeUntilDestroyed(this.#destroyRef), pairwise())
-      .subscribe(
-        ([
-          [prevChatMessages],
-          [currChatMessages, selectedTab, selectedPanelView],
-        ]) => {
-          const isViewingChat =
-            selectedPanelView === StatisticsPanelView.Chat ||
-            (!selectedPanelView && selectedTab === GameViewTab.Chat);
-          if (isViewingChat) {
-            this.numUnreadChatMessages = 0;
-            return;
-          }
-
-          const increasedChatMessages =
-            prevChatMessages.length < currChatMessages.length;
-          if (increasedChatMessages) {
-            this.numUnreadChatMessages = this.numUnreadChatMessages + 1;
-          }
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(([playerGameView, selectedTab, selectedPanelView]) => {
+        if (!playerGameView) {
+          this.numUnreadChatMessages = 0;
+          return;
         }
-      );
+        const isViewingChat =
+          selectedPanelView === StatisticsPanelView.Chat ||
+          (!selectedPanelView && selectedTab === GameViewTab.Chat);
+
+        if (!isViewingChat) {
+          this.numUnreadChatMessages = playerGameView.numUnreadMessages;
+          return;
+        }
+
+        if (playerGameView.numUnreadMessages > 0) {
+          this.#store.dispatch(
+            new MarkLatestReadChatMessage(
+              playerGameView.chatMessages.length - 1
+            )
+          );
+        }
+
+        this.numUnreadChatMessages = 0;
+      });
     this.gameIsActive$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((gameIsActive) => {
@@ -456,6 +462,26 @@ export class GameViewComponent implements OnInit, AfterViewInit {
           this.selectedPanelView$.next(StatisticsPanelView.Moves);
         }
       });
+    combineLatest([this.gameCode$, this.pendingGameCode$])
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(([gameCode, pendingGameCode]) =>
+        this.#router.navigate(['game', gameCode ?? pendingGameCode ?? ''])
+      );
+    this.playerGameView$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((playerGameView) => {
+        if (!playerGameView || playerGameView.hasEnded) {
+          return;
+        }
+        this.storeLocalGameData(playerGameView);
+      });
+    this.gameIsActive$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((isActive) => {
+        if (!isActive) {
+          this.destroyLocalGameData();
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -464,7 +490,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscapeKey() {
-    if (this.isPlacingMultipleCards) {
+    if (this.#store.selectSnapshot(GameState.isPlacingMultipleCards)) {
       this.cancelPlaceMultipleCards();
     }
   }
@@ -519,12 +545,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       if (
         cardMovementEntities.some(
           (entity) =>
-            entity.context.Card &&
-            cardEqualsCard(card, entity.context.Card) &&
-            ((cachedGameView?.IsHost &&
-              entity.context.From.HostHandCardIndex !== null) ||
-              (!cachedGameView?.IsHost &&
-                entity.context.From.GuestHandCardIndex !== null))
+            entity.context.card &&
+            cardEqualsCard(card, entity.context.card) &&
+            ((cachedGameView?.isHost &&
+              entity.context.from.hostHandCardIndex !== null) ||
+              (!cachedGameView?.isHost &&
+                entity.context.from.guestHandCardIndex !== null))
         )
       ) {
         removeCardFromArray(card, hand);
@@ -543,7 +569,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     let cardEntities = animatedEntities as AnimatedEntity<CardMovement>[];
-    const numLanes = cachedGameView.Lanes.length;
+    const numLanes = cachedGameView.lanes.length;
 
     for (const cardEntity of cardEntities) {
       for (let laneIndex = 0; laneIndex < numLanes; laneIndex++) {
@@ -563,12 +589,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   attemptToPlaceCard(placeCardAttempt: PlaceCardAttempt) {
-    if (this.isPlacingMultipleCards) {
+    if (this.#store.selectSnapshot(GameState.isPlacingMultipleCards)) {
       return;
     }
 
     const move: Move = {
-      PlaceCardAttempts: [placeCardAttempt],
+      placeCardAttempts: [placeCardAttempt],
     };
 
     const cachedGameView = this.cachedGameView$.getValue();
@@ -585,7 +611,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     const invalidMoveMessage = this.isPlayersTurn
-      ? getReasonIfMoveInvalid(move, cachedGameView.CandidateMoves)
+      ? getReasonIfMoveInvalid(move, cachedGameView.candidateMoves)
       : "It's not your turn!";
 
     if (invalidMoveMessage) {
@@ -600,9 +626,9 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
     }
 
-    canPlaceMultipleCards(placeCardAttempt, cachedGameView.CandidateMoves)
+    canPlaceMultipleCards(placeCardAttempt, cachedGameView.candidateMoves)
       ? this.initiatePlaceMultipleCards(placeCardAttempt)
-      : this.makeValidatedMove(move, cachedGameView.Lanes);
+      : this.makeValidatedMove(move, cachedGameView.lanes);
   }
 
   onPlayerHandCardDrop(event: CdkDragDrop<string>) {
@@ -616,13 +642,17 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
     this.#audioCacheService.play(SLIDE_CARD_AUDIO_FILE_PATH);
 
-    if (this.isPlacingMultipleCards && oneListToAnother) {
+    const isPlacingMultipleCards = this.#store.selectSnapshot(
+      GameState.isPlacingMultipleCards
+    );
+
+    if (isPlacingMultipleCards && oneListToAnother) {
       const card = event.item.data as Card;
       this.dragCardBackToHand(card, event.currentIndex);
       return;
     }
 
-    this.isPlacingMultipleCards
+    isPlacingMultipleCards
       ? this.rearrangePlaceMultipleHand(event.previousIndex, event.currentIndex)
       : this.rearrangeHand(event.previousIndex, event.currentIndex);
   }
@@ -654,23 +684,23 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    cachedGameView.Hand.Cards = placeMultipleCardsHand;
+    cachedGameView.hand.cards = placeMultipleCardsHand;
     this.cachedGameView$.next({ ...cachedGameView });
     this.#store.dispatch(new FinishPlacingMultipleCards(false));
 
-    const isHost = cachedGameView.IsHost;
+    const isHost = cachedGameView.isHost;
     const cardsToAddBackToHand = placeMultipleCards.reverse();
     const placeCardAttempts: PlaceCardAttempt[] = cardsToAddBackToHand.map(
       (card, relativeRowIndex) => {
-        const initialRowIndex = initialPlaceMultipleCardAttempt.TargetRowIndex;
-        const TargetRowIndex = isHost
+        const initialRowIndex = initialPlaceMultipleCardAttempt.targetRowIndex;
+        const targetRowIndex = isHost
           ? initialRowIndex + relativeRowIndex
           : initialRowIndex - relativeRowIndex;
 
         return {
-          Card: card,
-          TargetLaneIndex: initialPlaceMultipleCardAttempt.TargetLaneIndex,
-          TargetRowIndex,
+          card,
+          targetLaneIndex: initialPlaceMultipleCardAttempt.targetLaneIndex,
+          targetRowIndex,
         };
       }
     );
@@ -696,10 +726,10 @@ export class GameViewComponent implements OnInit, AfterViewInit {
 
     const cardEntities = animatedEntites as AnimatedEntity<CardMovement>[];
     const cardsToAdd = cardEntities
-      .map((entity) => entity.context.Card as Card)
+      .map((entity) => entity.context.card as Card)
       .filter((card) => card);
-    const combinedCards = cachedGameView.Hand.Cards.concat(cardsToAdd);
-    cachedGameView.Hand.Cards = combinedCards;
+    const combinedCards = cachedGameView.hand.cards.concat(cardsToAdd);
+    cachedGameView.hand.cards = combinedCards;
 
     this.#store.dispatch(new UpdatePlayerGameView(cachedGameView));
     this.#store.dispatch(new RearrangeHand(combinedCards));
@@ -729,12 +759,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const move = convertPlaceMultipleCardsToMove(
       reversedPlaceMultipleCards,
       initialPlaceMultipleCardAttempt,
-      cachedGameView.IsHost
+      cachedGameView.isHost
     );
 
     const invalidMoveMessage = getReasonIfMoveInvalid(
       move,
-      cachedGameView.CandidateMoves
+      cachedGameView.candidateMoves
     );
     if (invalidMoveMessage) {
       this.#matSnackBar.open(
@@ -770,20 +800,20 @@ export class GameViewComponent implements OnInit, AfterViewInit {
   }
 
   patchPlayerSideGameViewWithMoves(gameView: PlayerGameView, move: Move) {
-    for (const placeCardAttempt of move.PlaceCardAttempts) {
-      for (let laneIndex = 0; laneIndex < gameView.Lanes.length; laneIndex++) {
-        if (placeCardAttempt.TargetLaneIndex === laneIndex) {
-          const lane = gameView.Lanes[laneIndex];
-          for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
+    for (const placeCardAttempt of move.placeCardAttempts) {
+      for (let laneIndex = 0; laneIndex < gameView.lanes.length; laneIndex++) {
+        if (placeCardAttempt.targetLaneIndex === laneIndex) {
+          const lane = gameView.lanes[laneIndex];
+          for (let rowIndex = 0; rowIndex < lane.rows.length; rowIndex++) {
             const isOnPlayersSide =
-              (gameView.IsHost && placeCardAttempt.TargetRowIndex < 3) ||
-              (!gameView.IsHost && placeCardAttempt.TargetRowIndex > 3);
+              (gameView.isHost && placeCardAttempt.targetRowIndex < 3) ||
+              (!gameView.isHost && placeCardAttempt.targetRowIndex > 3);
             if (
               isOnPlayersSide &&
-              rowIndex === placeCardAttempt.TargetRowIndex
+              rowIndex === placeCardAttempt.targetRowIndex
             ) {
-              const row = lane.Rows[rowIndex];
-              row.push(placeCardAttempt.Card);
+              const row = lane.rows[rowIndex];
+              row.push(placeCardAttempt.card);
             }
           }
         }
@@ -820,14 +850,14 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     const cardsToAdd = cardMovementEntities
-      .map((entity) => entity.context.Card as Card)
+      .map((entity) => entity.context.card as Card)
       .filter((card) => card);
 
     const cardsFromHand = this.#store.selectSnapshot(
       GameState.isPlacingMultipleCards
     )
       ? this.#store.selectSnapshot(GameState.placeMultipleCardsHand) ?? []
-      : [...cachedGameView.Hand.Cards];
+      : [...cachedGameView.hand.cards];
 
     cardsToAdd.forEach((card) => removeCardFromArray(card, cardsFromHand));
     this.cachedGameView$.next(cachedGameView);
@@ -881,8 +911,8 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     }
 
     const selectedCard = this.selectedCard$.getValue();
-    const matchingKind = card.Kind === selectedCard?.Kind;
-    const matchingSuit = card.Suit === selectedCard?.Suit;
+    const matchingKind = card.kind === selectedCard?.kind;
+    const matchingSuit = card.suit === selectedCard?.suit;
 
     this.updateLatestMoveDetails({
       wasDragged: false,
@@ -921,14 +951,18 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    let TargetRowIndex = cachedGameView.IsHost
-      ? initialPlaceCardAttempt.TargetRowIndex + placeMultipleCards.length
-      : initialPlaceCardAttempt.TargetRowIndex - placeMultipleCards.length;
+    if (placeMultipleCards[0]?.kind !== selectedCard.kind) {
+      return;
+    }
+
+    let TargetRowIndex = cachedGameView.isHost
+      ? initialPlaceCardAttempt.targetRowIndex + placeMultipleCards.length
+      : initialPlaceCardAttempt.targetRowIndex - placeMultipleCards.length;
 
     const placeCardAttempt: PlaceCardAttempt = {
-      Card: selectedCard,
-      TargetLaneIndex: initialPlaceCardAttempt.TargetLaneIndex,
-      TargetRowIndex,
+      card: selectedCard,
+      targetLaneIndex: initialPlaceCardAttempt.targetLaneIndex,
+      targetRowIndex: TargetRowIndex,
     };
 
     const cardsFromHand =
@@ -937,7 +971,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     const entities = gettoPmcLaneEntities(
       [placeCardAttempt],
       cardsFromHand,
-      cachedGameView.IsHost,
+      cachedGameView.isHost,
       this.cardMovementTemplate,
       this.cardSize
     );
@@ -987,8 +1021,29 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     this.#audioCacheService.unmute();
   }
 
-  changeName(name: string) {
-    this.joinGameName = name;
+  private storeLocalGameData(playerGameView: PlayerGameView) {
+    const inProgressGameData: InProgressGameData = {
+      durationOption: playerGameView.durationOption,
+      gameCode: playerGameView.gameCode,
+      gameStartedTimestampUTC: playerGameView.gameCreatedTimestampUTC,
+    };
+
+    localStorage.setItem(
+      'in-progress-game',
+      JSON.stringify(inProgressGameData)
+    );
+  }
+
+  private destroyLocalGameData() {
+    localStorage.removeItem('in-progress-game');
+  }
+
+  private getLocalGameData() {
+    const stringifiedGameData = localStorage.getItem('in-progress-game');
+    if (!stringifiedGameData || typeof stringifiedGameData !== 'string') {
+      return null;
+    }
+    return JSON.parse(stringifiedGameData) as InProgressGameData;
   }
 
   private updateLatestMoveDetails(updatedDetails: Partial<MoveMadeDetails>) {
@@ -1000,15 +1055,64 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     });
   }
 
+  private checkToJoinInProgressGame() {
+    const inProgressGameData = this.getLocalGameData();
+    this.destroyLocalGameData();
+
+    inProgressGameData
+      ? this.joinInProgressGameFromLocalData(inProgressGameData)
+      : this.joinInProgressGameFromUrl();
+  }
+
+  private joinInProgressGameFromLocalData(
+    inProgressGameData: InProgressGameData
+  ) {
+    const gameStarted = new Date(inProgressGameData.gameStartedTimestampUTC);
+    const playerTurnMinutes =
+      DURATION_OPTIONS_TO_MINUTES[inProgressGameData.durationOption];
+    const totalPossibleDuration = playerTurnMinutes * 2;
+    const gameEndedBy = addMinutes(gameStarted, totalPossibleDuration);
+    if (isAfter(gameStarted, gameEndedBy)) {
+      return;
+    }
+
+    this.joinGameUponConnectingToServer(inProgressGameData.gameCode);
+  }
+
+  private joinInProgressGameFromUrl() {
+    const urlPieces = this.#router.url.split('/');
+    const potentialGameCode = urlPieces[urlPieces.length - 1];
+    if (/[A-Z]/.test(potentialGameCode) && potentialGameCode.length === 4) {
+      this.joinGameUponConnectingToServer(potentialGameCode);
+    }
+  }
+
+  private joinGameUponConnectingToServer(gameCode: string) {
+    const hasDispatchedAction$ = new Subject();
+    this.isConnectedToServer$
+      .pipe(
+        filter((isConnected) => isConnected),
+        takeUntil(hasDispatchedAction$)
+      )
+      .subscribe(() => {
+        this.#store.dispatch(
+          new JoinGame({
+            gameCode,
+          })
+        );
+        hasDispatchedAction$.next();
+      });
+  }
+
   private rearrangeHand(previousIndex: number, targetIndex: number) {
     const cachedGameView = this.cachedGameView$.getValue();
     if (!cachedGameView) {
       return;
     }
-    moveItemInArray(cachedGameView.Hand.Cards, previousIndex, targetIndex);
+    moveItemInArray(cachedGameView.hand.cards, previousIndex, targetIndex);
     this.cachedGameView$.next(cachedGameView);
     this.#store.dispatch(new UpdatePlayerGameView(cachedGameView));
-    this.#store.dispatch(new RearrangeHand(cachedGameView.Hand.Cards));
+    this.#store.dispatch(new RearrangeHand(cachedGameView.hand.cards));
   }
 
   private rearrangePlaceMultipleHand(
@@ -1072,7 +1176,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    cachedGameView.Hand.Cards = handAfterSwitch;
+    cachedGameView.hand.cards = handAfterSwitch;
     this.cachedGameView$.next(cachedGameView);
     this.#store.dispatch(new UpdatePlayerGameView(cachedGameView));
     new RearrangeHand(handAfterSwitch);
@@ -1084,11 +1188,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const initialPlaceMultipleCardsHand = [...cachedGameView.Hand.Cards];
+    const initialPlaceMultipleCardsHand = [...cachedGameView.hand.cards];
 
     const cardWasDragged = this.latestMoveMadeDetails$.getValue()?.wasDragged;
     if (cardWasDragged) {
-      removeCardFromArray(placeCardAttempt.Card, initialPlaceMultipleCardsHand);
+      removeCardFromArray(placeCardAttempt.card, initialPlaceMultipleCardsHand);
     }
 
     this.#store.dispatch(
@@ -1103,7 +1207,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
         gettoPmcLaneEntities(
           [placeCardAttempt],
           initialPlaceMultipleCardsHand,
-          cachedGameView.IsHost,
+          cachedGameView.isHost,
           this.cardMovementTemplate,
           this.cardSize
         )
@@ -1111,7 +1215,7 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.#store.dispatch(new SetPlaceMultipleCards([placeCardAttempt.Card]));
+    this.#store.dispatch(new SetPlaceMultipleCards([placeCardAttempt.card]));
   }
 
   private makeValidatedMove(move: Move, lanes: Lane[]) {
@@ -1120,12 +1224,12 @@ export class GameViewComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    for (const placeCardAttempt of move.PlaceCardAttempts) {
+    for (const placeCardAttempt of move.placeCardAttempts) {
       if (this.latestMoveMadeDetails$.getValue()?.wasDragged) {
         moveCardToLane(placeCardAttempt, lanes);
       }
 
-      removeCardFromArray(placeCardAttempt.Card, cachedGameView.Hand.Cards);
+      removeCardFromArray(placeCardAttempt.card, cachedGameView.hand.cards);
     }
 
     this.cachedGameView$.next({ ...cachedGameView });
@@ -1166,15 +1270,15 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     cardEntity: AnimatedEntity<CardMovement>,
     gameView: PlayerGameView
   ) {
-    const lane = gameView.Lanes[laneIndex];
+    const lane = gameView.lanes[laneIndex];
 
-    for (let rowIndex = 0; rowIndex < lane.Rows.length; rowIndex++) {
-      const { CardPosition } = cardEntity.context.From;
-      const sameLane = CardPosition?.LaneIndex === laneIndex;
-      const sameRow = CardPosition?.RowIndex === rowIndex;
+    for (let rowIndex = 0; rowIndex < lane.rows.length; rowIndex++) {
+      const { cardPosition: CardPosition } = cardEntity.context.from;
+      const sameLane = CardPosition?.laneIndex === laneIndex;
+      const sameRow = CardPosition?.rowIndex === rowIndex;
 
       if (sameLane && sameRow) {
-        lane.Rows[rowIndex] = [];
+        lane.rows[rowIndex] = [];
       }
     }
     return gameView;
@@ -1184,11 +1288,11 @@ export class GameViewComponent implements OnInit, AfterViewInit {
     cardEntity: AnimatedEntity<CardMovement>,
     gameView: PlayerGameView
   ) {
-    const opponentHandCardIndex = this.cachedGameView$.getValue()?.IsHost
-      ? cardEntity.context.From?.GuestHandCardIndex
-      : cardEntity.context.From?.HostHandCardIndex;
+    const opponentHandCardIndex = this.cachedGameView$.getValue()?.isHost
+      ? cardEntity.context.from?.guestHandCardIndex
+      : cardEntity.context.from?.hostHandCardIndex;
     if (opponentHandCardIndex !== null && opponentHandCardIndex !== undefined) {
-      gameView.NumCardsInOpponentsHand--;
+      gameView.numCardsInOpponentsHand--;
     }
     return gameView;
   }

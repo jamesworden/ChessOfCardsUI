@@ -17,7 +17,7 @@
     >
       @for (position of pseudoPositions$ | async; track i; let i = $index) {
         <game-position
-          [laneIndex]="initialPlaceMultipleCardAttempt.TargetLaneIndex"
+          [laneIndex]="initialPlaceMultipleCardAttempt.targetLaneIndex"
           [rowIndex]="
             (isHost$ | async) ? position.rowIndex : 6 - position.rowIndex
           "
@@ -30,7 +30,7 @@
             ((placeMultipleCards$ | async)?.length ?? 0) +
               ((previouslyCapturedCards$ | async)?.length ?? 0) ===
               ((isHost$ | async) ? i : 6 - i) &&
-            initialPlaceMultipleCardAttempt.Card.Kind === selectedCard?.Kind
+            initialPlaceMultipleCardAttempt.card.kind === selectedCard?.kind
           "
         ></game-position>
       }

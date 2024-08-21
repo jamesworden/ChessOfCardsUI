@@ -34,6 +34,12 @@
     (resigned)="resign()"
     (muted)="mute()"
     (unmuted)="unmute()"
+    [clocks]="
+      (clocks$ | async) ?? {
+        player: '0:00',
+        opponent: '0:00'
+      }
+    "
   ></app-sidebar>
 
   <div class="flex flex-col flex-1">
@@ -67,9 +73,9 @@
 </div>
 
 <ng-template #cardMovementTemplate let-animatedEntity>
-  @if (animatedEntity.context.Card) {
+  @if (animatedEntity.context.card) {
     @if (playerGameViewToAnimate$ | async; as playerGameViewToAnimate) {
-      <game-card [card]="animatedEntity.context.Card"></game-card>
+      <game-card [card]="animatedEntity.context.card"></game-card>
     }
   } @else {
     <game-face-down-card></game-face-down-card>
@@ -92,15 +98,40 @@
               [username]="(opponentUsername$ | async) ?? ''"
               class="h-sm-hidden"
               [containerClass]="
-                isPlayersTurn
-                  ? 'rounded-b-sm bg-rose-900'
-                  : 'rounded-b-sm bg-rose-700'
+                (opponentIsDisconnected$ | async)
+                  ? 'rounded-b-sm transition bg-gray-700'
+                  : isPlayersTurn
+                    ? 'rounded-b-sm transition bg-rose-900'
+                    : 'rounded-b-sm transition bg-rose-700'
               "
+              [opponentDisconnectTimer]="opponentDisconnectClock$ | async"
             ></app-player-banner>
+
+            @if (((opponentDisconnectClock$ | async) ?? 0) > 0) {
+              <div [@fadeInOut] class="h-gt-sm-hidden relative flex-1">
+                <div
+                  class="absolute top-0 left-0 w-full"
+                  [ngStyle]="{
+                    'z-index': 1000
+                  }"
+                >
+                  <div
+                    class="rounded-b-sm dark:bg-gray-700 bg-gray-100 flex justify-evenly py-2"
+                  >
+                    <span> Reconnecting... </span>
+                    <div
+                      class="border border-1 border-gray-400 rounded-sm text-gray-800 bg-gray-100 font-bold text-sm w-10 text-center"
+                    >
+                      {{ opponentDisconnectClock$ | async }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
 
           <app-opponent-hand-toolbar
-            [numCardsInOpponentsHand]="gameView.NumCardsInOpponentsHand"
+            [numCardsInOpponentsHand]="gameView.numCardsInOpponentsHand"
             [cardSize]="(cardSize$ | async) ?? 64"
             [hasPendingDrawOffer]="(hasPendingDrawOffer$ | async) ?? false"
             [isPlacingMultipleCards]="
@@ -110,6 +141,7 @@
             (drawAccepted)="acceptDraw()"
             (placeMultipleCardsConfirmed)="confirmPlaceMultipleCards()"
             (placeMultipleCardsCanceled)="cancelPlaceMultipleCards()"
+            [opaqueCards]="((opponentDisconnectClock$ | async) ?? 0) > 0"
           ></app-opponent-hand-toolbar>
 
           <game-board
@@ -135,9 +167,11 @@
 
           <game-player-hand
             #playerHand
-            [isPlacingMultipleCards]="isPlacingMultipleCards"
-            [isHost]="gameView.IsHost"
-            [cards]="gameView.Hand.Cards"
+            [isPlacingMultipleCards]="
+              (isPlacingMultipleCards$ | async) ?? false
+            "
+            [isHost]="gameView.isHost"
+            [cards]="gameView.hand.cards"
             [cardSize]="(cardSize$ | async)!"
             [disabled]="
               !!(waitingForServer$ | async) || !(gameIsActive$ | async)
@@ -150,10 +184,12 @@
             "
             [selectedCard]="selectedCard$ | async"
             [unfadedKind]="
-              (initialPlaceMultipleCardAttempt$ | async)?.Card?.Kind ?? null
+              (initialPlaceMultipleCardAttempt$ | async)?.card?.kind ?? null
             "
             [connectedToDropList]="
-              isPlacingMultipleCards ? 'place-multiple-cards-list' : 'position'
+              (isPlacingMultipleCards$ | async) ?? false
+                ? 'place-multiple-cards-list'
+                : 'position'
             "
             [fadeAllCards]="!isPlayersTurn"
             [suitAndKindHasValidMove]="(suitAndKindHasValidMove$ | async) ?? {}"
@@ -238,18 +274,16 @@
 
 <ng-template #statisticsPanel>
   <div class="m-8 rounded-sm overflow-hidden flex-grow max-w-3xl flex">
-    <div
-      class="flex flex-col border-r border-solid border-gray-300 dark:border-gray-800"
-    >
+    <div class="flex flex-col border-gray-300 text-white">
       <icon-button
-        class="bg-gray-50 dark:bg-gray-700"
+        class="bg-gray-800 dark:bg-gray-700"
         iconClass="material-symbols-outlined"
         iconString="playing_cards"
         buttonClass="py-4 cursor-default"
         label="Stack"
       ></icon-button>
       <card-stack
-        class="h-full pb-2 bg-gray-50 dark:bg-gray-700 shadow-lg"
+        class="h-full pb-2 bg-gray-800 dark:bg-gray-700 shadow-lg"
         [position]="selectedPosition$ | async"
         [cardStack]="cardStack$ | async"
         [cardSize]="(cardSize$ | async) ?? 64"
@@ -261,7 +295,7 @@
 
     <statistics-panel
       [moveNotations]="(moveNotations$ | async) ?? []"
-      [isHost]="(playerGameView$ | async)?.IsHost ?? false"
+      [isHost]="(playerGameView$ | async)?.isHost ?? false"
       [selectedNotationIndex]="selectedNotationIndex$ | async"
       (moveNotationSelected)="selectMoveNotation($event)"
       [chatMessages]="(chatMessages$ | async) ?? []"

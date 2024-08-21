@@ -9,12 +9,15 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Select, Store } from '@ngxs/store';
-import { GameState, ResponsiveSizeService } from '@shared/game';
+import {
+  GameClockService,
+  GameClocks,
+  GameState,
+  ResponsiveSizeService,
+} from '@shared/game';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { withLatestFrom, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Card, CardPosition, PlayerGameView } from '@shared/models';
-import { RemainingTimeService } from '../../services/remaining-time.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toggleDarkMode } from '../../../../logic/toggle-dark-mode';
 import {
@@ -32,7 +35,6 @@ export class SidebarComponent implements OnInit {
   readonly #responsiveSizeService = inject(ResponsiveSizeService);
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
-  readonly #remainingTimeService = inject(RemainingTimeService);
   readonly #destroyRef = inject(DestroyRef);
   readonly #store = inject(Store);
 
@@ -45,6 +47,7 @@ export class SidebarComponent implements OnInit {
   @Input() set isShowingMovesPanel(isShowingMovesPanel: boolean) {
     this.isShowingMovesPanel$.next(isShowingMovesPanel);
   }
+  @Input({ required: true }) clocks: GameClocks;
 
   @Output() drawOffered = new EventEmitter<void>();
   @Output() passedMove = new EventEmitter<void>();
@@ -95,38 +98,9 @@ export class SidebarComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((playerGameView) => {
         if (playerGameView) {
-          this.numCardsInPlayerDeck = playerGameView.NumCardsInPlayersDeck;
-          this.numCardsInOpponentDeck = playerGameView.NumCardsInOpponentsDeck;
+          this.numCardsInPlayerDeck = playerGameView.numCardsInPlayersDeck;
+          this.numCardsInOpponentDeck = playerGameView.numCardsInOpponentsDeck;
         }
-      });
-    this.#remainingTimeService.secondsRemainingFromLastMove$
-      .pipe(
-        startWith(null),
-        withLatestFrom(this.playerGameView$.pipe(startWith(null))),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe(([secondsRemaining, playerGameView]) => {
-        if (secondsRemaining && playerGameView) {
-          const { IsHost } = playerGameView;
-
-          const playersRemainingSeconds = IsHost
-            ? secondsRemaining.host
-            : secondsRemaining.guest;
-          const opponentsRemainingSeconds = IsHost
-            ? secondsRemaining.guest
-            : secondsRemaining.host;
-
-          this.playersRemainingSecondsString =
-            this.secondsToRemainingTimeString(playersRemainingSeconds);
-          this.opponentsRemainingSecondsString =
-            this.secondsToRemainingTimeString(opponentsRemainingSeconds);
-
-          this.playerHasLowTime = playersRemainingSeconds <= 30;
-          return;
-        }
-        this.playersRemainingSecondsString =
-          this.opponentsRemainingSecondsString =
-            this.secondsToRemainingTimeString(0);
       });
   }
 
@@ -275,17 +249,5 @@ export class SidebarComponent implements OnInit {
 
   unmute() {
     this.unmuted.emit();
-  }
-
-  private secondsToRemainingTimeString(seconds: number) {
-    if (seconds <= 0) {
-      return '0:00';
-    }
-
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return (
-      minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds
-    );
   }
 }

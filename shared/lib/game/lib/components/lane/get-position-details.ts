@@ -22,8 +22,8 @@ export function getPositionDetails(
   const topCard = row[row.length - 1];
 
   const isSelected =
-    selectedPosition?.LaneIndex === laneIndex &&
-    selectedPosition?.RowIndex === rowIndex;
+    selectedPosition?.laneIndex === laneIndex &&
+    selectedPosition?.rowIndex === rowIndex;
 
   const { positionClass, textClass } = getPositionBackgroundClass(
     lane,
@@ -36,7 +36,7 @@ export function getPositionDetails(
   );
 
   const cardRotation = topCard
-    ? getCardTiltDegrees(topCard, rowIndex, isHost, lane.LaneAdvantage)
+    ? getCardTiltDegrees(topCard, rowIndex, isHost, lane.laneAdvantage)
     : 0;
 
   const position: PositionDetails = {

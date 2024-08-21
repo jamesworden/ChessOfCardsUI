@@ -34,12 +34,12 @@
         [disabled]="
           disabled ||
           fadeAllCards ||
-          (!!unfadedKind && unfadedKind !== card.Kind) ||
-          (!suitAndKindHasValidMove[card.Suit]?.[card.Kind] && !unfadedKind)
+          (!!unfadedKind && unfadedKind !== card.kind) ||
+          (!suitAndKindHasValidMove[card.suit]?.[card.kind] && !unfadedKind)
         "
         [selected]="
-          (selectedCard$ | async)?.Suit === card.Suit &&
-          (selectedCard$ | async)?.Kind === card.Kind
+          (selectedCard$ | async)?.suit === card.suit &&
+          (selectedCard$ | async)?.kind === card.kind
         "
         (dragEnded)="onDragEnded(card)"
         (dragStarted)="onDragStarted(card)"

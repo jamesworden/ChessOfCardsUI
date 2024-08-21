@@ -2,7 +2,7 @@ import { AnimatedMovement, AnimatedPosition } from '@shared/animation-overlay';
 import { CardMovement, CardPosition, CardStore } from '@shared/models';
 
 export function getAnimatedMovement(
-  { From, To }: CardMovement,
+  { from: From, to: To }: CardMovement,
   sequence: number,
   cardSize: number,
   isHost: boolean,
@@ -28,45 +28,45 @@ function getAnimatedPosition(
     return null;
   }
 
-  if (cardStore.CardPosition) {
-    return getAnimatedPositionFromCardPosition(cardStore.CardPosition);
+  if (cardStore.cardPosition) {
+    return getAnimatedPositionFromCardPosition(cardStore.cardPosition);
   }
 
-  if (cardStore.Destroyed) {
+  if (cardStore.destroyed) {
     return null;
   }
 
-  if (typeof cardStore.GuestHandCardIndex === 'number') {
+  if (typeof cardStore.guestHandCardIndex === 'number') {
     return isHost
       ? getAnimatedPositionFromOpponentCardIndex(
-          cardStore.GuestHandCardIndex,
+          cardStore.guestHandCardIndex,
           cardSize
         )
       : getAnimatedPositionFromPlayerCardIndex(
-          cardStore.GuestHandCardIndex,
+          cardStore.guestHandCardIndex,
           cardSize
         );
   }
 
-  if (typeof cardStore.HostHandCardIndex === 'number') {
+  if (typeof cardStore.hostHandCardIndex === 'number') {
     return isHost
       ? getAnimatedPositionFromPlayerCardIndex(
-          cardStore.HostHandCardIndex,
+          cardStore.hostHandCardIndex,
           cardSize
         )
       : getAnimatedPositionFromOpponentCardIndex(
-          cardStore.HostHandCardIndex,
+          cardStore.hostHandCardIndex,
           cardSize
         );
   }
 
-  if (cardStore.HostDeck) {
+  if (cardStore.hostDeck) {
     return isHost
       ? getAnimatedPositionFromPlayerDeck()
       : getAnimatedPositionFromOpponentDeck();
   }
 
-  if (cardStore.GuestDeck) {
+  if (cardStore.guestDeck) {
     return isHost
       ? getAnimatedPositionFromOpponentDeck()
       : getAnimatedPositionFromPlayerDeck();
@@ -78,7 +78,7 @@ function getAnimatedPosition(
 function getAnimatedPositionFromCardPosition(
   cardPosition: CardPosition
 ): AnimatedPosition | null {
-  const { LaneIndex: laneIndex, RowIndex: rowIndex } = cardPosition;
+  const { laneIndex: laneIndex, rowIndex: rowIndex } = cardPosition;
 
   const lane = document.getElementsByClassName('lane-animation-target')[
     laneIndex

@@ -21,18 +21,18 @@
 
       <div
         class="flex"
-        [ngClass]="{ 'flex-row-reverse': !playerGameView.IsHost }"
+        [ngClass]="{ 'flex-row-reverse': !playerGameView.isHost }"
       >
         @for (
-          lane of playerGameView.Lanes;
+          lane of playerGameView.lanes;
           track laneIndex;
           let laneIndex = $index
         ) {
-          @if (initialPlaceMultipleCardAttempt?.TargetLaneIndex === laneIndex) {
+          @if (initialPlaceMultipleCardAttempt?.targetLaneIndex === laneIndex) {
             <game-place-multiple-cards-lane
               class="lane-animation-target"
               #placeMultipleCardsLane
-              [isHost]="playerGameView.IsHost"
+              [isHost]="playerGameView.isHost"
               [playerGameView]="playerGameView"
               [placeMultipleCardsHand]="placeMultipleCardsHand$ | async"
               [placeMultipleCards]="placeMultipleCards$ | async"
@@ -51,9 +51,9 @@
               class="lane-animation-target"
               [lane]="lane"
               [laneIndex]="laneIndex"
-              [isHost]="playerGameView.IsHost"
-              [redJokerLaneIndex]="playerGameView.RedJokerLaneIndex"
-              [blackJokerLaneIndex]="playerGameView.BlackJokerLaneIndex"
+              [isHost]="playerGameView.isHost"
+              [redJokerLaneIndex]="playerGameView.redJokerLaneIndex"
+              [blackJokerLaneIndex]="playerGameView.blackJokerLaneIndex"
               [transparentTiles]="transparentTiles"
               [isPlayersTurn]="isPlayersTurn"
               [validMoveRowIndexes]="

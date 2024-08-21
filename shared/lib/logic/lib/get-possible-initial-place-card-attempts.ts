@@ -7,9 +7,9 @@ export function getPossibleInitialPlaceCardAttempts(
     candidateMoves
       ?.filter((candidateMove) => {
         const isInitialAttempt =
-          candidateMove.Move.PlaceCardAttempts.length === 1;
-        return isInitialAttempt && candidateMove.IsValid;
+          candidateMove.move.placeCardAttempts.length === 1;
+        return isInitialAttempt && candidateMove.isValid;
       })
-      .map((candidateMove) => candidateMove.Move.PlaceCardAttempts[0]) ?? []
+      .map((candidateMove) => candidateMove.move.placeCardAttempts[0]) ?? []
   );
 }

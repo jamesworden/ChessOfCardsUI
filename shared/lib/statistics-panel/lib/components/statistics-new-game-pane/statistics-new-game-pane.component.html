@@ -1,6 +1,6 @@
 <div class="flex h-full w-full p-4">
   <div
-    class="flex-1 flex flex-col gap-y-8 bg-gray-100 dark:bg-gray-700 shadow-lg py-8 px-4 md:px-8"
+    class="flex-1 flex flex-col gap-y-6 md:gap-y-8 bg-gray-100 dark:bg-gray-700 shadow-lg py-8 px-4 md:px-8"
   >
     @if (hostOrJoinView) {
       <div class="flex justify-between max-w-[250px] w-full gap-x-4">
@@ -56,10 +56,10 @@
             class="border rounded-sm p-2 w-full focus:outline-none dark:text-black max-w-xs uppercase"
             (ngModelChange)="gameCodeChanged()"
             [ngClass]="{
-              'border-red-500 focus:border-red-500': gameCodeIsInvalid$ | async,
-              'border-gray-300 focus:border-yellow-500': !(
-                gameCodeIsInvalid$ | async
-              )
+              'border-red-500 focus:border-red-500':
+                (gameCodeIsInvalid$ | async) && triedToJoinGame,
+              'border-gray-300 focus:border-yellow-500':
+                !(gameCodeIsInvalid$ | async) || !triedToJoinGame
             }"
             [(ngModel)]="joinGameCode"
           />
@@ -68,8 +68,8 @@
             <span
               class="text-red-500 text-sm dark:font-semibold absolute top-0"
               [ngClass]="{
-                'opacity-0': !(gameCodeIsInvalid$ | async),
-                'opacity-100': gameCodeIsInvalid$ | async
+                'opacity-0': !(gameCodeIsInvalid$ | async) || !triedToJoinGame,
+                'opacity-100': (gameCodeIsInvalid$ | async) && triedToJoinGame
               }"
               >Invalid game code</span
             >
@@ -109,7 +109,7 @@
                 class="px-4 py-2 rounded-sm transition flex gap-x-2 rounded-sm shadow-md bg-white dark:bg-gray-600"
                 [ngClass]="{
                   'text-yellow-500':
-                    button.durationOption === pendingGameOptions.DurationOption
+                    button.durationOption === pendingGameOptions.durationOption
                 }"
                 (click)="selectDurationOption(button.durationOption)"
               >
@@ -182,7 +182,7 @@
                   <h2 class="text-3xl font-semibold">
                     {{
                       (pendingGameCode$ | async) ??
-                        (playerGameView$ | async)?.GameCode
+                        (playerGameView$ | async)?.gameCode
                     }}
                   </h2>
                 </div>

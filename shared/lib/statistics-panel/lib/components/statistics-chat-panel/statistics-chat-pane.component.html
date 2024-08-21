@@ -104,15 +104,25 @@
     />
 
     <button
-      class="bg-yellow-500 rounded-full p-2 flex flex-col justify-around shadow-md transition h-10 w-10"
+      class="rounded-full p-2 flex flex-col justify-around transition h-10 w-10"
       [ngClass]="{
-        'hover:bg-yellow-400': (gameIsActive$ | async)
+        'hover:bg-yellow-400 bg-yellow-500 shadow-md cursor-pointer':
+          (gameIsActive$ | async) && message.length > 0,
+        'cursor-default': !(gameIsActive$ | async) || message.length === 0
       }"
       (click)="sendMessage()"
       [disabled]="!(gameIsActive$ | async)"
     >
       <div class="flex justify-around">
-        <span class="material-symbols-outlined text-gray-800">send</span>
+        <span
+          class="material-symbols-outlined transition"
+          [ngClass]="{
+            'dark:text-gray-800': (gameIsActive$ | async) && message.length > 0,
+            'dark:text-gray-200':
+              !(gameIsActive$ | async) || message.length === 0
+          }"
+          >send</span
+        >
       </div>
     </button>
   </div>

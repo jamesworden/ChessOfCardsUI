@@ -18,22 +18,22 @@ export function suitAndKindHasValidMove(
 
   const suitAndKindHasValidMove: SuitAndKindHasValidMove = {};
 
-  const cardsInHand = playerGameView.Hand?.Cards ?? [];
+  const cardsInHand = playerGameView.hand?.cards ?? [];
 
   const cardsWithValidMoves = cardsInHand.filter(
     (card) =>
-      playerGameView?.CandidateMoves?.some((candidateMove) => {
-        const candidateCard = candidateMove.Move.PlaceCardAttempts[0].Card;
+      playerGameView?.candidateMoves?.some((candidateMove) => {
+        const candidateCard = candidateMove.move.placeCardAttempts[0].card;
         const isSameCard = cardEqualsCard(candidateCard, card);
-        return isSameCard && candidateMove.IsValid;
+        return isSameCard && candidateMove.isValid;
       }) ?? false
   );
 
   for (const card of cardsWithValidMoves) {
-    if (!suitAndKindHasValidMove[card.Suit]) {
-      suitAndKindHasValidMove[card.Suit] = {};
+    if (!suitAndKindHasValidMove[card.suit]) {
+      suitAndKindHasValidMove[card.suit] = {};
     }
-    suitAndKindHasValidMove[card.Suit]![card.Kind] = true;
+    suitAndKindHasValidMove[card.suit]![card.kind] = true;
   }
 
   return suitAndKindHasValidMove;

@@ -13,6 +13,7 @@ export class OpponentHandToolbarComponent {
   @Input() isPlacingMultipleCards = false;
   @Input() cardSize = 64;
   @Input() hasPendingDrawOffer = false;
+  @Input() opaqueCards = false;
 
   @Output() placeMultipleCardsConfirmed = new EventEmitter<void>();
   @Output() placeMultipleCardsCanceled = new EventEmitter<void>();

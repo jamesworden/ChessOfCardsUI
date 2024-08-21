@@ -7,8 +7,8 @@ export function getReasonIfMoveInvalid(
 ) {
   const candidateMove = getCandidateMove(move, candidateMoves);
 
-  return !candidateMove || !candidateMove?.IsValid
-    ? candidateMove?.InvalidReason ??
+  return !candidateMove || !candidateMove?.isValid
+    ? candidateMove?.invalidReason ??
         'Error: The server has not anticipated that this move was possible.'
     : null;
 }

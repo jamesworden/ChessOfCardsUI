@@ -1,15 +1,19 @@
 <nav
-  class="sidebar bg-gray-50 dark:bg-gray-700 h-full flex flex-col w-20 shadow-lg"
+  class="sidebar bg-gray-800 dark:bg-gray-700 h-full flex flex-col w-20 shadow-lg text-white"
 >
-  @if ((playerGameView$ | async)?.GameCode; as gameCode) {
-    <div class="flex flex-col justify-around text-center my-2 px-1 h-16">
+  @if ((playerGameView$ | async)?.gameCode; as gameCode) {
+    <div
+      class="flex flex-col justify-around text-center my-2 px-1 h-16 h-xs-hidden"
+    >
       <div class="semibold text-center text-sm h-sm-hidden">Game<br />Code</div>
       <div class="tracking-widest font-bold text-center text-md mt-1">
         {{ gameCode }}
       </div>
     </div>
   } @else {
-    <div class="flex flex-col justify-around text-center my-2 px-1 h-16">
+    <div
+      class="flex flex-col justify-around text-center my-2 px-1 h-16 h-xs-hidden"
+    >
       <div class="tracking-widest text-center text-xs">
         Chess <br />
         of <br />
@@ -18,7 +22,9 @@
     </div>
   }
 
-  <div class="h-px rounded-lg bg-gray-400 dark:bg-gray-600 mx-2 mb-2"></div>
+  <div
+    class="h-px rounded-lg bg-gray-400 dark:bg-gray-600 mx-2 mb-2 h-xs-hidden"
+  ></div>
 
   <div
     class="px-1 pt-2 flex flex-col pb-4"
@@ -33,7 +39,7 @@
       label="Stack"
       (clicked)="toggleCardStack()"
       iconClass="material-symbols-outlined"
-      buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
+      buttonClass="rounded-sm hover:bg-slate-600 dark:hover:bg-slate-500 transition"
     ></icon-button>
   </div>
 
@@ -58,7 +64,7 @@
         (clicked)="attemptToOpenPassMoveModal()"
         label="Pass"
         iconClass="material-symbols-outlined"
-        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
+        buttonClass="rounded-sm hover:bg-slate-600 dark:hover:bg-slate-500 transition"
       ></icon-button>
       <icon-button
         [disabled]="!!(waitingForServer$ | async)"
@@ -68,7 +74,7 @@
         iconClass="material-symbols-outlined"
         (clicked)="attemptToOpenOfferDrawModel()"
         label="Draw"
-        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
+        buttonClass="rounded-sm hover:bg-slate-600 dark:hover:bg-slate-500 transition"
       ></icon-button>
       <icon-button
         [disabled]="!!(waitingForServer$ | async)"
@@ -78,7 +84,7 @@
         iconClass="material-symbols-outlined"
         (clicked)="openResignModal()"
         label="Resign"
-        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
+        buttonClass="rounded-sm hover:bg-slate-600 dark:hover:bg-slate-500 transition"
       ></icon-button>
       <icon-button
         matTooltip="More"
@@ -88,7 +94,7 @@
         mat-icon-button
         [matMenuTriggerFor]="menu"
         label="More"
-        buttonClass="rounded-sm hover:bg-slate-200 dark:hover:bg-slate-500 transition"
+        buttonClass="rounded-sm hover:bg-slate-600 dark:hover:bg-slate-500 transition"
       ></icon-button>
     </div>
 
@@ -103,7 +109,7 @@
         }"
       >
         <span>
-          {{ opponentsRemainingSecondsString }}
+          {{ clocks.opponent }}
         </span>
       </div>
       <div>
@@ -113,7 +119,7 @@
         <div class="flex justify-around">
           <game-face-down-card></game-face-down-card>
         </div>
-        <div class="hidden md:flex h-sm-hidden flex justify-around">
+        <div class="flex h-sm-hidden flex justify-around">
           <game-face-down-card></game-face-down-card>
         </div>
         <div data-testid="player-deck-count" class="deck-count">
@@ -128,26 +134,27 @@
           'is-not-counting-down': !isPlayersTurn
         }"
       >
-        <span>{{ playersRemainingSecondsString }}</span>
+        <span>{{ clocks.player }}</span>
       </div>
     </div>
   }
 </nav>
 
+<!-- Angular Material's mat-menu doesn't provide support for 'class="bg-gray-800 dark:bg-gray-600"' -->
 <mat-menu
-  class="bg-white dark:bg-gray-600"
+  class="bg-gray-700-important"
   #menu="matMenu"
   yPosition="below"
   xPosition="after"
 >
   <div class="hidden dark:block">
     <button mat-menu-item (click)="toggleDarkMode()">
-      <div class="flex gap-x-2 dark:text-white">
+      <div class="flex gap-x-2 text-white">
         <div class="flex flex-col justify-around">
           <span class="material-symbols-outlined">dark_mode</span>
         </div>
 
-        <div class="bg-gray-600 dark:bg-gray-200 min-h-full w-px"></div>
+        <div class="bg-gray-200 min-h-full w-px"></div>
 
         <div class="flex flex-col justify-around">
           <span>Light Mode</span>
@@ -158,12 +165,12 @@
 
   <div class="block dark:hidden">
     <button mat-menu-item (click)="toggleDarkMode()">
-      <div class="flex gap-x-2 dark:text-white">
+      <div class="flex gap-x-2 text-white">
         <div class="flex flex-col justify-around">
           <span class="material-symbols-outlined">light_mode</span>
         </div>
 
-        <div class="bg-gray-600 dark:bg-gray-200 min-h-full w-px"></div>
+        <div class="bg-gray-200 min-h-full w-px"></div>
 
         <div class="flex flex-col justify-around">
           <span>Dark Mode</span>
@@ -178,12 +185,12 @@
     }"
   >
     <button mat-menu-item (click)="mute()">
-      <div class="flex gap-x-2 dark:text-white">
+      <div class="flex gap-x-2 text-white">
         <div class="flex flex-col justify-around">
           <span class="material-symbols-outlined">volume_up</span>
         </div>
 
-        <div class="bg-gray-600 dark:bg-gray-200 min-h-full w-px"></div>
+        <div class="bg-gray-200 min-h-full w-px"></div>
 
         <div class="flex flex-col justify-around">
           <span>Mute</span>
@@ -198,12 +205,12 @@
     }"
   >
     <button mat-menu-item (click)="unmute()">
-      <div class="flex gap-x-2 dark:text-white">
+      <div class="flex gap-x-2 text-white">
         <div class="flex flex-col justify-around">
           <span class="material-symbols-outlined">volume_off</span>
         </div>
 
-        <div class="bg-gray-600 dark:bg-gray-200 min-h-full w-px"></div>
+        <div class="bg-gray-200 min-h-full w-px"></div>
 
         <div class="flex flex-col justify-around">
           <span>Unmute</span>

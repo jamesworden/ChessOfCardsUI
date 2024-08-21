@@ -34,7 +34,7 @@ export class BoardComponent implements AfterViewInit {
     playerGameView: PlayerGameView
   ) {
     // Hacky change detection to update lanes
-    playerGameView.Lanes = [...playerGameView.Lanes];
+    playerGameView.lanes = [...playerGameView.lanes];
     const x = JSON.stringify(playerGameView);
     const y = JSON.parse(x) as PlayerGameView;
     this.playerGameView$.next(y);
@@ -77,18 +77,20 @@ export class BoardComponent implements AfterViewInit {
   ).pipe(
     map(
       ([playerGameView, selectedCard]) =>
-        playerGameView?.CandidateMoves?.filter(
-          (candidateMove) =>
-            candidateMove.Move.PlaceCardAttempts.length === 1 &&
-            candidateMove.IsValid &&
-            candidateMove.Move.PlaceCardAttempts[0].Card.Kind ===
-              selectedCard?.Kind &&
-            candidateMove.Move.PlaceCardAttempts[0].Card.Suit ===
-              selectedCard?.Suit
-        ).map((candidateMove) => ({
-          RowIndex: candidateMove.Move.PlaceCardAttempts[0].TargetRowIndex,
-          LaneIndex: candidateMove.Move.PlaceCardAttempts[0].TargetLaneIndex,
-        })) ?? []
+        playerGameView?.candidateMoves
+          ?.filter(
+            (candidateMove) =>
+              candidateMove.move.placeCardAttempts.length === 1 &&
+              candidateMove.isValid &&
+              candidateMove.move.placeCardAttempts[0].card.kind ===
+                selectedCard?.kind &&
+              candidateMove.move.placeCardAttempts[0].card.suit ===
+                selectedCard?.suit
+          )
+          .map((candidateMove) => ({
+            rowIndex: candidateMove.move.placeCardAttempts[0].targetRowIndex,
+            laneIndex: candidateMove.move.placeCardAttempts[0].targetLaneIndex,
+          })) ?? []
     )
   );
 
@@ -97,7 +99,10 @@ export class BoardComponent implements AfterViewInit {
       map((positionsWithValidMoves) => {
         const laneIndexesToValidMoveRowIndexes = new Map<number, Set<number>>();
 
-        for (const { LaneIndex, RowIndex } of positionsWithValidMoves) {
+        for (const {
+          laneIndex: LaneIndex,
+          rowIndex: RowIndex,
+        } of positionsWithValidMoves) {
           const existingPositions =
             laneIndexesToValidMoveRowIndexes.get(LaneIndex) ??
             new Set<number>();
@@ -129,8 +134,8 @@ export class BoardComponent implements AfterViewInit {
 
   onPositionClicked(laneIndex: number, rowIndex: number) {
     this.positionClicked.emit({
-      LaneIndex: laneIndex,
-      RowIndex: rowIndex,
+      laneIndex: laneIndex,
+      rowIndex: rowIndex,
     });
   }
 

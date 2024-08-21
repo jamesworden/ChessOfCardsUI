@@ -6,7 +6,7 @@ export function getPositionNotation(cardPosition: CardPosition | null) {
     return null;
   }
 
-  const laneLetter = getLaneLetter(cardPosition.LaneIndex);
+  const laneLetter = getLaneLetter(cardPosition.laneIndex);
 
-  return `${laneLetter}${cardPosition.RowIndex + 1}`;
+  return `${laneLetter}${cardPosition.rowIndex + 1}`;
 }
