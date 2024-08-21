@@ -5,7 +5,7 @@ This repository contains the code for the UI in [chessofcards.com](https://chess
 
 ---
 
-## Developer Commentary
+## Documentation
 
 ### Deploying to production
 
