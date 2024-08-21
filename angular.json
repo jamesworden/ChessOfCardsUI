@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "LanesFrontend": {
+    "ChessOfCardsUI": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -21,7 +21,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist/LanesFrontend"
+              "base": "dist/ChessOfCardsUI"
             },
             "index": "projects/client/src/index.html",
             "polyfills": [
@@ -77,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "prod": {
-              "buildTarget": "LanesFrontend:build:prod"
+              "buildTarget": "ChessOfCardsUI:build:prod"
             },
             "local": {
-              "buildTarget": "LanesFrontend:build:local"
+              "buildTarget": "ChessOfCardsUI:build:local"
             }
           },
           "defaultConfiguration": "local"
@@ -88,7 +88,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "LanesFrontend:build"
+            "buildTarget": "ChessOfCardsUI:build"
           }
         },
         "test": {

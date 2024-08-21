@@ -15,7 +15,6 @@ import {
   withLatestFrom,
   tap,
   distinctUntilChanged,
-  switchMap,
 } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {

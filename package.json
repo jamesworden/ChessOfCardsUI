@@ -1,12 +1,12 @@
 {
-  "name": "lanes-frontend",
+  "name": "chess-of-cards-ui",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start:local": "ng serve LanesFrontend --configuration=local",
-    "start:prod": "ng serve LanesFrontend --configuration=prod",
-    "build:prod": "ng build LanesFrontend --configuration=prod",
-    "test:lanes-frontend": "ng test --project=LanesFrontend",
+    "start:local": "ng serve ChessOfCardsUI --configuration=local",
+    "start:prod": "ng serve ChessOfCardsUI --configuration=prod",
+    "build:prod": "ng build ChessOfCardsUI --configuration=prod",
+    "test:chess-of-cards-ui": "ng test --project=ChessOfCardsUI",
     "test:shared": "ng test --project=shared"
   },
   "private": true,

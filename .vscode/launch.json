@@ -4,7 +4,7 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Lanes Frontend Localhost",
+      "name": "Chess Of Cards UI Localhost",
       "skipFiles": ["<node_internals>/**"],
       "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}",
