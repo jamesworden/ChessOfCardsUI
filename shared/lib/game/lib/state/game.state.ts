@@ -433,12 +433,12 @@ export class GameState {
 
   @Action(CheckHostForEmptyTimer)
   checkHostForEmptyTimer() {
-    this.#gameWebsocketService.checkHostForEmptyTimer();
+    // this.#gameWebsocketService.checkHostForEmptyTimer();
   }
 
   @Action(CheckGuestForEmptyTimer)
   checkGuestForEmptyTimer() {
-    this.#gameWebsocketService.checkGuestForEmptyTimer();
+    // this.#gameWebsocketService.checkGuestForEmptyTimer();
   }
 
   @Action(AnimateGameView)

@@ -1,10 +1,8 @@
-import { Card } from '@shared/models';
+import { Card, Kind, Suit } from '@shared/models';
 
 export function getCardImageFileName(card: Card) {
-  const { suit: Suit, kind: Kind } = card;
-
-  const suit = Suit.toLowerCase();
-  const kind = Kind.toLowerCase();
+  const suit = Suit[card.suit].toLowerCase();
+  const kind = Kind[card.kind].toLowerCase();
 
   return `card_${suit}_${kind}.png`;
 }

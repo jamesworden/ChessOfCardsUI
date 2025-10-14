@@ -1,5 +1,5 @@
 export enum PlayerOrNone {
-  Host = 'Host',
-  Guest = 'Guest',
-  None = 'None',
+  Host,
+  Guest,
+  None,
 }
