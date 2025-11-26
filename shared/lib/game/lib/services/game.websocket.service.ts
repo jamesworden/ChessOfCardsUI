@@ -195,7 +195,7 @@ export class GameWebsocketService {
         break;
 
       case MessageType.GameStarted:
-        const gameView = data as PlayerGameView;
+        const gameView = data.gameView as PlayerGameView;
         this.#store.dispatch(new SetGameIsActive(true));
         this.#store.dispatch(new AnimateGameView(gameView));
 
@@ -227,7 +227,9 @@ export class GameWebsocketService {
 
       case MessageType.GameUpdated:
         this.#store.dispatch(new FinishPlacingMultipleCards(false));
-        this.#store.dispatch(new AnimateGameView(data as PlayerGameView));
+        this.#store.dispatch(
+          new AnimateGameView(data.gameView as PlayerGameView)
+        );
         break;
 
       case MessageType.OpponentDisconnected:
